@@ -6,4 +6,12 @@
 
 <mapper namespace="kr.pe.eta.service.pay.PayDao">
 
+
+    <insert id="addPay" parameterType="pay">
+        INSERT
+        INTO pay(pay_no, call_no, user_no, pay_type, pay_date, money, role)
+        VALUES
+            (seq_pay_pay_no.NEXTVAL, seq_call_call_no.CURRVAL, #{userNo}, '선결제', SYSDATE, #{money}, 'passenger')
+    </insert>
+
 </mapper>

@@ -1,8 +1,12 @@
 package kr.pe.eta.service.community;
 
+import java.sql.Time;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import kr.pe.eta.domain.ShareReq;
+import kr.pe.eta.domain.ShareReqPassenger;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.pe.eta.common.Search;
@@ -29,5 +33,17 @@ public interface CommunityDao {
 	public int getTotalCountPass(Search search) throws Exception;
 
 	public int getTotalCountDriver(int call_no) throws Exception;
+
+	public void addShareReq(ShareReq shareReq) throws Exception;
+
+	public void addShareReqOther(ShareReqPassenger shareReqPassenger) throws Exception;
+
+	public void deleteShareReq(int userNo) throws Exception;
+
+	public List<DealReq> getShareList(Search search) throws Exception;
+
+	public void updateDealCode(int userNo) throws Exception;
+
+	public void updateShareCode(int userNo) throws Exception;
 
 }

@@ -56,6 +56,10 @@ public class Search {
 
 	@Override
 	public String toString() {
+
+		getEndRowNum();
+		getStartRowNum();
+
 		return "Search [currentPage=" + currentPage + ", searchCondition=" + searchCondition + ", searchKeyword="
 				+ searchKeyword + ", pageSize=" + pageSize + ", endRowNum=" + endRowNum + ", startRowNum=" + startRowNum
 				+ "]";

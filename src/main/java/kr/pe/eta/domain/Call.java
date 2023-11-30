@@ -3,6 +3,8 @@ package kr.pe.eta.domain;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Date;
+
 @Getter
 @Setter
 public class Call {
@@ -23,6 +25,7 @@ public class Call {
 	private String routeOpt;
 	private String carOpt;
 	private boolean petOpt;
+	private String callDate;
 
 	@Override
 	public String toString() {
@@ -30,7 +33,7 @@ public class Call {
 				+ ", startAddr=" + startAddr + ", startKeyword=" + startKeyword + ", startX=" + startX + ", startY="
 				+ startY + ", endAddr=" + endAddr + ", endKeyword=" + endKeyword + ", endX=" + endX + ", startX="
 				+ startX + ", endY=" + endY + ", callStateCode=" + callStateCode + ", routeOpt=" + routeOpt
-				+ ", carOpt=" + carOpt + ", petOpt=" + petOpt + "]";
+				+ ", carOpt=" + carOpt + ", petOpt=" + petOpt + ", callDate=" + callDate + "]";
 	}
 
 }

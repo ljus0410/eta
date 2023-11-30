@@ -6,4 +6,33 @@
 
 <mapper namespace="kr.pe.eta.service.callreq.CallReqDao">
 
+    <resultMap id="callSelectMap" type="call">
+        <result property="callNo"           column="call_no"            jdbcType="NUMERIC" />
+        <result property="callCode"         column="call_code"          jdbcType="VARCHAR" />
+        <result property="realPay"          column="real_pay"           jdbcType="NUMERIC" />
+        <result property="startAddr"        column="start_addr"         jdbcType="VARCHAR" />
+        <result property="startKeyword"     column="start_keyword"      jdbcType="VARCHAR" />
+        <result property="startX"           column="start_x"            jdbcType="NUMERIC" />
+        <result property="startY"           column="start_y"            jdbcType="NUMERIC" />
+        <result property="endAddr"          column="end_addr"           jdbcType="VARCHAR" />
+        <result property="endKeyword"       column="end_keyword"        jdbcType="VARCHAR" />
+        <result property="endX"             column="end_x"              jdbcType="NUMERIC" />
+        <result property="endY"             column="end_y"              jdbcType="NUMERIC" />
+        <result property="callStateCode"    column="call_state_code"    jdbcType="VARCHAR" />
+        <result property="callDate"         column="call_date"          jdbcType="DATE" />
+    </resultMap>
+
+    <insert id="addCall" parameterType="call">
+        INSERT
+        INTO call(call_no, call_code, call_date, real_pay, start_addr, start_keyword, start_x, start_y, end_addr, end_keyword, end_x, end_y, call_state_code, star)
+        VALUES
+            (seq_call_call_no.NEXTVAL, #{callCode}, SYSDATE, #{realPay}, #{startAddr}, #{startKeyword}, #{startX}, #{startY}, #{endAddr}, #{endKeyword}, #{endX}, #{endY}, '운행전', 0)
+    </insert>
+
+    <select id="getCall" parameterType="int" resultMap="callSelectMap">
+        SELECT call_no, call_code, TO_CHAR(call_date, 'YYYY-MM-DD HH24:MI:SS') AS call_date, real_pay, start_keyword, start_x, start_y, end_addr, end_keyword, end_x, end_y, call_state_code, star)
+        FROM call
+        WHERE call_no=#{value}
+    </select>
+
 </mapper>

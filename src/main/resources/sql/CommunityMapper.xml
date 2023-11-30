@@ -19,6 +19,7 @@
         <result property="endX"           column="end_x"            jdbcType="NUMERIC" />
         <result property="endY"           column="end_y"            jdbcType="NUMERIC" />
         <result property="callStateCode"  column="call_state_code"  jdbcType="VARCHAR" />
+        <result property="callDate"         column="call_date"  jdbcType="DATE" />
     </resultMap>
 
     <resultMap id="dealreqSelectMap" type="dealreq">
@@ -27,12 +28,21 @@
         <result property="passengerOffer"   column="passenger_offer"  jdbcType="NUMERIC" />
         <result property="driverOffer"    column="driver_offer"       jdbcType="NUMERIC" />
     </resultMap>
+
+    <resultMap id="sharereqSelectMap" type="sharereq">
+        <result property="firstSharePassengerNo"           column="other_share_passenger_no"        jdbcType="NUMERIC" />
+        <result property="callNo"         column="call_no"      jdbcType="NUMERIC" />
+        <result property="firstShareCount"   column="share_count"  jdbcType="NUMERIC" />
+        <result property="startShareCount"    column="start_share_count"       jdbcType="NUMERIC" />
+        <result property="maxShareCount"    column="max_share_count"       jdbcType="NUMERIC" />
+        <result property="shareDate"    column="share_date"       jdbcType="DATE" />
+    </resultMap>
     
     <insert id="addReservation" parameterType="call">
         INSERT
         INTO call(call_no, call_code, call_date, real_pay, start_addr, start_keyword, start_x, start_y, end_addr, end_keyword, end_x, end_y, call_state_code, star)
         VALUES
-        (seq_call_call_no.NEXTVAL, 'R', #{callDate}, #{realPay}, #{startAddr}, #{startKeyword}, #{startX}, #{startY}, #{endAddr}, #{endKeyword}, #{endX}, #{endY}, '운행전', 5);
+        (seq_call_call_no.NEXTVAL, 'R', TO_DATE(#{callDate}, 'YYYY-MM-DD HH24:MI:SS'), #{realPay}, #{startAddr}, #{startKeyword}, #{startX}, #{startY}, #{endAddr}, #{endKeyword}, #{endX}, #{endY}, '운행전', 5)
     </insert>
 
     <select id="getCallNo" parameterType="int" resultType="int">
@@ -41,8 +51,7 @@
         WHERE users.user_no=#{userNo}
           AND users.user_no=pay.user_no
           AND call.call_no=pay.call_no
-          AND call.call_code='D'
-          AND call.call_state_code='운행전';
+          AND call.call_state_code='운행전'
     </select>
 
     <insert id="addDealReq" parameterType="dealreq" >
@@ -62,7 +71,7 @@
         FROM deal, users
         WHERE users.user_no=#{userNo}
           AND users.user_no=deal.driver_no
-          AND users.role='passenger';
+          AND users.role='passenger'
     </select>
 
     <select id="getDealList" parameterType="map" resultMap="dealreqSelectMap">
@@ -71,11 +80,10 @@
         FROM( SELECT deal.call_no, deal.deal_no, deal.driver_no, deal.passenger_offer
         FROM call, deal, users
         WHERE deal.call_no=call.call_no
-        AND call.call_state_code='운행전'
         AND users.user_no=deal.driver_no
         AND users.role='passenger' ) inner_table
         WHERE ROWNUM &lt;= #{endRowNum} )
-        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum};
+        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
     </select>
 
     <select id="getDealDriverList" parameterType="map" resultMap="dealreqSelectMap">
@@ -89,7 +97,7 @@
         AND users.user_no=deal.driver_no
         AND users.role='driver') inner_table
         WHERE ROWNUM &lt;= #{endRowNum})
-        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum};
+        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
     </select>
 
     <select  id="getTotalCountPass"  parameterType="search"  resultType="int">
@@ -113,4 +121,45 @@
                    AND users.role='driver' ) countTable
     </select>
 
+    <insert id="addShareReq" parameterType="sharereq">
+        INSERT
+        INTO shares(share_no, other_share_passenger_no, call_no, share_count, start_share_count, max_share_count, share_date, star)
+        VALUES (seq_share_share_no.nextval, NULL, #{callNo}, #{firstShareCount}, #{startShareCount}, #{maxShareCount}, #{shareDate}, 0)
+    </insert>
+
+    <insert id="addShareReqOther" parameterType="sharereq">
+        INSERT
+        INTO shares(share_no, other_share_passenger_no, call_no, share_count, start_share_count, max_share_count, share_date, star)
+        VALUES (seq_share_share_no.nextval, #{firstSharePassengerNo}, #{callNo}, #{firstShareCount}, #{startShareCount}, #{maxShareCount}, #{shareDate}, 0)
+    </insert>
+
+    <delete id="deleteShareReq" parameterType="int">
+        DELETE
+        FROM shares
+        WHERE other_share_passenger_no=#{firstSharePassengerNo}
+    </delete>
+
+    <select id="getShareList" parameterType="map" resultMap="sharereqSelectMap">
+        SELECT *
+        FROM (  SELECT inner_table.* , ROWNUM AS row_seq
+                FROM( SELECT s.other_share_passenger_no, s.call_no, s.share_count, s.start_share_count, s.max_share_count, s.share_date, s.star
+                      FROM call c, shares s, users u
+                      WHERE s.call_no=c.call_no
+                        AND c.call_state_code='운행전'
+                        AND u.user_no=s.other_share_passenger_no ) inner_table
+                WHERE ROWNUM &lt;= #{endRowNum} )
+        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+    </select>
+
+    <update id="updateDealCode" parameterType="int">
+        UPDATE users
+        SET deal_code=1
+        WHERE user_no=#{userNo}
+    </update>
+
+    <update id="updateShareCode" parameterType="int">
+        UPDATE users
+        SET share_code=1
+        WHERE user_no=#{userNo}
+    </update>
 </mapper>
