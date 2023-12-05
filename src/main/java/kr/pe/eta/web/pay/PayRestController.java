@@ -1,14 +1,18 @@
 package kr.pe.eta.web.pay;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.pe.eta.domain.Call;
+import kr.pe.eta.domain.Cash;
 import kr.pe.eta.service.pay.PayService;
 
 @RestController
@@ -45,6 +49,29 @@ public class PayRestController {
 
 		return result;
 
+	}
+
+	@RequestMapping(value = "addCash", method = RequestMethod.POST)
+	public String addCash(@RequestBody List<Cash> cashDataList) throws Exception {
+		System.out.println("/pay/json/addCash");
+
+		for (Cash cashData : cashDataList) {
+			System.out.println("CashDriverNo: " + cashData.getCashDriverNo());
+			System.out.println("CashMonth: " + cashData.getCashMonth());
+			System.out.println("CashTotal: " + cashData.getCashTotal());
+
+			Cash cash = new Cash();
+			cash.setCashDriverNo(cashData.getCashDriverNo());
+			cash.setCashMonth(cashData.getCashMonth());
+			cash.setCashTotal(cashData.getCashTotal());
+
+			payService.addCash(cash);
+		}
+
+		List<Call> cashDriverList = payService.getCashDriverList();
+		// List<Integer> cashCode = payService.getCashCode();
+
+		return "Success";
 	}
 
 }
