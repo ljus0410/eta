@@ -12,29 +12,72 @@
       <result property="payDate"     column="PAY_DATE"     jdbcType="DATE"/>
       <result property="money"     column="MONEY"     jdbcType="NUMERIC"/>
   </resultMap>
+  
+  <resultMap id="cashDriverSelectMap" type="Call">
+    <result property="callDate" column="call_month"    jdbcType="VARCHAR" />
+    <result property="realPay"         column="total_real_pay"          jdbcType="NUMERIC" />
+    <result property="userNo"         column="driver_no"          jdbcType="NUMERIC" />
+    <result property="star"         column="cash_code"          jdbcType="NUMERIC" />
+  </resultMap>
+  
+  <resultMap id="myCashSelectMap" type="Call">
+    <result property="callNo" column="call_no"    jdbcType="NUMERIC" />
+    <result property="callDate"         column="call_date"          jdbcType="DATE" />
+    <result property="realPay"         column="real_pay"          jdbcType="NUMERIC" />
+    <result property="star"         column="cash_code"          jdbcType="NUMERIC" />
+  </resultMap>
 
   <select id="getMyMoney" parameterType="int" resultType="int">
        SELECT my_money FROM users WHERE user_no=#{userNo:NUMERIC}
   </select>
 
-   <insert  id="addCharge"    parameterType="map" >
-             
-      INSERT INTO pay (pay_no, user_no, call_no, pay_type, pay_date, money, role) 
-      VALUES (seq_pay_pay_no.NEXTVAL, #{userNo:NUMERIC}, null, '충전', SYSDATE, #{Tpay:NUMERIC}, 'passenger')
-
-   </insert>
+  <insert  id="addCharge"    parameterType="map" >             
+       INSERT INTO pay (pay_no, user_no, call_no, pay_type, pay_date, money, role) 
+       VALUES (seq_pay_pay_no.NEXTVAL, #{userNo:NUMERIC}, null, '충전', SYSDATE, #{Tpay:NUMERIC}, 'passenger')
+  </insert>
    
-   <update id="updateMyMoney" parameterType="map">
-    UPDATE users SET my_money = #{updateMyMoney:NUMERIC} WHERE user_no =  #{userNo:NUMERIC}
-   </update>
+  <update id="updateMyMoney" parameterType="map">
+       UPDATE users SET my_money = #{updateMyMoney:NUMERIC} WHERE user_no =  #{userNo:NUMERIC}
+  </update>
    
-     <select id="getTpayList" parameterType="int" resultMap="paySelectMap">
+  <select id="getTpayList" parameterType="int" resultMap="paySelectMap">
        SELECT call_no, pay_type, pay_date, money FROM pay WHERE user_no =  #{userNo:NUMERIC}
   </select>
   
-     <insert  id="addPay"    parameterType="Pay" >            
-      INSERT INTO pay (pay_no, user_no, call_no, pay_type, pay_date, money, role) 
-      VALUES (seq_pay_pay_no.NEXTVAL, #{userNo:NUMERIC}, #{callNo:NUMERIC}, #{payType:VARCHAR}, SYSDATE, #{money:NUMERIC}, 'passenger')
+  <insert  id="addPay"    parameterType="Pay" >            
+       INSERT INTO pay (pay_no, user_no, call_no, pay_type, pay_date, money, role) 
+       VALUES (seq_pay_pay_no.NEXTVAL, #{userNo:NUMERIC}, #{callNo:NUMERIC}, #{payType:VARCHAR}, SYSDATE, #{money:NUMERIC}, 'passenger')
+  </insert>
+  
+  <select id="getCashDriverList"  resultMap="cashDriverSelectMap">
+				SELECT
+				    M.driver_no,
+				    TO_CHAR(C.call_date, 'YYYY-MM') AS call_month,
+				    SUM(C.real_pay) AS total_real_pay,
+				    COALESCE(CA.cash_code,0) AS cash_code
+				FROM
+				    call C
+				JOIN
+				    match M ON C.call_no = M.call_no
+				LEFT JOIN
+				    cash CA ON TO_CHAR(C.call_date, 'YYYY-MM') = CA.cash_month AND M.driver_no = CA.cash_driver_no
+				WHERE
+				    M.driver_no IS NOT NULL
+				GROUP BY
+				    M.driver_no, TO_CHAR(C.call_date, 'YYYY-MM'), CA.cash_code
+  </select>
+  
+  <insert  id="addCash"    parameterType="Cash" >            
+       INSERT INTO cash (cash_no, cash_driver_no, cash_month, cash_total, cash_code, cash_date) 
+       VALUES (seq_cash_cash_no.NEXTVAL, #{cashDriverNo:NUMERIC}, #{cashMonth:VARCHAR}, #{cashTotal:NUMERIC}, 1, SYSDATE)
+  </insert>
+  
+  <select id="getMyCashList"  parameterType="int" resultMap="myCashSelectMap">
+        SELECT C.call_no, C.call_date, C.real_pay, COALESCE(CA.cash_code,0) AS cash_code
+        FROM call C
+        JOIN match M ON C.call_no = M.call_no
+        LEFT JOIN cash CA ON TO_CHAR(C.call_date, 'YYYY-MM') = CA.cash_month AND M.driver_no = CA.cash_driver_no
+        WHERE M.driver_no = #{userNo:NUMERIC}
+  </select>
 
-   </insert>
 </mapper>

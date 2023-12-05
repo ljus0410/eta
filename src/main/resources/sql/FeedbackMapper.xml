@@ -65,7 +65,7 @@
 		select star 
 		from shares 
 		where call_no = #{callNo}
-		and OTHER_SHARE_PASSENGER_NO = #{passengerNo}
+		and USER_NO = #{passengerNo}
 	</select>
 	
 	<insert id="addBlacklist" parameterType="blacklist">
@@ -120,7 +120,7 @@
 		from report r,  pay p
 		where r.bad_call_no = p.call_no
 		and r.bad_call_no = #{badCallNo}
-		and p.pay_type = 2
+		and p.pay_type = '실결제'
 		and r.report_no = #{reportNo}
 		<if test="reportRole == 'passenger'">
 		and p.role = 'driver'
@@ -227,11 +227,11 @@
 	<select id="avgStar" parameterType="user">
 		select avg(star)
 		from(
-			select COALESCE(s.star, c.star) as star from
-			call c, pay p, shares s
+			select COALESCE(s.star, c.star) as star
+			from call c, pay p, shares s
 			where c.call_no = p.call_no(+)
 			and c.call_no = s.call_no(+)
-			and p.pay_type = 2
+			and p.pay_type = '실결제'
 			and p.user_no = #{userNo})
 		where star > 0
 	</select>
@@ -240,7 +240,7 @@
 		UPDATE SHARES
 			set STAR = #{star}
 		WHERE CALL_NO = #{callNo}
-		and other_share_passenger_no = #{passengerNo}
+		and user_no = #{passengerNo}
 	</update>
 	
 </mapper>

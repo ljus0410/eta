@@ -136,7 +136,7 @@ public class FeedbackApplicationTests {
 //
 //	}
 
-	// @Test
+	@Test
 	public void testGetReport() throws Exception {
 		Report report = Report.builder().reportRole("driver").reportNo(1022).badCallNo(1001).build();
 		// report = feedbackService.getReport(report.getReportNo());

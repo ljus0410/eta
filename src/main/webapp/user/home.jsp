@@ -15,5 +15,19 @@
 <!-- <a href="/user/logon">Label</a> -->
 
 </form>
+ <table>
+              <tr>
+               <td width="10">&nbsp;</td>
+                         <td width="70">
+                            <a href="/user/kakao-login">
+                            <img src="/static/images/kakao_login.png" width="70" height="20" border="0"></a>
+                         </td>
+               <td width="10">&nbsp;</td>
+                  <td width="70">
+                       <a href="/user/naver-login">
+                     <img src="/static/images/btnD_short.png" width="70" height="20" border="0"></a>
+                      </td>
+              </tr>
+              </table>
 </body>
 </html>

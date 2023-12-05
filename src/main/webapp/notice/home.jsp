@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+<a href="/notice/listNotice">공지사항 리스트</a>
 </body>
 </html>

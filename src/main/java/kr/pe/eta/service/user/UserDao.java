@@ -10,7 +10,7 @@ import kr.pe.eta.domain.User;
 @Mapper
 public interface UserDao {
 
-	public User addUser(User user) throws Exception;
+	public void addUser(User user) throws Exception;
 
 	public List<User> getUserList(Search search) throws Exception;
 

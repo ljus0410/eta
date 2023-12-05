@@ -20,4 +20,6 @@ public interface NoticeDao {
 
 	public int deleteNotice(int noticeNo) throws Exception;
 
+	public int getTotalCount(Search search) throws Exception;
+
 }
