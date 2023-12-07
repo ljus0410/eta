@@ -51,13 +51,12 @@ public class LoginService {
 
 	public String getNaverAuthorizeUrl(String type)
 			throws URISyntaxException, MalformedURLException, UnsupportedEncodingException {
-
+		System.out.println("service naver======");
 		UriComponents uriComponents = UriComponentsBuilder.fromUriString(baseUrl + "/" + type)
-				.queryParam("response_type", "code").queryParam("client_id", clientId)
+				.queryParam("client_id", clientId).queryParam("response_type", "code")
 				.queryParam("redirect_uri", URLEncoder.encode(redirectUrl, "UTF-8"))
-				.queryParam("state", URLEncoder.encode("1234", "UTF-8")).build();
-
+				.queryParam("state", URLEncoder.encode("123456", "UTF-8")).build();
+		System.out.println("url = = " + uriComponents.toString());
 		return uriComponents.toString();
 	}
-
 }

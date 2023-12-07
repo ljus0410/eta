@@ -8,26 +8,8 @@
 </head>
 <body>
 
-<form id="login" method="post" action="/user/login">
-<input id ="email" type="text" name="email" value=""><br>
-<input id ="pwd" type="text" name="pwd" value=''>
-<input id="submit" type="submit" name="submit" value="Enter"/>
-<!-- <a href="/user/logon">Label</a> -->
 
-</form>
- <table>
-              <tr>
-               <td width="10">&nbsp;</td>
-                         <td width="70">
-                            <a href="/user/kakao-login">
-                            <img src="/static/images/kakao_login.png" width="70" height="20" border="0"></a>
-                         </td>
-               <td width="10">&nbsp;</td>
-                  <td width="70">
-                       <a href="/user/naver-login">
-                     <img src="/static/images/btnD_short.png" width="70" height="20" border="0"></a>
-                      </td>
-              </tr>
-              </table>
-</body>
+
+<a href="/user/getUser?userNo=${user.userNo}">유저정보</a>
+
 </html>
