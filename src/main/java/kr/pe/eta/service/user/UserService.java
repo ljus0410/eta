@@ -1,7 +1,8 @@
 package kr.pe.eta.service.user;
 
-import java.awt.Point;
 import java.util.Map;
+
+import org.springframework.data.geo.Point;
 
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.User;
