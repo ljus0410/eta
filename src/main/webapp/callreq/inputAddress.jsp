@@ -9,6 +9,7 @@
 <title>input Address</title>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=70ef6f6883ad97593a97af6324198ac0&libraries=services"></script>
 <script>
+
 if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(async function (position) {
         const latitude = position.coords.latitude;
@@ -102,6 +103,11 @@ if (navigator.geolocation) {
 
 
 </script>
+<style>
+.hiddenButton{
+  display: none;
+}
+</style>
 </head>
 <body>
     <div class="map_wrap">
@@ -111,7 +117,7 @@ if (navigator.geolocation) {
                 <div>
                     <form class="form">
                         <input type="text" value="" id="startAddrKeyword" size="50px"> 
-                        <button id="startSubmit" type="submit">주소검색</button>
+                        <button class="hiddenButton" id="startSubmit" type="submit">주소검색</button>
                         <input type="hidden" value="" id="startx" size="20px"> 
                         <input type="hidden" value="" id="starty" size="20px"> 
                     </form>
@@ -121,7 +127,7 @@ if (navigator.geolocation) {
                 <div>
                     <form class="form">
                         <input type="text" value="" id="endAddrKeyword" size="50px"> 
-                        <button id="endSubmit" type="submit">주소검색</button> 
+                        <button class="hiddenButton" id="endSubmit" type="submit">주소검색</button> 
                         <input type="hidden" value="" id="endx" size="20px"> 
                         <input type="hidden" value="" id="endy" size="20px"> 
                     </form>
@@ -133,36 +139,47 @@ if (navigator.geolocation) {
         </div>
     </div>
     <!-- 출발지, 목적지 둘다 입력되어야 넘어가게 하기 -->
-    <button type="button" class="selectOptions" onclick="selectOptions()">옵션 선택</button>
-    <!-- 이용내역 도착지 키워드, 주소 리스트 -->
-    <c:set var="i" value="0" />
-    <c:forEach var="endAddrList" items="${endAddrList}">
-      <c:set var="i" value="${ i+1 }" />
-      
-      <div id="endAddrList">
-      <p>${endAddrList.endKeyword}</p>
-      <p>${endAddrList.endAddr}</p>
-      <p>${endAddrList.endX}</p>
-      <p>${endAddrList.endY}</p>          
-      </div>
-    </c:forEach>
+    <button type="button" class="selectOptions" onclick="selectOptions('${callCode}')">옵션 선택</button><br>
+    <input type="hidden" value="${callCode}" id="getCallCode">
     
     <!-- 즐겨찾기 리스트-->
     <c:set var="i" value="0" />
     <c:forEach var="likeList" items="${likeList}">
-      <c:set var="i" value="${ i+1 }" />
-      
-      <div id="likeList">
-      <p>${likeList.likeNo}</p>
-      <p>${likeList.likeName}</p>
-      <p>${likeList.likeAddr}</p>           
-      </div>
-
+      <c:set var="i" value="${ i+1 }" /> 
+      <c:choose>
+        <c:when test="${empty likeList.likeAddr && !empty likeList.likeName}">
+           <button onclick="handleButtonClick('${likeList.likeAddr}')" disabled>${likeList.likeName}</button>       
+        </c:when>
+        <c:when test="${empty likeList.likeAddr && empty likeList.likeName}">
+           <button onclick="handleButtonClick('${likeList.likeAddr}')" disabled>내별칭</button>       
+        </c:when>
+        <c:otherwise>        
+          <button onclick="handleButtonClick('${likeList.likeAddr}')">${likeList.likeName}</button> 
+        </c:otherwise>
+      </c:choose>     
+     
     </c:forEach>
-    
+
+    <!-- 이용내역 도착지 키워드, 주소 리스트 -->
+    <c:set var="i" value="0" />
+    <c:forEach var="endAddrList" items="${endAddrList}">
+      <c:set var="i" value="${ i+1 }" />
+      <div id="endAddrList">
+      <p><a onclick="handleButtonClick('${endAddrList.endAddr}')">${endAddrList.endKeyword} ${endAddrList.endAddr}</a></p>      
+      </div>
+    </c:forEach>    
        
 </body>
 <script>
+
+function handleButtonClick(Addr) {
+
+    var endAddrKeywordInput = document.getElementById('endAddrKeyword');
+
+    endAddrKeywordInput.value = Addr;
+
+}
+
 
 //마커를 담을 배열입니다
 var markers = [];
@@ -425,9 +442,10 @@ async function displayInfowindow(title, position, type) {
             sessionStorage.setItem('lng', position.getLng());
             sessionStorage.setItem('address', detailAddr);
             sessionStorage.setItem('type', type);
+            sessionStorage.setItem('callCode', window.callCodeData.callCode);
             
-            location.href ='https://localhost:8000/callreq/inputAddressMap.jsp';                       
-            //inputAddress.jsp
+            //location.href ='https://localhost:8000/callreq/inputAddressMap.jsp';
+            location.href = '/callreq/inputAddressMap?userNo=1004&callCode='+window.callCodeData.callCode; 
         }
     }
 }
@@ -448,6 +466,35 @@ function searchDetailAddrFromCoords(coords, callback) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+	
+	window.onload = function() {
+	    // 특정 input 엘리먼트를 찾아 포커스 설정
+	    var endAddrKeyword = document.getElementById('endAddrKeyword');
+	    if (endAddrKeyword) {
+	    	endAddrKeyword.focus();
+	    }
+	    
+	    var endAddrKeywordInput = document.getElementById('getCallCode');
+	    var callCode = endAddrKeywordInput.value;
+	    
+	    window.callCodeData = {
+	    		callCode: callCode
+	        };
+	    
+	};
+	
+    var startAddrKeyword = document.getElementById('startAddrKeyword');
+    startAddrKeyword.addEventListener('click', function() {
+    	startAddrKeyword.value = '';
+    	startAddrKeyword.placeholder = '출발지를 입력해주세요';
+     });
+	
+	   var endAddrKeyword = document.getElementById('endAddrKeyword');
+	   endAddrKeyword.addEventListener('click', function() {
+		   endAddrKeyword.value = '';
+		   endAddrKeyword.placeholder = '도착지를 입력해주세요';
+	    });
+	    
     // 세션 스토리지에서 데이터 가져오기
     var startAddress = sessionStorage.getItem('startAddress');
     var endAddress = sessionStorage.getItem('endAddress');
@@ -515,7 +562,16 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-function selectOptions(){
+function selectOptions(callCode){
+	
+	// 출발/도착지 값 둘다 있는지 체크
+	/*var startAddrKeywordInput = document.getElementById('startAddrKeyword');
+    
+	if(startAddrKeywordInput.value == '' || startAddrKeywordInput.value == null){
+		
+		
+	}*/
+	
 	  
 	  // 세션 스토리지에 정보 저장	 
 	  if(window.selectOptionsStartDataMap.startAddress != null){
@@ -535,8 +591,7 @@ function selectOptions(){
     sessionStorage.setItem('endLat', window.selectOptionsEndData.endLat);
     sessionStorage.setItem('endLng', window.selectOptionsEndData.endLng);
 
-	  
-	  self.location = "/callreq/selectOptions?userNo=1004"
+	  self.location = "/callreq/selectOptions?userNo=1004&callCode="+callCode;
 	}
 </script>
 

@@ -13,7 +13,10 @@
   </style>
 </head>
 <body>
- <button type="button" class="inputAddress" onclick="inputAddress()">일반콜</button>
+ <button type="button" class="inputAddress" onclick="inputAddress('N')">일반콜</button>
+  <button type="button" class="inputAddress" onclick="inputAddress('R')">예약콜</button>
+  <button type="button" class="inputAddress" onclick="inputAddress('D')">택시비 딜 콜</button>
+  <button type="button" class="inputAddress" onclick="inputAddress('S')">합승콜</button>
  <br>
   <button type="button" class="likeAddress" onclick="likeAddress()">즐겨찾기</button>
   <br>
@@ -23,7 +26,7 @@
   <br>
   <button type="button" class="myCashList" onclick="myCashList()">정산 내역 리스트</button>
   <br>
- <input type="text" placeholder="도착지" class="content">
+ <!-- <input type="text" placeholder="도착지" class="content">
  <input type="text" placeholder="경로옵션" class="content">
  <input type="text" placeholder="가격" class="content">
     <button type="button" class="sendBtn" onclick="sendMessage()">전송</button>
@@ -32,15 +35,16 @@
     <div class="msgArea"></div>
     <div id="socketAlertDiv" class="hidden"></div>
     </div>
+     -->
 </body>
 <script>
 function myCashList() {    
-    self.location = "/pay/myCashList?userNo=1012"
+    self.location = "/pay/myCashList?userNo=1012&month=all"
   }
   
 function cashDriverList() {
     
-    self.location = "/pay/cashDriverList"
+    self.location = "/pay/cashDriverList?month=all"
   }
   
 function likeAddress() {
@@ -48,17 +52,26 @@ function likeAddress() {
 	  self.location = "/callreq/likeAddress?userNo=1004"
 	}
 
-function inputAddress() {
-    
-	self.location = "/callreq/inputAddress?userNo=1004"
+function inputAddress(callCode) {
+	var callCode = callCode;
+
+	if(callCode === 'N'){
+		self.location = "/callreq/inputAddress?userNo=1004&callCode=N"
+	} else if(callCode === 'D'){
+		self.location = "/callreq/inputAddress?userNo=1004&callCode=D"
+	} else if(callCode === 'S'){
+		 self.location = "/callreq/inputAddress?userNo=1004&callCode=S"
+	} else if(callCode === 'R'){
+		self.location = "/callreq/inputAddress?userNo=1004&callCode=R"
+	}	
 }
 
 function TpayList() {
     
-    self.location = "/pay/TpayList?userNo=1004"
+    self.location = "/pay/TpayList?userNo=1004&month=all"
   }
 
-    let socket = new WebSocket("wss://localhost:8000/websocket");
+/*    let socket = new WebSocket("wss://localhost:8000/websocket");
 
     socket.onopen = function (event) {
         console.log("웹 소켓 연결 성공!");
@@ -127,6 +140,6 @@ function TpayList() {
           socketAlertDiv.classList.remove('hidden');
         }
       }
-
+*/
 </script>
 </html>

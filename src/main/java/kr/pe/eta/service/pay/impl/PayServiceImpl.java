@@ -57,9 +57,9 @@ public class PayServiceImpl implements PayService {
 		payDao.addPay(pay);
 	}
 
-	public List<Call> getCashDriverList() throws Exception {
+	public List<Call> getCashDriverList(String month) throws Exception {
 
-		List<Call> cashDriverList = payDao.getCashDriverList();
+		List<Call> cashDriverList = payDao.getCashDriverList(month);
 
 		return cashDriverList;
 	}
@@ -70,11 +70,17 @@ public class PayServiceImpl implements PayService {
 		payDao.addCash(cash);
 	}
 
-	public List<Call> getMyCashList(int userNo) throws Exception {
+	public List<Call> getMyCashList(int userNo, String month) throws Exception {
 
-		List<Call> myCashList = payDao.getMyCashList(userNo);
+		List<Call> myCashList = payDao.getMyCashList(userNo, month);
 
 		return myCashList;
+	}
+
+	public void updateRealPay(int callNo, int money) throws Exception {
+		System.out.println("serviceImpl updateRealPay : " + callNo + ", " + money);
+
+		payDao.updateRealPay(callNo, money);
 	}
 
 }
