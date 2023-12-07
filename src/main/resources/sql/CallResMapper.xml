@@ -18,6 +18,8 @@
 		<result property="endY" column="end_y" jdbcType="NUMERIC" />
 		<result property="callStateCode" column="call_state_code"
 			jdbcType="VARCHAR" />
+			<result property="callDate" column="call_Date"
+			jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<resultMap id="userSelectMap" type="User">
@@ -48,7 +50,11 @@
     <result column="share_date" property="shareDate" jdbcType="DATE" />
 	</resultMap>
 	
-	
+	<update id="updateRealPay" parameterType="call">
+		UPDATE call
+		SET real_pay = #{realPay} 
+		WHERE call_No = #{callNo}
+	</update>
 
 	<update id="updateEndXY" parameterType="call">
 		UPDATE call
@@ -69,7 +75,9 @@
 		WHERE call_No = #{callNo}
 	</update>
 
-	
+	<select id="getUserByUserNo" parameterType="int" resultMap="userSelectMap">
+    	SELECT * FROM users WHERE user_No = #{userNo}
+	</select>
 
 	<select id="getRecordPassenger" parameterType="int" resultMap="callSelectMap">
 		SELECT 
@@ -131,7 +139,7 @@
 	</select>
 	
 	<select id="getBlacklistByCallNod" parameterType="int" resultType="int">
-		SELECT bl.blacklist_no
+		SELECT bl.passenger_no
 		FROM call c
 		JOIN match m ON c.call_no = m.call_no
 		LEFT JOIN blacklist bl ON m.driver_no = bl.driver_no AND m.passenger_no = bl.passenger_no
@@ -146,7 +154,7 @@
     	s.user_no,
     	bl.blacklist_no
 		FROM 
-    	call c
+    	call c 
 		JOIN 
     	match m ON c.call_no = m.call_no
 		JOIN 
@@ -177,6 +185,7 @@
                     WHERE s.share_no = #{userNo}
                 )
             )
+             AND c.call_state_code = '운행후'
             <if test="search.searchCondition != null">
     			AND EXTRACT(MONTH FROM c.call_date) = #{search.searchCondition}
 			</if>
@@ -216,14 +225,12 @@
                    OR m.driver_no = #{userNo}
                )
                AND c.call_state_code = '예약중'
-               <if test="month != null">
-                   AND EXTRACT(MONTH FROM c.call_date) = #{month}
-               </if>
+
                ORDER BY c.call_date DESC
            ) inner_table
-           WHERE ROWNUM &lt;= #{endRowNum}
+           WHERE ROWNUM &lt;= #{search.endRowNum}
        )
-       WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+       WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
    </select>
 	
 	<select id="getTotalCount" parameterType="search"

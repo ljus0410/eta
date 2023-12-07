@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 import jakarta.servlet.http.HttpSession;
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.User;
+import kr.pe.eta.redis.RedisEntity;
+import kr.pe.eta.redis.RedisService;
 import kr.pe.eta.service.feedback.FeedbackService;
 import kr.pe.eta.service.user.UserService;
 
@@ -27,10 +30,13 @@ public class UserController {
 	@Autowired
 	private FeedbackService feedback;
 
+	private final RedisService redisService; // RedisService 필드 추가
+
 	@Value("${search.pageSize}")
 	private int pageSize;
 
-	public UserController() {
+	public UserController(RedisService redisService) {
+		this.redisService = redisService; // 여기 추가
 		System.out.println(this.getClass());
 	}
 
@@ -56,7 +62,18 @@ public class UserController {
 		System.out.println(db);
 		System.out.println("code" + db.isBlockCode());
 
+		Point location = userService.calculateRandomLocation();
+		double X = location.getX();
+		System.out.println("X : " + X);
+		double Y = location.getY();
+		System.out.println("Y : " + Y);
+
 		if (user.getPwd().equals(db.getPwd()) && user.isBlockCode() == false) {
+			RedisEntity redisEntity = new RedisEntity();
+			redisEntity.setId(db.getEmail());
+			redisEntity.setCurrentX(X);
+			redisEntity.setCurrentY(Y);
+			redisService.addUser(redisEntity);
 			session.setAttribute("user", db);
 		}
 
@@ -158,6 +175,7 @@ public class UserController {
 	public ModelAndView logout(HttpSession session) throws Exception {
 		System.out.println("/user/logout : POST");
 		ModelAndView model = new ModelAndView();
+		redisService.deleteUser(session);// 추가
 		session.invalidate();
 
 		model.setViewName("redirect:/home.jsp");

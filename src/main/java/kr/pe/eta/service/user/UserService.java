@@ -2,6 +2,8 @@ package kr.pe.eta.service.user;
 
 import java.util.Map;
 
+import org.springframework.data.geo.Point;
+
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.User;
 
@@ -37,5 +39,9 @@ public interface UserService {
 	public int getPassengerCount(Search search) throws Exception;
 
 	public int getDriverCount(Search search) throws Exception;
+
+	public Point calculateRandomLocation();
+
+	public double haversineDistance(double lat1, double lon1, double lat2, double lon2);
 
 }
