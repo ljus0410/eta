@@ -1,240 +1,461 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  
 
 <mapper namespace="kr.pe.eta.service.callres.CallResDao">
 
-	<resultMap id="callSelectMap" type="Call">
-		<result property="callNo" column="call_no" jdbcType="NUMERIC" />
-		<result property="callCode" column="call_code" jdbcType="VARCHAR" />
-		<result property="realPay" column="real_pay" jdbcType="NUMERIC" />
-		<result property="startAddr" column="start_addr" jdbcType="VARCHAR" />
-		<result property="startKeyword" column="start_keyword"
-			jdbcType="VARCHAR" />
-		<result property="startX" column="start_x" jdbcType="NUMERIC" />
-		<result property="startY" column="start_y" jdbcType="NUMERIC" />
-		<result property="endAddr" column="end_addr" jdbcType="VARCHAR" />
-		<result property="endKeyword" column="end_keyword" jdbcType="VARCHAR" />
-		<result property="endX" column="end_x" jdbcType="NUMERIC" />
-		<result property="endY" column="end_y" jdbcType="NUMERIC" />
-		<result property="callStateCode" column="call_state_code"
-			jdbcType="VARCHAR" />
-	</resultMap>
-	
-	<resultMap id="userSelectMap" type="User">
-    <result column="user_no" property="userNo" jdbcType="NUMERIC" />
-    <result column="email" property="email" jdbcType="VARCHAR" />
-    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
-    <result column="birth" property="birth" jdbcType="VARCHAR" />
-    <result column="gender" property="gender" jdbcType="NUMERIC" />
-    <result column="phone" property="phone" jdbcType="VARCHAR" />
-    <result column="role" property="role" jdbcType="VARCHAR" />
-    <result column="block_code" property="blockCode" jdbcType="NUMERIC" />
-    <result column="car_opt" property="carOpt" jdbcType="NUMERIC" />
-    <result column="pet_opt" property="petOpt" jdbcType="NUMERIC" />
-    <result column="car_num" property="carNum" jdbcType="VARCHAR" />
-    <result column="bank" property="bank" jdbcType="VARCHAR" />
-    <result column="account" property="account" jdbcType="VARCHAR" />
-	</resultMap>
-	
-	<resultMap id="shareSelectMap" type="ShareReq">
-    <result column="share_no" property="shareReqNo" jdbcType="NUMERIC" />
-    <result column="user_no" property="firstSharePassengerNo" jdbcType="NUMERIC" />
-    <result column="call_no" property="callNo" jdbcType="NUMERIC" />
-    <result column="share_count" property="firstShareCount" jdbcType="NUMERIC" />
-    <result column="start_share_count" property="startShareCount" jdbcType="NUMERIC" />
-    <result column="max_share_count" property="maxShareCount" jdbcType="NUMERIC" />
-    <result column="share_date" property="shareDate" jdbcType="DATE" />
-	</resultMap>
-	
-	
+  
 
-	<update id="updateEndXY" parameterType="call">
-		UPDATE call
-		SET end_X = #{endX}, end_Y = #{endY}, start_X = #{startX}, start_Y = #{startY}
-		WHERE call_No = #{callNo}
+<resultMap id="callSelectMap" type="Call">
 
-	</update>
+<result property="callNo" column="call_no" jdbcType="NUMERIC" />
 
-	<update id="updateCallStateCode" parameterType="call">
-		UPDATE call
-		SET call_state_code = #{callStateCode} 
-		WHERE call_No = #{callNo}
-	</update>
-	
-	<update id="updateMatchDriver" parameterType="int">
-		UPDATE match
-		SET driver_no = #{driverNo}
-		WHERE call_No = #{callNo}
-	</update>
+<result property="callCode" column="call_code" jdbcType="VARCHAR" />
 
-	
+<result property="realPay" column="real_pay" jdbcType="NUMERIC" />
 
-	<select id="getRecordPassenger" parameterType="int" resultMap="callSelectMap">
-		SELECT 
-    	c.*, 
-    	u.car_num,
-    	u.phone,
-    	s.user_no
-		FROM 
-    	call c
-		JOIN 
-    	match m ON c.call_no = m.call_no
-		JOIN 
-    	users u ON m.driver_no = u.user_no
-		LEFT JOIN 
-    	shares s ON c.call_no = s.call_no
-		WHERE 
-    	c.call_no = #{callNo}
-	</select>
-	
-	<select id="getCallByNo" parameterType="int" resultMap="callSelectMap">
-    	SELECT * FROM call WHERE call_no = #{callNo}
-	</select>
-	
-	<select id="getUserByCallNop" parameterType="int" resultMap="userSelectMap">
-    	SELECT u.*
-    	FROM users u
-    	JOIN match m ON u.user_no = m.driver_no
-    	JOIN call c ON m.call_no = c.call_no
-    	WHERE c.call_no = #{callNo}
-	</select>
-	
-	<select id="getSharesByCallNop" parameterType="int" resultMap="shareSelectMap">
-    	SELECT *
-    	FROM shares s
-    	JOIN call c ON s.call_no = c.call_no
-    	WHERE c.call_no = #{callNo}
-	</select>
-	
-	<select id="getUserByCallNod" parameterType="int" resultMap="userSelectMap">
-    	SELECT u.*
-		FROM call c
-		JOIN match m ON c.call_no = m.call_no
-		JOIN users u ON m.passenger_no = u.user_no 
-		WHERE c.call_no = #{callNo}
-	</select>
-	
-	<select id="getMatchByCallnod" parameterType="int" resultType="int">
-		SELECT m.passenger_no
-		FROM call c
-		JOIN match m ON c.call_no = m.call_no
-		WHERE c.call_no = #{callNo}
-	</select>
-	
-	<select id="getSharesByCallNod" parameterType="int" resultMap="shareSelectMap">
-    	SELECT s.*
-		FROM call c
-		LEFT JOIN shares s ON c.call_no = s.call_no
-		WHERE c.call_no = #{callNo}
-	</select>
-	
-	<select id="getBlacklistByCallNod" parameterType="int" resultType="int">
-		SELECT bl.blacklist_no
-		FROM call c
-		JOIN match m ON c.call_no = m.call_no
-		LEFT JOIN blacklist bl ON m.driver_no = bl.driver_no AND m.passenger_no = bl.passenger_no
-		WHERE c.call_no = #{callNo}
-	</select>
-	
-	<select id="getRecordDriver" parameterType="int" resultMap="callSelectMap">
-		SELECT 
-    	c.*,
-    	m.passenger_no,
-    	u.phone AS passenger_phone,
-    	s.user_no,
-    	bl.blacklist_no
-		FROM 
-    	call c
-		JOIN 
-    	match m ON c.call_no = m.call_no
-		JOIN 
-    	users u ON m.passenger_no = u.user_no 
-		LEFT JOIN 
-    	shares s ON c.call_no = s.call_no
-		LEFT JOIN 
-    	blacklist bl ON m.driver_no = bl.driver_no AND m.passenger_no = bl.passenger_no
-		WHERE 
-    	c.call_no = #{callNo}
+<result property="startAddr" column="start_addr" jdbcType="VARCHAR" />
 
-	</select> 
-	
-	<select id="getRecordList" parameterType="search" resultMap="callSelectMap">
-    SELECT *
-    FROM (
-        SELECT inner_table.*, ROWNUM AS row_seq
-        FROM (
-            SELECT c.* 
-            FROM call c 
-            JOIN match m ON c.call_no = m.call_no 
-            WHERE (
-                m.passenger_no = #{userNo} 
-                OR m.driver_no = #{userNo} 
-                OR m.call_no IN (
-                    SELECT s.call_no 
-                    FROM shares s 
-                    WHERE s.share_no = #{userNo}
-                )
-            )
-            <if test="search.searchCondition != null">
-    			AND EXTRACT(MONTH FROM c.call_date) = #{search.searchCondition}
-			</if>
+<result property="startKeyword" column="start_keyword"
 
-            ORDER BY c.call_date DESC
-        ) inner_table
-        WHERE ROWNUM &lt;= #{search.endRowNum}
-    )
-    WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
-   </select>
-   
-   <select id="getCallResList" parameterType="search" resultMap="callSelectMap">
-      SELECT *
-       FROM (
-           SELECT inner_table.*, ROWNUM AS row_seq
-           FROM (
-               SELECT c.*, m.passenger_no, m.driver_no
-               FROM call c
-               JOIN match m ON c.call_no = m.call_no
-               ORDER BY c.call_date DESC
-           ) inner_table
-           WHERE ROWNUM &lt;= #{endRowNum}
-       )
-       WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
-   </select>
-   
-   <select id="getReservationList" parameterType="search" resultMap="callSelectMap">
-      SELECT *
-       FROM (
-           SELECT inner_table.*, ROWNUM AS row_seq
-           FROM (
-               SELECT c.*
-               FROM call c
-               JOIN match m ON c.call_no = m.call_no
-               WHERE (
-                   m.passenger_no = #{userNo} 
-                   OR m.driver_no = #{userNo}
-               )
-               AND c.call_state_code = '예약중'
-               <if test="month != null">
-                   AND EXTRACT(MONTH FROM c.call_date) = #{month}
-               </if>
-               ORDER BY c.call_date DESC
-           ) inner_table
-           WHERE ROWNUM &lt;= #{endRowNum}
-       )
-       WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
-   </select>
-	
-	<select id="getTotalCount" parameterType="search"
-		resultType="int">
-		SELECT COUNT(*)
-		FROM (SELECT CALL_NO
-		from call
-		<if test="searchCondition != null">
-			AND EXTRACT(MONTH FROM call_date) = #{month}
-		</if>
-		) countTable
-	</select>
+jdbcType="VARCHAR" />
+
+<result property="startX" column="start_x" jdbcType="NUMERIC" />
+
+<result property="startY" column="start_y" jdbcType="NUMERIC" />
+
+<result property="endAddr" column="end_addr" jdbcType="VARCHAR" />
+
+<result property="endKeyword" column="end_keyword" jdbcType="VARCHAR" />
+
+<result property="endX" column="end_x" jdbcType="NUMERIC" />
+
+<result property="endY" column="end_y" jdbcType="NUMERIC" />
+
+<result property="callStateCode" column="call_state_code"
+
+jdbcType="VARCHAR" />
+
+<result property="callDate" column="call_Date"
+
+jdbcType="VARCHAR" />
+
+</resultMap>
+
+<resultMap id="userSelectMap" type="User">
+
+<result column="user_no" property="userNo" jdbcType="NUMERIC" />
+
+<result column="email" property="email" jdbcType="VARCHAR" />
+
+<result column="pwd" property="pwd" jdbcType="VARCHAR" />
+
+<result column="name" property="name" jdbcType="VARCHAR" />
+
+<result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+
+<result column="birth" property="birth" jdbcType="VARCHAR" />
+
+<result column="gender" property="gender" jdbcType="NUMERIC" />
+
+<result column="phone" property="phone" jdbcType="VARCHAR" />
+
+<result column="role" property="role" jdbcType="VARCHAR" />
+
+<result column="block_code" property="blockCode" jdbcType="NUMERIC" />
+
+<result column="car_opt" property="carOpt" jdbcType="NUMERIC" />
+
+<result column="pet_opt" property="petOpt" jdbcType="NUMERIC" />
+
+<result column="car_num" property="carNum" jdbcType="VARCHAR" />
+
+<result column="bank" property="bank" jdbcType="VARCHAR" />
+
+<result column="account" property="account" jdbcType="VARCHAR" />
+
+</resultMap>
+
+<resultMap id="shareSelectMap" type="ShareReq">
+
+<result column="share_no" property="shareReqNo" jdbcType="NUMERIC" />
+
+<result column="user_no" property="firstSharePassengerNo" jdbcType="NUMERIC" />
+
+<result column="call_no" property="callNo" jdbcType="NUMERIC" />
+
+<result column="share_count" property="firstShareCount" jdbcType="NUMERIC" />
+
+<result column="start_share_count" property="startShareCount" jdbcType="NUMERIC" />
+
+<result column="max_share_count" property="maxShareCount" jdbcType="NUMERIC" />
+
+<result column="share_date" property="shareDate" jdbcType="DATE" />
+
+</resultMap>
+
+<update id="updateRealPay" parameterType="call">
+
+UPDATE call
+
+SET real_pay = #{realPay}
+
+WHERE call_No = #{callNo}
+
+</update>
+
+  
+
+<update id="updateEndXY" parameterType="call">
+
+UPDATE call
+
+SET end_X = #{endX}, end_Y = #{endY}, start_X = #{startX}, start_Y = #{startY}
+
+WHERE call_No = #{callNo}
+
+  
+
+</update>
+
+  
+
+<update id="updateCallStateCode" parameterType="call">
+
+UPDATE call
+
+SET call_state_code = #{callStateCode}
+
+WHERE call_No = #{callNo}
+
+</update>
+
+<update id="updateMatchDriver" parameterType="int">
+
+UPDATE match
+
+SET driver_no = #{driverNo}
+
+WHERE call_No = #{callNo}
+
+</update>
+
+  
+
+<select id="getUserByUserNo" parameterType="int" resultMap="userSelectMap">
+
+SELECT * FROM users WHERE user_No = #{userNo}
+
+</select>
+
+  
+
+<select id="getRecordPassenger" parameterType="int" resultMap="callSelectMap">
+
+SELECT
+
+c.*,
+
+u.car_num,
+
+u.phone,
+
+s.user_no
+
+FROM
+
+call c
+
+JOIN
+
+match m ON c.call_no = m.call_no
+
+JOIN
+
+users u ON m.driver_no = u.user_no
+
+LEFT JOIN
+
+shares s ON c.call_no = s.call_no
+
+WHERE
+
+c.call_no = #{callNo}
+
+</select>
+
+<select id="getCallByNo" parameterType="int" resultMap="callSelectMap">
+
+SELECT * FROM call WHERE call_no = #{callNo}
+
+</select>
+
+<select id="getUserByCallNop" parameterType="int" resultMap="userSelectMap">
+
+SELECT u.*
+
+FROM users u
+
+JOIN match m ON u.user_no = m.driver_no
+
+JOIN call c ON m.call_no = c.call_no
+
+WHERE c.call_no = #{callNo}
+
+</select>
+
+<select id="getSharesByCallNop" parameterType="int" resultMap="shareSelectMap">
+
+SELECT *
+
+FROM shares s
+
+JOIN call c ON s.call_no = c.call_no
+
+WHERE c.call_no = #{callNo}
+
+</select>
+
+<select id="getUserByCallNod" parameterType="int" resultMap="userSelectMap">
+
+SELECT u.*
+
+FROM call c
+
+JOIN match m ON c.call_no = m.call_no
+
+JOIN users u ON m.passenger_no = u.user_no
+
+WHERE c.call_no = #{callNo}
+
+</select>
+
+<select id="getMatchByCallnod" parameterType="int" resultType="int">
+
+SELECT m.passenger_no
+
+FROM call c
+
+JOIN match m ON c.call_no = m.call_no
+
+WHERE c.call_no = #{callNo}
+
+</select>
+
+<select id="getSharesByCallNod" parameterType="int" resultMap="shareSelectMap">
+
+SELECT s.*
+
+FROM call c
+
+LEFT JOIN shares s ON c.call_no = s.call_no
+
+WHERE c.call_no = #{callNo}
+
+</select>
+
+<select id="getBlacklistByCallNod" parameterType="int" resultType="int">
+
+SELECT bl.passenger_no
+
+FROM call c
+
+JOIN match m ON c.call_no = m.call_no
+
+LEFT JOIN blacklist bl ON m.driver_no = bl.driver_no AND m.passenger_no = bl.passenger_no
+
+WHERE c.call_no = #{callNo}
+
+</select>
+
+<select id="getRecordDriver" parameterType="int" resultMap="callSelectMap">
+
+SELECT
+
+c.*,
+
+m.passenger_no,
+
+u.phone AS passenger_phone,
+
+s.user_no,
+
+bl.blacklist_no
+
+FROM
+
+call c
+
+JOIN
+
+match m ON c.call_no = m.call_no
+
+JOIN
+
+users u ON m.passenger_no = u.user_no
+
+LEFT JOIN
+
+shares s ON c.call_no = s.call_no
+
+LEFT JOIN
+
+blacklist bl ON m.driver_no = bl.driver_no AND m.passenger_no = bl.passenger_no
+
+WHERE
+
+c.call_no = #{callNo}
+
+  
+
+</select>
+
+<select id="getRecordList" parameterType="search" resultMap="callSelectMap">
+
+SELECT *
+
+FROM (
+
+SELECT inner_table.*, ROWNUM AS row_seq
+
+FROM (
+
+SELECT c.*
+
+FROM call c
+
+JOIN match m ON c.call_no = m.call_no
+
+WHERE (
+
+m.passenger_no = #{userNo}
+
+OR m.driver_no = #{userNo}
+
+OR m.call_no IN (
+
+SELECT s.call_no
+
+FROM shares s
+
+WHERE s.share_no = #{userNo}
+
+)
+
+)
+
+AND c.call_state_code = '운행후'
+
+<if test="search.searchCondition != null">
+
+AND EXTRACT(MONTH FROM c.call_date) = #{search.searchCondition}
+
+</if>
+
+  
+
+ORDER BY c.call_date DESC
+
+) inner_table
+
+WHERE ROWNUM &lt;= #{search.endRowNum}
+
+)
+
+WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
+
+</select>
+
+<select id="getCallResList" parameterType="search" resultMap="callSelectMap">
+
+SELECT *
+
+FROM (
+
+SELECT inner_table.*, ROWNUM AS row_seq
+
+FROM (
+
+SELECT c.*, m.passenger_no, m.driver_no
+
+FROM call c
+
+JOIN match m ON c.call_no = m.call_no
+
+ORDER BY c.call_date DESC
+
+) inner_table
+
+WHERE ROWNUM &lt;= #{endRowNum}
+
+)
+
+WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+
+</select>
+
+<select id="getReservationList" parameterType="search" resultMap="callSelectMap">
+
+SELECT *
+
+FROM (
+
+SELECT inner_table.*, ROWNUM AS row_seq
+
+FROM (
+
+SELECT c.*
+
+FROM call c
+
+JOIN match m ON c.call_no = m.call_no
+
+WHERE (
+
+m.passenger_no = #{userNo}
+
+OR m.driver_no = #{userNo}
+
+)
+
+AND c.call_state_code = '예약중'
+
+  
+
+ORDER BY c.call_date DESC
+
+) inner_table
+
+WHERE ROWNUM &lt;= #{search.endRowNum}
+
+)
+
+WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
+
+</select>
+
+<select id="getTotalCount" parameterType="search"
+
+resultType="int">
+
+SELECT COUNT(*)
+
+FROM (SELECT CALL_NO
+
+from call
+
+<if test="searchCondition != null">
+
+AND EXTRACT(MONTH FROM call_date) = #{month}
+
+</if>
+
+) countTable
+
+</select>
+
+  
 
 </mapper>

@@ -1,10 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+
+pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-  
-
-  
 
 <!DOCTYPE html>
 
@@ -15,6 +13,8 @@
 <meta charset="UTF-8">
 
 <title>Insert title here</title>
+
+  
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -50,6 +50,8 @@ margin-right: 20px;
 
 <body>
 
+  
+
 <div>
 
 <c:forEach var="record" items="${list}" varStatus="status">
@@ -58,13 +60,11 @@ margin-right: 20px;
 
 <p>날짜/시간: ${record.callDate}</p>
 
-<p>호출: ${record.callCode}</p>
-
 <p>출발: ${record.startKeyword}</p>
 
 <p>도착: ${record.endKeyword}</p>
 
-<p>금액: ${record.realPay}</p>
+<p>예약배차번호: ${record.callNo}</p>
 
 </div>
 
@@ -99,6 +99,8 @@ window.location.href = newUrl;
 });
 
 </script>
+
+  
 
 </body>
 

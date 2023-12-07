@@ -34,6 +34,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.User;
+import kr.pe.eta.redis.RedisEntity;
+import kr.pe.eta.redis.RedisService;
 import kr.pe.eta.service.feedback.FeedbackService;
 import kr.pe.eta.service.user.KakaoProfile;
 import kr.pe.eta.service.user.LoginService;
@@ -61,7 +63,7 @@ public class UserController {
 	@Value("${kakao.redirect}")
 	private String redirect;
 
-	private final RedisService redisService;
+	private RedisService redisService = null;
 
 	public UserController() {
 		this.redisService = redisService; // 여기 추가

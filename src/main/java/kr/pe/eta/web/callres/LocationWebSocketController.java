@@ -8,7 +8,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import kr.pe.eta.domain.Location;
 
@@ -24,18 +23,15 @@ public class LocationWebSocketController {
 	public void receiveLocation(@DestinationVariable String passengerNo, Location location) {
 		// 로그에 위치 데이터 출력
 		logger.info("Received location: Lat = " + location.getLat() + ", Lng = " + location.getLng());
+		System.out.println("passNo: " + passengerNo);
 		// 'user01'에게 위치 데이터 전송
 		template.convertAndSend("/topic/location/" + passengerNo, location);
 	}
 
-	@MessageMapping("/sendNotification")
-	@SendTo("/topic/notifications")
+	@MessageMapping("/sendNotification/{passengerNo}")
+	@SendTo("/topic/notifications/{passengerNo}")
 	public String sendNotification(String message) {
 		return message;
 	}
 
-	@GetMapping("/drivingP")
-	public String drivingP() {
-		return "drivingP"; // JSP 파일 이름
-	}
 }
