@@ -34,15 +34,18 @@
 <div class="container">
     <a href="/community/addCall?callCode=N">일반</a>
     <hr/>
-    <a href="/community/addCall?callCode=R">예약</a>
+    <a href="/community/addReservation">예약</a>
     <hr/>
-    <a href="/community/addCall?callCode=D">딜</a>
+    <a href="/community/addDeal">딜</a>
     <hr/>
     <a href="/community/addCall?callCode=S">합승</a>
     <hr/>
     <a href="/community/getDealList">딜 리스트</a>
     <hr/>
     <a href="/community/getShareList">합승 리스트</a>
+    <hr/>
+    <a href="/community/getDealReq">딜 상세</a>
+    <hr/>
     <hr/>
 </div>
 </body>
