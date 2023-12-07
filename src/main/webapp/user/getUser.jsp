@@ -74,6 +74,7 @@
 <a href="/user/listUser">list</a>
 <a href="/user/deleteUserView?email=${user.email}">회원탈퇴</a>
 <a href="/user/updatePwd?email=${user.email}">비밀번호변경</a>
+<a href ="/user/kakao-logOut">로그아웃</a>
 </form>
 </body>
 </html>

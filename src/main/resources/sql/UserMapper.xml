@@ -48,6 +48,12 @@
         WHERE email = #{email}
     </select>
     
+    <select id="getUsers" parameterType="int" resultMap="userSelectMap">
+        SELECT *
+        FROM users
+        WHERE user_no = #{userNo}
+    </select>
+    
     <update id="updateUser" parameterType="user" >
       UPDATE users
       <set>

@@ -31,15 +31,31 @@ Tpay 이용 내역<br>
  <button type="button" id="searchButton">검색</button>
 <hr>
     
-    <!-- Tpay 리스트--> 
-    <c:set var="i" value="0" />
-    <c:forEach var="TpayList" items="${TpayList}">
-      <c:set var="i" value="${ i+1 }" />
-      
-      <div id="TpayList">
-      <p>${TpayList.callNo} ${TpayList.payType} ${TpayList.payDate} ${TpayList.money}</p>
-      </div> 
-    </c:forEach>
+
+    
+		<c:choose>
+		    <c:when test="${empty TpayList}">
+		        이용 내역이 없습니다.
+		    </c:when>
+		    <c:otherwise>
+		        <!-- Tpay 리스트--> 
+				    <c:set var="i" value="0" />
+				    <c:forEach var="TpayList" items="${TpayList}">				
+				      <c:set var="i" value="${ i+1 }" />				      
+				      <div id="TpayList">
+				      <c:choose>
+				        <c:when test="${TpayList.callNo eq 0}">
+				        </c:when>
+				        <c:otherwise>
+				         <p><button class="getRecord">${TpayList.callNo} </button>
+				        </c:otherwise>
+				      </c:choose>				     
+				      ${TpayList.payType} ${TpayList.payDate} ${TpayList.money}</p>
+				      </div> 
+				    </c:forEach>		       
+		    </c:otherwise>
+		</c:choose>
+
     
     <form>
     <input type="hidden" name="userNo" value="1004">
@@ -56,9 +72,12 @@ $(function() {
 	   
 	   $( "#searchButton" ).on("click" , function() {
 		   var month = $("#month").val();
-		   alert(month);
-		   $("form").attr("method" , "POST").attr("action" , "/pay/TpayList?month="+month).submit();
+		   self.location = "/pay/TpayList?userNo=1004&month="+month;
 	  });
+	   
+	     $( ".getRecord" ).on("click" , function() {
+	         alert("이용기록상세조회로 이동");
+	      });
 });
 
 function addPay(){
@@ -67,8 +86,12 @@ function addPay(){
 function payRequeset(){
 	
 	  var userInput = prompt("충전할 금액을 입력하세요 :");
-
-	  if (userInput !== null) {
+	  
+	  if(userInput !== null && userInput < 10000){
+		  alert("10000원 이상 충전이 가능합니다.");
+		  payRequeset();
+		  
+	  } else if (userInput !== null && userInput >= 10000) {
 	    
 		  TpayCharge(userInput);
 		  
@@ -98,11 +121,11 @@ function TpayCharge(Tpay) {
 	          //m_redirect_url : '{/purchase/addPurchase.jsp}' // 예: https://www.my-service.com/payments/complete/mobile
 	    }, function (rsp) { // callback
 	        if (rsp.success) {
-	            alert("결제완료");
+	            alert(Tpay+"원 충전이 완료되었습니다.");
 	            addCharge(Tpay, userNo);
 	          
 	        } else {
-	           alert("결제실패");
+	           alert("충전이 실패하였습니다.");
 	        }
 	    });
 	  }

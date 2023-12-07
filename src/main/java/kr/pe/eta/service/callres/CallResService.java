@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import kr.pe.eta.common.Search;
-import kr.pe.eta.domain.Blacklist;
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.ShareReqPassenger;
 import kr.pe.eta.domain.User;
@@ -38,5 +37,9 @@ public interface CallResService {
 
 	public List<ShareReqPassenger> getSharesByCallNod(int callNo);
 
-	public Blacklist getBlacklistByCallNod(int callNo);
+	public int getBlacklistByCallNod(int callNo);
+
+	public User getUserByUserNo(int userNo);
+
+	public void updateRealPay(Call call) throws Exception;
 }
