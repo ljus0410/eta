@@ -1,5 +1,6 @@
 package kr.pe.eta.service.feedback.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +10,11 @@ import org.springframework.stereotype.Service;
 
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.Blacklist;
+import kr.pe.eta.domain.Block;
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Report;
 import kr.pe.eta.domain.Star;
+import kr.pe.eta.domain.User;
 import kr.pe.eta.service.feedback.FeedbackDao;
 import kr.pe.eta.service.feedback.FeedbackService;
 
@@ -85,6 +88,46 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 	public Call getCall(int callNo) throws Exception {
 		return feedbackDao.getCall(callNo);
+	}
+
+	public int updateReportCode(int reportNo) throws Exception {
+		return feedbackDao.updateReportCode(reportNo);
+	}
+
+	public int updateDisReportCode(int reportNo) throws Exception {
+		return feedbackDao.updateDisReportCode(reportNo);
+	}
+
+	public Report getReportCode(int reportNo) throws Exception {
+		return feedbackDao.getReportCode(reportNo);
+	}
+
+	public int addBlock(Block block) throws Exception {
+		block.setBlockCount(this.feedbackDao.getBlockCount(block));
+		return feedbackDao.addBlock(block);
+	}
+
+	public int updateBlockCode(User user) throws Exception {
+		Block block = feedbackDao.getUnblockDate(user);
+		Date now = new Date();
+		if (block.getUnblockDate().before(now)) {
+			return feedbackDao.updateBlockCode(user);
+		} else {
+			return 0;
+		}
+
+	}
+
+	public int avgStar(User user) throws Exception {
+		return feedbackDao.avgStar(user);
+	}
+
+	public int addShareStar(Star star) throws Exception {
+		return feedbackDao.updateShareStar(star);
+	}
+
+	public int updateShareStar(Star star) throws Exception {
+		return feedbackDao.updateStar(star);
 	}
 
 }

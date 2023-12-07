@@ -24,7 +24,7 @@
 	
 	<select id="getNotice" parameterType="int" resultMap="noticeSelectMap">
 		SELECT
-		*
+		notice_no, notice_Title, notice_Detail, TO_CHAR(notice_date, 'YY/MM/DD') as notice_date
 		FROM NOTICE
 		WHERE NOTICE_NO = #{noticeNo}
 	</select>
@@ -32,17 +32,31 @@
 	<select id="getNoticeList" parameterType="search" resultMap="noticeSelectMap">
 		SELECT *
 		  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
-		  			FROM	(	SELECT *
+		  			FROM	(	SELECT notice_no, notice_Title, TO_CHAR(notice_date, 'YY/MM/DD') as notice_date 
 								FROM NOTICE
 								
 								<where>
-								<if test="searchKeyword !='' ">
+								<if test="searchKeyword !='' and searchKeyword !=null">
 				 					notice_title LIKE '%'||#{searchKeyword}||'%'
 								</if>	
 								</where>
-								ORDER BY notice_date ) inner_table
+								ORDER BY notice_date desc) inner_table
 					WHERE ROWNUM &lt;= #{endRowNum} )
 			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+	<select id="getTotalCount" parameterType="search" resultType="int">
+		SELECT count(*)
+		FROM	(	SELECT notice_no, notice_Title, TO_CHAR(notice_date, 'YY/MM/DD') as notice_date 
+					FROM NOTICE
+					
+					<where>
+					<if test="searchKeyword !='' and searchKeyword !=null">
+	 					notice_title LIKE '%'||#{searchKeyword}||'%'
+					</if>	
+					</where>
+					ORDER BY notice_date desc) inner_table
+					
 	</select>
 	
 	<update id="updateNotice" parameterType="notice">

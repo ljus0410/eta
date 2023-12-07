@@ -8,7 +8,7 @@ public class Search {
 	private int pageSize;
 	private int endRowNum;
 	private int startRowNum;
-	private boolean code;
+	private int code;
 
 	// Constructor
 	public Search() {
@@ -47,11 +47,11 @@ public class Search {
 		this.pageSize = pageSize;
 	}
 
-	public boolean isCode() {
+	public int getCode() {
 		return code;
 	}
 
-	public void setCode(boolean code) {
+	public void setCode(int code) {
 		this.code = code;
 	}
 

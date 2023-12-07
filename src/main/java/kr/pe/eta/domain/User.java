@@ -26,6 +26,8 @@ public class User {
 	private String account;
 	private double currentX;
 	private double currentY;
+	private String myMoney;
+	private String regDate;
 
 	@Override
 	public String toString() {

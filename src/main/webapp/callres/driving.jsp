@@ -1,146 +1,430 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
+
 <html>
+
 <head>
-<meta charset="EUC-KR">
+
+<meta charset="UTF-8">
+
 <title>Insert title here</title>
-	<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62&libraries=services"></script>
-	
-	<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62"></script>
-	         <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-	<script>
-	async function loadMapData() {
-	    const apiUrl = 'https://apis-navi.kakaomobility.com/v1/directions?origin=127.03515132405035,37.500518493640655&destination=127.02902706106634,37.49943894990428';
-	    console.log("Generated URL:", apiUrl);  
 
-	    try {
-	        const response = await fetch(apiUrl, {
-	            method: 'get',
-	            headers: {
-	                "Content-Type": "application/json",
-	                "Authorization": "KakaoAK bb9f3068bf970e08b9d0147524d0258f"
-	            }
-	        });
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-	        if (!response.ok) {
-	            throw new Error("Failed to fetch data");
-	        }
+<script
+	src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62&libraries=services"></script>
 
-	        const data = await response.json();
-	        console.log(data);
-	        drawPolylineAndMoveMarker(data, map);
-	    } catch (error) {
-	        console.error("Error fetching data:", error);
-	    }
-	}
+<script type="text/javascript"
+	src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62"></script>
 
-	loadMapData();
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
 
-    	const drawPolylineAndMoveMarker = (data,map) => {
-   	    const linePath = [];
-   	    data.routes[0].sections[0].roads.forEach(router => {
-   	        router.vertexes.forEach((vertex, index) => {
-   	           if (index % 2 === 0) {
-   	               const lat = router.vertexes[index + 1];
-   	               const lng = router.vertexes[index];
-   	               linePath.push(new kakao.maps.LatLng(lat, lng));
-   	          
-   	           }
-   	        });
-   	    });
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
-   	    var polyline = new kakao.maps.Polyline({
-   	        path: linePath,
-   	        strokeWeight: 5,
-   	        strokeColor: '#000000',
-   	        strokeOpacity: 0.7,
-   	        strokeStyle: 'solid'
-   	      }); 
-   	      polyline.setMap(map);
-   	      
-   	// ¸¶Ä¿¸¦ »ı¼ºÇÏ°í Áöµµ¿¡ Ç¥½ÃÇÕ´Ï´Ù.
-   	    let marker = new kakao.maps.Marker({
-   	        map: map,
-   	        position: linePath[0], // Æú¸®¶óÀÎÀÇ ½ÃÀÛÁ¡¿¡ ¸¶Ä¿¸¦ ¹èÄ¡ÇÕ´Ï´Ù.
-   	    });
-   	
-   	// ¸¶Ä¿¸¦ ÀÌµ¿½ÃÅ³ ÀÎµ¦½º º¯¼ö¸¦ ÃÊ±âÈ­ÇÕ´Ï´Ù.
-   	    let index = 0;
-   	
-   	 // ÀÏÁ¤ ½Ã°£ °£°İÀ¸·Î ¸¶Ä¿¸¦ ÀÌµ¿½ÃÅ°´Â ÇÔ¼öÀÔ´Ï´Ù.
-   	    const moveMarker = () => {
-   	        if (index < linePath.length) {
-   	            // ÇöÀç ÀÎµ¦½ºÀÇ ÁÂÇ¥·Î ¸¶Ä¿¸¦ ÀÌµ¿½ÃÅµ´Ï´Ù.
-   	            marker.setPosition(linePath[index]);
-   	            map.setCenter(linePath[index]);
-   	         sendLocationToServer(linePath[index]);
-	            //////////////////////////////////////////////////////////À§Ä¡º¸³»±â
+<script>
+
+async function loadMapData() {
+
+const apiUrl = 'https://apis-navi.kakaomobility.com/v1/directions?origin=${call.startX},${call.startY}&destination=${call.endX},${call.endY}';
+
   
-   	            index++;
-   	        } else {
-   	            // Æú¸®¶óÀÎÀÇ ³¡¿¡ µµ´ŞÇß´Ù¸é, ÀÎÅÍ¹úÀ» Áß´ÜÇÕ´Ï´Ù.
-   	            clearInterval(intervalId);
-   	        }
-   	    };
 
-   	    // 1ÃÊ¸¶´Ù ¸¶Ä¿¸¦ ÀÌµ¿½ÃÅ°±â À§ÇÑ ÀÎÅÍ¹ú ¼³Á¤
-   	    const intervalId = setInterval(moveMarker, 500);
-   	};
-   	
-   	
-   	
-   	var stompClient = null; // Àü¿ª ½ºÄÚÇÁ¿¡¼­ stompClient ÃÊ±âÈ­
-   	function sendLocationToServer(index) {
- 	    if (stompClient && stompClient.connected) {
- 	        const location = index;
- 	        const locationData = { lat: location.getLat(), lng: location.getLng() };
- 	        stompClient.send("/app/sendLocation", {}, JSON.stringify(locationData));
- 	    } else {
- 	        console.error("Websocket is not connected.");
- 	    }
- 	}
-   	function connectWebSocket() {
- 	    var socket = new SockJS('/ws'); // '/ws'´Â ¼­¹öÀÇ À¥¼ÒÄÏ ¿¬°á URL
- 	    stompClient = Stomp.over(socket);
+  
 
- 	    stompClient.connect({}, function (frame) {
- 	    		console.log('Connected: ' + frame);
- 	    		// Ãß°¡ ±¸µ¶ ¼³Á¤
- 	    		
- 	    		socket.onclose = function () {
- 	            console.log('WebSocket connection closed');
- 	        	};
- 			}, function (error) {
- 	    		console.error('Websocket connection error: ', error);
- 			
- 			});
- 	}
-	connectWebSocket();
-	</script>
+console.log("Generated URL:", apiUrl);
+
+  
+
+try {
+
+const response = await fetch(apiUrl, {
+
+method: 'get',
+
+headers: {
+
+"Content-Type": "application/json",
+
+"Authorization": "KakaoAK bb9f3068bf970e08b9d0147524d0258f"
+
+}
+
+});
+
+  
+
+if (!response.ok) {
+
+throw new Error("Failed to fetch data");
+
+}
+
+  
+
+const data = await response.json();
+
+console.log(data);
+
+drawPolylineAndMoveMarker(data, map);
+
+} catch (error) {
+
+console.error("Error fetching data:", error);
+
+}
+
+}
+
+  
+
+loadMapData();
+
+  
+
+const drawPolylineAndMoveMarker = (data,map) => {
+
+const linePath = [];
+
+data.routes[0].sections[0].roads.forEach(router => {
+
+router.vertexes.forEach((vertex, index) => {
+
+if (index % 2 === 0) {
+
+const lat = router.vertexes[index + 1];
+
+const lng = router.vertexes[index];
+
+linePath.push(new kakao.maps.LatLng(lat, lng));
+
+}
+
+});
+
+});
+
+  
+
+var polyline = new kakao.maps.Polyline({
+
+path: linePath,
+
+strokeWeight: 5,
+
+strokeColor: '#000000',
+
+strokeOpacity: 0.7,
+
+strokeStyle: 'solid'
+
+});
+
+polyline.setMap(map);
+
+// ë§ˆì»¤ë¥¼ ìƒì„±í•˜ê³  ì§€ë„ì— í‘œì‹œí•©ë‹ˆë‹¤.
+
+let marker = new kakao.maps.Marker({
+
+map: map,
+
+position: linePath[0], // í´ë¦¬ë¼ì¸ì˜ ì‹œì‘ì ì— ë§ˆì»¤ë¥¼ ë°°ì¹˜í•©ë‹ˆë‹¤.
+
+});
+
+// ë§ˆì»¤ë¥¼ ì´ë™ì‹œí‚¬ ì¸ë±ìŠ¤ ë³€ìˆ˜ë¥¼ ì´ˆê¸°í™”í•©ë‹ˆë‹¤.
+
+let index = 0;
+
+// ì¼ì • ì‹œê°„ ê°„ê²©ìœ¼ë¡œ ë§ˆì»¤ë¥¼ ì´ë™ì‹œí‚¤ëŠ” í•¨ìˆ˜ì…ë‹ˆë‹¤.
+
+const moveMarker = () => {
+
+if (index < linePath.length) {
+
+// í˜„ì¬ ì¸ë±ìŠ¤ì˜ ì¢Œí‘œë¡œ ë§ˆì»¤ë¥¼ ì´ë™ì‹œí‚µë‹ˆë‹¤.
+
+marker.setPosition(linePath[index]);
+
+map.setCenter(linePath[index]);
+
+sendLocationToServer(linePath[index]);
+
+//////////////////////////////////////////////////////////ìœ„ì¹˜ë³´ë‚´ê¸°
+
+index++;
+
+} else {
+
+// í´ë¦¬ë¼ì¸ì˜ ëì— ë„ë‹¬í–ˆë‹¤ë©´, ì¸í„°ë²Œì„ ì¤‘ë‹¨í•©ë‹ˆë‹¤.
+
+clearInterval(intervalId);
+
+}
+
+};
+
+// 1ì´ˆë§ˆë‹¤ ë§ˆì»¤ë¥¼ ì´ë™ì‹œí‚¤ê¸° ìœ„í•œ ì¸í„°ë²Œ ì„¤ì •
+
+const intervalId = setInterval(moveMarker, 500);
+
+};
+
+var locationBuffer = []; // ìœ„ì¹˜ ë°ì´í„°ë¥¼ ì €ì¥í•  ë°°ì—´
+
+var firstLocation = null;
+
+var lastLocation = null;
+
+var passengerNo = "${passengerNo}";
+
+var stompClient = null; // ì „ì—­ ìŠ¤ì½”í”„ì—ì„œ stompClient ì´ˆê¸°í™”
+
+function sendLocationToServer(index) {
+
+if (stompClient && stompClient.connected) {
+
+const location = index;
+
+const locationData = { lat: location.getLat(), lng: location.getLng() };
+
+stompClient.send("/sendLocation/" + passengerNo, {}, JSON.stringify(locationData));
+
+addLocation(locationData);
+
+if (!firstLocation) {
+
+firstLocation = locationData;
+
+}
+
+  
+
+// ë§ˆì§€ë§‰ ìœ„ì¹˜ ë°ì´í„° ê°±ì‹ 
+
+lastLocation = locationData;
+
+} else {
+
+console.error("Websocket is not connected.");
+
+}
+
+}
+
+function addLocation(locationData) {
+
+locationBuffer.push(locationData);
+
+}
+
+function connectWebSocket() {
+
+var socket = new SockJS('/ws'); // '/ws'ëŠ” ì„œë²„ì˜ ì›¹ì†Œì¼“ ì—°ê²° URL
+
+stompClient = Stomp.over(socket);
+
+  
+
+stompClient.connect({}, function (frame) {
+
+console.log('Connected: ' + frame);
+
+// ì¶”ê°€ êµ¬ë… ì„¤ì •
+
+socket.onclose = function () {
+
+console.log('WebSocket connection closed');
+
+};
+
+}, function (error) {
+
+console.error('Websocket connection error: ', error);
+
+});
+
+}
+
+connectWebSocket();
+
+var callNo = ${call.callNo};
+
+console.log("callNO: "+callNo);
+
+  
+
+  
+
+function updateLocationData() {
+
+if (firstLocation && lastLocation) {
+
+addRouteMongo();
+
+sendEndDriving();
+
+// ì„œë²„ì— AJAX ìš”ì²­ ë³´ë‚´ê¸°
+
+$.ajax({
+
+url: '/callres/callEnd', // ì»¨íŠ¸ë¡¤ëŸ¬ URL
+
+method: 'POST',
+
+contentType: 'application/json',
+
+data: JSON.stringify({
+
+startX: firstLocation.lng,
+
+startY: firstLocation.lat,
+
+endX: lastLocation.lng,
+
+endY: lastLocation.lat,
+
+callNo: callNo
+
+}),
+
+success: function(response) {
+
+console.log('ì„œë²„ì— ë°ì´í„° ì „ì†¡ ì„±ê³µ:', response);
+
+window.location.href = '/callres/getRealPay?callNo=' + callNo;
+
+},
+
+error: function(error) {
+
+console.error('ì„œë²„ì— ë°ì´í„° ì „ì†¡ ì‹¤íŒ¨:', error);
+
+}
+
+});
+
+} else {
+
+console.error('ìœ„ì¹˜ ë°ì´í„°ê°€ ì¶©ë¶„í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.');
+
+}
+
+}
+
+function addRouteMongo() {
+
+console.log("Saving location data to MongoDB.");
+
+console.log(locationBuffer);
+
+// ì˜ˆì‹œ: ëª¨ë“  ìœ„ì¹˜ ë°ì´í„°ë¥¼ í•˜ë‚˜ì˜ RouteDTOë¡œ ë³€í™˜
+
+var routeDto = {
+
+callNo: callNo, // ì ì ˆí•œ callNo ê°’ ì„¤ì • í•„ìš”
+
+route: locationBuffer.flatMap(loc => [loc.lat, loc.lng])
+
+};
+
+console.log(routeDto);
+
+  
+
+// ì„œë²„ì— DTO ì „ì†¡í•˜ì—¬ MongoDBì— ì €ì¥ ìš”ì²­
+
+// Ajax ë˜ëŠ” ë‹¤ë¥¸ HTTP í´ë¼ì´ì–¸íŠ¸ ë¼ì´ë¸ŒëŸ¬ë¦¬ ì‚¬ìš©
+
+$.ajax({
+
+url: '/route/saveRoute', // ì„œë²„ì˜ í•´ë‹¹ ì—”ë“œí¬ì¸íŠ¸ URL
+
+method: 'POST',
+
+contentType: 'application/json',
+
+data: JSON.stringify(routeDto),
+
+success: function (response) {
+
+console.log("Location data saved to MongoDB successfully.");
+
+},
+
+error: function (error) {
+
+console.error("Error saving location data to MongoDB: ", error);
+
+}
+
+});
+
+  
+
+// ë²„í¼ ë¹„ìš°ê¸°
+
+locationBuffer = [];
+
+}
+
+var socket2 = new SockJS('/websoket');
+
+var stompClient2 = Stomp.over(socket2);
+
+function sendEndDriving() {
+
+stompClient2.send("/sendNotification" + passengerNo, {}, 'ìš´í–‰ì¢…ë£Œ');
+
+}
+
+</script>
+
 </head>
+
 <body>
+
 	<div class="col-md-6">
-    	<div id="map" style="width:100%;height:710px;"></div>
-    </div>
-    
 
-    
-    
-    
-    
-    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62&libraries=services"></script>
-          <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62"></script>
-    <script>
-    var mapContainer = document.getElementById('map'), // Áöµµ¸¦ Ç¥½ÃÇÒ div 
-    mapOption = { 
-        center: new kakao.maps.LatLng(37.4939072071976, 127.0143838311636), // ÁöµµÀÇ Áß½ÉÁÂÇ¥
-        level: 3 // ÁöµµÀÇ È®´ë ·¹º§
-    };
+		<div id="map" style="width: 100%; height: 710px;"></div>
 
-var map = new kakao.maps.Map(mapContainer, mapOption); // Áöµµ¸¦ »ı¼ºÇÕ´Ï´Ù
-    </script>
+	</div>
+
+	<button onclick="updateLocationData()">ìš´í–‰ì¢…ë£Œ</button>
+
+	<script
+		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+	<script
+		src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62&libraries=services"></script>
+
+	<script type="text/javascript"
+		src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62"></script>
+
+	<script>
+
+var mapContainer = document.getElementById('map'), // ì§€ë„ë¥¼ í‘œì‹œí•  div
+
+mapOption = {
+
+center: new kakao.maps.LatLng(37.4939072071976, 127.0143838311636), // ì§€ë„ì˜ ì¤‘ì‹¬ì¢Œí‘œ
+
+level: 3 // ì§€ë„ì˜ í™•ëŒ€ ë ˆë²¨
+
+};
+
+var map = new kakao.maps.Map(mapContainer, mapOption); // ì§€ë„ë¥¼ ìƒì„±í•©ë‹ˆë‹¤
+
+  
+
+  
+
+</script>
+
 </body>
+
 </html>

@@ -6,9 +6,11 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.Blacklist;
+import kr.pe.eta.domain.Block;
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Report;
 import kr.pe.eta.domain.Star;
+import kr.pe.eta.domain.User;
 
 @Mapper
 public interface FeedbackDao {
@@ -32,5 +34,23 @@ public interface FeedbackDao {
 	public List<Report> getReport(Report report) throws Exception;
 
 	public List<Report> getReportList(Search search) throws Exception;
+
+	public int updateReportCode(int reportNo) throws Exception;
+
+	public int updateDisReportCode(int reportNo) throws Exception;
+
+	public Report getReportCode(int reportNo) throws Exception;
+
+	public int addBlock(Block block) throws Exception;
+
+	public int getBlockCount(Block block) throws Exception;
+
+	public int updateBlockCode(User user) throws Exception;
+
+	public Block getUnblockDate(User user) throws Exception;
+
+	public int avgStar(User user) throws Exception;
+
+	public int updateShareStar(Star star) throws Exception;
 
 }

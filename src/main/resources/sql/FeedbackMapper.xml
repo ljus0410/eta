@@ -24,11 +24,9 @@
 		<result property="reportCode"		column="REPORT_CODE"		jdbcType="NUMERIC"/>
 		<result property="reportDetail"		column="REPORT_DETAIL"		jdbcType="VARCHAR"/>
 		<result property="reportDate"		column="REPORT_DATE"		jdbcType="DATE"/>
-		<result property="role"				column="ROLE"				jdbcType="VARCHAR"/>
+		<result property="reportRole"		column="ROLE"				jdbcType="VARCHAR"/>
 		<result property="regDate"			column="REG_DATE"			jdbcType="DATE"/>
-		<association property="badUserNo" 	column="USER_NO"			javaType="int" >
-			<result property="userNo"		column="User_NO" 			jdbcType="NUMERIC"/>
-		</association>
+		<result property="badUserNo" 		column="USER_NO"			jdbcType="NUMERIC"/>
 	</resultMap>
 	<resultMap id="callSelectMap" type="call">
 		<result property="callNo"			column="call_no"			jdbcType="NUMERIC" />
@@ -44,7 +42,11 @@
 		<result property="endY"				column="end_y"				jdbcType="NUMERIC"/>
 		<result property="callStateCode"	column="call_state_code"	jdbcType="VARCHAR"/>
 		<result property="callDate"			column="call_date"			jdbcType="DATE"/>
-		
+	</resultMap>
+	<resultMap id="blockSelectMap" type="block">
+		<result property="userNo"			column="user_no"		jdbcType="NUMERIC"/>
+		<result property="unblockDate"		column="unblock_date"	jdbcType="DATE"/>
+		<result property="blockDate"		column="block_date"		jdbcType="DATE"/>
 	</resultMap>
 
 	<update id="updateStar" parameterType="star">
@@ -63,7 +65,7 @@
 		select star 
 		from shares 
 		where call_no = #{callNo}
-		and OTHER_SHARE_PASSENGER_NO = #{passengerNo}
+		and USER_NO = #{passengerNo}
 	</select>
 	
 	<insert id="addBlacklist" parameterType="blacklist">
@@ -103,7 +105,7 @@
 		sysdate)
 	</insert>
 	
-	<select id="getReport" parameterType="int" resultMap="reportSelectMap">
+	<select id="getReport" parameterType="report" resultMap="reportSelectMap">
 		select 
 		r.report_no as report_no, 
 		r.report_user_no as report_user_no,
@@ -118,12 +120,12 @@
 		from report r,  pay p
 		where r.bad_call_no = p.call_no
 		and r.bad_call_no = #{badCallNo}
-		and p.pay_type = 2
+		and p.pay_type = '실결제'
 		and r.report_no = #{reportNo}
-		<if test="role == 'passenger'">
+		<if test="reportRole == 'passenger'">
 		and p.role = 'driver'
 		</if>
-		<if test="role == 'driver'">
+		<if test="reportRole == 'driver'">
 		and p.role = 'passenger'
 		</if>
 	</select>
@@ -135,13 +137,13 @@
 							FROM REPORT
 							<if test="searchCondition != null">
 							<where>
-								<if test="searchCondition == 0 and searchKeyword !='' ">
-					 				REPORT_CODE = #{searchKeyword}
+								<if test="code != 3">
+					 				REPORT_CODE = #{code}
 								</if>
-								<if test="searchCondition == 1 and searchKeyword !='' ">
-					 				AND REPORT_CATEGORY = #{searchKeyword}
+								<if test="searchCondition != 0 and searchCondition != '' ">
+					 				AND REPORT_CATEGORY = #{searchCondition}
 								</if>
-								<if test="searchCondition == 2 and searchKeyword !='' ">
+								<if test="searchKeyword !='' ">
 					 				AND REPORT_USER_NO like #{searchKeyword}||'%'
 								</if>
 							</where>
@@ -156,5 +158,90 @@
 		FROM CALL
 		WHERE CALL_NO = #{CallNo}
 	</select>
+	
+	<update id="updateReportCode" parameterType="int">
+		update report
+		set
+		report_code = 1
+		where report_no = #{reportNo}
+	</update>
+	
+	<update id="updateDisReportCode" parameterType="int">
+		update report
+		set
+		report_code = 2
+		where report_no = #{reportNo}
+	</update>
+	
+	<select id="getReportCode" parameterType="int" resultMap="reportSelectMap">
+		SELECT REPORT_CODE
+		FROM Report
+		WHERE REPORT_NO = #{reportNo}
+	</select>
+	
+	<insert id="addBlock" parameterType="block">
+		INSERT
+		INTO BLOCK
+		VALUES (seq_block_block_no.nextval,
+				#{userNo},
+				
+				<if test="blockCount == 0">
+	 				sysdate + 1
+				</if>
+				<if test="blockCount == 1">
+	 				sysdate + 7
+				</if>
+				<if test="blockCount == 2">
+	 				sysdate + 30
+				</if>
+				<if test="blockCount == 3">
+	 				'9999/12/31'
+				</if>,
+				sysdate)
+	</insert>
+	
+	<select id="getBlockCount" parameterType="block">
+		select count(*) 
+		from (select * 
+       		 from block
+    	    where user_no = #{userNo})
+	</select>
+	
+	<select id="getUnblockDate" parameterType="user" resultMap="blockSelectMap">
+		SELECT *
+		FROM (SELECT * 
+		        FROM block
+		        where user_no = #{userNo}
+		        ORDER BY unblock_date DESC)
+		WHERE ROWNUM = 1
+	</select>
+	
+	<update id="updateBlockCode" parameterType="user">
+		update users
+		<set>
+			block_code = 0
+		</set> 
+		where user_no = #{userNo}
+	</update>
+	
+	<select id="avgStar" parameterType="user">
+		select avg(star)
+		from(
+			select COALESCE(s.star, c.star) as star
+			from call c, pay p, shares s
+			where c.call_no = p.call_no(+)
+			and c.call_no = s.call_no(+)
+			and p.pay_type = '실결제'
+			and p.user_no = #{userNo})
+		where star > 0
+	</select>
+	
+	<update id="updateShareStar" parameterType="star">
+		UPDATE SHARES
+			set STAR = #{star}
+		WHERE CALL_NO = #{callNo}
+		and user_no = #{passengerNo}
+	</update>
+	
 </mapper>
 

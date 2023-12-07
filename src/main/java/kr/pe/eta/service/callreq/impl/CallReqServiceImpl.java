@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Like;
+import kr.pe.eta.domain.User;
 import kr.pe.eta.service.callreq.CallReqDao;
 import kr.pe.eta.service.callreq.CallReqService;
 
@@ -60,6 +61,41 @@ public class CallReqServiceImpl implements CallReqService {
 	@Transactional
 	public void deleteCall(int callNo) throws Exception {
 		callReqDao.deleteCall(callNo);
+	}
+
+	public List<User> getCallDriverList(String carOpt, boolean petOpt) throws Exception {
+		System.out.println("serviceImpl getCallDriverList carOpt : " + carOpt);
+		System.out.println("serviceImpl getCallDriverList petOpt : " + petOpt);
+
+		List<User> callDriverList = callReqDao.getCallDriverList(carOpt, petOpt);
+
+		return callDriverList;
+	}
+
+	public void updateDealCode(int callNo) throws Exception {
+
+		callReqDao.updateDealCode(callNo);
+	}
+
+	public void updateShareCode(int callNo) throws Exception {
+
+		callReqDao.updateShareCode(callNo);
+	}
+
+	public void updateLikeAddr(String likeAddr, int userNo, int likeNo) throws Exception {
+		callReqDao.updateLikeAddr(likeAddr, userNo, likeNo);
+	}
+
+	public void updateCustomName(String likeName, int userNo) throws Exception {
+		callReqDao.updateCustomName(likeName, userNo);
+	}
+
+	public void deleteLikeAddr(int likeNo, int userNo) throws Exception {
+		callReqDao.deleteLikeAddr(likeNo, userNo);
+	}
+
+	public void deleteCustomName(int userNo) throws Exception {
+		callReqDao.deleteCustomName(userNo);
 	}
 
 }

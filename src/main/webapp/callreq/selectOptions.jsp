@@ -22,11 +22,18 @@
  목적지 : <input type="text" value="" id="endAddrKeyword" size="50px" name="endKeyword" class="content"><br>
  <input type="hidden" name="startAddr" id="startAddrInput">
  <input type="hidden" name="endAddr" id="endAddrInput">
-  <input type="hidden" name="endAddr" value=>
- 차량 옵션 : <input type="text" value="4" class="content"><br>
- 반려동물 옵션 : <input type="text" value="0" class="content"><br>
- 경로 옵션 : <input type="text" value="추천" class="content"><br>
  
+ <input type="hidden" name="startX" id="startX" value="">
+ <input type="hidden" name="startY" id="startY" value="">
+ <input type="hidden" name="endX" id="endX" value="">
+ <input type="hidden" name="endY" id="endY" value="">
+ 차량 옵션 : <input type="text" value="4" class="content" name="carOpt"><br>
+ 반려동물 옵션 : <input type="text" value="0" class="content" name="petOpt"><br>
+ 경로 옵션 : <input type="text" value="RECOMMEND" class="content" name="routeOpt"><br>
+ <!-- 
+ RECOMMEND: 추천 경로
+TIME: 최단 시간
+DISTANCE: 최단 경로 -->
  잔여 Tpay : ${myMoney} 원<br>
  선결제 예상금액 : <input type="text" id = "prepay" name="realPay" value="100" class="content"> <br>
     <button type="button" class="sendBtn" onclick="addCall()">호출하기</button>
@@ -42,11 +49,32 @@ document.addEventListener('DOMContentLoaded', function() {
 		var endAddress = sessionStorage.getItem('endAddress');
 		var startPlaceName = sessionStorage.getItem('startPlaceName');
 	  var endPlaceName = sessionStorage.getItem('endPlaceName');
+	  var startLat = sessionStorage.getItem('startLat');
+	  var startLng = sessionStorage.getItem('startLng');
+	  var endLat = sessionStorage.getItem('endLat');
+	  var endLng = sessionStorage.getItem('endLng');
 		
 		var startKeywordInput = document.getElementById('startAddrKeyword'); // Add quotes around the ID
 		var endKeywordInput = document.getElementById('endAddrKeyword'); // Add quotes around the ID
-		
+	  var startxInput = document.getElementById('startX'); // Add quotes around the ID
+	  var startyInput = document.getElementById('startY'); // Add quotes around the ID
+	  var endxInput = document.getElementById('endX'); // Add quotes around the ID
+	  var endyInput = document.getElementById('endY'); // Add quotes around the ID
+	    
 		// sessionStorage에 데이터가 있을 때만 처리
+		
+	  if (startxInput) {
+		  startxInput.value = startLat;
+    }
+	  if (startyInput) {
+		  startyInput.value = startLng;
+		    }
+		if (endxInput) {
+			endxInput.value = endLat;
+		    }
+		if (endyInput) {
+			endyInput.value = endLng;
+		    }
 		if (startKeywordInput) {
 		    startKeywordInput.value = startPlaceName;
 		}
@@ -59,89 +87,27 @@ document.addEventListener('DOMContentLoaded', function() {
         		startAddress: startAddress,
         		startPlaceName: startPlaceName,
             endAddress: endAddress,
-            endPlaceName: endPlaceName
+            endPlaceName: endPlaceName,
+            startLat: startLat,
+            startLng: startLng,
+            endLat: endLat,
+            endLng: endLng
             };
         
 });
 
-
-    let socket = new WebSocket("ws://localhost:8000/websocket");
-
-    socket.onopen = function (event) {
-        console.log("웹 소켓 연결 성공!");
-    };
-
-    socket.onerror = function (error) {
-        console.log(`에러 발생: ${error}`);
-    };
-
-    socket.onmessage = function (event) {
-        let msgArea = document.querySelector('.msgArea');
-        let newMsg = document.createElement('div');
-        newMsg.innerText = event.data;
-        msgArea.appendChild(newMsg);
-        
-        showButtonWithMessage(event.data);
-    };
-
-    function sendMessageBack() {
-        
-        socket.send("driver가 call을 수락하였습니다.");
-    }
-    function addCall(){
-    	
-    	 document.getElementById('startAddrInput').value = window.selectOptionsData.startAddress;
-    	 document.getElementById('endAddrInput').value = window.selectOptionsData.endAddress;
-    	 
-    	$("form").attr("method" , "POST").attr("action" , "/callreq/addCall").submit();
-    	
-    	//sendMessage();
-    }
-    function sendMessage() {
-        let contentElemenets = document.querySelectorAll('.content');
-        let contentValues = [];
-        contentElemenets.forEach(function (element){
-          contentValues.push(element.value);
-        });
-        let contentString = contentValues.join(', ');
-        
-        socket.send(contentString);
-    }
-    
-    function showButtonWithMessage(message) {
-      let socketAlertDiv = document.getElementById('socketAlertDiv');
-
-      let newAcceptBtn = document.createElement('button');
-      newAcceptBtn.type = 'button';
-      newAcceptBtn.innerText = "수락";
-      newAcceptBtn.onclick = function () {
-        alert("수락!"+message);
-        let callreq = document.getElementById('callreq');
-        callreq.parentNode.removeChild(callreq);
-
-        sendMessageBack();
-      };
-
-      let newDenyBtn = document.createElement('button');
-      newDenyBtn.type = 'button';
-      newDenyBtn.innerText = "거절";
-      newDenyBtn.onclick = function () {
-        alert("거절!"+message);
-        let callreq = document.getElementById('callreq');
-        callreq.parentNode.removeChild(callreq);
-      };
-
-      // 새로운 버튼을 기존 버튼 뒤에 추가
-      socketAlertDiv.innerHTML += "<div>" + message + "</div>";
-      socketAlertDiv.appendChild(newAcceptBtn);
-      socketAlertDiv.appendChild(newDenyBtn);
-
-
-        // 버튼이 숨겨져 있다면 표시
-        if (socketAlertDiv.classList.contains('hidden')) {
-          socketAlertDiv.classList.remove('hidden');
-        }
-      }
+function addCall(){
+	  
+	   document.getElementById('startAddrInput').value = window.selectOptionsData.startAddress;
+	   document.getElementById('endAddrInput').value = window.selectOptionsData.endAddress;
+	   document.getElementById('startX').value = window.selectOptionsData.startLat;
+	   document.getElementById('startY').value = window.selectOptionsData.startLng;
+	   document.getElementById('endX').value = window.selectOptionsData.endLat;
+	   document.getElementById('endY').value = window.selectOptionsData.endLng;
+	   
+	  $("form").attr("method" , "POST").attr("action" , "/callreq/addCall").submit();
+	  
+	}
 
 </script>
 </html>

@@ -27,12 +27,23 @@ public interface CallResDao {
 
 	public int getTotalCount(Search search) throws Exception;
 
-	public void updateMatchDriver(Call call, int driverNo) throws Exception;
+	public void updateMatchDriver(int callNo, int driverNo) throws Exception;
 
 	public Call getCallByNo(int callNo);
 
-	public User getUserByCallNo(int callNo);
+	public User getUserByCallNop(int callNo);
 
-	public List<ShareReqPassenger> getSharesByCallNo(int callNo);
+	public List<ShareReqPassenger> getSharesByCallNop(int callNo);
 
+	public User getUserByCallNod(int callNo);
+
+	public int getMatchByCallnod(int callNo);
+
+	public List<ShareReqPassenger> getSharesByCallNod(int callNo);
+
+	public int getBlacklistByCallNod(int callNo);
+
+	public User getUserByUserNo(int userNo);
+
+	public void updateRealPay(Call call) throws Exception;
 }

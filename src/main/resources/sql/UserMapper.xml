@@ -5,5 +5,165 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="kr.pe.eta.service.user.UserDao">
+  
+    <resultMap id="userSelectMap" type="user">
+    <result property="userNo" column="user_no" jdbcType="NUMERIC"/>
+    <result property="name" column="name" jdbcType="VARCHAR"/>
+    <result property="email" column="email" jdbcType="VARCHAR"/>
+    <result property="pwd" column="pwd" jdbcType="VARCHAR"/>
+    <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+    <result property="birth" column="birth" jdbcType="VARCHAR"/>
+    <result property="gender" column="gender" jdbcType="NUMERIC"/>
+    <result property="phone" column="phone" jdbcType="VARCHAR"/>
+    <result property="role" column="role" jdbcType="VARCHAR"/>
+    <result property="blockCode" column="block_code" jdbcType="NUMERIC"/>
+    <result property="shareCode" column="share_code" jdbcType="NUMERIC"/>
+    <result property="dealCode" column="deal_code" jdbcType="NUMERIC"/>
+    <result property="carOpt" column="car_opt" jdbcType="NUMERIC"/>
+    <result property="petOpt" column="pet_opt" jdbcType="NUMERIC"/>
+    <result property="carNum" column="car_num" jdbcType="VARCHAR"/>
+    <result property="bank" column="bank" jdbcType="VARCHAR"/>
+    <result property="account" column="account" jdbcType="VARCHAR"/>
+    <result property="myMoney" column="my_money" jdbcType="NUMERIC"/>
+    <result property="regDate" column="reg_date" jdbcType="DATE"/>
+</resultMap>
 
+<insert id="addUser" parameterType="user">
+    INSERT INTO users (
+        user_no, email, pwd, name, nick_name, birth, gender, phone,
+        role, block_code, car_opt, pet_opt, car_num, bank, account, reg_date, my_money,
+        deal_code, share_code
+            )
+    VALUES (
+        seq_users_user_no.NEXTVAL, #{email:VARCHAR}, #{pwd:VARCHAR}, #{name:VARCHAR}, #{nickName:VARCHAR}, #{birth:VARCHAR}, #{gender:NUMERIC},
+        #{phone:VARCHAR}, #{role:VARCHAR}, 0, #{carOpt:NUMERIC}, #{petOpt:NUMERIC}, #{carNum:VARCHAR}, #{bank:VARCHAR},
+        #{account:VARCHAR}, SYSDATE, 0, 0, 0
+    )
+</insert>
+
+  
+    <select id="getUser" parameterType="string" resultMap="userSelectMap">
+        SELECT *
+        FROM users
+        WHERE email = #{email}
+    </select>
+    
+    <select id="getUsers" parameterType="int" resultMap="userSelectMap">
+        SELECT *
+        FROM users
+        WHERE user_no = #{userNo}
+    </select>
+    
+    <update id="updateUser" parameterType="user" >
+      UPDATE users
+      <set>
+         name = #{name},
+         phone = #{phone},
+         nick_name = #{nickName},
+         car_opt = #{carOpt},
+         car_num = #{carNum},
+         bank = #{bank},
+         account = #{account},
+         pet_opt = #{petOpt}
+         
+      </set>
+      WHERE user_no = #{userNo}
+    </update>
+    
+    <select id= "getUserList" parameterType="search" resultMap="userSelectMap">
+     SELECT *
+     FROM ( SELECT inner_table.* , ROWNUM AS row_seq
+                      FROM(SELECT user_no, name, email, role 
+                            FROM users
+                        <if test="searchCondition != null">
+                        <where>
+                          <if test="searchCondition == 0 and searchKeyword !='' ">
+                            email LIKE '%' || #{searchKeyword} || '%'
+                          </if>
+                          <if test="searchCondition == 1 and searchKeyword !='' ">
+                            name LIKE '%' || #{searchKeyword} || '%'
+                          </if>
+                        </where>
+                      </if>
+                   ORDER BY user_no ) inner_table
+            WHERE ROWNUM &lt;= #{endRowNum} )
+    WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}  
+   </select>
+   
+    <select id= "autoUserList" parameterType="search" resultMap="userSelectMap">
+     SELECT *
+     FROM ( SELECT inner_table.* , ROWNUM AS row_seq
+                      FROM(SELECT user_no, name, email, role 
+                            FROM users
+                        <if test="searchCondition != null">
+                        <where>
+                          <if test="searchCondition == 0 and searchKeyword !='' ">
+                            email LIKE '%' || #{searchKeyword} || '%'
+                          </if>
+                          <if test="searchCondition == 1 and searchKeyword !='' ">
+                            name LIKE '%' || #{searchKeyword} || '%'
+                          </if>
+                        </where>
+                      </if>
+                   ORDER BY user_no ) inner_table)          
+   </select>
+    
+    
+ <delete id="deleteUser" parameterType="string">
+
+   DELETE FROM users
+   WHERE email = #{email}
+
+</delete>
+  
+  <update id = "updatePwd" parameterType="user">
+    UPDATE users
+    <set>
+      pwd = #{pwd}
+    </set>
+    WHERE email = #{email}
+  </update>
+  
+      <select id="getNickName" parameterType="string"  resultMap="userSelectMap">
+        SELECT nick_name
+        FROM users
+        WHERE nick_name = #{nickName}
+    </select>
+    
+     <select id="getEmail" parameterType="string" resultMap="userSelectMap">
+        SELECT *
+        FROM users
+        WHERE email = #{email}
+    </select>
+       <select  id="getPassengerCount"  parameterType="search"   resultType="int">
+      SELECT COUNT(*)
+         FROM(SELECT user_no, name, email, role 
+                            FROM users where role ='passenger'
+                        <if test="searchCondition != null">
+                        <where>
+                          <if test="searchCondition == 0 and searchKeyword !='' ">
+                            email LIKE '%' || #{searchKeyword} || '%'
+                          </if>
+                          <if test="searchCondition == 1 and searchKeyword !='' ">
+                            name LIKE '%' || #{searchKeyword} || '%'
+                          </if>
+                        </where>
+                      </if>) countTable            
+   </select>
+   
+       <select  id="getDriverCount"  parameterType="search"   resultType="int">
+      SELECT COUNT(*)
+         FROM(SELECT user_no, name, email, role 
+                            FROM users where role ='driver'
+                        <if test="searchCondition != null">
+                        <where>
+                          <if test="searchCondition == 0 and searchKeyword !='' ">
+                            email LIKE '%' || #{searchKeyword} || '%'
+                          </if>
+                          <if test="searchCondition == 1 and searchKeyword !='' ">
+                            name LIKE '%' || #{searchKeyword} || '%'
+                          </if>
+                        </where>
+                      </if>) countTable            
+   </select>
 </mapper>
