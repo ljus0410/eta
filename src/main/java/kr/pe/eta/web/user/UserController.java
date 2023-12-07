@@ -1,6 +1,5 @@
 package kr.pe.eta.web.user;
 
-import java.awt.Point;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -8,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.geo.Point;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -34,6 +34,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.User;
+import kr.pe.eta.redis.RedisEntity;
+import kr.pe.eta.redis.RedisService;
 import kr.pe.eta.service.feedback.FeedbackService;
 import kr.pe.eta.service.user.KakaoProfile;
 import kr.pe.eta.service.user.LoginService;
@@ -63,7 +65,7 @@ public class UserController {
 
 	private final RedisService redisService;
 
-	public UserController() {
+	public UserController(RedisService redisService) {
 		this.redisService = redisService; // 여기 추가
 		System.out.println(this.getClass());
 	}
@@ -104,8 +106,8 @@ public class UserController {
 			redisService.addUser(redisEntity);
 			session.setAttribute("user", db);
 		}
-
-		modelAndView.setViewName("redirect:/user/getUser.jsp");
+		session.setAttribute("user", db);
+		modelAndView.setViewName("redirect:/user/home.jsp");
 		return modelAndView;
 	}
 
@@ -148,7 +150,7 @@ public class UserController {
 
 		System.out.println("userInfo = " + user);
 		model.setViewName("forward:/user/getUser.jsp");
-		model.addObject("user", user);
+
 		return model;
 	}
 
@@ -209,7 +211,7 @@ public class UserController {
 	public ModelAndView logout(HttpSession session) throws Exception {
 		System.out.println("/user/logout : POST");
 		ModelAndView model = new ModelAndView();
-		redisService.deleteUser(session);// 추가
+		// redisService.deleteUser(session);// 추가
 		session.invalidate();
 
 		model.setViewName("redirect:/home.jsp");
@@ -340,9 +342,9 @@ public class UserController {
 		User user = userService.getUser(email);
 		if (user != null && email.equals(user.getEmail())) {
 			session.setAttribute("user", user);
-			model.setViewName("forward:user/home.jsp");
+			model.setViewName("redirect:/user/home.jsp");
 		} else {
-			model.setViewName("forward:/user/addUser.jsp");
+			model.setViewName("redirect:/user/addUser.jsp");
 		}
 
 		// User
@@ -423,9 +425,9 @@ public class UserController {
 		User user = userService.getUser(email);
 		if (user != null && email.equals(userService.getUser(email))) {
 			session.setAttribute("user", user);
-			model.setViewName("forward:user/home.jsp");
+			model.setViewName("redirect:/user/home.jsp");
 		} else {
-			model.setViewName("forward:/user/addUser.jsp");
+			model.setViewName("redirect:/user/addUser.jsp");
 		}
 		System.out.println("email" + naverProfile.getResponse().getEmail());
 		model.addObject("naverProfile", naverProfile);
@@ -456,5 +458,28 @@ public class UserController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@GetMapping("/kakao-logOut")
+	public void kakaoLoOut(HttpServletRequest request, HttpServletResponse response)
+			throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
+		System.out.println("kakao-logout");
+		String url = loginService.kakaoLoOut();
+		try {
+			response.sendRedirect(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@GetMapping("/auth/kakao/logout")
+	public @ResponseBody ModelAndView logOut(HttpSession session) throws Exception {
+		System.out.println("카카오 로그아웃 컨트롤");
+		ModelAndView model = new ModelAndView();
+		model.setViewName("redirect:/user/login.jsp");
+		// redisService.deleteUser(session);// 추가
+		session.invalidate();
+
+		return model;
 	}
 }

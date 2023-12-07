@@ -17,7 +17,6 @@
 </head>
 <body>
 <form>
- <input type="hidden" name="callCode" id="callCode" value="N">
  출발지 : <input type="text" value="" id="startAddrKeyword" size="50px" name="startKeyword" class="content"><br>
  목적지 : <input type="text" value="" id="endAddrKeyword" size="50px" name="endKeyword" class="content"><br>
  <input type="hidden" name="startAddr" id="startAddrInput">
@@ -27,6 +26,7 @@
  <input type="hidden" name="startY" id="startY" value="">
  <input type="hidden" name="endX" id="endX" value="">
  <input type="hidden" name="endY" id="endY" value="">
+ <input type="hidden" name="callCode" id="callCode" value="${callCode }">
  차량 옵션 : <input type="text" value="4" class="content" name="carOpt"><br>
  반려동물 옵션 : <input type="text" value="0" class="content" name="petOpt"><br>
  경로 옵션 : <input type="text" value="RECOMMEND" class="content" name="routeOpt"><br>

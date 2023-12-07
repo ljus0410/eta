@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html>
@@ -26,9 +27,26 @@
         body {
             font-family: NanumSquare;
             font-weight:300;
-            padding: 100px;
         }
+
+        .driver-list {
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
     </style>
+
+    <script>
+        $(function() {
+            $( "#delete" ).on("click" , function() {
+                self.location="/community/deleteDealReq?callNo="+${dealReq.callNo};
+            });
+
+            $( "#select" ).on("click" , function() {
+                alert("driver 선택")
+            });
+        });
+    </script>
 
 </head>
 <body>
@@ -37,8 +55,13 @@
     <div class="page-header">
         <h3 class="text-info">상세 조회</h3>
     </div>
+
     <div class="row">
-        <div class="col-xs-4 col-md-2"><strong>배차코드</strong></div>
+        <div class="col-xs-offset-8 col-xs-4"><button type="button" class="btn btn-primary" id="delete">삭제</button></div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-4 col-md-2"><strong>배차 코드</strong></div>
         <div class="col-xs-8 col-md-4">${call.callCode}</div>
     </div>
     <hr/>
@@ -48,52 +71,43 @@
     </div>
     <hr/>
     <div class="row">
-        <div class="col-xs-4 col-md-2"><strong>출발 도로명 주소</strong></div>
+        <div class="col-xs-4 col-md-2"><strong>출발</strong></div>
         <div class="col-xs-8 col-md-4">${call.startAddr}</div>
     </div>
     <hr/>
     <div class="row">
-        <div class="col-xs-4 col-md-2"><strong>출발 검색 키워드</strong></div>
-        <div class="col-xs-8 col-md-4">${call.startKeyword}</div>
-    </div>
-    <hr/>
-    <div class="row">
-        <div class="col-xs-4 col-md-2"><strong>출발 X</strong></div>
-        <div class="col-xs-8 col-md-4">${call.startX}</div>
-    </div>
-    <hr/>
-    <div class="row">
-        <div class="col-xs-4 col-md-2"><strong>출발 Y</strong></div>
-        <div class="col-xs-8 col-md-4">${call.startY}</div>
-    </div>
-    <hr/>
-    <div class="row">
-        <div class="col-xs-4 col-md-2"><strong>도착 도로명 주소</strong></div>
+        <div class="col-xs-4 col-md-2"><strong>도착</strong></div>
         <div class="col-xs-8 col-md-4">${call.endAddr}</div>
     </div>
     <hr/>
     <div class="row">
-        <div class="col-xs-4 col-md-2"><strong>도착 검색 키워드</strong></div>
-        <div class="col-xs-8 col-md-4">${call.endKeyword}</div>
-    </div>
-    <hr/>
-    <div class="row">
-        <div class="col-xs-4 col-md-2"><strong>도착 X</strong></div>
-        <div class="col-xs-8 col-md-4">${call.endX}</div>
-    </div>
-    <hr/>
-    <div class="row">
-        <div class="col-xs-4 col-md-2"><strong>도착 Y</strong></div>
-        <div class="col-xs-8 col-md-4">${call.endY}</div>
+        <div class="col-xs-4 col-md-2"><strong>경로옵션</strong></div>
+        <div class="col-xs-8 col-md-4">${call.routeOpt}</div>
     </div>
     <hr/>
     <div class="row">
         <div class="col-xs-4 col-md-2"><strong>제시 금액</strong></div>
-        <div class="col-xs-8 col-md-4">${dealreq.passengerOffer}</div>
+        <div class="col-xs-8 col-md-4">${dealReq.passengerOffer}</div>
     </div>
     <hr/>
+    <c:choose>
+        <c:when test="${empty list}">
+            <p>참여한 driver가 없습니다.</p>
+        </c:when>
+        <c:otherwise>
+            <ul class="driver-list"> <!-- .driver-list 클래스 추가 -->
+                <c:forEach var="driver" items="${list}">
+                    <li class="list-group-item">
+                        <input type="radio" name="driverNo" id="driverNo"> ${driver.userNo} : ${driver.driverOffer} /
+                    </li>
+                </c:forEach>
+            </ul>
+        </c:otherwise>
+    </c:choose>
 
-    </form>
+    <div class="row">
+        <div class="col-xs-offset-8 col-xs-4"><button type="button" class="btn btn-primary" id="select">선택</button></div>
+    </div>
 
 
 
