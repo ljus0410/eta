@@ -17,9 +17,12 @@
     <result property="phone" column="phone" jdbcType="VARCHAR"/>
     <result property="role" column="role" jdbcType="VARCHAR"/>
     <result property="blockCode" column="block_code" jdbcType="NUMERIC"/>
+    <result property="shareCode" column="share_code" jdbcType="NUMERIC"/>
+    <result property="dealCode" column="deal_code" jdbcType="NUMERIC"/>
     <result property="carOpt" column="car_opt" jdbcType="NUMERIC"/>
     <result property="petOpt" column="pet_opt" jdbcType="NUMERIC"/>
     <result property="carNum" column="car_num" jdbcType="VARCHAR"/>
+    <result property="bank" column="bank" jdbcType="VARCHAR"/>
     <result property="account" column="account" jdbcType="VARCHAR"/>
     <result property="myMoney" column="my_money" jdbcType="NUMERIC"/>
     <result property="regDate" column="reg_date" jdbcType="DATE"/>
@@ -28,12 +31,13 @@
 <insert id="addUser" parameterType="user">
     INSERT INTO users (
         user_no, email, pwd, name, nick_name, birth, gender, phone,
-        role, block_code, car_opt, pet_opt, car_num, bank, account, reg_date, my_money
-    )
+        role, block_code, car_opt, pet_opt, car_num, bank, account, reg_date, my_money,
+        deal_code, share_code
+            )
     VALUES (
-        seq_users_user_no.NEXTVAL, #{email}, #{pwd}, #{name}, #{nickName}, #{birth}, #{gender},
-        #{phone}, #{role}, 0, #{carOpt}, #{petOpt}, #{carNum}, #{bank},
-        #{account}, SYSDATE, 0
+        seq_users_user_no.NEXTVAL, #{email:VARCHAR}, #{pwd:VARCHAR}, #{name:VARCHAR}, #{nickName:VARCHAR}, #{birth:VARCHAR}, #{gender:NUMERIC},
+        #{phone:VARCHAR}, #{role:VARCHAR}, 0, #{carOpt:NUMERIC}, #{petOpt:NUMERIC}, #{carNum:VARCHAR}, #{bank:VARCHAR},
+        #{account:VARCHAR}, SYSDATE, 0, 0, 0
     )
 </insert>
 
@@ -42,6 +46,12 @@
         SELECT *
         FROM users
         WHERE email = #{email}
+    </select>
+    
+    <select id="getUsers" parameterType="int" resultMap="userSelectMap">
+        SELECT *
+        FROM users
+        WHERE user_no = #{userNo}
     </select>
     
     <update id="updateUser" parameterType="user" >
@@ -99,20 +109,19 @@
    </select>
     
     
- <delete id="deleteUser" parameterType="int">
+ <delete id="deleteUser" parameterType="string">
 
    DELETE FROM users
-   WHERE user_no = #{userNo}
+   WHERE email = #{email}
 
 </delete>
   
   <update id = "updatePwd" parameterType="user">
     UPDATE users
     <set>
-      user_no = #{userNo}
+      pwd = #{pwd}
     </set>
-  
-    WHERE user_no = #{userNo}
+    WHERE email = #{email}
   </update>
   
       <select id="getNickName" parameterType="string"  resultMap="userSelectMap">

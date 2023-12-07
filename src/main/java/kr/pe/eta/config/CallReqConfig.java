@@ -20,6 +20,6 @@ public class CallReqConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/").setAllowedOrigins("http://localhost:8000").withSockJS();
+		registry.addEndpoint("/").setAllowedOrigins("https://localhost:8000").withSockJS();
 	}
 }

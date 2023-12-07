@@ -6,7 +6,7 @@
 
 <mapper namespace="kr.pe.eta.service.callreq.CallReqDao">
 
-  <resultMap id="callReqSelectMap" type="call">
+  <resultMap id="callReqSelectMap" type="Call">
     <result property="callNo"       column="call_no"       jdbcType="NUMERIC"/>
     <result property="callCode" column="call_code"    jdbcType="VARCHAR" />
     <result property="callDate" column="call_date"    jdbcType="DATE" />
@@ -21,6 +21,7 @@
     <result property="endY"     column="end_y"      jdbcType="NUMERIC" />
     <result property="callStateCode"     column="call_state_code"      jdbcType="VARCHAR" />
     <result property="star"     column="star"      jdbcType="NUMERIC" />
+    <result property="routeOpt"     column="route_opt"      jdbcType="VARCHAR" />
   </resultMap>
   
   <resultMap type="Like" id="LikeSelectMap">
@@ -28,6 +29,12 @@
       <result property="userNo"   column="USER_NO"      jdbcType="NUMERIC"/>
       <result property="likeName"   column="LIKE_NAME"      jdbcType="VARCHAR"/>
       <result property="likeAddr"     column="LIKE_ADDR"     jdbcType="VARCHAR"/>
+  </resultMap>
+  
+  <resultMap id="userSelectMap" type="User">
+    <result property="userNo"       column="user_no"       jdbcType="NUMERIC"/>
+    <result property="carOpt"     column="car_opt"      jdbcType="NUMERIC" />
+    <result property="petOpt"     column="pet_opt"      jdbcType="NUMERIC" />
   </resultMap>
 
   <select id="getEndAddrList" parameterType="int" resultMap="callReqSelectMap">
@@ -56,12 +63,12 @@
     v_call_no NUMBER;
   BEGIN
     INSERT INTO call 
-    (call_no, call_code, call_date, real_pay, start_addr, start_keyword, start_x, start_y, end_addr, end_keyword, end_x, end_y, call_state_code, star) 
+    (call_no, call_code, call_date, real_pay, start_addr, start_keyword, start_x, start_y, end_addr, end_keyword, end_x, end_y, call_state_code, star, route_opt) 
     VALUES 
-    (seq_call_call_no.NEXTVAL, #{callCode:VARCHAR}, SYSDATE, #{realPay:NUMERIC}, #{startAddr:VARCHAR}, #{startKeyword:VARCHAR}, 0.0, 0.0, #{endAddr:VARCHAR}, #{endKeyword:VARCHAR}, 0.0, 0.0, '운행전', 0)
+    (seq_call_call_no.NEXTVAL, #{callCode:VARCHAR}, SYSDATE, #{realPay:NUMERIC}, #{startAddr:VARCHAR}, #{startKeyword:VARCHAR}, #{startX:NUMERIC}, #{startY:NUMERIC}, #{endAddr:VARCHAR}, #{endKeyword:VARCHAR}, #{endX:NUMERIC}, #{endY:NUMERIC}, '운행전', 0, #{routeOpt:VARCHAR})
     RETURNING call_no INTO v_call_no;
 
-    INSERT INTO match (call_no, passenger_no, driver_no) VALUES (v_call_no, #{userNo:NUMERIC}, 1002);
+    INSERT INTO match (call_no, passenger_no, driver_no) VALUES (v_call_no, #{userNo:NUMERIC}, null);
   END;
   ]]>
 </insert>
@@ -81,4 +88,33 @@
     END;
     ]]>
   </delete>
+  
+    <select id="getCallDriverList" parameterType="map" resultMap="userSelectMap">
+      SELECT user_no FROM users WHERE car_opt=#{carOpt} AND pet_opt=#{petOpt} 
+   </select>
+  
+    <update id="updateDealCode" parameterType="int">
+      UPDATE call SET deal_code = '1' WHERE call_no =  #{callNo:NUMERIC}
+   </update>
+  
+   <update id="updateShareCode" parameterType="int">
+    UPDATE call SET share_code = '1' WHERE call_no =  #{callNo:NUMERIC}
+   </update>
+   
+   <update id="updateLikeAddr" parameterType="map">
+    UPDATE likes SET like_addr = #{likeAddr:VARCHAR} WHERE user_no = #{userNo:NUMERIC} AND like_no= #{likeNo:NUMERIC}
+   </update>
+   
+   <update id="updateCustomName" parameterType="map">
+    UPDATE likes SET like_name = #{likeName:VARCHAR} WHERE user_no = #{userNo:NUMERIC} AND like_no= 1002
+   </update>
+   
+   <update id="deleteLikeAddr" parameterType="map">
+    UPDATE likes SET like_addr = null WHERE user_no = #{userNo:NUMERIC} AND like_no= #{likeNo:NUMERIC}
+   </update>
+   
+   <update id="deleteCustomName" parameterType="int">
+    UPDATE likes SET like_name = null WHERE user_no = #{userNo:NUMERIC} AND like_no= 1002
+   </update>
+
 </mapper>

@@ -18,5 +18,6 @@ public class Block {
 	private Date blockDate;
 	private Date unblockDate;
 	private int blockOpt;
+	private int blockCount;
 
 }

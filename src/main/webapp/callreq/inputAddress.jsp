@@ -33,9 +33,13 @@ if (navigator.geolocation) {
 
         if (startAddress == null) {
             document.getElementById('startAddrKeyword').value = "현 위치 : " + firstPlaceName;
+            document.getElementById('startx').value =firstLat;
+            document.getElementById('starty').value =firstLng;
             window.selectOptionsStartData = {
                     startAddress: firstAddr,
-                    startPlaceName: firstPlaceName
+                    startPlaceName: firstPlaceName,
+                    startLat : firstLat,
+                    startLng : firstLng
                 };
         } else {
             document.getElementById('startAddrKeyword').value = startPlaceName;
@@ -107,7 +111,9 @@ if (navigator.geolocation) {
                 <div>
                     <form class="form">
                         <input type="text" value="" id="startAddrKeyword" size="50px"> 
-                        <button id="startSubmit" type="submit">주소검색</button> 
+                        <button id="startSubmit" type="submit">주소검색</button>
+                        <input type="hidden" value="" id="startx" size="20px"> 
+                        <input type="hidden" value="" id="starty" size="20px"> 
                     </form>
                 </div>
             </div>
@@ -116,6 +122,8 @@ if (navigator.geolocation) {
                     <form class="form">
                         <input type="text" value="" id="endAddrKeyword" size="50px"> 
                         <button id="endSubmit" type="submit">주소검색</button> 
+                        <input type="hidden" value="" id="endx" size="20px"> 
+                        <input type="hidden" value="" id="endy" size="20px"> 
                     </form>
                 </div>
             </div>
@@ -137,7 +145,6 @@ if (navigator.geolocation) {
       <p>${endAddrList.endX}</p>
       <p>${endAddrList.endY}</p>          
       </div>
-+
     </c:forEach>
     
     <!-- 즐겨찾기 리스트-->
@@ -150,7 +157,7 @@ if (navigator.geolocation) {
       <p>${likeList.likeName}</p>
       <p>${likeList.likeAddr}</p>           
       </div>
-+
+
     </c:forEach>
     
        
@@ -419,7 +426,7 @@ async function displayInfowindow(title, position, type) {
             sessionStorage.setItem('address', detailAddr);
             sessionStorage.setItem('type', type);
             
-            location.href ='http://localhost:8000/callreq/inputAddressMap.jsp';                       
+            location.href ='https://localhost:8000/callreq/inputAddressMap.jsp';                       
             //inputAddress.jsp
         }
     }
@@ -462,7 +469,26 @@ document.addEventListener('DOMContentLoaded', function() {
     
     var startKeywordInput = document.getElementById('startAddrKeyword'); // Add quotes around the ID
     var endKeywordInput = document.getElementById('endAddrKeyword'); // Add quotes around the ID
+    var startxInput = document.getElementById('startx');
+    var startyInput = document.getElementById('starty');
+    var endxInput = document.getElementById('endx');
+    var endyInput = document.getElementById('endy');
     
+    if (startxInput) {
+    	startxInput.value = startLat;
+    }
+    
+    if (startyInput) {
+    	startyInput.value = startLng;
+    }
+    
+    if (endxInput) {
+    	endxInput.value = endLat;
+    }
+    
+    if (endyInput) {
+    	endyInput.value = endLng;
+    }
     // sessionStorage에 데이터가 있을 때만 처리
     if (startKeywordInput) {
         startKeywordInput.value = startPlaceName;
@@ -475,12 +501,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // selectOptions 함수에 전달할 데이터 설정
     window.selectOptionsEndData = {
         endAddress: endAddress,
-        endPlaceName: endPlaceName
+        endPlaceName: endPlaceName,
+        endLat: endLat,
+        endLng: endLng
     };
     
     window.selectOptionsStartDataMap = {
             startAddress: startAddress,
-            startPlaceName: startPlaceName
+            startPlaceName: startPlaceName,
+            startLat: startLat,
+            startLng: startLng
         };
 });
 
@@ -491,13 +521,19 @@ function selectOptions(){
 	  if(window.selectOptionsStartDataMap.startAddress != null){
 		  sessionStorage.setItem('startAddress', window.selectOptionsStartDataMap.startAddress);
 		  sessionStorage.setItem('startPlaceName', window.selectOptionsStartDataMap.startPlaceName);
+		  sessionStorage.setItem('startLat', window.selectOptionsStartDataMap.startLat);
+		  sessionStorage.setItem('startLng', window.selectOptionsStartDataMap.startLng);
 	  } else{
 	      sessionStorage.setItem('startAddress', window.selectOptionsStartData.startAddress);
 	      sessionStorage.setItem('startPlaceName', window.selectOptionsStartData.startPlaceName);
+	      sessionStorage.setItem('startLat', window.selectOptionsStartData.startLat);
+	      sessionStorage.setItem('startLng', window.selectOptionsStartData.startLng);
 	  }
     
     sessionStorage.setItem('endAddress', window.selectOptionsEndData.endAddress);    
     sessionStorage.setItem('endPlaceName', window.selectOptionsEndData.endPlaceName);
+    sessionStorage.setItem('endLat', window.selectOptionsEndData.endLat);
+    sessionStorage.setItem('endLng', window.selectOptionsEndData.endLng);
 
 	  
 	  self.location = "/callreq/selectOptions?userNo=1004"

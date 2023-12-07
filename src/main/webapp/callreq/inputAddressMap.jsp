@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sessionStorage.setItem('startLat', startLat);
             sessionStorage.setItem('startLng', startLng);
             
-            location.href = 'http://localhost:8000/callreq/inputAddress.jsp';
+            location.href = 'https://localhost:8000/callreq/inputAddress.jsp';
         });
 
         // 버튼을 문서에 추가
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sessionStorage.setItem('endLat', endLat);
             sessionStorage.setItem('endLng', endLng);
             
-            location.href = 'http://localhost:8000/callreq/inputAddress.jsp';
+            location.href = 'https://localhost:8000/callreq/inputAddress.jsp';
             
         });
 

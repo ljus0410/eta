@@ -32,9 +32,11 @@ public class NoticeServiceImpl implements NoticeService {
 
 	public Map<String, Object> getNoticeList(Search search) throws Exception {
 		List<Notice> noticelist = noticeDao.getNoticeList(search);
+		int totalCount = noticeDao.getTotalCount(search);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("noticelist", noticelist);
+		map.put("totalCount", totalCount);
 		return map;
 	}
 

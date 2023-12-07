@@ -10,9 +10,11 @@ import org.springframework.util.Assert;
 
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.Blacklist;
+import kr.pe.eta.domain.Block;
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Report;
 import kr.pe.eta.domain.Star;
+import kr.pe.eta.domain.User;
 import kr.pe.eta.service.feedback.FeedbackDao;
 import kr.pe.eta.service.feedback.FeedbackService;
 
@@ -144,7 +146,7 @@ public class FeedbackApplicationTests {
 
 	}
 
-	// @Test
+	@Test
 	public void testGetReportList() throws Exception {
 		Search search = new Search();
 //		search.setSearchCondition("0");
@@ -174,6 +176,75 @@ public class FeedbackApplicationTests {
 		Call call = feedbackService.getCall(1000);
 		System.out.println(call);
 		Assert.notNull(call);
+
+	}
+
+	// @Test
+	public void testUpdateReportCode() throws Exception {
+		assert 1 == feedbackService.updateReportCode(1011);
+	}
+
+	// @Test
+	public void testUpdateDisReportCode() throws Exception {
+		assert 1 == feedbackService.updateDisReportCode(1011);
+	}
+
+	// @Test
+	public void testGetReportCode() throws Exception {
+		Report report = feedbackService.getReportCode(1011);
+
+		System.out.println(report);
+	}
+
+	// @Test
+	public void testAddBlock() throws Exception {
+		Block block = Block.builder().userNo(1001).build();
+		System.out.println(block);
+		int count = feedbackService.addBlock(block);
+
+		System.out.println(count);
+	}
+
+	// @Test
+	public void testUpateBlockCode() throws Exception {
+//		Block block = Block.builder().userNo(1001).build();
+		User user = new User();
+		user.setUserNo(1020);
+
+		int count = feedbackService.updateBlockCode(user);
+
+		System.out.println(count);
+	}
+
+	// @Test
+	public void tesAvgStar() throws Exception {
+		User user = new User();
+		user.setUserNo(1029);
+
+		int count = feedbackService.avgStar(user);
+
+		System.out.println(count);
+	}
+
+	// @Test
+	public void testAddShareStar() throws Exception {
+
+		Star star = Star.builder().star(0).callNo(1001).passengerNo(1001).build();
+		System.out.println("////////" + star);
+		// feedbackService.addStar(star);
+		// Assertions.assertEquals(1, feedbackDao.updateStar(star));
+		Assertions.assertEquals(1, feedbackService.addShareStar(star));
+
+	}
+
+	// @Test
+	public void testUpdateShareStar() throws Exception {
+
+		Star star = Star.builder().star(3).callNo(1001).passengerNo(1001).build();
+		System.out.println("////////" + star);
+		// feedbackService.addStar(star);
+		// Assertions.assertEquals(1, feedbackDao.updateStar(star));
+		Assertions.assertEquals(1, feedbackService.addShareStar(star));
 
 	}
 

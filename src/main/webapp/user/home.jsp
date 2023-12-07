@@ -8,5 +8,8 @@
 </head>
 <body>
 
-</body>
+
+
+<a href="/user/getUser?userNo=${user.userNo}">유저정보</a>
+
 </html>

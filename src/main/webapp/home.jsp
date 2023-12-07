@@ -7,6 +7,11 @@
 <title>Insert title here</title>
 </head>
 <body>
-<a href="/community/home.jsp">Label</a>
+<jsp:include page="/home/top.jsp" />
+
+
+<!-- <a href="/community/home.jsp">Label</a>
+<a href="/user/home.jsp">로그인</a> -->
+<!-- <a href= -->
 </body>
 </html>
