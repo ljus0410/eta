@@ -1,23 +1,45 @@
 package kr.pe.eta.web.user;
 
+import java.awt.Point;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.geo.Point;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.User;
-import kr.pe.eta.redis.RedisEntity;
-import kr.pe.eta.redis.RedisService;
 import kr.pe.eta.service.feedback.FeedbackService;
+import kr.pe.eta.service.user.KakaoProfile;
+import kr.pe.eta.service.user.LoginService;
+import kr.pe.eta.service.user.NaveLoginProfile;
+import kr.pe.eta.service.user.NaverToken;
+import kr.pe.eta.service.user.OAuthToken;
 import kr.pe.eta.service.user.UserService;
 
 @Controller
@@ -30,7 +52,8 @@ public class UserController {
 	@Autowired
 	private FeedbackService feedback;
 
-	private final RedisService redisService; // RedisService 필드 추가
+	@Autowired
+	private LoginService loginService;
 
 	@Value("${search.pageSize}")
 	private int pageSize;
@@ -38,10 +61,9 @@ public class UserController {
 	@Value("${kakao.redirect}")
 	private String redirect;
 
-	private RedisService redisService = null;
+	private final RedisService redisService;
 
 	public UserController() {
-
 		this.redisService = redisService; // 여기 추가
 		System.out.println(this.getClass());
 	}
@@ -51,7 +73,7 @@ public class UserController {
 
 		System.out.println("/user/login : GET");
 
-		mv.setViewName("redirect:/user/loginView.jsp");
+		mv.setViewName("redirect:/user/login.jsp");
 
 		return mv;
 
@@ -92,7 +114,7 @@ public class UserController {
 		System.out.println("/user/addUser : GET");
 		ModelAndView model = new ModelAndView();
 
-		model.setViewName("redirect:/user/addUserView.jsp");
+		model.setViewName("redirect:/user/addUser.jsp");
 
 		return model;
 	}
@@ -111,17 +133,23 @@ public class UserController {
 
 	}
 
-	@RequestMapping(value = "getUser", method = RequestMethod.GET)
-	public ModelAndView getUser(@RequestParam("email") String eamil) throws Exception {
-		System.out.println("/user/getUser : POST");
+	@RequestMapping(value = "/getUser", method = RequestMethod.GET)
+	public ModelAndView getUser(@RequestParam(name = "email", required = false) String email,
+			@RequestParam(name = "userNo") int userNo) throws Exception {
+		System.out.println("/user/getUser : GET");
 		ModelAndView model = new ModelAndView();
+		User user = null;
 
-		User user = userService.getUser(eamil);
+		if (email == null) {
+			user = userService.getUsers(userNo);
+		} else {
+			user = userService.getUser(email);
+		}
 
-		model.setViewName("forward:/home.jsp");
+		System.out.println("userInfo = " + user);
+		model.setViewName("forward:/user/getUser.jsp");
 		model.addObject("user", user);
 		return model;
-
 	}
 
 	@RequestMapping(value = "updateUser", method = RequestMethod.GET)
@@ -240,5 +268,193 @@ public class UserController {
 		model.setViewName("redirect:/home.jsp");
 		return model;
 
+	}
+
+	@GetMapping("/auth/kakao/callback")
+	public @ResponseBody ModelAndView kakaoCallback(String code, HttpSession session) throws Exception {// Data를 리턴해주는
+																										// 컨트롤러
+		System.out.println("카카오톡 로그인");
+		// Post방식으로 key=value 데이터를 요청(카카오쪽으로)
+		// HttpURLConnection
+		// RestTemplate
+
+		RestTemplate rt = new RestTemplate();
+
+		// HttpHeaders 오브젝트 생성
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+		// HttBody 오브젝트 생성
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("grant_type", "authorization_code");
+		params.add("client_id", "9a25c34801a488b5107a4b66b0001d79");
+		params.add("redirect_uri", redirect);
+		params.add("code", code);
+
+		// HttpHeaders 와 HttBody룰 하나의 오브젝트에 담기 request
+		HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
+
+		// 요청부분 Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음
+		ResponseEntity<String> response = rt.exchange( // exchange가 HttpEntity를 담음
+				"https://kauth.kakao.com/oauth/token", HttpMethod.POST, kakaoTokenRequest, String.class// 응답받을 데이터
+		);
+		// gson, Jsonsimple, objectmapper 라이브러리
+		// accessToken 매핑
+		ObjectMapper objectMapper = new ObjectMapper();
+		OAuthToken oauthToken = null;
+		try {
+			oauthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("oauthToken" + oauthToken.getAccess_token());
+		RestTemplate rt2 = new RestTemplate();
+
+		// HttpHeaders 오브젝트 생성
+		HttpHeaders headers2 = new HttpHeaders();
+		headers2.add("Authorization", "Bearer " + oauthToken.getAccess_token());
+		headers2.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+		// HttpHeaders 와 HttBody룰 하나의 오브젝트에 담기
+		HttpEntity<MultiValueMap<String, String>> kakaoprofileRequest2 = new HttpEntity<>(headers2);
+
+		// 요청부분 Http 요청하기 - Post방식으로 - 그리고 response 변수의 응답 받음
+		ResponseEntity<String> response2 = rt2.exchange( // exchange가 HttpEntity를 담음
+				"https://kapi.kakao.com/v2/user/me", HttpMethod.POST, kakaoprofileRequest2, String.class);
+
+		ObjectMapper objectMapper2 = new ObjectMapper();
+		KakaoProfile kakaoprofile = null;
+		try {
+			kakaoprofile = objectMapper2.readValue(response2.getBody(), KakaoProfile.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		// body만 보는거
+		ModelAndView model = new ModelAndView();
+		String email = kakaoprofile.getKakao_account().getEmail();
+		User user = userService.getUser(email);
+		if (user != null && email.equals(user.getEmail())) {
+			session.setAttribute("user", user);
+			model.setViewName("forward:user/home.jsp");
+		} else {
+			model.setViewName("forward:/user/addUser.jsp");
+		}
+
+		// User
+		System.out.println("kakaoprofile ID" + kakaoprofile.getId());
+		System.out.println("kakaoprofile Email" + kakaoprofile.getKakao_account().getEmail());
+		System.out.println("닉네임 " + kakaoprofile.getProperties().getNickname());
+
+		model.addObject("kakaoProfile", kakaoprofile);
+		return model;
+	}
+
+	@GetMapping("/auth/naver/callback")
+	public @ResponseBody ModelAndView callBack(String code, String state, HttpSession session) throws Exception {
+		System.out.println("네이버 로그인");
+		RestTemplate restTemplate = new RestTemplate();
+
+		// Naver OAuth 토큰 요청 URL
+		String naverTokenUrl = "https://nid.naver.com/oauth2.0/token";
+
+		// 요청 파라미터 설정
+		MultiValueMap<String, String> naverTokenParams = new LinkedMultiValueMap<>();
+		naverTokenParams.add("grant_type", "authorization_code");
+		naverTokenParams.add("client_id", "pvTZe4A7s4jfxQ017lJ5");
+		naverTokenParams.add("client_secret", "Qw3A3shVVu");
+		naverTokenParams.add("code", code);
+		naverTokenParams.add("state", state);
+
+		// 헤더 설정
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		// HttpEntity 생성
+		HttpEntity<MultiValueMap<String, String>> naverTokenRequest = new HttpEntity<>(naverTokenParams, headers);
+
+		// 요청 보내기
+		ResponseEntity<String> naverTokenResponse = restTemplate.exchange(naverTokenUrl, HttpMethod.POST,
+				naverTokenRequest, String.class);
+
+		ObjectMapper objectmapper = new ObjectMapper();
+		NaverToken naverToken = null;
+
+		try {
+			naverToken = objectmapper.readValue(naverTokenResponse.getBody(), NaverToken.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		// 응답 확인
+		System.out.println("getAccess_token" + naverToken.getAccess_token());
+		System.out.println("naverToken.getToken_type()" + naverToken.getToken_type());
+
+		RestTemplate rt2 = new RestTemplate();
+		HttpHeaders headers2 = new HttpHeaders();
+		headers2.add("Authorization", naverToken.getToken_type() + " " + naverToken.getAccess_token());
+
+		String naverTokenUrl2 = "https://openapi.naver.com/v1/nid/me";
+
+		HttpEntity<String> naverTokenRequest2 = new HttpEntity<>(null, headers2);
+
+		ResponseEntity<String> response2 = rt2.exchange(naverTokenUrl2, HttpMethod.POST, naverTokenRequest2,
+				String.class
+
+		);// exchange가 HttpEntity를 담음
+
+		ObjectMapper objectMapper2 = new ObjectMapper();
+		NaveLoginProfile naverProfile = null;
+		try {
+			naverProfile = objectMapper2.readValue(response2.getBody(), NaveLoginProfile.class);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		ModelAndView model = new ModelAndView();
+		String email = naverProfile.getResponse().getEmail();
+		User user = userService.getUser(email);
+		if (user != null && email.equals(userService.getUser(email))) {
+			session.setAttribute("user", user);
+			model.setViewName("forward:user/home.jsp");
+		} else {
+			model.setViewName("forward:/user/addUser.jsp");
+		}
+		System.out.println("email" + naverProfile.getResponse().getEmail());
+		model.addObject("naverProfile", naverProfile);
+		return model;
+
+	}
+
+	@GetMapping("/kakao-login")
+	public void kakao(HttpServletRequest request, HttpServletResponse response)
+			throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
+		System.out.println("kakao-login");
+		String url = loginService.kakaoUrl("authorize");
+		System.out.println("url========" + url);
+		try {
+			response.sendRedirect(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@GetMapping("/naver-login")
+	public void naverLogin(HttpServletRequest request, HttpServletResponse response)
+			throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
+		System.out.println("naver-login");
+		String url = loginService.getNaverAuthorizeUrl("authorize");
+		try {
+			response.sendRedirect(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
