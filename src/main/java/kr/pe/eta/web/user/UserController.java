@@ -35,7 +35,13 @@ public class UserController {
 	@Value("${search.pageSize}")
 	private int pageSize;
 
-	public UserController(RedisService redisService) {
+	@Value("${kakao.redirect}")
+	private String redirect;
+
+	private RedisService redisService = null;
+
+	public UserController() {
+
 		this.redisService = redisService; // 여기 추가
 		System.out.println(this.getClass());
 	}

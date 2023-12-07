@@ -96,6 +96,13 @@
         <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
     
+    <!-- messege -->
+        <dependency>
+            <groupId>net.nurigo</groupId>
+            <artifactId>sdk</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+      
     <dependency>
     	<groupId>org.springframework.boot</groupId>
     	<artifactId>spring-boot-starter-data-redis</artifactId>
@@ -105,6 +112,7 @@
     	<groupId>org.springframework.boot</groupId>
     	<artifactId>spring-boot-starter-data-mongodb</artifactId>
 	</dependency>
+
   </dependencies>
 
   <build>
