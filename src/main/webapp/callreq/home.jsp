@@ -19,6 +19,10 @@
   <br>
    <button type="button" class="TpayList" onclick="TpayList()">Tpay 이용 내역</button>
    <br>
+   <button type="button" class="cashDriverList" onclick="cashDriverList()">정산 승인 대상 리스트</button>
+  <br>
+  <button type="button" class="myCashList" onclick="myCashList()">정산 내역 리스트</button>
+  <br>
  <input type="text" placeholder="도착지" class="content">
  <input type="text" placeholder="경로옵션" class="content">
  <input type="text" placeholder="가격" class="content">
@@ -30,7 +34,15 @@
     </div>
 </body>
 <script>
-
+function myCashList() {    
+    self.location = "/pay/myCashList?userNo=1012"
+  }
+  
+function cashDriverList() {
+    
+    self.location = "/pay/cashDriverList"
+  }
+  
 function likeAddress() {
     
 	  self.location = "/callreq/likeAddress?userNo=1004"

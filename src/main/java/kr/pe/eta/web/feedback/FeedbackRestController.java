@@ -1,12 +1,12 @@
 package kr.pe.eta.web.feedback;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.eta.service.feedback.FeedbackService;
 
-@Controller
+@RestController
 @RequestMapping("/feedback/json/*")
 public class FeedbackRestController {
 

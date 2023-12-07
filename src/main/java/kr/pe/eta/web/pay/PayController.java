@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Pay;
 import kr.pe.eta.service.pay.PayService;
 
@@ -25,12 +26,14 @@ public class PayController {
 	}
 
 	@RequestMapping(value = "TpayList", method = RequestMethod.GET)
-	public String TpayList(@RequestParam("userNo") int userNo, Model model) throws Exception {
+	public String TpayList(@RequestParam("month") String month, @RequestParam("userNo") int userNo, Model model)
+			throws Exception {
 
 		System.out.println("/pay/TpayList");
 		System.out.println("userNo : " + userNo);
+		System.out.println("month : " + month);
 
-		List<Pay> TpayList = payService.getTpayList(userNo);
+		List<Pay> TpayList = payService.getTpayList(userNo, month);
 		int myMoney = payService.getMyMoney(userNo);
 
 		model.addAttribute("TpayList", TpayList);
@@ -60,13 +63,39 @@ public class PayController {
 			payService.updateMyMoney(userNo, updateMyMoney);
 			payService.addPay(pay);
 		}
+		String month = null;
 
 		int lastMyMoney = payService.getMyMoney(userNo);
-		List<Pay> TpayList = payService.getTpayList(userNo);
+		List<Pay> TpayList = payService.getTpayList(userNo, month);
 
 		model.addAttribute("myMoney", lastMyMoney);
 		model.addAttribute("TpayList", TpayList);
 
 		return "forward:/pay/TpayList.jsp";
 	}
+
+	@RequestMapping(value = "cashDriverList", method = RequestMethod.GET)
+	public String cashDriverList(Model model) throws Exception {
+
+		System.out.println("/pay/cashDriverList");
+
+		List<Call> cashDriverList = payService.getCashDriverList();
+
+		model.addAttribute("cashDriverList", cashDriverList);
+
+		return "forward:/pay/cashDriverList.jsp";
+	}
+
+	@RequestMapping(value = "myCashList", method = RequestMethod.GET)
+	public String myCashList(@RequestParam("userNo") int userNo, Model model) throws Exception {
+
+		System.out.println("/pay/myCashList");
+
+		List<Call> myCashList = payService.getMyCashList(userNo);
+
+		model.addAttribute("myCashList", myCashList);
+
+		return "forward:/pay/myCashList.jsp";
+	}
+
 }

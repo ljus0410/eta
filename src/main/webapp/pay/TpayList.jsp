@@ -12,8 +12,24 @@
 </head>
 <body>
 Tpay 이용 내역<br>
-잔여 Tpay : ${myMoney} 원  <button onclick="payRequeset()">Tpay 충전</button>
-
+잔여 Tpay : ${myMoney} 원  <button onclick="payRequeset()">Tpay 충전</button><br>
+            
+<select id="month">
+  <option value="01">1월</option>
+  <option value="02">2월</option>
+  <option value="03">3월</option>
+  <option value="04">4월</option>
+  <option value="05">5월</option>
+  <option value="06">6월</option>
+  <option value="07">7월</option>
+  <option value="08">8월</option>
+  <option value="09">9월</option>
+  <option value="10">10월</option>
+  <option value="11">11월</option>
+  <option value="12">12월</option>
+</select>
+ <button type="button" id="searchButton">검색</button>
+<hr>
     
     <!-- Tpay 리스트--> 
     <c:set var="i" value="0" />
@@ -35,6 +51,16 @@ Tpay 이용 내역<br>
        
 </body>
 <script>
+
+$(function() {
+	   
+	   $( "#searchButton" ).on("click" , function() {
+		   var month = $("#month").val();
+		   alert(month);
+		   $("form").attr("method" , "POST").attr("action" , "/pay/TpayList?month="+month).submit();
+	  });
+});
+
 function addPay(){
 	$("form").attr("method" , "POST").attr("action" , "/pay/addPay").submit();
 }
@@ -49,9 +75,7 @@ function payRequeset(){
 	  } else {
 	    alert("충전이 취소되었습니다.");
 	  }
-	
-	//TpayCharge();
-	
+
 }
 function TpayCharge(Tpay) {
 	  

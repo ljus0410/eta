@@ -6,7 +6,7 @@
 
 <mapper namespace="kr.pe.eta.service.callreq.CallReqDao">
 
-  <resultMap id="callReqSelectMap" type="call">
+  <resultMap id="callReqSelectMap" type="Call">
     <result property="callNo"       column="call_no"       jdbcType="NUMERIC"/>
     <result property="callCode" column="call_code"    jdbcType="VARCHAR" />
     <result property="callDate" column="call_date"    jdbcType="DATE" />
