@@ -38,33 +38,34 @@
                 <div>
                     <form class="form">
                     <input type="hidden" name="likeNo" value="1000">
+                    <input type="hidden" name="likeName" value="집">
                        ${likeList[0].likeName} <input type="text" value="" name="likeAddr" id="homeAddrKeyword" size="50px"> 
                         <button id="homeSubmit" type="submit">주소검색</button>                        
                     </form>
-                    <button id="deleteHomeAddr" type="submit" onclick="deleteHomeAddr()">삭제</button>
+                    <button id="deleteHomeAddr" type="submit" onclick="deleteHomeAddrRequest()">삭제</button>
                 </div>
             </div>
             <div class="companyAddrSearch">
                 <div>
                     <form class="form">
                     <input type="hidden" name="likeNo" value="1001">
+                    <input type="hidden" name="likeName" value="회사">
                       ${likeList[1].likeName}  <input type="text" value="" name="likeAddr" id="companyAddrKeyword" size="50px"> 
                         <button id="companySubmit" type="submit">주소검색</button> 
                     </form>
-                     <button id="deleteCompanyAddr" type="submit" onclick="deleteCompanyAddr()">삭제</button>
+                     <button id="deleteCompanyAddr" type="submit" onclick="deleteCompanyAddrRequest()">삭제</button>
                 </div>
             </div>
              <div class="customAddrSearch">
                 <div>
                     <form class="form">
-                    <input type="hidden" name="likeNo" value="1002">
+                        <input type="hidden" name="likeNo" value="1002">
                         <input type="text" value="" name="likeName" id="customNameKeyword" size="20px"> 
                         <input type="text" value="" name="likeAddr" id="customAddrKeyword" size="50px"> 
                         <button id="customSubmit" type="submit">주소검색</button> 
                     </form>
-                    <button id="deleteCustomAddr" type="submit" onclick="deleteCustomAddr()">삭제</button>
-                    <button id="updateCustomName" type="submit" onclick="updateCustomName()">별칭 수정</button>
-                    <button id="deleteCustomName" type="submit" onclick="deleteCustomName()">별칭 삭제</button>
+                    <button id="updateCustomAddr" type="submit" onclick="updateCustomAddr()">수정</button>
+                    <button id="deleteCustomAddr" type="submit" onclick="deleteCustomAddrRequest()">삭제</button>
                 </div>
             </div>
             <hr>
@@ -88,6 +89,43 @@
        
 </body>
 <script>
+
+function deleteHomeAddrRequest(){
+	  
+	  var result = confirm("삭제하시겠습니까?");
+
+	  if (result == true) {
+	      alert("삭제가 완료되었습니다.");
+	      deleteHomeAddr();
+	  } else {
+	      alert("삭제 취소");
+	  }  
+	}
+	
+function deleteCompanyAddrRequest(){
+    
+    var result = confirm("삭제하시겠습니까?");
+
+    if (result == true) {
+        alert("삭제가 완료되었습니다.");
+        deleteCompanyAddr();
+    } else {
+        alert("삭제 취소");
+    }  
+  }
+  
+function deleteCustomAddrRequest(){
+    
+    var result = confirm("삭제하시겠습니까?");
+
+    if (result == true) {
+        alert("삭제가 완료되었습니다.");
+        deleteCustomAddr();
+    } else {
+        alert("삭제 취소");
+    }  
+  }
+	
 function updateHomeAddr() {
     // homeAddrSearch div 안에 있는 form을 선택하여 submit
     $(".homeAddrSearch form").attr("method", "POST").attr("action", "/callreq/updateLikeAddr?userNo=1004").submit();
@@ -98,11 +136,22 @@ function updateCompanyAddr() {
 }
 
 function updateCustomAddr() {
-    $(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/updateLikeAddr?userNo=1004").submit();
-}
-
-function updateCustomName() {
-    $(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/updateLikeName?userNo=1004").submit();
+	   var customNameInput = document.getElementById('customNameKeyword');
+     var customName = customNameInput.value;
+     
+     var customAddrInput = document.getElementById('customAddrKeyword');
+     var customAddr = customAddrInput.value;
+     
+       if(customName == ''){
+         alert("별칭을 입력해주세요.");
+       } else if(customAddr == '' ){
+    	   alert("주소를 입력해주세요.");
+       } else if(customName != '' && customAddr != ''){
+    	   $(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/updateLikeAddr?userNo=1004").submit();
+       }
+	
+	  
+   
 }
 
 function deleteHomeAddr() {
@@ -117,9 +166,6 @@ function deleteCustomAddr() {
     $(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/deleteLikeAddr?userNo=1004").submit();
 }
 
-function deleteCustomName() {
-    $(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/deleteCustomName?userNo=1004").submit();
-}
 //마커를 담을 배열입니다
 var markers = [];
 let presentPosition;
@@ -398,7 +444,7 @@ async function displayInfowindow(title, position, type) {
         	   updateHomeAddr();
            } else if(type === 'company'){
         	   updateCompanyAddr();
-           } else{
+           } else {
         	   updateCustomAddr();
            }
         }
@@ -421,7 +467,30 @@ function searchDetailAddrFromCoords(coords, callback) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+	  var homeAddrKeyword = document.getElementById('homeAddrKeyword');
+	  homeAddrKeyword.addEventListener('click', function() {
+		  homeAddrKeyword.value = '';
+		  homeAddrKeyword.placeholder = '주소를 입력해주세요';
+    });
+	  
+	   var companyAddrKeyword = document.getElementById('companyAddrKeyword');
+	   companyAddrKeyword.addEventListener('click', function() {
+		   companyAddrKeyword.value = '';
+		   companyAddrKeyword.placeholder = '주소를 입력해주세요';
+	    });
+	   
+	     var customAddrKeyword = document.getElementById('customAddrKeyword');
+	     customAddrKeyword.addEventListener('click', function() {
+	    	 customAddrKeyword.value = '';
+	    	 customAddrKeyword.placeholder = '주소를 입력해주세요';
+	      });
     
+	       var customNameKeyword = document.getElementById('customNameKeyword');
+	       customNameKeyword.addEventListener('click', function() {
+	    	   customNameKeyword.value = '';
+	    	   customNameKeyword.placeholder = '별칭을 입력해주세요';
+	        });
+	       
     var homeKeywordInput = document.getElementById('homeAddrKeyword'); // Add quotes around the ID
     var companyKeywordInput = document.getElementById('companyAddrKeyword'); // Add quotes around the ID
     var customKeywordInput = document.getElementById('customAddrKeyword');
@@ -454,6 +523,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (companyKeywordInput && likeCompanyAddr != null) {
         companyKeywordInput.value = likeCompanyAddr;
     } 
+    
     if (customKeywordInput && likeCustomAddr != null) {
         customKeywordInput.value = likeCustomAddr;
     } 

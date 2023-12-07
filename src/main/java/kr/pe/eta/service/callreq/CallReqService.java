@@ -26,9 +26,7 @@ public interface CallReqService {
 
 	public void updateShareCode(int callNo) throws Exception;
 
-	public void updateLikeAddr(String likeAddr, int userNo, int likeNo) throws Exception;
-
-	public void updateCustomName(String likeName, int userNo) throws Exception;
+	public void updateLikeAddr(String likeAddr, String likeName, int userNo, int likeNo) throws Exception;
 
 	public void deleteLikeAddr(int likeNo, int userNo) throws Exception;
 
