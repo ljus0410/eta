@@ -7,3 +7,4 @@ public interface RouteRepository extends MongoRepository<RouteEntity, Integer> {
 // 기본 CRUD 메소드 제공
 
 }
+

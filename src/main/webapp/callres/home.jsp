@@ -38,6 +38,7 @@ padding-top : 70px;
 
 <!-- ///////////////////////// JavaScript ////////////////////////// -->
 
+
 <script>
 
 function sendRequestP() {
@@ -73,6 +74,7 @@ window.location.href = '/callres/getReservationList';
 </script>
 
   
+
 
 </head>
 

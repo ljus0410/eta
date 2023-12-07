@@ -5,7 +5,6 @@
   
 
 <mapper namespace="kr.pe.eta.service.callres.CallResDao">
-
   
 
 <resultMap id="callSelectMap" type="Call">
@@ -455,7 +454,5 @@ AND EXTRACT(MONTH FROM call_date) = #{month}
 ) countTable
 
 </select>
-
-  
 
 </mapper>
