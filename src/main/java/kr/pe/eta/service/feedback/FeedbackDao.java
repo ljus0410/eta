@@ -17,15 +17,15 @@ public interface FeedbackDao {
 
 	public int updateStar(Star star) throws Exception;
 
-	public Star getStar(Star star) throws Exception;
+	public int getStar(Star star) throws Exception;
 
-	public Star getShareStar(Star star) throws Exception;
+	public int getShareStar(Star star) throws Exception;
 
 	public int addBlacklist(Blacklist blacklist) throws Exception;
 
 	public int deleteBlacklist(Blacklist blacklist) throws Exception;
 
-	public Blacklist getBlacklist(Blacklist blacklist) throws Exception;
+	public int getBlacklistCount(Blacklist blacklist) throws Exception;
 
 	public int addReport(Report report) throws Exception;
 
@@ -39,7 +39,7 @@ public interface FeedbackDao {
 
 	public int updateDisReportCode(int reportNo) throws Exception;
 
-	public Report getReportCode(int reportNo) throws Exception;
+	public int getReportCode(int reportNo) throws Exception;
 
 	public int addBlock(Block block) throws Exception;
 
@@ -53,4 +53,17 @@ public interface FeedbackDao {
 
 	public int updateShareStar(Star star) throws Exception;
 
+	public int getCallNo(User user) throws Exception;
+
+	public int getDriverNoByCallNo(int callNo) throws Exception;
+
+	public List<Report> getUserReportList(Search search) throws Exception;
+
+	public int getUserReportTotalCount(Search search) throws Exception;
+
+	public int getReportTotalCount(Search search) throws Exception;
+
+	public int getPassNoByCallNo(int callNo) throws Exception;
+
+	public List<Blacklist> getBlacklistList(int callno) throws Exception;
 }

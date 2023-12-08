@@ -36,11 +36,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 		return feedbackDao.updateStar(star);
 	}
 
-	public Star getStar(Star star) throws Exception {
+	public int getStar(Star star) throws Exception {
 		return feedbackDao.getStar(star);
 	}
 
-	public Star getShareStar(Star star) throws Exception {
+	public int getShareStar(Star star) throws Exception {
 		return feedbackDao.getShareStar(star);
 	}
 
@@ -53,14 +53,16 @@ public class FeedbackServiceImpl implements FeedbackService {
 	}
 
 	public Blacklist getBlacklist(Blacklist blacklist) throws Exception {
-		Blacklist blacklist1 = feedbackDao.getBlacklist(blacklist);
-		if (blacklist1 == null) {
+		int blacklistCount = feedbackDao.getBlacklistCount(blacklist);
+
+		if (blacklistCount == 0) {
 			// blacklist1 = new Blacklist();
-			blacklist1 = Blacklist.builder().blacklistCode(false).build();
+			blacklist.setBlacklistCode(false);
+			;
 		} else {
-			blacklist1.setBlacklistCode(true);
+			blacklist.setBlacklistCode(true);
 		}
-		return blacklist1;
+		return blacklist;
 	}
 
 	public int addReport(Report report) throws Exception {
@@ -79,9 +81,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public Map<String, Object> getReportList(Search search) throws Exception {
 
 		List<Report> reportlist = feedbackDao.getReportList(search);
+		int totalCount = feedbackDao.getReportTotalCount(search);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("reportlist", reportlist);
+		map.put("totalCount", totalCount);
 		return map;
 
 	}
@@ -98,7 +102,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		return feedbackDao.updateDisReportCode(reportNo);
 	}
 
-	public Report getReportCode(int reportNo) throws Exception {
+	public int getReportCode(int reportNo) throws Exception {
 		return feedbackDao.getReportCode(reportNo);
 	}
 
@@ -127,7 +131,40 @@ public class FeedbackServiceImpl implements FeedbackService {
 	}
 
 	public int updateShareStar(Star star) throws Exception {
-		return feedbackDao.updateStar(star);
+		return feedbackDao.updateShareStar(star);
+	}
+
+	public int getCallNo(User user) throws Exception {
+		return feedbackDao.getCallNo(user);
+	}
+
+	public int getDriverNoByCallNo(int callNo) throws Exception {
+		return feedbackDao.getDriverNoByCallNo(callNo);
+	}
+
+	public Map<String, Object> getUserReportList(Search search) throws Exception {
+
+		List<Report> reportlist = feedbackDao.getUserReportList(search);
+
+		int totalCount = feedbackDao.getUserReportTotalCount(search);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("reportlist", reportlist);
+		map.put("totalCount", totalCount);
+		return map;
+	}
+
+	public int getPassNoByCallNo(int callNo) throws Exception {
+		return feedbackDao.getPassNoByCallNo(callNo);
+	}
+
+	public List<Blacklist> getBlacklistList(int callno) throws Exception {
+
+//		List<Report> blacklistList = feedbackDao.getBlacklistList(callno);
+//
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("blacklistList", blacklistList);
+
+		return feedbackDao.getBlacklistList(callno);
 	}
 
 }
