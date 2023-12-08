@@ -67,8 +67,9 @@ public class PayRestController {
 
 			payService.addCash(cash);
 		}
+		String month = "all";
 
-		List<Call> cashDriverList = payService.getCashDriverList();
+		List<Call> cashDriverList = payService.getCashDriverList(month);
 		// List<Integer> cashCode = payService.getCashCode();
 
 		return "Success";

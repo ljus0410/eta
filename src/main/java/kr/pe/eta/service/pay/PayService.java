@@ -18,10 +18,12 @@ public interface PayService {
 
 	public void addPay(Pay pay) throws Exception;
 
-	public List<Call> getCashDriverList() throws Exception;
+	public List<Call> getCashDriverList(String month) throws Exception;
 
 	public void addCash(Cash cash) throws Exception;
 
-	public List<Call> getMyCashList(int userNo) throws Exception;
+	public List<Call> getMyCashList(int userNo, String month) throws Exception;
+
+	public void updateRealPay(int callNo, int money) throws Exception;
 
 }

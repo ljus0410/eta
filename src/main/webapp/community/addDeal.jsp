@@ -32,26 +32,54 @@
     <script type="text/javascript">
 
         $(function() {
-            //==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
-            $( "button.btn.btn-primary" ).on("click" , function() {
-                fncAddDealReq();
-            });
-        });
 
-        $(function() {
-            //==> DOM Object GET 3가지 방법 ==> 1. $(tagName) : 2.(#id) : 3.$(.className)
             $("a[href='#']").on("click" , function() {
                 $("form")[0].reset();
             });
         });
 
-        function fncAddDealReq(){
-            $("form").attr("method" , "POST").attr("action" , "/community/addDealReq").submit();
-        }
-
     </script>
+
 </head>
 <body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+<script>
+
+    $(function (){
+
+        $( "button.btn.btn-primary" ).on("click" , function() {
+
+            let preMoney = parseFloat($("#money").val()); // 문자열을 숫자로 변환
+            let TPay = parseFloat($("#myMoney").val()); // 문자열을 숫자로 변환
+            let offer = parseFloat($("#passengerOffer").val()); // 문자열을 숫자로 변환
+
+            console.log(preMoney);
+            console.log(TPay);
+            console.log(offer);
+
+            if (offer > TPay && offer > preMoney) {
+                Swal.fire({
+                    title: '알림',
+                    text: '잔여 TPay가 부족합니다.',
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: '충전',
+                    cancelButtonText: '취소'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/pay/addCharge';
+                    }
+                });
+                return;
+            } else if (offer < preMoney && offer < TPay) {
+                alert("금액이 잘못 입력되었습니다.\n선결제 금액을 확인해주세요");
+                return;
+            } else if (offer > preMoney && offer < TPay) {
+                $("form").attr("method" , "POST").attr("action" , "/community/addDealReq").submit();
+            }
+        })
+    })
+</script>
 <div class="container">
 
     <h2 class="bg-default text-center">딜배차</h2><br/>
@@ -69,8 +97,13 @@
                 <input type="text" class="form-control" id="money" name="money" value="${money}" readonly>
             </div>
         </div>
-        
-        <!-- 잔여 tpay rest로 구현 -->
+
+        <div class="form-group">
+            <label for="myMoney" class="col-sm-offset-1 col-sm-3 control-label">잔여 Tpay</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="myMoney" name="myMoney" value="${myMoney}" readonly>
+            </div>
+        </div>
 
         <div class="form-group">
             <label for="passengerOffer" class="col-sm-offset-1 col-sm-3 control-label">제시금액</label>

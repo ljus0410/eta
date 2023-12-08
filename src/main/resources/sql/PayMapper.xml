@@ -40,8 +40,13 @@
        UPDATE users SET my_money = #{updateMyMoney:NUMERIC} WHERE user_no =  #{userNo:NUMERIC}
   </update>
    
-  <select id="getTpayList" parameterType="int" resultMap="paySelectMap">
-       SELECT call_no, pay_type, pay_date, money FROM pay WHERE user_no =  #{userNo:NUMERIC}
+  <select id="getTpayList" parameterType="map" resultMap="paySelectMap">
+    <if test="month == 'all'">
+       SELECT call_no, pay_type, pay_date, money FROM pay WHERE user_no =  #{userNo:NUMERIC} ORDER BY pay_date DESC
+    </if>
+    <if test="month != 'all'">
+       SELECT call_no, pay_type, pay_date, money FROM pay WHERE user_no = #{userNo:NUMERIC} AND TO_CHAR(pay_date, 'MM') = #{month:VARCHAR} ORDER BY pay_date DESC
+    </if>
   </select>
   
   <insert  id="addPay"    parameterType="Pay" >            
@@ -49,22 +54,43 @@
        VALUES (seq_pay_pay_no.NEXTVAL, #{userNo:NUMERIC}, #{callNo:NUMERIC}, #{payType:VARCHAR}, SYSDATE, #{money:NUMERIC}, 'passenger')
   </insert>
   
-  <select id="getCashDriverList"  resultMap="cashDriverSelectMap">
-				SELECT
-				    M.driver_no,
-				    TO_CHAR(C.call_date, 'YYYY-MM') AS call_month,
-				    SUM(C.real_pay) AS total_real_pay,
-				    COALESCE(CA.cash_code,0) AS cash_code
-				FROM
-				    call C
-				JOIN
-				    match M ON C.call_no = M.call_no
-				LEFT JOIN
-				    cash CA ON TO_CHAR(C.call_date, 'YYYY-MM') = CA.cash_month AND M.driver_no = CA.cash_driver_no
-				WHERE
-				    M.driver_no IS NOT NULL
-				GROUP BY
-				    M.driver_no, TO_CHAR(C.call_date, 'YYYY-MM'), CA.cash_code
+  <select id="getCashDriverList"  parameterType="String" resultMap="cashDriverSelectMap">
+    <if test="month == 'all'">
+				 SELECT
+					    M.driver_no,
+					    TO_CHAR(C.call_date, 'YYYY-MM') AS call_month,
+					    SUM(C.real_pay) AS total_real_pay,
+					    COALESCE(CA.cash_code, 0) AS cash_code
+					FROM
+					    call C
+					JOIN
+					    match M ON C.call_no = M.call_no
+					LEFT JOIN
+					    cash CA ON TO_CHAR(C.call_date, 'YYYY-MM') = CA.cash_month AND M.driver_no = CA.cash_driver_no
+					WHERE
+					    M.driver_no IS NOT NULL
+					GROUP BY
+					    M.driver_no, TO_CHAR(C.call_date, 'YYYY-MM'), CA.cash_code
+					ORDER BY
+					    M.driver_no, TO_CHAR(C.call_date, 'YYYY-MM'), CA.cash_code
+		 </if>
+		 <if test="month != 'all'">
+		    SELECT
+            M.driver_no,
+            TO_CHAR(C.call_date, 'YYYY-MM') AS call_month,
+            SUM(C.real_pay) AS total_real_pay,
+            COALESCE(CA.cash_code,0) AS cash_code
+        FROM
+            call C
+        JOIN
+            match M ON C.call_no = M.call_no
+        LEFT JOIN
+            cash CA ON TO_CHAR(C.call_date, 'YYYY-MM') = CA.cash_month AND M.driver_no = CA.cash_driver_no
+        WHERE
+            M.driver_no IS NOT NULL AND TO_CHAR(C.call_date, 'MM') = #{month:VARCHAR}
+        GROUP BY
+            M.driver_no, TO_CHAR(C.call_date, 'YYYY-MM'), CA.cash_code
+		 </if>
   </select>
   
   <insert  id="addCash"    parameterType="Cash" >            
@@ -72,12 +98,26 @@
        VALUES (seq_cash_cash_no.NEXTVAL, #{cashDriverNo:NUMERIC}, #{cashMonth:VARCHAR}, #{cashTotal:NUMERIC}, 1, SYSDATE)
   </insert>
   
-  <select id="getMyCashList"  parameterType="int" resultMap="myCashSelectMap">
+  <select id="getMyCashList"  parameterType="map" resultMap="myCashSelectMap">
+    <if test="month == 'all'">
         SELECT C.call_no, C.call_date, C.real_pay, COALESCE(CA.cash_code,0) AS cash_code
         FROM call C
         JOIN match M ON C.call_no = M.call_no
         LEFT JOIN cash CA ON TO_CHAR(C.call_date, 'YYYY-MM') = CA.cash_month AND M.driver_no = CA.cash_driver_no
         WHERE M.driver_no = #{userNo:NUMERIC}
+    </if>
+    <if test="month != 'all'">
+        SELECT C.call_no, C.call_date, C.real_pay, COALESCE(CA.cash_code,0) AS cash_code
+        FROM call C
+        JOIN match M ON C.call_no = M.call_no
+        LEFT JOIN cash CA ON TO_CHAR(C.call_date, 'YYYY-MM') = CA.cash_month AND M.driver_no = CA.cash_driver_no
+        WHERE M.driver_no = #{userNo:NUMERIC} AND TO_CHAR(C.call_date, 'MM') = #{month:VARCHAR}
+    </if>
+     
   </select>
+  
+    <update id="updateRealPay" parameterType="map">
+       UPDATE call SET real_pay = #{money:NUMERIC} where call_no = #{callNo:NUMERIC}
+  </update>
 
 </mapper>

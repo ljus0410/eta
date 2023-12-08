@@ -1,11 +1,12 @@
 package kr.pe.eta.service.user.impl;
 
-import java.awt.Point;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
 import kr.pe.eta.common.Search;
@@ -95,16 +96,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Map<String, Object> autoUserList(Search search) throws Exception {
 		List<User> list = userDao.getUserList(search);
-		int drivertotalCount = userDao.getDriverCount(search);
-		int passengertotalCount = userDao.getPassengerCount(search);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
-		map.put("drivertotalCount", new Integer(drivertotalCount));
-		map.put("passengertotalCount", new Integer(passengertotalCount));
-
-		System.out.println("passengertotalCount " + passengertotalCount);
-		System.out.println("drivertotalCount " + drivertotalCount);
 
 		return map;
 	}

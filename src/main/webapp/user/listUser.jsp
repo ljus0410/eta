@@ -5,9 +5,68 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Insert title here</title>  
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+ <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+<script type="text/javascript">
+$(function() {
+    
+    $("input[name='searchKeyword']").autocomplete({
+          source: function(request, response) {
+              $.ajax({
+             url : "/user/json/autoList",  
+            method : "POST",
+            data : JSON.stringify({
+            currentPage: 0,
+            pageSize: 0,
+            searchKeyword: request.term, //현재 압력된 검색어
+            searchCondition: $("select[name= 'searchCondition']").val()
+          }),
+        contentType: "application/json",
+        dataType:"json",
+        success: function(data){
+          console.log("data"+data.lstName )
+          console.log("data"+data.list)
+          if($("select[name= 'searchCondition']").val()=="0"){
+            response(data.list);
+          }else if($("select[name= 'searchCondition']").val()=="1"){
+            response(data.listName);
+          }
+        }
+        });
+      },
+      minLength: 1
+  });
+ });
+
+</script>
 </head>
 <body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
+  <tr>
+    <td align="right">
+      <select name="searchCondition" class="ct_input_g" style="width:80px">
+        <option value="0"  ${ ! empty search.searchCondition && search.searchCondition==0 ? "selected" : "" }>회원ID</option>
+        <option value="1"  ${ ! empty search.searchCondition && search.searchCondition==1 ? "selected" : "" }>회원명</option>
+      </select>
+      <input type="text" name="searchKeyword" 
+            value="${! empty search.searchKeyword ? search.searchKeyword : ""}"  
+            class="ct_input_g" style="width:200px; height:20px" > 
+    </td>
+    <td align="right" width="70">
+      <table border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="17" height="23"></td>
+          <td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top:3px;">
+            검색
+          </td>
+          <td width="14" height="23"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
   <tr>
     <td colspan="11" >

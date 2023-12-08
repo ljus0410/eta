@@ -116,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var lat = sessionStorage.getItem('lat');
     var lng = sessionStorage.getItem('lng');
     var type = sessionStorage.getItem('type');
+    var callCode = sessionStorage.getItem('callCode');    
     
     initMap(lat, lng);
 
@@ -145,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sessionStorage.setItem('startLat', startLat);
             sessionStorage.setItem('startLng', startLng);
             
-            location.href = 'https://localhost:8000/callreq/inputAddress.jsp';
+            self.location = "/callreq/inputAddress?userNo="+${user.userNo }+"&callCode="+callCode;
         });
 
         // 버튼을 문서에 추가
@@ -173,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sessionStorage.setItem('endLat', endLat);
             sessionStorage.setItem('endLng', endLng);
             
-            location.href = 'https://localhost:8000/callreq/inputAddress.jsp';
+            self.location = "/callreq/inputAddress?userNo="+${user.userNo }+"&callCode="+callCode;
             
         });
 

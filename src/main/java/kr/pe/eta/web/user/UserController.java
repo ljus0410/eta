@@ -1,6 +1,6 @@
 package kr.pe.eta.web.user;
 
-import java.awt.Point;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.geo.Point;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,11 +30,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.User;
+import kr.pe.eta.redis.RedisEntity;
+import kr.pe.eta.redis.RedisService;
+import kr.pe.eta.service.callreq.CallReqService;
 import kr.pe.eta.service.feedback.FeedbackService;
 import kr.pe.eta.service.user.KakaoProfile;
 import kr.pe.eta.service.user.LoginService;
@@ -55,15 +60,42 @@ public class UserController {
 	@Autowired
 	private LoginService loginService;
 
+	@Autowired
+	private CallReqService callReqService;
+
 	@Value("${search.pageSize}")
 	private int pageSize;
 
+	@Value("${naver.baseUrl}")
+	String baseUrl;
+
+	@Value("${naver.clientId}")
+	String clientId;
+
+	@Value("${naver.redirectUrl}")
+	String redirectUrl;
+
+	@Value("${naver.Secret}")
+	String Secret;
+
+	@Value("${kakao.clienId}")
+	String kaclienId;
+
 	@Value("${kakao.redirect}")
-	private String redirect;
+	String karedirect;
+
+	@Value("${kakao.scope}")
+	String scope;
+
+	@Value("${kakao.url}")
+	String url;
+
+	@Value("${kakao.logout}")
+	String logout;
 
 	private final RedisService redisService;
 
-	public UserController() {
+	public UserController(RedisService redisService) {
 		this.redisService = redisService; // 여기 추가
 		System.out.println(this.getClass());
 	}
@@ -88,7 +120,7 @@ public class UserController {
 		User db = userService.getUser(user.getEmail());
 
 		System.out.println(db);
-		System.out.println("code" + db.isBlockCode());
+		System.out.println("login code : " + db.isBlockCode());
 
 		Point location = userService.calculateRandomLocation();
 		double X = location.getX();
@@ -96,16 +128,43 @@ public class UserController {
 		double Y = location.getY();
 		System.out.println("Y : " + Y);
 
-		if (user.getPwd().equals(db.getPwd()) && user.isBlockCode() == false) {
-			RedisEntity redisEntity = new RedisEntity();
-			redisEntity.setId(db.getEmail());
-			redisEntity.setCurrentX(X);
-			redisEntity.setCurrentY(Y);
-			redisService.addUser(redisEntity);
+		if (db.isBlockCode()) {
+			// feedback 로직
+			int result = feedback.updateBlockCode(db);
+			System.out.println("UpdateCode : " + feedback.updateBlockCode(db));
+
+			// 다시 code 확인
+			if (result == 1) {
+				// 블록 코드가 false이면 로그인 로직을 타게 하거나 다른 처리를 수행
+				if (db.getRole().equals("driver")) {
+					RedisEntity redisEntity = new RedisEntity();
+					String userNo = String.valueOf(db.getUserNo());
+					redisEntity.setId(userNo);
+					redisEntity.setCurrentX(X);
+					redisEntity.setCurrentY(Y);
+					redisService.addUser(redisEntity);
+				}
+				session.setAttribute("user", db);
+				modelAndView.setViewName("redirect:/home.jsp");
+			} else {
+				// 여전히 true인 경우, home 화면으로 이동
+				modelAndView.setViewName("redirect:/home.jsp");
+			}
+		} else {
+			// 코드가 이미 false인 경우, 로그인 로직 수행
+			if (db.getRole().equals("driver")) {
+				RedisEntity redisEntity = new RedisEntity();
+				String userNo = String.valueOf(db.getUserNo());
+				redisEntity.setId(userNo);
+				redisEntity.setCurrentX(X);
+				redisEntity.setCurrentY(Y);
+				redisService.addUser(redisEntity);
+			}
+
 			session.setAttribute("user", db);
+			modelAndView.setViewName("redirect:/home.jsp");
 		}
 
-		modelAndView.setViewName("redirect:/user/getUser.jsp");
 		return modelAndView;
 	}
 
@@ -127,7 +186,12 @@ public class UserController {
 
 		userService.addUser(user);
 		session.setAttribute("user", user);
-
+		User newuser = userService.getUser(user.getEmail());
+		if (newuser.getRole().equals("passenger")) {
+			callReqService.addLikeList(newuser.getUserNo());
+		}
+		System.out.println("방금 만든 회원 : " + userService.getUser(user.getEmail()));
+		System.out.println("즐겨찾기 보자 : " + callReqService.getLikeList(newuser.getUserNo()));
 		model.setViewName("forward:/user/home.jsp");
 		return model;
 
@@ -157,10 +221,7 @@ public class UserController {
 		System.out.println("/user/updateUser : POST");
 		ModelAndView model = new ModelAndView();
 
-		User User = userService.getUser(eamil);
-
 		model.setViewName("forward:/user/updateUserView.jsp");
-		model.addObject("user", User);
 		return model;
 	}
 
@@ -205,11 +266,11 @@ public class UserController {
 
 	}
 
-	@RequestMapping(value = "logout", method = RequestMethod.POST)
+	@RequestMapping(value = "logout", method = RequestMethod.GET)
 	public ModelAndView logout(HttpSession session) throws Exception {
-		System.out.println("/user/logout : POST");
+		System.out.println("/user/logout : GET");
 		ModelAndView model = new ModelAndView();
-		redisService.deleteUser(session);// 추가
+		// redisService.deleteUser(session);// 추가
 		session.invalidate();
 
 		model.setViewName("redirect:/home.jsp");
@@ -287,8 +348,8 @@ public class UserController {
 		// HttBody 오브젝트 생성
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", "authorization_code");
-		params.add("client_id", "9a25c34801a488b5107a4b66b0001d79");
-		params.add("redirect_uri", redirect);
+		params.add("client_id", kaclienId);
+		params.add("redirect_uri", karedirect);
 		params.add("code", code);
 
 		// HttpHeaders 와 HttBody룰 하나의 오브젝트에 담기 request
@@ -340,22 +401,22 @@ public class UserController {
 		User user = userService.getUser(email);
 		if (user != null && email.equals(user.getEmail())) {
 			session.setAttribute("user", user);
-			model.setViewName("forward:user/home.jsp");
+			model.setViewName("redirect:/user/home.jsp");
 		} else {
-			model.setViewName("forward:/user/addUser.jsp");
+			model.setViewName("redirect:/user/addUser.jsp");
 		}
 
 		// User
 		System.out.println("kakaoprofile ID" + kakaoprofile.getId());
 		System.out.println("kakaoprofile Email" + kakaoprofile.getKakao_account().getEmail());
-		System.out.println("닉네임 " + kakaoprofile.getProperties().getNickname());
 
 		model.addObject("kakaoProfile", kakaoprofile);
 		return model;
 	}
 
 	@GetMapping("/auth/naver/callback")
-	public @ResponseBody ModelAndView callBack(String code, String state, HttpSession session) throws Exception {
+	public @ResponseBody ModelAndView callBack(String code, String state, HttpSession session,
+			HttpServletResponse response) throws Exception {
 		System.out.println("네이버 로그인");
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -365,8 +426,8 @@ public class UserController {
 		// 요청 파라미터 설정
 		MultiValueMap<String, String> naverTokenParams = new LinkedMultiValueMap<>();
 		naverTokenParams.add("grant_type", "authorization_code");
-		naverTokenParams.add("client_id", "pvTZe4A7s4jfxQ017lJ5");
-		naverTokenParams.add("client_secret", "Qw3A3shVVu");
+		naverTokenParams.add("client_id", clientId);
+		naverTokenParams.add("client_secret", Secret);
 		naverTokenParams.add("code", code);
 		naverTokenParams.add("state", state);
 
@@ -391,7 +452,11 @@ public class UserController {
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-
+		String naverAccessToken = naverToken.getAccess_token();
+		Cookie cookie = new Cookie("naverAccessToken", naverAccessToken);
+		cookie.setMaxAge(60 * 60); // 쿠키 만료 시간 설정 (예: 1시간)
+		cookie.setPath("/");
+		response.addCookie(cookie);
 		// 응답 확인
 		System.out.println("getAccess_token" + naverToken.getAccess_token());
 		System.out.println("naverToken.getToken_type()" + naverToken.getToken_type());
@@ -408,7 +473,7 @@ public class UserController {
 				String.class
 
 		);// exchange가 HttpEntity를 담음
-
+		System.out.println("결과값 : " + response2.getBody());
 		ObjectMapper objectMapper2 = new ObjectMapper();
 		NaveLoginProfile naverProfile = null;
 		try {
@@ -421,11 +486,11 @@ public class UserController {
 		ModelAndView model = new ModelAndView();
 		String email = naverProfile.getResponse().getEmail();
 		User user = userService.getUser(email);
-		if (user != null && email.equals(userService.getUser(email))) {
+		if (user != null && email.equals(user.getEmail())) {
 			session.setAttribute("user", user);
-			model.setViewName("forward:user/home.jsp");
+			model.setViewName("redirect:/user/home.jsp");
 		} else {
-			model.setViewName("forward:/user/addUser.jsp");
+			model.setViewName("redirect:/user/addUser.jsp");
 		}
 		System.out.println("email" + naverProfile.getResponse().getEmail());
 		model.addObject("naverProfile", naverProfile);
@@ -457,4 +522,55 @@ public class UserController {
 			e.printStackTrace();
 		}
 	}
+
+	@GetMapping("/kakao-logOut")
+	public ModelAndView kakaoLoOut(@RequestParam(name = "token", required = false) String access_token,
+			HttpServletRequest request, HttpServletResponse response, HttpServletRequest request1)
+			throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
+		System.out.println("kakao-logout");
+		System.out.println("token : " + access_token);
+
+		ModelAndView modelAndView = new ModelAndView();
+
+		if (access_token == null) {
+			try {
+				// access_token이 null인 경우 Kakao 로그아웃 URL 생성 및 리다이렉트
+				String url = loginService.kakaoLoOut(request1);
+				modelAndView.setViewName("redirect:/home.jsp");
+			} catch (IOException e) {
+				e.printStackTrace(); // 또는 로깅 등의 적절한 예외 처리 로직을 추가할 수 있습니다.
+			}
+
+		} else {
+			// access_token이 null이 아닌 경우 Naver 로그아웃 URL 생성 및 리다이렉트
+			String url = loginService.naverLoOut(access_token, request1, response);
+			modelAndView.setViewName("redirect:/home.jsp");
+		}
+
+		return modelAndView;
+	}
+
+	@GetMapping("/auth/kakao/logout")
+	public @ResponseBody ModelAndView logOut(HttpSession session) throws Exception {
+		System.out.println("카카오 로그아웃 컨트롤");
+		ModelAndView model = new ModelAndView();
+		model.setViewName("redirect:/user/login.jsp");
+		// redisService.deleteUser(session);// 추가
+		session.invalidate();
+
+		return model;
+	}
+
+//	@GetMapping("naverLogout")
+//	public void naverLogout(@RequestParam("token") String access_token, HttpServletResponse response) throws Exception {
+//		System.out.println("token : " + access_token);
+//		String url = loginService.naverLoOut(access_token);
+//		try {
+//			response.sendRedirect(url);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
+
 }

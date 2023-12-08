@@ -1,14 +1,9 @@
 package kr.pe.eta.web.callreq;
 
-import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,31 +13,34 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.OnMessage;
-import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
-import jakarta.websocket.server.ServerEndpoint;
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Like;
-import kr.pe.eta.domain.User;
+import kr.pe.eta.redis.RedisEntity;
+import kr.pe.eta.redis.RedisService;
 import kr.pe.eta.service.callreq.CallReqService;
 import kr.pe.eta.service.pay.PayService;
+import kr.pe.eta.service.user.UserService;
 
 //==>  Call Req Controller
 @Controller
-@ServerEndpoint("/websocket")
 @RequestMapping("/callreq/*")
-public class CallReqController extends Socket {
+public class CallReqController {
 
 	@Autowired
-	@Qualifier("callReqService")
 	private CallReqService callReqService;
 
 	@Autowired
-	@Qualifier("payService")
 	private PayService payService;
 
-	public CallReqController() {
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private final RedisService redisService;
+
+	public CallReqController(RedisService redisService) {
+		this.redisService = redisService; // 여기 추가
 		System.out.println(this.getClass());
 	}
 
@@ -53,42 +51,14 @@ public class CallReqController extends Socket {
 		return "redirect:callreq/home.jsp";
 	}
 
-	@OnOpen
-	public void open(Session newUser) {
-		System.out.println("connected");
-		session.add(newUser);
-		System.out.println(newUser.getId());
-	}
-
-	@OnMessage
-	public void getMsg(Session recieveSession, String msg) {
-		for (int i = 0; i < session.size(); i++) {
-			if (!recieveSession.getId().equals(session.get(i).getId())) {
-				try {
-					session.get(i).getBasicRemote().sendText("배차번호 : " + msg);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			} /*
-				 * else { try { session.get(i).getBasicRemote().sendText("나 : " + msg); } catch
-				 * (IOException e) { e.printStackTrace(); } }
-				 */
-		}
-	}
-
-	@MessageMapping("/test")
-	@SendTo("/topic/test")
-	public String handleTestMessage(String message) {
-		System.out.println("Received message: " + message);
-		return "Received message: " + message;
-	}
-
 	@RequestMapping(value = "inputAddress", method = RequestMethod.GET)
-	public String inputAddress(@RequestParam("userNo") int userNo, Model model) throws Exception {
+	public String inputAddress(@RequestParam("userNo") int userNo, @RequestParam("callCode") String callCode,
+			Model model) throws Exception {
 
 		System.out.println("/callreq/inputAddress");
 		System.out.println("userNo : " + userNo);
-		// userNo = "1004";
+		System.out.println("callCode : " + callCode);
+
 		// Business Logic
 		List<Call> endAddrList = callReqService.getEndAddrList(userNo); // 도착지 키워드, 주소 리스트
 		List<Like> likeList = callReqService.getLikeList(userNo); // 즐겨찾기 리스트
@@ -96,12 +66,26 @@ public class CallReqController extends Socket {
 		// Model 과 View 연결
 		model.addAttribute("endAddrList", endAddrList);
 		model.addAttribute("likeList", likeList);
+		model.addAttribute("callCode", callCode);
 
 		return "forward:/callreq/inputAddress.jsp";
 	}
 
+	@RequestMapping(value = "inputAddressMap", method = RequestMethod.GET)
+	public String inputAddressMap(@RequestParam("userNo") int userNo, @RequestParam("callCode") String callCode,
+			Model model) throws Exception {
+
+		System.out.println("/callreq/inputAddressMap");
+		System.out.println("userNo : " + userNo);
+
+		model.addAttribute("callCode", callCode);
+
+		return "forward:/callreq/inputAddressMap.jsp";
+	}
+
 	@RequestMapping(value = "selectOptions", method = RequestMethod.GET)
-	public String selectOptions(@RequestParam("userNo") int userNo, Model model) throws Exception {
+	public String selectOptions(@RequestParam("userNo") int userNo, @RequestParam("callCode") String callCode,
+			Model model) throws Exception {
 
 		System.out.println("/callreq/selectOptions");
 		System.out.println("userNo : " + userNo);
@@ -109,6 +93,7 @@ public class CallReqController extends Socket {
 		int myMoney = payService.getMyMoney(userNo);
 
 		model.addAttribute("myMoney", myMoney);
+		model.addAttribute("callCode", callCode);
 
 		return "forward:/callreq/selectOptions.jsp";
 	}
@@ -120,19 +105,33 @@ public class CallReqController extends Socket {
 
 		System.out.println("call : " + call);
 
-		call.setUserNo(1004); // test
-		call.setCallCode("N"); // test
-
-		String callCode = call.getCallCode();
-
 		callReqService.addCall(call); // addCall()
 
-		int callNo = callReqService.getCallNo(); // getCallNo()
+		double passengerX = call.getStartX();
+		double passengerY = call.getStartY();
+		double driverX = 0;
+		double driverY = 0;
 
-		if (callCode == "D") {
-			callReqService.updateDealCode(callNo);
-		} else if (callCode == "S") {
-			callReqService.updateShareCode(callNo);
+		List<RedisEntity> driverList = redisService.getAllUser();
+
+		List<String> driverNoList = new ArrayList<>();
+		List<Integer> callDriverNoList = new ArrayList<>();
+		List<Integer> driverNoResult = new ArrayList<>();
+
+		for (int i = 0; i < driverList.size(); i++) {
+			System.out.println("redis 전체 driverList : " + driverList.get(i).getId());
+		}
+		for (int i = 0; i < driverList.size(); i++) {
+			driverX = driverList.get(i).getCurrentX();
+			driverY = driverList.get(i).getCurrentY();
+
+			double distance = userService.haversineDistance(passengerX, passengerY, driverX, driverY);
+
+			if (distance <= 3) { // passenger의 출발 위치로부터 3km 이내의 driver List
+				String driverNo = driverList.get(i).getId();
+				System.out.println("3km 이내의 driverList: " + driverNo);
+				driverNoList.add(driverNo);
+			}
 		}
 
 		boolean petOpt = call.isPetOpt();
@@ -141,11 +140,33 @@ public class CallReqController extends Socket {
 		String carOpt = call.getCarOpt();
 		System.out.println("carOpt : " + carOpt);
 
-		List<User> callDriverList = callReqService.getCallDriverList(carOpt, petOpt); // driver 탐색
+		for (int i = 0; i < driverNoList.size(); i++) {
+			int driverNo = Integer.parseInt(driverNoList.get(i));
+			Integer callDriverNo = callReqService.getCallDriver(carOpt, petOpt, driverNo);
+			if (callDriverNo != null) {
+				System.out.println("반려동물, 차량옵션에 맞는 driver : " + callDriverNo);
+				callDriverNoList.add(callDriverNo);
+			}
+		}
+
+		int passengerNo = call.getUserNo();
+		List<Integer> blackNo = callReqService.getBlackList(passengerNo);
+
+		for (int i = 0; i < callDriverNoList.size(); i++) {
+			for (int j = 0; j < blackNo.size(); j++) {
+				if (callDriverNoList.get(i).equals(blackNo.get(j))) {
+					System.out.println("blackList driver : " + callDriverNoList.get(i));
+				} else {
+					driverNoResult.add(callDriverNoList.get(i));
+				}
+
+			}
+		}
+		int callNo = callReqService.getCallNo(); // getCallNo()
 
 		model.addAttribute("call", call);
 		model.addAttribute("callNo", callNo);
-		model.addAttribute("callDriverList", callDriverList);
+		model.addAttribute("callDriverList", driverNoResult);
 
 		return "forward:/callreq/searchCall.jsp";
 	}
@@ -189,31 +210,10 @@ public class CallReqController extends Socket {
 		// Business Logic
 
 		String likeAddr = like.getLikeAddr();
+		String likeName = like.getLikeName();
 		int likeNo = like.getLikeNo();
 
-		callReqService.updateLikeAddr(likeAddr, userNo, likeNo);
-
-		List<Like> likeList = callReqService.getLikeList(userNo); // 즐겨찾기 리스트
-
-		// Model 과 View 연결
-		model.addAttribute("likeList", likeList);
-
-		return "forward:/callreq/likeAddrList.jsp";
-	}
-
-	@RequestMapping(value = "updateLikeName", method = RequestMethod.POST)
-	public String updateLikeName(@ModelAttribute("like") Like like, @RequestParam("userNo") int userNo, Model model)
-			throws Exception {
-
-		System.out.println("/callreq/updateLikeName");
-		System.out.println("like : " + like);
-		System.out.println("userNo : " + userNo);
-		// userNo = "1004";
-		// Business Logic
-
-		String likeName = like.getLikeName();
-
-		callReqService.updateCustomName(likeName, userNo);
+		callReqService.updateLikeAddr(likeAddr, likeName, userNo, likeNo);
 
 		List<Like> likeList = callReqService.getLikeList(userNo); // 즐겨찾기 리스트
 
