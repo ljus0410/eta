@@ -19,7 +19,7 @@ public interface CallReqService {
 
 	public void deleteCall(int callNo) throws Exception;
 
-	public int getCallDriver(String carOpt, boolean petOpt, int driverNo) throws Exception;
+	public Integer getCallDriver(String carOpt, boolean petOpt, int driverNo) throws Exception;
 
 	public void updateDealCode(int callNo) throws Exception;
 

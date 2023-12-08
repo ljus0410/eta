@@ -46,8 +46,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function removeMessage() {
+
 	   alert("배차에 실패하였습니다.");
 	   $("form").attr("method" , "POST").attr("action" , "/callreq/deleteCall").submit();
+
 }
 
 function deleteCall(){
@@ -89,7 +91,7 @@ function sendLocationToServer(driverNo) {
       stompClient.send("/sendCall/" + sendDriverNo, {}, callNo);
       
       setTimeout(() => {
-          alert("배차 탐색이 취소되었습니다.");
+    	  removeMessage();
         }, 2 * 60 * 1000); // 2분(밀리초 단위)
     
   } else {
