@@ -1,5 +1,6 @@
 package kr.pe.eta.service.feedback;
 
+import java.util.List;
 import java.util.Map;
 
 import kr.pe.eta.common.Search;
@@ -15,9 +16,9 @@ public interface FeedbackService {
 
 	public int updateStar(Star star) throws Exception;
 
-	public Star getStar(Star star) throws Exception;
+	public int getStar(Star star) throws Exception;
 
-	public Star getShareStar(Star star) throws Exception;
+	public int getShareStar(Star star) throws Exception;
 
 	public int addBlacklist(Blacklist blacklist) throws Exception;
 
@@ -37,7 +38,7 @@ public interface FeedbackService {
 
 	public int updateDisReportCode(int reportNo) throws Exception;
 
-	public Report getReportCode(int reportNo) throws Exception;
+	public int getReportCode(int reportNo) throws Exception;
 
 	public int addBlock(Block block) throws Exception;
 
@@ -49,4 +50,13 @@ public interface FeedbackService {
 
 	public int updateShareStar(Star star) throws Exception;
 
+	public int getCallNo(User user) throws Exception;
+
+	public int getDriverNoByCallNo(int callNo) throws Exception;
+
+	public Map<String, Object> getUserReportList(Search search) throws Exception;
+
+	public int getPassNoByCallNo(int callNo) throws Exception;
+
+	public List<Blacklist> getBlacklistList(int callno) throws Exception;
 }
