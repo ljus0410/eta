@@ -142,9 +142,11 @@ public class CallReqController {
 
 		for (int i = 0; i < driverNoList.size(); i++) {
 			int driverNo = Integer.parseInt(driverNoList.get(i));
-			int callDriverNo = callReqService.getCallDriver(carOpt, petOpt, driverNo);
-			System.out.println("반려동물, 차량옵션에 맞는 driver : " + callDriverNo);
-			callDriverNoList.add(callDriverNo);
+			Integer callDriverNo = callReqService.getCallDriver(carOpt, petOpt, driverNo);
+			if (callDriverNo != null) {
+				System.out.println("반려동물, 차량옵션에 맞는 driver : " + callDriverNo);
+				callDriverNoList.add(callDriverNo);
+			}
 		}
 
 		int passengerNo = call.getUserNo();

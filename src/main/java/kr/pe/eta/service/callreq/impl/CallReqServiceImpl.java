@@ -62,7 +62,7 @@ public class CallReqServiceImpl implements CallReqService {
 		callReqDao.deleteCall(callNo);
 	}
 
-	public int getCallDriver(String carOpt, boolean petOpt, int driverNo) throws Exception {
+	public Integer getCallDriver(String carOpt, boolean petOpt, int driverNo) throws Exception {
 		System.out.println("serviceImpl getCallDriverList carOpt : " + carOpt);
 		System.out.println("serviceImpl getCallDriverList petOpt : " + petOpt);
 		System.out.println("serviceImpl getCallDriverList driverNo : " + driverNo);
