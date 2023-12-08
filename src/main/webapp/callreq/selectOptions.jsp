@@ -21,7 +21,7 @@
  목적지 : <input type="text" value="" id="endAddrKeyword" size="50px" name="endKeyword" class="content"><br>
  <input type="hidden" name="startAddr" id="startAddrInput">
  <input type="hidden" name="endAddr" id="endAddrInput">
- 
+  <input type="hidden" name="userNo" id="userNo" value="${user.userNo }">
  <input type="hidden" name="startX" id="startX" value="">
  <input type="hidden" name="startY" id="startY" value="">
  <input type="hidden" name="endX" id="endX" value="">

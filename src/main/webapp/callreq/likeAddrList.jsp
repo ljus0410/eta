@@ -128,11 +128,11 @@ function deleteCustomAddrRequest(){
 	
 function updateHomeAddr() {
     // homeAddrSearch div 안에 있는 form을 선택하여 submit
-    $(".homeAddrSearch form").attr("method", "POST").attr("action", "/callreq/updateLikeAddr?userNo=1004").submit();
+    $(".homeAddrSearch form").attr("method", "POST").attr("action", '/callreq/updateLikeAddr?userNo=${user.userNo }').submit();
 }
 
 function updateCompanyAddr() {
-    $(".companyAddrSearch form").attr("method", "POST").attr("action", "/callreq/updateLikeAddr?userNo=1004").submit();
+    $(".companyAddrSearch form").attr("method", "POST").attr("action", '/callreq/updateLikeAddr?userNo=${user.userNo }').submit();
 }
 
 function updateCustomAddr() {
@@ -147,7 +147,7 @@ function updateCustomAddr() {
        } else if(customAddr == '' ){
     	   alert("주소를 입력해주세요.");
        } else if(customName != '' && customAddr != ''){
-    	   $(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/updateLikeAddr?userNo=1004").submit();
+    	   $(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/updateLikeAddr?userNo=${user.userNo }").submit();
        }
 	
 	  
@@ -155,15 +155,15 @@ function updateCustomAddr() {
 }
 
 function deleteHomeAddr() {
-   $(".homeAddrSearch form").attr("method", "POST").attr("action", "/callreq/deleteLikeAddr?userNo=1004").submit();
+   $(".homeAddrSearch form").attr("method", "POST").attr("action", "/callreq/deleteLikeAddr?userNo=${user.userNo }").submit();
 }
 
 function deleteCompanyAddr() {
-    $(".companyAddrSearch form").attr("method", "POST").attr("action", "/callreq/deleteLikeAddr?userNo=1004").submit();
+    $(".companyAddrSearch form").attr("method", "POST").attr("action", "/callreq/deleteLikeAddr?userNo=${user.userNo }").submit();
 }
 
 function deleteCustomAddr() {
-    $(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/deleteLikeAddr?userNo=1004").submit();
+    $(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/deleteLikeAddr?userNo=${user.userNo }").submit();
 }
 
 //마커를 담을 배열입니다

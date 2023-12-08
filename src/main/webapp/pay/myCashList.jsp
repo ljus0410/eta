@@ -14,6 +14,7 @@
 정산 내역 리스트<br>
 
   <select id="month">
+  <option value="all">전체</option>
   <option value="01">1월</option>
   <option value="02">2월</option>
   <option value="03">3월</option>
@@ -44,7 +45,7 @@
     <c:forEach var="myCashList" items="${myCashList}">
       <c:set var="i" value="${ i+1 }" />
        <div class="cashItem" data-star="${myCashList.star}">         
-        <a class="getRecord">${myCashList.callNo}</a> ${myCashList.callDate} ${myCashList.realPay}원
+        <a class="getRecord" data-callno="${myCashList.callNo}">${myCashList.callNo}</a> ${myCashList.callDate} ${myCashList.realPay}원
        <c:choose>
           <c:when test="${myCashList.star eq 1}">
             정산 완료
@@ -71,12 +72,14 @@
 $(function () {
 	
     $( ".getRecord" ).on("click" , function() {
-        alert("운행 기록 상세조회로 이동"); 
-     });
+    	
+    	var callNo = $(this).data("callno");
+    	  self.location = "/callres/getRecordDriver?callNo="+callNo;
+     }); 
     
     $("#searchButton").on("click", function () {
         var month = $("#month").val();
-        self.location = "/pay/myCashList?userNo=1012&month=" + month;
+        self.location = "/pay/myCashList?userNo="+${user.userNo}+"&month=" + month;
     });
 
     $("#cashState").on("change", function () {
@@ -93,14 +96,6 @@ $(function () {
             }
         });
     });
-});
-
-$(function() {
-    
-    $( "#searchButton" ).on("click" , function() {
-      var month = $("#month").val();
-      self.location = "/pay/myCashList?userNo=1012&month="+month;
-   });
 });
 </script>
 

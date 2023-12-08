@@ -154,7 +154,7 @@ if (navigator.geolocation) {
            <button onclick="handleButtonClick('${likeList.likeAddr}')" disabled>내별칭</button>       
         </c:when>
         <c:otherwise>        
-          <button onclick="handleButtonClick('${likeList.likeAddr}')">${likeList.likeName}</button> 
+          <button onclick="handleButtonClick('${likeList.likeAddr}','${likeList.likeName}','${likeList.likeX}','${likeList.likeY}')">${likeList.likeName}</button> 
         </c:otherwise>
       </c:choose>     
      
@@ -165,18 +165,35 @@ if (navigator.geolocation) {
     <c:forEach var="endAddrList" items="${endAddrList}">
       <c:set var="i" value="${ i+1 }" />
       <div id="endAddrList">
-      <p><a onclick="handleButtonClick('${endAddrList.endAddr}')">${endAddrList.endKeyword} ${endAddrList.endAddr}</a></p>      
+      <p><a onclick="handleButtonClick('${endAddrList.endAddr}','${endAddrList.endKeyword}',${endAddrList.endX},${endAddrList.endY})">${endAddrList.endKeyword} ${endAddrList.endAddr}</a></p>      
       </div>
     </c:forEach>    
        
 </body>
 <script>
 
-function handleButtonClick(Addr) {
-
-    var endAddrKeywordInput = document.getElementById('endAddrKeyword');
-
-    endAddrKeywordInput.value = Addr;
+function handleButtonClick(Addr, Name, X, Y) {
+	
+	/*alert(likeAddr);
+	alert(likeName);
+	alert(likeX);
+	alert(likeY);*/
+	
+	var endAddrKeywordInput = document.getElementById('endAddrKeyword');
+	    endAddrKeywordInput.value=Addr;
+	var endxInput = document.getElementById('endx');
+	    endxInput.value=X;
+	var endyInput = document.getElementById('endy');
+	    endyInput.value=Y;
+	    
+	    window.selectOptionsEndData = {
+	            endAddress: Addr,
+	            endPlaceName: Addr,
+	            endLat: X,
+	            endLng: Y
+	        };
+	    
+	    
 
 }
 
@@ -445,7 +462,7 @@ async function displayInfowindow(title, position, type) {
             sessionStorage.setItem('callCode', window.callCodeData.callCode);
             
             //location.href ='https://localhost:8000/callreq/inputAddressMap.jsp';
-            location.href = '/callreq/inputAddressMap?userNo=1004&callCode='+window.callCodeData.callCode; 
+            location.href = '/callreq/inputAddressMap?userNo='+${user.userNo }+'&callCode='+window.callCodeData.callCode; 
         }
     }
 }
@@ -565,13 +582,13 @@ document.addEventListener('DOMContentLoaded', function() {
 function selectOptions(callCode){
 	
 	// 출발/도착지 값 둘다 있는지 체크
-	/*var startAddrKeywordInput = document.getElementById('startAddrKeyword');
+
+	  var startAddrInput = document.getElementById('startAddrKeyword');
+    var endAddrInput = document.getElementById('endAddrKeyword');
     
-	if(startAddrKeywordInput.value == '' || startAddrKeywordInput.value == null){
-		
-		
-	}*/
-	
+    if(startAddrInput.value == '' || endAddrInput.value == ''){
+    	 alert("출발지와 목적지를 모두 입력해주세요.");
+    } else if (startAddrInput.value.trim() !== '' && endAddrInput.value.trim() !== '') {
 	  
 	  // 세션 스토리지에 정보 저장	 
 	  if(window.selectOptionsStartDataMap.startAddress != null){
@@ -591,8 +608,9 @@ function selectOptions(callCode){
     sessionStorage.setItem('endLat', window.selectOptionsEndData.endLat);
     sessionStorage.setItem('endLng', window.selectOptionsEndData.endLng);
 
-	  self.location = "/callreq/selectOptions?userNo=1004&callCode="+callCode;
+	  self.location = "/callreq/selectOptions?userNo="+${user.userNo }+"&callCode="+callCode;
 	}
+}
 </script>
 
 </body>
