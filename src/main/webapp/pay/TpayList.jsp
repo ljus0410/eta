@@ -12,9 +12,10 @@
 </head>
 <body>
 Tpay 이용 내역<br>
-잔여 Tpay : ${myMoney} 원  <button onclick="payRequeset()">Tpay 충전</button><br>
+잔여 Tpay : ${myMoney} 원  <button onclick="payRequest()">Tpay 충전</button><br>
             
 <select id="month">
+  <option value="all">전체</option>
   <option value="01">1월</option>
   <option value="02">2월</option>
   <option value="03">3월</option>
@@ -47,7 +48,7 @@ Tpay 이용 내역<br>
 				        <c:when test="${TpayList.callNo eq 0}">
 				        </c:when>
 				        <c:otherwise>
-				         <p><button class="getRecord">${TpayList.callNo} </button>
+				         <p><a class="getRecord" data-callno="${TpayList.callNo} "> ${TpayList.callNo} </a>
 				        </c:otherwise>
 				      </c:choose>				     
 				      ${TpayList.payType} ${TpayList.payDate} ${TpayList.money}</p>
@@ -55,15 +56,11 @@ Tpay 이용 내역<br>
 				    </c:forEach>		       
 		    </c:otherwise>
 		</c:choose>
-
-    
-    <form>
-    <input type="hidden" name="userNo" value="1004">
-     <input type="hidden" name="callNo" value="1044">
-    <input type="hidden" name="payType" value="실결제">
-    <input type="hidden" name="money" value="3000">
-    <button onclick="addPay()">addPay Test</button>
-    </form>
+		
+		<input type="hidden" id="userNo" value="${user.userNo }">
+		<input type="hidden" id="email" value="${user.email }">
+		<input type="hidden" id="name" value="${user.name }">
+		<input type="hidden" id="phone" value="${user.phone }">
        
 </body>
 <script>
@@ -72,24 +69,23 @@ $(function() {
 	   
 	   $( "#searchButton" ).on("click" , function() {
 		   var month = $("#month").val();
-		   self.location = "/pay/TpayList?userNo=1004&month="+month;
+		   self.location = '/pay/TpayList?userNo=${user.userNo}&month='+month;
 	  });
 	   
-	     $( ".getRecord" ).on("click" , function() {
-	         alert("이용기록상세조회로 이동");
-	      });
+	    $( ".getRecord" ).on("click" , function() { 
+	        
+	        var callNo = $(this).data("callno");
+	          self.location = "/callres/getRecordPassenger?callNo="+callNo;
+	       }); 
 });
 
-function addPay(){
-	$("form").attr("method" , "POST").attr("action" , "/pay/addPay").submit();
-}
-function payRequeset(){
+function payRequest(){
 	
 	  var userInput = prompt("충전할 금액을 입력하세요 :");
 	  
 	  if(userInput !== null && userInput < 10000){
 		  alert("10000원 이상 충전이 가능합니다.");
-		  payRequeset();
+		  payRequest();
 		  
 	  } else if (userInput !== null && userInput >= 10000) {
 	    
@@ -105,8 +101,17 @@ function TpayCharge(Tpay) {
 	  var IMP = window.IMP;
 	  IMP.init("imp16061541");
 	  
-	  var userNo = 1004;
+	  var No = document.getElementById('userNo');
+	  var userNo = No.value;
+	  var name = document.getElementById('name');
+	  var userName = name.value;
+	  var phone = document.getElementById('phone');
+	  var userPhone = phone.value;
+	  var email = document.getElementById('email');
+	  var userEmail = email.value;
 	  
+	  //alert(userNo, userName, userPhone, userEmail);
+
 	    // IMP.request_pay(param, callback) 결제창 호출
 	    IMP.request_pay({ // param
 	       pg : 'html5_inicis',
@@ -114,9 +119,9 @@ function TpayCharge(Tpay) {
 	          merchant_uid: "merchant_" + new Date().getTime(), // 상점에서 관리하는 주문 번호를 전달
 	          name : 'Tpay 충전',
 	          amount : Tpay,
-	          buyer_name : userNo.toString(),  // 사용자 닉네임?이름?회원번호?
-	          buyer_email : 'mirim666@naver.com',
-	          buyer_tel : '010-0000-0000'  //필수입력
+	          buyer_name : userName,
+	          buyer_email : userEmail,
+	          buyer_tel : userPhone,  //필수입력
 	          //buyer_postcode : '123-456',
 	          //m_redirect_url : '{/purchase/addPurchase.jsp}' // 예: https://www.my-service.com/payments/complete/mobile
 	    }, function (rsp) { // callback
