@@ -8,6 +8,8 @@
 <meta charset="UTF-8">
 <title>searchCall</title>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
 
@@ -32,6 +34,7 @@
 
 </body>
 <script>
+
 document.addEventListener('DOMContentLoaded', function() {
 	
 	var callNo = document.getElementById('callNo').value;
@@ -39,82 +42,61 @@ document.addEventListener('DOMContentLoaded', function() {
     window.callNo = {
     		callNo: callNo
             };
-    
 });
 
+
+function removeMessage() {
+	   alert("배차에 실패하였습니다.");
+	   $("form").attr("method" , "POST").attr("action" , "/callreq/deleteCall").submit();
+}
+
 function deleteCall(){
-	alert("배차 탐색을 취소하시겠습니까?");
-	$("form").attr("method" , "POST").attr("action" , "/callreq/deleteCall").submit();
+	
+	 var result = confirm("배차 탐색을 취소하시겠습니까?");
+
+	  if (result == true) {
+		  $("form").attr("method" , "POST").attr("action" , "/callreq/deleteCall").submit();
+	  } else {
+
+	  }  
 }
 
-let socket = new WebSocket("wss://localhost:8000/websocket");
+function connectWebSocket() {
+    var socket = new SockJS('/ws'); // '/ws'는 서버의 웹소켓 연결 URL
+    stompClient = Stomp.over(socket);
 
-socket.onopen = function (event) {
-    console.log("웹 소켓 연결 성공!");
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+        // 추가 구독 설정
+        
+        socket.onclose = function () {
+            console.log('WebSocket connection closed');
+          };
+
+          var driverNo = 1012;
+          sendLocationToServer(driverNo);
+    }, function (error) {
+        console.error('Websocket connection error: ', error);
     
-    var callNo = window.callNo.callNo;
-    sendMessage(callNo);
-};
+    });
 
-socket.onerror = function (error) {
-    console.log(`에러 발생: ${error}`);
-};
-
-socket.onmessage = function (event) {
-    let msgArea = document.querySelector('.msgArea');
-    let newMsg = document.createElement('div');
-    newMsg.innerText = event.data;
-    msgArea.appendChild(newMsg);
-    
-    //showButtonWithMessage(event.data);
-};
-
-function sendMessageBack() {
-    
-    socket.send("driver가 call을 수락하였습니다.");
 }
 
-function sendMessage(callNo) {    
+function sendLocationToServer(driverNo) {
+  if (stompClient && stompClient.connected) {
+	    const sendDriverNo = driverNo;
+      const callNo = window.callNo.callNo;
+      stompClient.send("/sendCall/" + sendDriverNo, {}, callNo);
+      
+      setTimeout(() => {
+          alert("배차 탐색이 취소되었습니다.");
+        }, 2 * 60 * 1000); // 2분(밀리초 단위)
     
-	  console.log("push 된 callNo : "+callNo);
-  
-    socket.send("test", callNo);
-}
-
-function showButtonWithMessage(message) {
-  let socketAlertDiv = document.getElementById('socketAlertDiv');
-
-  let newAcceptBtn = document.createElement('button');
-  newAcceptBtn.type = 'button';
-  newAcceptBtn.innerText = "수락";
-  newAcceptBtn.onclick = function () {
-    alert("수락!"+message);
-    let callreq = document.getElementById('callreq');
-    callreq.parentNode.removeChild(callreq);
-
-    sendMessageBack();
-  };
-
-  let newDenyBtn = document.createElement('button');
-  newDenyBtn.type = 'button';
-  newDenyBtn.innerText = "거절";
-  newDenyBtn.onclick = function () {
-    alert("거절!"+message);
-    let callreq = document.getElementById('callreq');
-    callreq.parentNode.removeChild(callreq);
-  };
-
-  // 새로운 버튼을 기존 버튼 뒤에 추가
-  socketAlertDiv.innerHTML += "<div>" + message + "</div>";
-  socketAlertDiv.appendChild(newAcceptBtn);
-  socketAlertDiv.appendChild(newDenyBtn);
-
-
-    // 버튼이 숨겨져 있다면 표시
-    if (socketAlertDiv.classList.contains('hidden')) {
-      socketAlertDiv.classList.remove('hidden');
-    }
+  } else {
+      console.error("Websocket is not connected.");
   }
+}
+connectWebSocket();
 
 </script>
 </html>

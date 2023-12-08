@@ -38,9 +38,14 @@
   </resultMap>
 
   <select id="getEndAddrList" parameterType="int" resultMap="callReqSelectMap">
-       SELECT * FROM call
-       WHERE call_no IN (SELECT call_no FROM match WHERE passenger_no = #{userNo:NUMERIC} AND call_state_code = '운행완료')
-       ORDER BY call_date DESC
+        SELECT *
+        FROM call
+        WHERE call_no IN (
+            SELECT call_no
+            FROM match
+            WHERE passenger_no = #{userNo:NUMERIC} AND call_state_code = '운행완료'
+        )
+        ORDER BY call_date DESC
   </select>
   
     <select id="getLikeList" parameterType="int" resultMap="LikeSelectMap">
@@ -102,19 +107,16 @@
    </update>
    
    <update id="updateLikeAddr" parameterType="map">
-    UPDATE likes SET like_addr = #{likeAddr:VARCHAR} WHERE user_no = #{userNo:NUMERIC} AND like_no= #{likeNo:NUMERIC}
-   </update>
-   
-   <update id="updateCustomName" parameterType="map">
-    UPDATE likes SET like_name = #{likeName:VARCHAR} WHERE user_no = #{userNo:NUMERIC} AND like_no= 1002
+    UPDATE likes SET like_addr = #{likeAddr:VARCHAR}, like_name = #{likeName:VARCHAR} WHERE user_no = #{userNo:NUMERIC} AND like_no = #{likeNo:NUMERIC}
    </update>
    
    <update id="deleteLikeAddr" parameterType="map">
+    <if test="likeNo != 1002">
     UPDATE likes SET like_addr = null WHERE user_no = #{userNo:NUMERIC} AND like_no= #{likeNo:NUMERIC}
-   </update>
-   
-   <update id="deleteCustomName" parameterType="int">
-    UPDATE likes SET like_name = null WHERE user_no = #{userNo:NUMERIC} AND like_no= 1002
+    </if>
+    <if test="likeNo == 1002">
+    UPDATE likes SET like_addr = null, like_name = null WHERE user_no = #{userNo:NUMERIC} AND like_no= #{likeNo:NUMERIC}
+    </if>
    </update>
 
 </mapper>

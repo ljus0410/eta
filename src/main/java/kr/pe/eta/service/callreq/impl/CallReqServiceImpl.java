@@ -82,12 +82,8 @@ public class CallReqServiceImpl implements CallReqService {
 		callReqDao.updateShareCode(callNo);
 	}
 
-	public void updateLikeAddr(String likeAddr, int userNo, int likeNo) throws Exception {
-		callReqDao.updateLikeAddr(likeAddr, userNo, likeNo);
-	}
-
-	public void updateCustomName(String likeName, int userNo) throws Exception {
-		callReqDao.updateCustomName(likeName, userNo);
+	public void updateLikeAddr(String likeAddr, String likeName, int userNo, int likeNo) throws Exception {
+		callReqDao.updateLikeAddr(likeAddr, likeName, userNo, likeNo);
 	}
 
 	public void deleteLikeAddr(int likeNo, int userNo) throws Exception {

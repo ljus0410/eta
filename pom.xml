@@ -59,6 +59,11 @@
       <scope>test</scope>
     </dependency>
     
+      <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+  </dependency>
+    
     <!-- Jakarta Expression Language API -->
     <dependency>
         <groupId>jakarta.platform</groupId>
@@ -116,6 +121,7 @@
   </dependencies>
 
   <build>
+    <finalName>ROOT</finalName>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>

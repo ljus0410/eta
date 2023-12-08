@@ -20,6 +20,8 @@
         <result property="endY"             column="end_y"            jdbcType="NUMERIC" />
         <result property="callStateCode"    column="call_state_code"  jdbcType="VARCHAR" />
         <result property="callDate"         column="call_date"        jdbcType="DATE" />
+        <result property="star"             column="star"             jdbcType="NUMERIC" />
+        <result property="routeOpt"         column="route_opt"        jdbcType="VARCHAR" />
     </resultMap>
 
     <resultMap id="dealreqSelectMap" type="dealreq">
@@ -38,148 +40,38 @@
         <result property="shareDate"                column="share_date"         jdbcType="DATE" />
     </resultMap>
 
-    <select id="getDealCallList" parameterType="int" resultMap="callSelectMap">
-        SELECT *
-        FROM (  SELECT inner_table.* , ROWNUM AS row_seq
-                FROM( SELECT call.start_addr, call.end_addr, call.call_no
-                      FROM call, deal, users
-                      WHERE deal.call_no=call.call_no
-                        AND users.user_no=deal.driver_no
-                        AND users.role='passenger'
-                        AND call.call_state_code='운행전') inner_table
-                WHERE ROWNUM &lt;= #{endRowNum} )
-        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
-    </select>
+
 
     <insert id="addReservation" parameterType="call">
-			  <![CDATA[
-				  DECLARE
-				    v_call_no NUMBER;
-				  BEGIN
-				    INSERT INTO call 
-				    (call_no, call_code, call_date, real_pay, start_addr, start_keyword, start_x, start_y, end_addr, end_keyword, end_x, end_y, call_state_code, star) 
-				    VALUES 
-				    (seq_call_call_no.NEXTVAL, 'R', TO_DATE(#{callDate}, 'YYYY-MM-DD HH24:MI:SS'), #{realPay:NUMERIC}, #{startAddr:VARCHAR}, #{startKeyword:VARCHAR}, #{startX}, #{startY}, #{endAddr:VARCHAR}, #{endKeyword:VARCHAR}, #{endX}, #{endY}, '운행전', 0)
-				    RETURNING call_no INTO v_call_no;
-				
-				    INSERT INTO match (call_no, passenger_no, driver_no) VALUES (v_call_no, #{userNo:NUMERIC}, NULL);
-				  END;
-			  ]]>
-		</insert>
-		
+        <![CDATA[
+        DECLARE
+        v_call_no NUMBER;
+        BEGIN
+        INSERT INTO call
+        (call_no, call_code, call_date, real_pay, start_addr, start_keyword, start_x, start_y, end_addr, end_keyword, end_x, end_y, call_state_code, star, route_opt)
+        VALUES (seq_call_call_no.NEXTVAL, 'R', TO_DATE(#{callDate}, 'YYYY-MM-DD HH24:MI:SS'), #{realPay:NUMERIC}, #{startAddr:VARCHAR}, #{startKeyword:VARCHAR}, #{startX}, #{startY}, #{endAddr:VARCHAR}, #{endKeyword:VARCHAR}, #{endX}, #{endY}, '운행전', 0, #{routeOpt})
+        RETURNING call_no INTO v_call_no;
+
+        INSERT INTO match (call_no, passenger_no, driver_no) VALUES (v_call_no, #{userNo:NUMERIC}, null);
+        END;
+        ]]>
+    </insert>
+    
     <select id="getCallNo" parameterType="map" resultType="int">
         SELECT call.call_no
-        FROM call, users, pay
-        WHERE users.user_no=#{param.userNo}
-        AND users.user_no=pay.user_no
-        AND call.call_no=pay.call_no
+        FROM call, users, match
+        WHERE users.user_no=#{userNo}
+        AND users.user_no=match.passenger_no
+        AND call.call_no=match.call_no
         AND call.call_state_code='운행전'
-        AND call.call_code=#{param.callCode}
-    </select>
-
-    <select id="getCall" parameterType="int" resultMap="callSelectMap">
-        SELECT call_no, call_code, TO_CHAR(call_date, 'YYYY-MM-DD HH24:MI:SS') AS call_date, real_pay, start_keyword, start_x, start_y, end_addr, end_keyword, end_x, end_y, call_state_code, star)
-        FROM call
-        WHERE call_no=#{value}
+        AND call.call_code=#{callCode}
     </select>
     
     <insert id="addDealReq" parameterType="dealreq" >
         INSERT
-        INTO deal(deal_no, driver_no, call_no, passenger_offer, driver_offer)
+        INTO deal(deal_no, user_no, call_no, passenger_offer, driver_offer)
         VALUES (seq_deal_deal_no.nextval, #{userNo}, #{callNo}, #{passengerOffer}, #{driverOffer:NUMERIC})
     </insert>
-
-    <delete id="deleteDealReq" parameterType="int">
-        DELETE
-        FROM deal
-        WHERE driver_no=#{userNo}
-    </delete>
-
-    <select id="getDeal" parameterType="int" resultMap="dealreqSelectMap">
-        SELECT deal.call_no, deal.passenger_offer
-        FROM deal, users
-        WHERE users.user_no=#{userNo}
-          AND users.user_no=deal.driver_no
-          AND users.role='passenger'
-    </select>
-
-    <select id="getDealList" parameterType="map" resultMap="dealreqSelectMap">
-        SELECT *
-        FROM (  SELECT inner_table.* , ROWNUM AS row_seq
-				        FROM( SELECT deal.call_no, deal.deal_no, deal.driver_no, deal.passenger_offer
-				              FROM call, deal, users
-				              WHERE deal.call_no=call.call_no
-				              AND users.user_no=deal.driver_no
-				              AND users.role='passenger'
-				              AND call.call_state_code='운행전') inner_table
-				        WHERE ROWNUM &lt;= #{endRowNum} )
-        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
-    </select>
-
-    <select id="getDealDriverList" parameterType="map" resultMap="dealreqSelectMap">
-        SELECT *
-        FROM (  SELECT inner_table.* , ROWNUM AS row_seq
-				        FROM( SELECT deal.driver_offer, deal.call_no, deal.driver_no
-							        FROM call, deal, users
-							        WHERE deal.call_no=call.call_no
-							        AND call.call_no=#{callNo}
-							        AND call.call_state_code='운행전'
-							        AND users.user_no=deal.driver_no
-							        AND users.role='driver') inner_table
-				        WHERE ROWNUM &lt;= #{endRowNum})
-        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
-    </select>
-
-    <select  id="getTotalCountPass"  parameterType="search"  resultType="int">
-        SELECT COUNT(*)
-        FROM( SELECT deal.call_no, deal.deal_no, deal.driver_no, deal.passenger_offer
-                 FROM call, deal, users
-                 WHERE deal.call_no=call.call_no
-                   AND call.call_state_code='운행전'
-                   AND users.user_no=deal.driver_no
-                   AND users.role='passenger' ) countTable
-    </select>
-
-    <select  id="getTotalCountDriver"  parameterType="int"   resultType="int">
-        SELECT COUNT(*)
-        FROM( SELECT deal.driver_offer, deal.call_no, deal.driver_no
-                 FROM call, deal, users
-                 WHERE deal.call_no=call.call_no
-                   AND call.call_no=#{callNo}
-                   AND call.call_state_code='운행전'
-                   AND users.user_no=deal.driver_no
-                   AND users.role='driver' ) countTable
-    </select>
-
-    <insert id="addShareReq" parameterType="sharereq">
-        INSERT
-        INTO shares(share_no, other_share_passenger_no, call_no, share_count, start_share_count, max_share_count, share_date, star)
-        VALUES (seq_share_share_no.nextval, NULL, #{callNo}, #{firstShareCount}, #{startShareCount}, #{maxShareCount}, #{shareDate}, 0)
-    </insert>
-
-    <insert id="addShareReqOther" parameterType="sharereq">
-        INSERT
-        INTO shares(share_no, other_share_passenger_no, call_no, share_count, start_share_count, max_share_count, share_date, star)
-        VALUES (seq_share_share_no.nextval, #{firstSharePassengerNo}, #{callNo}, #{firstShareCount}, #{startShareCount}, #{maxShareCount}, #{shareDate}, 0)
-    </insert>
-
-    <delete id="deleteShareReq" parameterType="int">
-        DELETE
-        FROM shares
-        WHERE other_share_passenger_no=#{firstSharePassengerNo}
-    </delete>
-
-    <select id="getShareList" parameterType="map" resultMap="sharereqSelectMap">
-        SELECT *
-        FROM (  SELECT inner_table.* , ROWNUM AS row_seq
-                FROM( SELECT s.other_share_passenger_no, s.call_no, s.share_count, s.start_share_count, s.max_share_count, s.share_date, s.star
-                      FROM call c, shares s, users u
-                      WHERE s.call_no=c.call_no
-                        AND c.call_state_code='운행전'
-                        AND u.user_no=s.other_share_passenger_no ) inner_table
-                WHERE ROWNUM &lt;= #{endRowNum} )
-        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
-    </select>
 
     <update id="updateDealCode" parameterType="int">
         UPDATE users
@@ -191,14 +83,88 @@
         WHERE user_no = #{userNo}
     </update>
 
-    <update id="updateShareCode" parameterType="int">
-        UPDATE users
-        SET share_code =
-                CASE
-                    WHEN share_code = 0 THEN 1
-                    WHEN share_code = 1 THEN 0
-                    END
-        WHERE user_no = #{userNo}
-    </update>
-    
+    <select id="getCall" parameterType="int" resultMap="callSelectMap">
+        SELECT call_no, call_code, TO_CHAR(call_date, 'YYYY-MM-DD HH24:MI:SS') AS call_date, real_pay, start_addr ,start_keyword, start_x, start_y, end_addr, end_keyword, end_x, end_y, call_state_code, star, route_opt
+        FROM call
+        WHERE call_no=#{value}
+    </select>
+
+    <select id="getDeal" parameterType="int" resultMap="dealreqSelectMap">
+        SELECT deal.call_no, deal.passenger_offer
+        FROM deal, users
+        WHERE users.user_no=#{userNo}
+          AND users.user_no=deal.user_no
+          AND users.role='passenger'
+    </select>
+
+    <select id="getDealDriverList" parameterType="int" resultMap="dealreqSelectMap">
+        SELECT deal.driver_offer, deal.call_no, deal.user_no
+        FROM call, deal, users
+        WHERE deal.call_no=call.call_no
+          AND call.call_no=#{value}
+          AND call.call_state_code='운행전'
+          AND users.user_no=deal.user_no
+          AND users.role='driver'
+    </select>
+
+    <delete id="deleteDealReq" parameterType="int">
+        DELETE
+        FROM deal
+        WHERE call_no=#{callNo}
+    </delete>
+
+    <select id="getDealList" parameterType="search" resultMap="dealreqSelectMap">
+        SELECT *
+        FROM (  SELECT inner_table.* , ROWNUM AS row_seq
+                FROM( SELECT deal.call_no, deal.user_no, deal.passenger_offer
+                      FROM call, deal, users
+                      WHERE deal.call_no=call.call_no
+                      AND users.user_no=deal.user_no
+                      AND users.role='passenger'
+                      AND call.call_state_code='운행전'
+                              ORDER BY call.call_no) inner_table
+                WHERE ROWNUM &lt;= #{endRowNum} )
+        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+    </select>
+
+    <select id="getDealCallList" parameterType="search" resultMap="callSelectMap">
+        SELECT *
+        FROM (  SELECT inner_table.* , ROWNUM AS row_seq
+                FROM( SELECT call.start_addr, call.end_addr, call.call_no
+                      FROM call, deal, users
+                      WHERE deal.call_no=call.call_no
+                        AND users.user_no=deal.user_no
+                        AND users.role='passenger'
+                        AND call.call_state_code='운행전'
+                      ORDER BY call.call_no) inner_table
+                WHERE ROWNUM &lt;= #{endRowNum} )
+        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+    </select>
+
+    <select  id="getDealCount"  parameterType="search"  resultType="int">
+        SELECT COUNT(*)
+        FROM( SELECT deal.call_no, deal.deal_no, deal.user_no, deal.passenger_offer
+                 FROM call, deal, users
+                 WHERE deal.call_no=call.call_no
+                   AND call.call_state_code='운행전'
+                   AND users.user_no=deal.user_no
+                   AND users.role='passenger' ) countTable
+    </select>
+
+    <select id="getDealNo" parameterType="map" resultType="int">
+        SELECT deal.call_no
+        FROM call, users, deal
+        WHERE users.user_no=#{userNo}
+          AND users.user_no=deal.user_no
+          AND call.call_no=deal.call_no
+          AND call.call_state_code='운행전'
+          AND call.call_code=#{callCode}
+    </select>
+
+    <delete id="deleteDealReqDriver" parameterType="int">
+        DELETE
+        FROM deal
+        WHERE user_no=#{userNo}
+    </delete>
+
 </mapper>
