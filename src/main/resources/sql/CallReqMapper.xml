@@ -6,7 +6,7 @@
 
 <mapper namespace="kr.pe.eta.service.callreq.CallReqDao">
 
-  <resultMap id="callReqSelectMap" type="call">
+  <resultMap id="callReqSelectMap" type="Call">
     <result property="callNo"       column="call_no"       jdbcType="NUMERIC"/>
     <result property="callCode" column="call_code"    jdbcType="VARCHAR" />
     <result property="callDate" column="call_date"    jdbcType="DATE" />
@@ -29,6 +29,8 @@
       <result property="userNo"   column="USER_NO"      jdbcType="NUMERIC"/>
       <result property="likeName"   column="LIKE_NAME"      jdbcType="VARCHAR"/>
       <result property="likeAddr"     column="LIKE_ADDR"     jdbcType="VARCHAR"/>
+      <result property="likeX"     column="LIKE_X"     jdbcType="NUMERIC"/>
+      <result property="likeY"     column="LIKE_Y"     jdbcType="NUMERIC"/>
   </resultMap>
   
   <resultMap id="userSelectMap" type="User">
@@ -38,9 +40,14 @@
   </resultMap>
 
   <select id="getEndAddrList" parameterType="int" resultMap="callReqSelectMap">
-       SELECT * FROM call
-       WHERE call_no IN (SELECT call_no FROM match WHERE passenger_no = #{userNo:NUMERIC} AND call_state_code = '운행완료')
-       ORDER BY call_date DESC
+        SELECT *
+        FROM call
+        WHERE call_no IN (
+            SELECT call_no
+            FROM match
+            WHERE passenger_no = #{userNo:NUMERIC} AND call_state_code = '운행완료'
+        )
+        ORDER BY call_date DESC
   </select>
   
     <select id="getLikeList" parameterType="int" resultMap="LikeSelectMap">
@@ -50,9 +57,9 @@
    <insert  id="addLikeList"    parameterType="int" >
      <![CDATA[
      BEGIN             
-      INSERT INTO likes (like_no, user_no, like_name, like_addr) VALUES (1000, #{userNo:NUMERIC}, '집', null);
-      INSERT INTO likes (like_no, user_no, like_name, like_addr) VALUES (1001, #{userNo:NUMERIC}, '회사', null);
-      INSERT INTO likes (like_no, user_no, like_name, like_addr) VALUES (1002, #{userNo:NUMERIC}, null, null);      
+      INSERT INTO likes (like_no, user_no, like_name, like_addr, like_x, like_y) VALUES (1000, #{userNo:NUMERIC}, '집', null, null, null);
+      INSERT INTO likes (like_no, user_no, like_name, like_addr, like_x, like_y) VALUES (1001, #{userNo:NUMERIC}, '회사', null, null, null);
+      INSERT INTO likes (like_no, user_no, like_name, like_addr, like_x, like_y) VALUES (1002, #{userNo:NUMERIC}, null, null, null, null);      
      END;
     ]]>
    </insert>
@@ -89,8 +96,8 @@
     ]]>
   </delete>
   
-    <select id="getCallDriverList" parameterType="map" resultMap="userSelectMap">
-      SELECT user_no FROM users WHERE car_opt=#{carOpt} AND pet_opt=#{petOpt} 
+    <select id="getCallDriver" parameterType="map" resultType="Integer">
+      SELECT user_no FROM users WHERE car_opt=#{carOpt} AND pet_opt=#{petOpt} AND user_no=#{driverNo:NUMERIC}
    </select>
   
     <update id="updateDealCode" parameterType="int">
@@ -102,19 +109,20 @@
    </update>
    
    <update id="updateLikeAddr" parameterType="map">
-    UPDATE likes SET like_addr = #{likeAddr:VARCHAR} WHERE user_no = #{userNo:NUMERIC} AND like_no= #{likeNo:NUMERIC}
-   </update>
-   
-   <update id="updateCustomName" parameterType="map">
-    UPDATE likes SET like_name = #{likeName:VARCHAR} WHERE user_no = #{userNo:NUMERIC} AND like_no= 1002
+    UPDATE likes SET like_addr = #{likeAddr:VARCHAR}, like_name = #{likeName:VARCHAR} WHERE user_no = #{userNo:NUMERIC} AND like_no = #{likeNo:NUMERIC}
    </update>
    
    <update id="deleteLikeAddr" parameterType="map">
+    <if test="likeNo != 1002">
     UPDATE likes SET like_addr = null WHERE user_no = #{userNo:NUMERIC} AND like_no= #{likeNo:NUMERIC}
+    </if>
+    <if test="likeNo == 1002">
+    UPDATE likes SET like_addr = null, like_name = null WHERE user_no = #{userNo:NUMERIC} AND like_no= #{likeNo:NUMERIC}
+    </if>
    </update>
    
-   <update id="deleteCustomName" parameterType="int">
-    UPDATE likes SET like_name = null WHERE user_no = #{userNo:NUMERIC} AND like_no= 1002
-   </update>
+   <select id="getBlackList" parameterType="int" resultType="int">
+      SELECT blacklist_no FROM blacklist WHERE passenger_no = #{passengerNo:NUMERIC}
+   </select>
 
 </mapper>

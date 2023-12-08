@@ -59,6 +59,11 @@
       <scope>test</scope>
     </dependency>
     
+      <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+  </dependency>
+    
     <!-- Jakarta Expression Language API -->
     <dependency>
         <groupId>jakarta.platform</groupId>
@@ -95,9 +100,28 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
+    
+    <!-- messege -->
+        <dependency>
+            <groupId>net.nurigo</groupId>
+            <artifactId>sdk</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+      
+    <dependency>
+    	<groupId>org.springframework.boot</groupId>
+    	<artifactId>spring-boot-starter-data-redis</artifactId>
+	</dependency>
+	
+	<dependency>
+    	<groupId>org.springframework.boot</groupId>
+    	<artifactId>spring-boot-starter-data-mongodb</artifactId>
+	</dependency>
+
   </dependencies>
 
   <build>
+    <finalName>ROOT</finalName>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>

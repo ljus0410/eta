@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import kr.pe.eta.common.Search;
-import kr.pe.eta.domain.Blacklist;
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.ShareReqPassenger;
 import kr.pe.eta.domain.User;
@@ -149,9 +148,24 @@ public class CallResServiceImpl implements CallResService {
 	}
 
 	@Override
-	public Blacklist getBlacklistByCallNod(int callNo) {
+	public int getBlacklistByCallNod(int callNo) {
+		Integer result = callResDao.getBlacklistByCallNod(callNo);
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
+
+	@Override
+	public User getUserByUserNo(int userNo) {
 		// TODO Auto-generated method stub
-		return callResDao.getBlacklistByCallNod(callNo);
+		return callResDao.getUserByUserNo(userNo);
+	}
+
+	@Override
+	public void updateRealPay(Call call) throws Exception {
+		// TODO Auto-generated method stub
+		callResDao.updateCallStateCode(call);
 	}
 
 }

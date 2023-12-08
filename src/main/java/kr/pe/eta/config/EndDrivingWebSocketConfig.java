@@ -6,20 +6,18 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
-@Configuration
 @EnableWebSocketMessageBroker
-public class CallReqConfig implements WebSocketMessageBrokerConfigurer {
-
-	@Override
-	public void configureMessageBroker(MessageBrokerRegistry config) {
-		config.enableSimpleBroker("/send");
-	}
+@Configuration
+public class EndDrivingWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/").setAllowedOrigins("https://localhost:8000").withSockJS();
+		registry.addEndpoint("/websoket").withSockJS();
 	}
+
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry registry) {
+		registry.enableSimpleBroker("/app");
+	}
+
 }

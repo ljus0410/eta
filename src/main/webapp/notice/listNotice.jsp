@@ -83,27 +83,38 @@ $(function () {
 	    lastScroll = currentScroll;
 
 	});
+	
+	$("a:contains('검색')").on("click", function () {
+		
+		$("form").attr("method","POST").attr("action","/notice/listNotice").submit();
+	})
+	
+
 })
 
 </script>
 </head>
 <body>
-<table id ="muhanlist">	
-	<tr>
-		<td>넘버</td>
-		<td>제목</td>
-		<td>날짜</td>
-		
-	</tr>
-	<c:forEach var="noticelist" items="${noticelist }" begin="0" step="1" varStatus="status">
-		<tr class = "list">
-			<td>${status.count }&nbsp;&nbsp;<a href="/notice/getNotice?noticeNo=${noticelist.noticeNo }">상세보기</a></td>
-			<td>${noticelist.noticeTitle }</td>
-			<td>${noticelist.noticeDate }</td>
+<form name="detailform">
+	<input 	type="text" name="searchKeyword"  value="${!empty search.searchKeyword ? search.searchKeyword : ""}">
+			<a>검색</a>
+	<table id ="muhanlist">	
+		<tr>
+			<td>넘버</td>
+			<td>제목</td>
+			<td>날짜</td>
+			
 		</tr>
-	</c:forEach>
-	<input type="hidden" id="currentPage"name ="currentPage" value=1></br>
-	<a href="../notice/addNotice">공지사항 등록</a>
-</table>
+		<c:forEach var="noticelist" items="${noticelist }" begin="0" step="1" varStatus="status">
+			<tr class = "list">
+				<td>${status.count }&nbsp;&nbsp;<a href="/notice/getNotice?noticeNo=${noticelist.noticeNo }">상세보기</a></td>
+				<td>${noticelist.noticeTitle }</td>
+				<td>${noticelist.noticeDate }</td>
+			</tr>
+		</c:forEach>
+		<input type="hidden" id="currentPage"name ="currentPage" value=1></br>
+		<a href="../notice/addNotice">공지사항 등록</a>
+	</table>
+</form>
 </body>
 </html>

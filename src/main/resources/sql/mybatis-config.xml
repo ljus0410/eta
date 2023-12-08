@@ -25,6 +25,7 @@
         <typeAlias alias="sharereqpassenger" type="kr.pe.eta.domain.ShareReqPassenger"/>
         <typeAlias alias="star" type="kr.pe.eta.domain.Star"/>
         <typeAlias alias="search" type="kr.pe.eta.common.Search"/>
+        <typeAlias alias="cash" type="kr.pe.eta.domain.Cash"/>
     </typeAliases>
 
     <mappers>

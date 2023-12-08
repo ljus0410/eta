@@ -4,7 +4,6 @@ import java.util.List;
 
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Like;
-import kr.pe.eta.domain.User;
 
 public interface CallReqService {
 
@@ -20,18 +19,18 @@ public interface CallReqService {
 
 	public void deleteCall(int callNo) throws Exception;
 
-	public List<User> getCallDriverList(String carOpt, boolean petOpt) throws Exception;
+	public Integer getCallDriver(String carOpt, boolean petOpt, int driverNo) throws Exception;
 
 	public void updateDealCode(int callNo) throws Exception;
 
 	public void updateShareCode(int callNo) throws Exception;
 
-	public void updateLikeAddr(String likeAddr, int userNo, int likeNo) throws Exception;
-
-	public void updateCustomName(String likeName, int userNo) throws Exception;
+	public void updateLikeAddr(String likeAddr, String likeName, int userNo, int likeNo) throws Exception;
 
 	public void deleteLikeAddr(int likeNo, int userNo) throws Exception;
 
 	public void deleteCustomName(int userNo) throws Exception;
+
+	public List<Integer> getBlackList(int passnegerNo) throws Exception;
 
 }

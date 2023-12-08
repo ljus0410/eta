@@ -13,6 +13,7 @@ public class Blacklist {
 
 	private int driverNo;
 	private int passengerNo;
+	private int callNo;
 	private boolean blacklistCode;
 
 }
