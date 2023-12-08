@@ -5,7 +5,7 @@ import java.util.Map;
 
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.Call;
-import kr.pe.eta.domain.ShareReqPassenger;
+import kr.pe.eta.domain.ShareReq;
 import kr.pe.eta.domain.User;
 
 public interface CallResService {
@@ -29,13 +29,13 @@ public interface CallResService {
 
 	public User getUserByCallNop(int callNo);
 
-	public List<ShareReqPassenger> getSharesByCallNop(int callNo);
+	public List<ShareReq> getSharesByCallNop(int callNo);
 
 	public User getUserByCallNod(int callNo);
 
 	public int getMatchByCallnod(int callNo);
 
-	public List<ShareReqPassenger> getSharesByCallNod(int callNo);
+	public List<ShareReq> getSharesByCallNod(int callNo);
 
 	public int getBlacklistByCallNod(int callNo);
 

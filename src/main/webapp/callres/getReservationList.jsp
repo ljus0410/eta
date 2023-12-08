@@ -1,9 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 
-
-pageEncoding="UTF-8"%>
-
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
 
@@ -15,93 +13,85 @@ pageEncoding="UTF-8"%>
 
 <title>Insert title here</title>
 
-  
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-  
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
 
 <style>
-
 .record-container {
-
-display: flex;
-
-flex-direction: row;
-
-justify-content: flex-start;
-
-align-items: center;
-
-margin-bottom: 10px;
-
-cursor: pointer; /* 마우스 커서를 포인터로 설정 */
-
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	margin-bottom: 10px;
+	cursor: pointer; /* 마우스 커서를 포인터로 설정 */
 }
 
 .record-container p {
-
-margin-right: 20px;
-
+	margin-right: 20px;
 }
-
 </style>
 
 </head>
 
 <body>
 
-  
 
-<div>
 
-<c:forEach var="record" items="${list}" varStatus="status">
+	<div>
 
-<div class="record-container" data-callno="${record.callNo}">
+		<c:forEach var="record" items="${list}" varStatus="status">
 
-<p>날짜/시간: ${record.callDate}</p>
+			<div class="record-container" data-callno="${record.callNo}">
 
-<p>출발: ${record.startKeyword}</p>
+				<p>날짜/시간: ${record.callDate}</p>
 
-<p>도착: ${record.endKeyword}</p>
+				<p>출발: ${record.startKeyword}</p>
 
-<p>예약배차번호: ${record.callNo}</p>
+				<p>도착: ${record.endKeyword}</p>
 
-</div>
+				<p>예약배차번호: ${record.callNo}</p>
 
-</c:forEach>
+			</div>
 
-</div>
+		</c:forEach>
 
-  
+	</div>
 
-<script>
 
-$(function() {
 
-$(".record-container").on("click", function() {
+	<script>
+		$(function() {
 
-var role = "${user.role}"; // 현재 사용자의 역할
+			$(".record-container")
+					.on(
+							"click",
+							function() {
 
-var callNo = $(this).data("callno"); // callNo 값
+								var role = "${user.role}"; // 현재 사용자의 역할
 
-var url = role === 'passenger' ? '/callres/getRecordPassenger' : '/callres/getRecordDriver';
+								var callNo = $(this).data("callno"); // callNo 값
 
-// URL 생성
+								var url = role === 'passenger' ? '/callres/getRecordPassenger'
+										: '/callres/getRecordDriver';
 
-var newUrl = url + "?callNo=" + callNo;
+								// URL 생성
 
-// 페이지 리디렉션
+								var newUrl = url + "?callNo=" + callNo;
 
-window.location.href = newUrl;
+								// 페이지 리디렉션
 
-});
+								window.location.href = newUrl;
 
-});
+							});
 
-</script>
+		});
+	</script>
 
-  
+
 
 </body>
 
