@@ -152,11 +152,15 @@ public class UserController {
 			}
 		} else {
 			// 코드가 이미 false인 경우, 로그인 로직 수행
-			RedisEntity redisEntity = new RedisEntity();
-			redisEntity.setId(db.getEmail());
-			redisEntity.setCurrentX(X);
-			redisEntity.setCurrentY(Y);
-			redisService.addUser(redisEntity);
+			if (db.getRole().equals("driver")) {
+				RedisEntity redisEntity = new RedisEntity();
+				String userNo = String.valueOf(db.getUserNo());
+				redisEntity.setId(userNo);
+				redisEntity.setCurrentX(X);
+				redisEntity.setCurrentY(Y);
+				redisService.addUser(redisEntity);
+			}
+
 			session.setAttribute("user", db);
 			modelAndView.setViewName("redirect:/home.jsp");
 		}
