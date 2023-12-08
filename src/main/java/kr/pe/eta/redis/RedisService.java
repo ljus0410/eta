@@ -1,5 +1,6 @@
 package kr.pe.eta.redis;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -41,6 +42,18 @@ public class RedisService {
 		// Handling
 		if (result.isPresent()) {
 			return result.get();
+		} else {
+			throw new RuntimeException("Database has no Data");
+		}
+	}
+
+	@Transactional(readOnly = true)
+	public List<RedisEntity> getAllUser() {
+		List<RedisEntity> userList = (List<RedisEntity>) repository.findAll();
+
+		// Handling
+		if (!userList.isEmpty()) {
+			return userList;
 		} else {
 			throw new RuntimeException("Database has no Data");
 		}

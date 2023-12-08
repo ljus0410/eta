@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Like;
-import kr.pe.eta.domain.User;
 import kr.pe.eta.service.callreq.CallReqDao;
 import kr.pe.eta.service.callreq.CallReqService;
 
@@ -63,13 +62,13 @@ public class CallReqServiceImpl implements CallReqService {
 		callReqDao.deleteCall(callNo);
 	}
 
-	public List<User> getCallDriverList(String carOpt, boolean petOpt) throws Exception {
+	public int getCallDriver(String carOpt, boolean petOpt, int driverNo) throws Exception {
 		System.out.println("serviceImpl getCallDriverList carOpt : " + carOpt);
 		System.out.println("serviceImpl getCallDriverList petOpt : " + petOpt);
+		System.out.println("serviceImpl getCallDriverList driverNo : " + driverNo);
+		int callDriverNo = callReqDao.getCallDriver(carOpt, petOpt, driverNo);
 
-		List<User> callDriverList = callReqDao.getCallDriverList(carOpt, petOpt);
-
-		return callDriverList;
+		return callDriverNo;
 	}
 
 	public void updateDealCode(int callNo) throws Exception {
@@ -92,6 +91,13 @@ public class CallReqServiceImpl implements CallReqService {
 
 	public void deleteCustomName(int userNo) throws Exception {
 		callReqDao.deleteCustomName(userNo);
+	}
+
+	public List<Integer> getBlackList(int passengerNo) throws Exception {
+		System.out.println("serviceImpl getBlackList passengerNo : " + passengerNo);
+		List<Integer> blackNoList = callReqDao.getBlackList(passengerNo);
+
+		return blackNoList;
 	}
 
 }

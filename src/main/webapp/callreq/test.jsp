@@ -18,7 +18,7 @@
 <script>
 function connect() {
     var socket = new SockJS('/ws');
-    var driverNo = 1012;
+    var driverNo = ${user.userNo };
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function (frame) {

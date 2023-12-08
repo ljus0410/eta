@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +15,7 @@
   </style>
 </head>
 <body>
+
  <button type="button" class="inputAddress" onclick="inputAddress('N')">일반콜</button>
   <button type="button" class="inputAddress" onclick="inputAddress('R')">예약콜</button>
   <button type="button" class="inputAddress" onclick="inputAddress('D')">택시비 딜 콜</button>
@@ -39,7 +42,7 @@
 </body>
 <script>
 function myCashList() {    
-    self.location = "/pay/myCashList?userNo=1012&month=all"
+    self.location = "/pay/myCashList?userNo="+${user.userNo }+"&month=all"
   }
   
 function cashDriverList() {
@@ -49,26 +52,26 @@ function cashDriverList() {
   
 function likeAddress() {
     
-	  self.location = "/callreq/likeAddress?userNo=1004"
+	  self.location = "/callreq/likeAddress?userNo="+${user.userNo }
 	}
 
 function inputAddress(callCode) {
 	var callCode = callCode;
 
 	if(callCode === 'N'){
-		self.location = "/callreq/inputAddress?userNo=1004&callCode=N"
+		self.location = "/callreq/inputAddress?userNo="+${user.userNo }+"&callCode=N"
 	} else if(callCode === 'D'){
-		self.location = "/callreq/inputAddress?userNo=1004&callCode=D"
+		self.location = "/callreq/inputAddress?userNo="+${user.userNo }+"&callCode=D"
 	} else if(callCode === 'S'){
-		 self.location = "/callreq/inputAddress?userNo=1004&callCode=S"
+		 self.location = "/callreq/inputAddress?userNo="+${user.userNo }+"&callCode=S"
 	} else if(callCode === 'R'){
-		self.location = "/callreq/inputAddress?userNo=1004&callCode=R"
+		self.location = "/callreq/inputAddress?userNo="+${user.userNo }+"&callCode=R"
 	}	
 }
 
 function TpayList() {
     
-    self.location = "/pay/TpayList?userNo=1004&month=all"
+    self.location = "/pay/TpayList?userNo="+${user.userNo }+"&month=all"
   }
 
 /*    let socket = new WebSocket("wss://localhost:8000/websocket");

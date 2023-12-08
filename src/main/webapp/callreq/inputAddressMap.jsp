@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sessionStorage.setItem('startLat', startLat);
             sessionStorage.setItem('startLng', startLng);
             
-            self.location = "/callreq/inputAddress?userNo=1004&callCode="+callCode;
+            self.location = "/callreq/inputAddress?userNo="+${user.userNo }+"&callCode="+callCode;
         });
 
         // 버튼을 문서에 추가
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sessionStorage.setItem('endLat', endLat);
             sessionStorage.setItem('endLng', endLng);
             
-            self.location = "/callreq/inputAddress?userNo=1004&callCode="+callCode;
+            self.location = "/callreq/inputAddress?userNo="+${user.userNo }+"&callCode="+callCode;
             
         });
 
