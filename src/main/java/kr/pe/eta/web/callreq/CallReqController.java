@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +16,11 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.Session;
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Like;
-import kr.pe.eta.domain.User;
+import kr.pe.eta.redis.RedisEntity;
+import kr.pe.eta.redis.RedisService;
 import kr.pe.eta.service.callreq.CallReqService;
 import kr.pe.eta.service.pay.PayService;
+import kr.pe.eta.service.user.UserService;
 
 //==>  Call Req Controller
 @Controller
@@ -27,14 +28,19 @@ import kr.pe.eta.service.pay.PayService;
 public class CallReqController {
 
 	@Autowired
-	@Qualifier("callReqService")
 	private CallReqService callReqService;
 
 	@Autowired
-	@Qualifier("payService")
 	private PayService payService;
 
-	public CallReqController() {
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private final RedisService redisService;
+
+	public CallReqController(RedisService redisService) {
+		this.redisService = redisService; // 여기 추가
 		System.out.println(this.getClass());
 	}
 
@@ -99,18 +105,33 @@ public class CallReqController {
 
 		System.out.println("call : " + call);
 
-		call.setUserNo(1004); // test
-
-		String callCode = call.getCallCode();
-
 		callReqService.addCall(call); // addCall()
 
-		int callNo = callReqService.getCallNo(); // getCallNo()
+		double passengerX = call.getStartX();
+		double passengerY = call.getStartY();
+		double driverX = 0;
+		double driverY = 0;
 
-		if (callCode == "D") {
-			callReqService.updateDealCode(callNo);
-		} else if (callCode == "S") {
-			callReqService.updateShareCode(callNo);
+		List<RedisEntity> driverList = redisService.getAllUser();
+
+		List<String> driverNoList = new ArrayList<>();
+		List<Integer> callDriverNoList = new ArrayList<>();
+		List<Integer> driverNoResult = new ArrayList<>();
+
+		for (int i = 0; i < driverList.size(); i++) {
+			System.out.println("redis 전체 driverList : " + driverList.get(i).getId());
+		}
+		for (int i = 0; i < driverList.size(); i++) {
+			driverX = driverList.get(i).getCurrentX();
+			driverY = driverList.get(i).getCurrentY();
+
+			double distance = userService.haversineDistance(passengerX, passengerY, driverX, driverY);
+
+			if (distance <= 3) { // passenger의 출발 위치로부터 3km 이내의 driver List
+				String driverNo = driverList.get(i).getId();
+				System.out.println("3km 이내의 driverList: " + driverNo);
+				driverNoList.add(driverNo);
+			}
 		}
 
 		boolean petOpt = call.isPetOpt();
@@ -119,11 +140,31 @@ public class CallReqController {
 		String carOpt = call.getCarOpt();
 		System.out.println("carOpt : " + carOpt);
 
-		List<User> callDriverList = callReqService.getCallDriverList(carOpt, petOpt); // driver 탐색
+		for (int i = 0; i < driverNoList.size(); i++) {
+			int driverNo = Integer.parseInt(driverNoList.get(i));
+			int callDriverNo = callReqService.getCallDriver(carOpt, petOpt, driverNo);
+			System.out.println("반려동물, 차량옵션에 맞는 driver : " + callDriverNo);
+			callDriverNoList.add(callDriverNo);
+		}
+
+		int passengerNo = call.getUserNo();
+		List<Integer> blackNo = callReqService.getBlackList(passengerNo);
+
+		for (int i = 0; i < callDriverNoList.size(); i++) {
+			for (int j = 0; j < blackNo.size(); j++) {
+				if (callDriverNoList.get(i).equals(blackNo.get(j))) {
+					System.out.println("blackList driver : " + callDriverNoList.get(i));
+				} else {
+					driverNoResult.add(callDriverNoList.get(i));
+				}
+
+			}
+		}
+		int callNo = callReqService.getCallNo(); // getCallNo()
 
 		model.addAttribute("call", call);
 		model.addAttribute("callNo", callNo);
-		model.addAttribute("callDriverList", callDriverList);
+		model.addAttribute("callDriverList", driverNoResult);
 
 		return "forward:/callreq/searchCall.jsp";
 	}

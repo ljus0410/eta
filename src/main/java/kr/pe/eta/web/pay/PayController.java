@@ -51,8 +51,8 @@ public class PayController {
 		int userNo = pay.getUserNo();
 		int myMoney = payService.getMyMoney(userNo);
 
-		int callNo = 1044; // test용 callNo
-		int money = 150; // test용 실결제 금액
+		int callNo = pay.getCallNo();
+		int money = pay.getMoney();
 
 		String payType = pay.getPayType();
 
