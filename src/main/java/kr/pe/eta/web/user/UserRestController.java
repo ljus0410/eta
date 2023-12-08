@@ -45,6 +45,12 @@ public class UserRestController {
 	@Value("${search.pageSize}")
 	private int pageSize;
 
+	@Value("${kakao.clienId}")
+	String kaclienId;
+
+	@Value("${naver.Secret}")
+	String Secret;
+
 	final DefaultMessageService messageService;
 
 	public UserRestController() {

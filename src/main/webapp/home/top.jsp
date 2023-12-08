@@ -60,38 +60,35 @@ $(function() {
     
    
 	$("#loginButton").on("click", function() {
-	    alert("로그인 화면 이동");
 	    self.location = "/user/login"
 	});
 
 	    $(".callreq").on("click", function() {
-	        alert("callreq");
 	        self.location.href = "/callreq/home.jsp";
 	    });
 	    
 	    $(".callres").on("click", function() {
-	          alert("callres");
-	          self.location.href = "/callreq/home.jsp";
+	          self.location.href = "/callres/home.jsp";
 	      });
 	    
 	    $(".community").on("click", function() {
-            alert("community");
             self.location.href = "/community/home.jsp";
         });
 	    
 	    $(".feedback").on("click", function() {
-            alert("feedback");
             self.location.href = "/feedback/home.jsp";
         });
 	    
 	    $(".notice").on("click", function() {
-            alert("notice");
             self.location.href = "/notice/home.jsp";
         });
 	    
 	    $(".pay").on("click", function() {
-            alert("pay");
             self.location.href = "/pay/home.jsp";
+        });
+	    
+	    $(".info").on("click", function() {
+            self.location.href = "/user/getUser.jsp";
         });
 
 });
@@ -118,6 +115,7 @@ $(function() {
                     <li><a class="dropdown-item feedback" href="#">feedback</a></li>
                     <li><a class="dropdown-item notice" href="#">notice</a></li>
                     <li><a class="dropdown-item pay" href="#">pay</a></li>
+                    <li><a class="dropdown-item info" href="#">내정보</a></li>
                 </ul>
             </div>
             <div class="d-flex flex-grow-1 justify-content-center">
