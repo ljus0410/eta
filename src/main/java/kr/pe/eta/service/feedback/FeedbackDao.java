@@ -66,4 +66,8 @@ public interface FeedbackDao {
 	public int getPassNoByCallNo(int callNo) throws Exception;
 
 	public List<Blacklist> getBlacklistList(int callno) throws Exception;
+
+	public List<Report> getShareReport(Report report) throws Exception;
+
+	public int addBlockCode(Block block) throws Exception;
 }
