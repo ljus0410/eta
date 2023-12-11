@@ -42,15 +42,15 @@ public class FeedbackController {
 	@Value("${search.pageUnit}")
 	int pageUnit;
 
-	@GetMapping(value = "addStar")
-	public ModelAndView addStar(HttpSession session) throws Exception {
+	@GetMapping(value = "addStar/{callNo}")
+	public ModelAndView addStar(HttpSession session, @RequestParam int callNo) throws Exception {
 		System.out.println("/feedback/addStar : GET");
 		String viewName = "/feedback/addStar.jsp";
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName(viewName);
 
 		User user = (User) session.getAttribute("user");
-		int callNo = feedbackService.getCallNo(user);
+		// int callNo = feedbackService.getCallNo(user);
 		int driverNo = feedbackService.getDriverNoByCallNo(callNo);
 		Star star = Star.builder().callNo(callNo).driverNo(driverNo).build();
 
@@ -75,15 +75,15 @@ public class FeedbackController {
 		return modelAndView;
 	}
 
-	@GetMapping(value = "updateStar")
-	public ModelAndView updateStar(HttpSession session) throws Exception {
+	@GetMapping(value = "updateStar/{callNo}")
+	public ModelAndView updateStar(HttpSession session, @RequestParam int callNo) throws Exception {
 		System.out.println("/feedback/updateStar : GET");
 		String viewName = "/feedback/updateStar.jsp";
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName(viewName);
 
 		User user = (User) session.getAttribute("user");
-		int callNo = feedbackService.getCallNo(user);
+		// callNo = feedbackService.getCallNo(user);
 		int driverNo = feedbackService.getDriverNoByCallNo(callNo);
 		Star star = Star.builder().callNo(callNo).driverNo(driverNo).build();
 		int starCount = 0;
@@ -114,20 +114,17 @@ public class FeedbackController {
 		String viewName = "/feedback/listReport.jsp";
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName(viewName);
-		if (search.getCurrentPage() == 0) {
-			search.setCurrentPage(1);
-		}
+		search.setCurrentPage(1);
+
 		search.setPageSize(pageSize);
 
 		User user = (User) session.getAttribute("user");
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		if (user.getRole().equals("admin")) {
-			map = feedbackService.getReportList(search);
-		} else {
+		if (!user.getRole().equals("admin")) {
 			search.setSearchKeyword("" + user.getUserNo());
-			map = feedbackService.getUserReportList(search);
 		}
+		map = feedbackService.getReportList(search);
 
 		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
 				pageSize);
@@ -150,42 +147,45 @@ public class FeedbackController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Report report = Report.builder().reportNo(reportNo).badCallNo(badCallNo).reportRole(reportRole).build();
 
-		if (user.getRole().equals("admin") & feedbackService.getReportCode(reportNo) == 1)
+		if (user.getRole().equals("admin") && feedbackService.getReportCode(reportNo) == 1)
 			feedbackService.updateReportCode(reportNo);
 
-		map = feedbackService.getReport(report);
+		map = user.getRole().equals("driver") && feedbackService.getCall(badCallNo).getCallCode().equals("S")
+				? feedbackService.getShareReport(report)
+				: feedbackService.getReport(report);
+
 		modelAndView.addObject("reportlist", map.get("reportlist"));
 
 		return modelAndView;
 	}
 
-	@GetMapping(value = "addBlacklist")
-	public ModelAndView addBlacklist(HttpSession session) throws Exception {
+	@GetMapping(value = "addBlacklist/{callNo}")
+	public ModelAndView addBlacklist(HttpSession session, @RequestParam int callNo) throws Exception {
 		System.out.println("/feedback/addBlacklist : GET");
 		String viewName = "/feedback/addBlacklist.jsp";
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName(viewName);
 
 		User user = (User) session.getAttribute("user");
-		int callNo = feedbackService.getCallNo(user);
+		// int callNo = feedbackService.getCallNo(user);
 		int userNo = feedbackService.getPassNoByCallNo(callNo);
 		Call call = feedbackService.getCall(callNo);
 		List<Blacklist> blacklistList = new ArrayList<>();
 
-//		if (!call.getCallCode().equals("S")) {
-//			Blacklist blacklist = Blacklist.builder().driverNo(user.getUserNo()).passengerNo(userNo).callNo(callNo)
-//					.build();
-//			blacklistList.add(0, feedbackService.getBlacklist(blacklist));
-//			System.out.println("합승아님");
-//
-//		} else {
-		System.out.println("합승임");
-		blacklistList = feedbackService.getBlacklistList(1001);
+		if (!call.getCallCode().equals("S")) {
+			Blacklist blacklist = Blacklist.builder().driverNo(user.getUserNo()).passengerNo(userNo).callNo(callNo)
+					.build();
+			blacklistList.add(0, feedbackService.getBlacklist(blacklist));
+			System.out.println("합승아님");
 
-		for (int i = 0; i < blacklistList.size(); i++) {
-			feedbackService.getBlacklist(blacklistList.get(i));
+		} else {
+			System.out.println("합승임");
+			blacklistList = feedbackService.getBlacklistList(1001);
 
-//			}
+			for (int i = 0; i < blacklistList.size(); i++) {
+				feedbackService.getBlacklist(blacklistList.get(i));
+				blacklistList.get(i).setCallNo(callNo);
+			}
 
 		}
 		modelAndView.addObject("blacklistList", blacklistList);
@@ -194,19 +194,37 @@ public class FeedbackController {
 	}
 
 	// update또한 현재는 최신배차만 가능 why? 이용기록 또는 운행기록을 통해서 들어오기떄문에 get이 필요없음
-	@GetMapping(value = "updateBlacklist")
-	public ModelAndView updateBlacklist(HttpSession session) throws Exception {
+	@GetMapping(value = "updateBlacklist/{callNo}")
+	public ModelAndView updateBlacklist(HttpSession session, @RequestParam int callNo) throws Exception {
 		System.out.println("/feedback/updateBlacklist : GET");
 		String viewName = "/feedback/updateBlacklist.jsp";
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName(viewName);
 
 		User user = (User) session.getAttribute("user");
-		int callNo = feedbackService.getCallNo(user);
+		// callNo = feedbackService.getCallNo(user);
 		int userNo = feedbackService.getPassNoByCallNo(callNo);
-		Blacklist blacklist = Blacklist.builder().driverNo(user.getUserNo()).passengerNo(userNo).callNo(callNo).build();
-		blacklist = feedbackService.getBlacklist(blacklist);
-		modelAndView.addObject("blacklist", blacklist);
+		Call call = feedbackService.getCall(callNo);
+		List<Blacklist> blacklistList = new ArrayList<>();
+
+		if (!call.getCallCode().equals("S")) {
+			Blacklist blacklist = Blacklist.builder().driverNo(user.getUserNo()).passengerNo(userNo).callNo(callNo)
+					.build();
+			blacklistList.add(0, feedbackService.getBlacklist(blacklist));
+			System.out.println("합승아님");
+
+		} else {
+			System.out.println("합승임");
+			blacklistList = feedbackService.getBlacklistList(1001);
+
+			for (int i = 0; i < blacklistList.size(); i++) {
+				feedbackService.getBlacklist(blacklistList.get(i));
+				blacklistList.get(i).setCallNo(callNo);
+			}
+
+		}
+		modelAndView.addObject("blacklistList", blacklistList);
+
 		return modelAndView;
 	}
 
