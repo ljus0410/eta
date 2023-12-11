@@ -44,16 +44,22 @@ $(function () {
                     isAjaxInProgress = true;
 	            countCurrentPage();
 	            if($("#currentPage").val() <= ${resultPage.maxPage}){
+	            	let data = {
+	        				
+	        				currentPage : $("#currentPage").val(),
+	        				searchKeyword : $("input:text[name='searchKeyword']").val()
+	        		}
 				
 				$.ajax( 
 						{
 						url : "/notice/json/listNotice/"+$("#currentPage").val() ,
-						method : "GET" ,
+						method : "POST" ,
 						dataType : "json" ,
 						headers : {
 							"Accept" : "application/json",
 							"Content-Type" : "application/json"
 						},
+						data		:  JSON.stringify(data),
 						success : function(noticeList , status) {
 							$.each(noticeList, function (index, notice) {
 					            // 새로운 행 추가

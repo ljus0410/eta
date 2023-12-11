@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,12 +31,9 @@ public class NoticeRestController {
 	int pageUnit;
 
 	@RequestMapping(value = "listNotice/{currentpage}")
-	public List<Notice> listNotice(@PathVariable int currentpage) throws Exception {
+	public List<Notice> listNotice(@RequestBody Search search) throws Exception {
 		System.out.println("/notice/json/listNotice : GET/POST");
-		System.out.println(currentpage);
 
-		Search search = new Search();
-		search.setCurrentPage(currentpage);
 		search.setPageSize(pageSize);
 
 		Map<String, Object> map = noticeService.getNoticeList(search);

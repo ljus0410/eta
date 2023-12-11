@@ -1,6 +1,10 @@
 package kr.pe.eta.web.feedback;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
+import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.Blacklist;
 import kr.pe.eta.domain.Block;
 import kr.pe.eta.domain.Call;
@@ -28,6 +33,12 @@ public class FeedbackRestController {
 	public FeedbackRestController() {
 		System.out.println(this.getClass());
 	}
+
+	@Value("${search.pageSize}")
+	int pageSize;
+
+	@Value("${search.pageUnit}")
+	int pageUnit;
 
 	@PostMapping(value = "addStar")
 	public void addStar(@RequestBody Star star, HttpSession session) throws Exception {
@@ -101,6 +112,20 @@ public class FeedbackRestController {
 		int result = blacklist.isBlacklistCode() ? feedbackService.deleteBlacklist(blacklist) : 0;
 
 		return ResponseEntity.ok(result);
+	}
+
+	@RequestMapping(value = "listReport")
+	public List<Report> listReport(@RequestBody Search search, HttpSession session) throws Exception {
+		System.out.println("/feedback/json/listReport : GET/POST");
+		;
+		search.setPageSize(pageSize);
+		System.out.println(search);
+
+		Map<String, Object> map = feedbackService.getReportList(search);
+
+		List<Report> reportList = (List<Report>) map.get("reportlist");
+		System.out.println("////" + reportList);
+		return reportList;
 	}
 
 }
