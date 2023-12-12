@@ -18,6 +18,7 @@
   </label>
   
   <select id="month">
+  <option value="all">전체</option>
   <option value="01">1월</option>
   <option value="02">2월</option>
   <option value="03">3월</option>
@@ -58,8 +59,7 @@
 		        <input type="checkbox" class="optionCheckbox" name="option" >      
 		      </c:when>
 		    </c:choose>               
-		        <a class="getRecordList">${cashDriverList.userNo} </a>
-		        ${cashDriverList.callDate} ${cashDriverList.realPay}
+		        ${cashDriverList.userNo} ${cashDriverList.callDate} ${cashDriverList.realPay}
             <c:choose>
                 <c:when test="${cashDriverList.star eq 1}">
                     <span class="approvalStatus">승인 완료</span>
@@ -111,10 +111,6 @@ $(function() {
       var month = $("#month").val();
       self.location = "/pay/cashDriverList?month="+month;
    });
-    
-    $( ".getRecordList" ).on("click" , function() {
-        alert("해당 driver의 운행 기록 리스트로 이동");
-     });
     
     $(".optionCheckbox").on("change", function() {
         calculateTotalRealPay();
@@ -175,15 +171,27 @@ function addCash() {
 
 
 function CashRequest(){
-  
-	var result = confirm("정산하시겠습니까?");
-
-	if (result == true) {
-		  addCash();
-	    alert("정산이 완료되었습니다.");
-	} else {
-	    alert("정산 취소");
-	}  
+	
+	var checkboxes = document.querySelectorAll('.optionCheckbox');
+	var checkedCount = 0;
+    checkboxes.forEach(function (checkbox) {
+        if (checkbox.checked) {
+            checkedCount++;
+        }
+    });
+    
+    if (checkedCount === 0) {
+        alert("선택된 항목이 없습니다.");
+    } else {
+        // 체크된 체크박스가 하나 이상인 경우에는 정산 진행
+        var result = confirm("정산하시겠습니까?");
+        if (result) {
+            addCash();
+            alert("정산이 완료되었습니다.");
+        } else {
+            alert("정산 취소");
+        }
+    }
 }
 </script>
 </html>

@@ -23,6 +23,4 @@ public class RedisEntity {
 	private Double CurrentX;
 	private Double CurrentY;
 
-	// private List<String> skils; // List 필요시
-
 }

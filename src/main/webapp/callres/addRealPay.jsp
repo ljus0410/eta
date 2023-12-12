@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-
-pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
 
@@ -16,21 +15,18 @@ pageEncoding="UTF-8"%>
 
 <body>
 
-<h2>결제 금액 입력</h2>
+	<h2>결제 금액 입력</h2>
 
-<form action="/callres/addRealPay" method="get">
+	<form action="/callres/addRealPay" method="get">
 
-<input type="hidden" name="callNo" value="${callNo}">
+		<input type="hidden" name="callNo" value="${callNo}"> <label
+			for="money">금액:</label> <input type="number" name="money" required>
 
-<label for="money">금액:</label>
+		<input type="submit" value="결제하기">
 
-<input type="number" name="money" required>
+	</form>
 
-<input type="submit" value="결제하기">
 
-</form>
-
-  
 
 </body>
 

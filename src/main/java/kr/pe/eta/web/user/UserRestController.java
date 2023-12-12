@@ -45,6 +45,12 @@ public class UserRestController {
 	@Value("${search.pageSize}")
 	private int pageSize;
 
+	@Value("${kakao.clienId}")
+	String kaclienId;
+
+	@Value("${naver.Secret}")
+	String Secret;
+
 	final DefaultMessageService messageService;
 
 	public UserRestController() {
@@ -116,7 +122,7 @@ public class UserRestController {
 	}
 
 	@RequestMapping(value = "autoList", method = RequestMethod.POST)
-	public ModelAndView autoautoList(@RequestBody Search search) throws Exception {
+	public Map<String, Object> autoautoList(@RequestBody Search search) throws Exception {
 
 		System.out.println("/Json/autoauoUser : POST");
 
@@ -144,11 +150,10 @@ public class UserRestController {
 		System.out.println("lists-=====" + lists);
 		System.out.println("listName======" + userName);
 
-		model.addObject("list", lists);
-		model.addObject(userName);
+		map.put("list", lists);
+		map.put("listName", userName);
 
-		return model;
-
+		return map;
 	}
 
 	@GetMapping("/vbanks/holder")
@@ -173,4 +178,5 @@ public class UserRestController {
 		return bankName;
 	}
 
+	// @@RequestMapping(value = "json/listUser")
 }
