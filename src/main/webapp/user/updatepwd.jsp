@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+<jsp:include page="../home/top.jsp" />
 <form id="login" method="post" action="/user/updatePwd">
 <%-- <input id ="pwd" type="text" name="pwd" value="${user.pwd}"><br> --%>
 <input id ="pwd" type="text" name="pwd" value=''>

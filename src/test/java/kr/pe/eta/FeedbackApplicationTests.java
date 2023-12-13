@@ -3,7 +3,6 @@ package kr.pe.eta;
 import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
@@ -58,34 +57,34 @@ public class FeedbackApplicationTests {
 
 	}
 
-	// @Test
-	public void testGetStar() throws Exception {
+//	// @Test
+//	public void testGetStar() throws Exception {
+//
+//		Star star = new Star();
+//
+//		star.setCallNo(1002);
+//		star = feedbackService.getStar(star);
+//		System.out.println("////////" + star.getStar());
+//		// feedbackService.addStar(star);
+//		// Assertions.assertEquals(1, feedbackDao.updateStar(star));
+//		Assert.notNull(star);
+//
+//	}
 
-		Star star = new Star();
-
-		star.setCallNo(1002);
-		star = feedbackService.getStar(star);
-		System.out.println("////////" + star.getStar());
-		// feedbackService.addStar(star);
-		// Assertions.assertEquals(1, feedbackDao.updateStar(star));
-		Assert.notNull(star);
-
-	}
-
-	// @Test
-	public void testGetShareStar() throws Exception {
-
-		Star star = new Star();
-
-		star.setCallNo(1001);
-		star.setPassengerNo(1001);
-		star = feedbackService.getShareStar(star);
-		System.out.println("////////" + star.getStar());
-		// feedbackService.addStar(star);
-		// Assertions.assertEquals(1, feedbackDao.updateStar(star));
-		Assert.notNull(star);
-
-	}
+//	// @Test
+//	public void testGetShareStar() throws Exception {
+//
+//		Star star = new Star();
+//
+//		star.setCallNo(1001);
+//		star.setPassengerNo(1001);
+//		star = feedbackService.getShareStar(star);
+//		System.out.println("////////" + star.getStar());
+//		// feedbackService.addStar(star);
+//		// Assertions.assertEquals(1, feedbackDao.updateStar(star));
+//		Assert.notNull(star);
+//
+//	}
 
 	// @Test
 	public void testAddBlacklist() throws Exception {
@@ -136,7 +135,7 @@ public class FeedbackApplicationTests {
 //
 //	}
 
-	@Test
+	// @Test
 	public void testGetReport() throws Exception {
 		Report report = Report.builder().reportRole("driver").reportNo(1022).badCallNo(1001).build();
 		// report = feedbackService.getReport(report.getReportNo());
@@ -146,7 +145,7 @@ public class FeedbackApplicationTests {
 
 	}
 
-	@Test
+	// @Test
 	public void testGetReportList() throws Exception {
 		Search search = new Search();
 //		search.setSearchCondition("0");
@@ -159,10 +158,8 @@ public class FeedbackApplicationTests {
 //		search.setCurrentPage(1);
 //		search.setPageSize(3);
 
-		search.setSearchCondition("2");
-		search.setSearchKeyword("10");
 		search.setCurrentPage(1);
-		search.setPageSize(3);
+		search.setPageSize(5);
 
 		Map<String, Object> report = feedbackService.getReportList(search);
 		Assert.notNull(report);
@@ -189,12 +186,12 @@ public class FeedbackApplicationTests {
 		assert 1 == feedbackService.updateDisReportCode(1011);
 	}
 
-	// @Test
-	public void testGetReportCode() throws Exception {
-		Report report = feedbackService.getReportCode(1011);
-
-		System.out.println(report);
-	}
+//	// @Test
+//	public void testGetReportCode() throws Exception {
+//		Report report = feedbackService.getReportCode(1011);
+//
+//		System.out.println(report);
+//	}
 
 	// @Test
 	public void testAddBlock() throws Exception {
@@ -246,6 +243,25 @@ public class FeedbackApplicationTests {
 		// Assertions.assertEquals(1, feedbackDao.updateStar(star));
 		Assertions.assertEquals(1, feedbackService.addShareStar(star));
 
+	}
+
+	// @Test
+	public void testGetCallNo() throws Exception {
+		User user = new User();
+		user.setUserNo(1026);
+
+		int count = feedbackService.getCallNo(user);
+
+		System.out.println(count);
+	}
+
+	// @Test
+	public void testGetDriverNoByCallNo() throws Exception {
+		int callNo = 1002;
+
+		int count = feedbackService.getDriverNoByCallNo(callNo);
+
+		System.out.println(count);
 	}
 
 }

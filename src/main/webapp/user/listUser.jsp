@@ -43,6 +43,7 @@ $(function() {
 </script>
 </head>
 <body>
+<jsp:include page="../home/top.jsp" />
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px;">
   <tr>
     <td align="right">

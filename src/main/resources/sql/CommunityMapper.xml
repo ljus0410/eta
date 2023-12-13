@@ -166,5 +166,76 @@
         FROM deal
         WHERE user_no=#{userNo}
     </delete>
+    
+    <insert id="addShareReq" parameterType="sharereq">
+        INSERT
+        INTO shares(share_no, user_no, call_no, share_count, start_share_count, max_share_count, share_date, star)
+        VALUES (seq_shares_share_no.nextval, #{firstSharePassengerNo}, #{callNo}, #{firstShareCount}, #{startShareCount}, #{maxShareCount}, TO_DATE(#{shareDate}, 'YYYY-MM-DD HH24:MI:SS'), 0)
+    </insert>
+
+    <update id="updateShareCode" parameterType="int">
+        UPDATE users
+        SET share_code =
+                CASE
+                    WHEN share_code = 0 THEN 1
+                    WHEN share_code = 1 THEN 0
+                    END
+        WHERE user_no = #{userNo}
+    </update>
+
+    <select id="getShareList" parameterType="map" resultMap="sharereqSelectMap">
+        SELECT *
+        FROM (  SELECT inner_table.* , ROWNUM AS row_seq
+                FROM( SELECT user_no, call_no, share_count, start_share_count, max_share_count, share_date, star
+                      FROM ( SELECT s.user_no, s.call_no, s.share_count, s.start_share_count, s.max_share_count, s.share_date, s.star,
+                                    ROW_NUMBER() OVER (PARTITION BY s.call_no ORDER BY s.share_no) AS row_num
+                             FROM shares s
+                                      JOIN call c ON s.call_no = c.call_no
+                                      JOIN users u ON u.user_no = s.user_no
+                             WHERE c.call_state_code = '운행전')
+                      WHERE row_num = 1) inner_table
+                WHERE ROWNUM &lt;= #{endRowNum} )
+        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+    </select>
+
+    <select id="getShareCallList" parameterType="int" resultMap="callSelectMap">
+        SELECT *
+        FROM (  SELECT inner_table.* , ROWNUM AS row_seq
+                FROM( SELECT call_no, start_addr, end_addr
+                      FROM ( SELECT c.call_no, c.start_addr, c.end_addr,
+                                    ROW_NUMBER() OVER (PARTITION BY s.call_no ORDER BY s.share_no) AS row_num
+                             FROM shares s
+                                      JOIN call c ON s.call_no = c.call_no
+                                      JOIN users u ON u.user_no = s.user_no
+                             WHERE c.call_state_code = '운행전')
+                      WHERE row_num = 1) inner_table
+                WHERE ROWNUM &lt;= #{endRowNum} )
+        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+    </select>
+
+    <select  id="getTotalCountPassShare"  parameterType="search"  resultType="int">
+        SELECT COUNT(*)
+        FROM( SELECT user_no, call_no, share_count, start_share_count, max_share_count, share_date, star
+              FROM ( SELECT s.user_no, s.call_no, s.share_count, s.start_share_count, s.max_share_count, s.share_date, s.star,
+                            ROW_NUMBER() OVER (PARTITION BY s.call_no ORDER BY s.share_no) AS row_num
+                     FROM shares s
+                              JOIN call c ON s.call_no = c.call_no
+                              JOIN users u ON u.user_no = s.user_no
+                     WHERE c.call_state_code = '운행전')
+              WHERE row_num = 1 ) countTable
+    </select>
+
+    <select id="getShare" parameterType="int" resultMap="sharereqSelectMap">
+        SELECT shares.call_no, shares.share_count, shares.start_share_count, shares.share_date
+        FROM shares, users
+        WHERE users.user_no=#{userNo}
+          AND users.user_no=shares.user_no
+    </select>
+
+    <delete id="deleteShareReq" parameterType="int">
+        DELETE
+        FROM shares
+        WHERE call_no=#{callNo}
+    </delete>
 
 </mapper>

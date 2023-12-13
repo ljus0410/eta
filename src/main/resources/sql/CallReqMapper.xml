@@ -96,7 +96,7 @@
     ]]>
   </delete>
   
-    <select id="getCallDriver" parameterType="map" resultType="int">
+    <select id="getCallDriver" parameterType="map" resultType="Integer">
       SELECT user_no FROM users WHERE car_opt=#{carOpt} AND pet_opt=#{petOpt} AND user_no=#{driverNo:NUMERIC}
    </select>
   

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.Call;
-import kr.pe.eta.domain.ShareReqPassenger;
+import kr.pe.eta.domain.ShareReq;
 import kr.pe.eta.domain.User;
 import kr.pe.eta.service.callres.CallResDao;
 import kr.pe.eta.service.callres.CallResService;
@@ -120,8 +120,8 @@ public class CallResServiceImpl implements CallResService {
 	}
 
 	@Override
-	public List<ShareReqPassenger> getSharesByCallNop(int callNo) {
-		List<ShareReqPassenger> sharelist = callResDao.getSharesByCallNop(callNo);
+	public List<ShareReq> getSharesByCallNop(int callNo) {
+		List<ShareReq> sharelist = callResDao.getSharesByCallNop(callNo);
 
 		return sharelist;
 
@@ -140,8 +140,8 @@ public class CallResServiceImpl implements CallResService {
 	}
 
 	@Override
-	public List<ShareReqPassenger> getSharesByCallNod(int callNo) {
-		List<ShareReqPassenger> sharelist = callResDao.getSharesByCallNod(callNo);
+	public List<ShareReq> getSharesByCallNod(int callNo) {
+		List<ShareReq> sharelist = callResDao.getSharesByCallNod(callNo);
 
 		return sharelist;
 
@@ -165,7 +165,7 @@ public class CallResServiceImpl implements CallResService {
 	@Override
 	public void updateRealPay(Call call) throws Exception {
 		// TODO Auto-generated method stub
-		callResDao.updateCallStateCode(call);
+		callResDao.updateRealPay(call);
 	}
 
 }
