@@ -151,22 +151,33 @@ public class CallReqController {
 
 		int passengerNo = call.getUserNo();
 		List<Integer> blackNo = callReqService.getBlackList(passengerNo);
+		if (blackNo != null && !blackNo.isEmpty()) {
+			System.out.println("blackList 있음");
+			System.out.println("blackNo : " + blackNo);
+			for (int i = 0; i < callDriverNoList.size(); i++) {
 
-		for (int i = 0; i < callDriverNoList.size(); i++) {
-			for (int j = 0; j < blackNo.size(); j++) {
-				if (callDriverNoList.get(i).equals(blackNo.get(j))) {
-					System.out.println("blackList driver : " + callDriverNoList.get(i));
-				} else {
-					driverNoResult.add(callDriverNoList.get(i));
+				for (int j = 0; j < blackNo.size(); j++) {
+					if (callDriverNoList.get(i).equals(blackNo.get(j))) {
+						System.out.println("blackList driver : " + callDriverNoList.get(i));
+					} else {
+						System.out.println("blackList 가 아닌 driver : " + callDriverNoList.get(i));
+						driverNoResult.add(callDriverNoList.get(i));
+					}
 				}
-
+			}
+		} else {
+			System.out.println("blackList 없음");
+			for (int i = 0; i < callDriverNoList.size(); i++) {
+				driverNoResult.add(callDriverNoList.get(i));
 			}
 		}
+
 		int callNo = callReqService.getCallNo(); // getCallNo()
 
+		System.out.println("driverNoResult : " + driverNoResult);
 		model.addAttribute("call", call);
 		model.addAttribute("callNo", callNo);
-		model.addAttribute("callDriverList", driverNoResult);
+		model.addAttribute("driverNoResult", driverNoResult);
 
 		return "forward:/callreq/searchCall.jsp";
 	}
@@ -177,10 +188,14 @@ public class CallReqController {
 		System.out.println("/callreq/deleteCall");
 
 		System.out.println("callNo : " + callNo);
+		Call call = callReqService.getCall(callNo);
+		int userNo = call.getUserNo();
+		String callCode = call.getCallCode();
+		System.out.println("userNo : " + userNo);
+		System.out.println("callCode : " + callCode);
 
 		callReqService.deleteCall(callNo);
-
-		return "forward:/callreq/selectOptions.jsp";
+		return "redirect:/callreq/selectOptions?userNo=" + userNo + "&callCode=" + callCode;
 	}
 
 	@RequestMapping(value = "likeAddress", method = RequestMethod.GET)
@@ -212,8 +227,10 @@ public class CallReqController {
 		String likeAddr = like.getLikeAddr();
 		String likeName = like.getLikeName();
 		int likeNo = like.getLikeNo();
+		double likeX = like.getLikeX();
+		double likeY = like.getLikeY();
 
-		callReqService.updateLikeAddr(likeAddr, likeName, userNo, likeNo);
+		callReqService.updateLikeAddr(likeAddr, likeName, userNo, likeNo, likeX, likeY);
 
 		List<Like> likeList = callReqService.getLikeList(userNo); // 즐겨찾기 리스트
 
@@ -223,17 +240,14 @@ public class CallReqController {
 		return "forward:/callreq/likeAddrList.jsp";
 	}
 
-	@RequestMapping(value = "deleteLikeAddr", method = RequestMethod.POST)
-	public String deleteLikeAddr(@ModelAttribute("like") Like like, @RequestParam("userNo") int userNo,
+	@RequestMapping(value = "deleteLikeAddr", method = RequestMethod.GET)
+	public String deleteLikeAddr(@RequestParam("likeNo") int likeNo, @RequestParam("userNo") int userNo,
 			HttpSession session, Model model) throws Exception {
 
 		System.out.println("/callreq/deleteLikeAddr");
-		System.out.println("like : " + like);
+		System.out.println("likeNo : " + likeNo);
 		System.out.println("userNo : " + userNo);
-		// userNo = "1004";
 		// Business Logic
-
-		int likeNo = like.getLikeNo();
 
 		callReqService.deleteLikeAddr(likeNo, userNo);
 

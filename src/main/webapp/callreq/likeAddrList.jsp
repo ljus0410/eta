@@ -5,8 +5,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
 <meta charset="UTF-8">
 <title>like Address</title>
+<link rel="stylesheet" type="text/css" href="../styles/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="../fonts/bootstrap-icons.css">
+<link rel="stylesheet" type="text/css" href="../styles/style.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="../_manifest.json">
+<meta id="theme-check" name="theme-color" content="#FFFFFF">
+<link rel="apple-touch-icon" sizes="180x180" href="../app/icons/icon-192x192.png">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=70ef6f6883ad97593a97af6324198ac0&libraries=services"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <style>
@@ -28,9 +40,18 @@
 #likeCustomList {
   display: none;
 }
+.icon-input {
+    display: flex;
+    align-items: center; /* 세로 가운데 정렬 */
+}
+.icon-input svg {
+    margin-right: 8px; /* 원하는 간격으로 조절 */
+}
 </style>
 </head>
-<body>
+<body class="theme-light">
+    <div class="page-content header-clear-medium">
+    <div class="card card-style">
     <div class="map_wrap">
         <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
         <div id="menu_wrap" class="bg_white">
@@ -39,41 +60,118 @@
                     <form class="form">
                     <input type="hidden" name="likeNo" value="1000">
                     <input type="hidden" name="likeName" value="집">
-                       ${likeList[0].likeName} <input type="text" value="" name="likeAddr" id="homeAddrKeyword" size="50px"> 
-                        <button id="homeSubmit" type="submit">주소검색</button>                        
+                    <br>
+                    <div class="icon-input">
+                    <c:choose>
+                      <c:when test="${likeList[0].likeName eq '집' && empty likeList[0].likeAddr}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-slash" viewBox="0 0 16 16">
+												  <path d="M13.879 10.414a2.5 2.5 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95Z"/>
+												  <path d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.708L8 2.207l-5 5V13.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 2 13.5V8.207l-.646.647a.5.5 0 1 1-.708-.708z"/>
+												</svg> 
+                      </c:when>
+                      <c:when test="${likeList[0].likeName eq '집' && !empty likeList[0].likeAddr}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-check-fill" viewBox="0 0 16 16">
+												  <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
+												  <path d="m8 3.293 4.712 4.712A4.5 4.5 0 0 0 8.758 15H3.5A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
+												  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.707l.547.547 1.17-1.951a.5.5 0 1 1 .858.514Z"/>
+												</svg> 
+											</c:when>
+                    </c:choose>                       
+                        <input type="text" value="" name="likeAddr" id="homeAddrKeyword" class="form-control rounded-xs"> 
+                        <input type="hidden" value="" name="likeX" id="homeAddrKeywordLng"> 
+                        <input type="hidden" value="" name="likeY" id="homeAddrKeywordLat"> 
+                        <button id="homeSubmit" type="submit">주소검색</button>                                            
                     </form>
-                    <button id="deleteHomeAddr" type="submit" onclick="deleteHomeAddrRequest()">삭제</button>
+                    <a onclick="deleteHomeAddrRequest()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                      </svg>
+                    </a>
+                    </div>
+                    </div>
                 </div>
-            </div>
             <div class="companyAddrSearch">
                 <div>
                     <form class="form">
                     <input type="hidden" name="likeNo" value="1001">
                     <input type="hidden" name="likeName" value="회사">
-                      ${likeList[1].likeName}  <input type="text" value="" name="likeAddr" id="companyAddrKeyword" size="50px"> 
+                     <div class="icon-input">
+                    <c:choose>
+                      <c:when test="${likeList[1].likeName eq '회사' && empty likeList[1].likeAddr}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building-slash" viewBox="0 0 16 16">
+												  <path d="M13.879 10.414a2.501 2.501 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95Z"/>
+												  <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z"/>
+												  <path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
+												</svg>
+                      </c:when>
+                      <c:when test="${likeList[1].likeName eq '회사' && !empty likeList[1].likeAddr}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building-fill-check" viewBox="0 0 16 16">
+												  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514Z"/>
+												  <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7.256A4.493 4.493 0 0 0 12.5 8a4.493 4.493 0 0 0-3.59 1.787A.498.498 0 0 0 9 9.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .39-.187A4.476 4.476 0 0 0 8.027 12H6.5a.5.5 0 0 0-.5.5V16H3a1 1 0 0 1-1-1zm2 1.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5m3 0v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5m3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5M7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5M4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
+												</svg>
+                      </c:when>
+                    </c:choose>
+                        <input type="text" value="" name="likeAddr" id="companyAddrKeyword" class="form-control rounded-xs"> 
+                        <input type="hidden" value="" name="likeX" id="companyAddrKeywordLng"> 
+                        <input type="hidden" value="" name="likeY" id="companyAddrKeywordLat"> 
                         <button id="companySubmit" type="submit">주소검색</button> 
                     </form>
-                     <button id="deleteCompanyAddr" type="submit" onclick="deleteCompanyAddrRequest()">삭제</button>
+                     <a onclick="deleteCompanyAddrRequest()" >
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                      </svg>
+                      </a>
+                </div>
                 </div>
             </div>
              <div class="customAddrSearch">
                 <div>
                     <form class="form">
                         <input type="hidden" name="likeNo" value="1002">
-                        <input type="text" value="" name="likeName" id="customNameKeyword" size="20px"> 
-                        <input type="text" value="" name="likeAddr" id="customAddrKeyword" size="50px"> 
-                        <button id="customSubmit" type="submit">주소검색</button> 
+                        <c:choose>
+                          <c:when test="${ empty likeList[2].likeName && empty likeList[2].likeAddr}">
+	                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-x" viewBox="0 0 16 16">
+																<path fill-rule="evenodd" d="M6.146 5.146a.5.5 0 0 1 .708 0L8 6.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 7l1.147 1.146a.5.5 0 0 1-.708.708L8 7.707 6.854 8.854a.5.5 0 1 1-.708-.708L7.293 7 6.146 5.854a.5.5 0 0 1 0-.708"/>
+																<path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+														</svg>
+                          </c:when>
+                           <c:when test="${ !empty likeList[2].likeName && !empty likeList[2].likeAddr}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-star-fill" viewBox="0 0 16 16">
+														  <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5M8.16 4.1a.178.178 0 0 0-.32 0l-.634 1.285a.178.178 0 0 1-.134.098l-1.42.206a.178.178 0 0 0-.098.303L6.58 6.993c.042.041.061.1.051.158L6.39 8.565a.178.178 0 0 0 .258.187l1.27-.668a.178.178 0 0 1 .165 0l1.27.668a.178.178 0 0 0 .257-.187L9.368 7.15a.178.178 0 0 1 .05-.158l1.028-1.001a.178.178 0 0 0-.098-.303l-1.42-.206a.178.178 0 0 1-.134-.098z"/>
+														</svg>
+                          </c:when>            
+                        </c:choose>
+                        즐겨찾는 장소<br>
+                         <div class="icon-input">
+			                        <input type="text" value="" name="likeName" id="customNameKeyword" class="form-control rounded-xs" size="20px"> 
+			                        <input type="text" value="" name="likeAddr" id="customAddrKeyword" class="form-control rounded-xs" size="50px"> 
+			                        <input type="hidden" value="" name="likeX" id="customAddrKeywordLng" > 
+                              <input type="hidden" value="" name="likeY" id="customAddrKeywordLat" > 
+			                        <button id="customSubmit" type="submit">주소검색</button> 
                     </form>
-                    <button id="updateCustomAddr" type="submit" onclick="updateCustomAddr()">수정</button>
-                    <button id="deleteCustomAddr" type="submit" onclick="deleteCustomAddrRequest()">삭제</button>
+                    <a onclick="updateCustomAddr()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+										  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+										  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+										</svg>
+										</a>
+                    <a onclick="deleteCustomAddrRequest()" >
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+											  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+											  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+											</svg>
+											</a>
+                    </div>
                 </div>
             </div>
-            <hr>
             <ul id="placesList"></ul>
             <div id="pagination"></div>
-        </div>
-    </div>
-    
+            </div>
+            </div>
+           </div>
+       </div>
     <!-- 즐겨찾기 리스트--> 
       <div id="likeHomeList">
       ${likeList[0].likeNo} ${likeList[0].likeName} <span id="likeHomeAddr">${likeList[0].likeAddr}</span>    
@@ -84,7 +182,6 @@
       <div id="likeCustomList">
       ${likeList[2].likeNo} <span id="likeCustomName">${likeList[2].likeName}</span> <span id="likeCustomAddr">${likeList[2].likeAddr}</span>     
       </div>
-
     
        
 </body>
@@ -92,17 +189,28 @@
 
 function deleteHomeAddrRequest(){
 	  
-	  var result = confirm("삭제하시겠습니까?");
-
-	  if (result == true) {
-	      alert("삭제가 완료되었습니다.");
-	      deleteHomeAddr();
-	  } else {
-	      alert("삭제 취소");
-	  }  
+	  if (document.getElementById('homeAddrKeyword').value == '' || document.getElementById('homeAddrKeyword').value == null){
+		  
+		  alert("삭제할 값이 없습니다.");
+		  
+	  }else {
+		  var result = confirm("삭제하시겠습니까?");
+		    if (result == true) {
+		        alert("삭제가 완료되었습니다.");
+		        deleteHomeAddr();
+		    } else {
+		        alert("삭제 취소");
+		    }  
+		  
+	  }
 	}
 	
 function deleteCompanyAddrRequest(){
+	
+	   if (document.getElementById('companyAddrKeyword').value == '' || document.getElementById('companyAddrKeyword').value == null){
+		      
+		      alert("삭제할 값이 없습니다.");
+	   } else {
     
     var result = confirm("삭제하시겠습니까?");
 
@@ -113,8 +221,14 @@ function deleteCompanyAddrRequest(){
         alert("삭제 취소");
     }  
   }
+}
   
 function deleteCustomAddrRequest(){
+	
+    if (document.getElementById('customAddrKeyword').value == '' || document.getElementById('customAddrKeyword').value == null){
+        
+        alert("삭제할 값이 없습니다.");
+   } else {
     
     var result = confirm("삭제하시겠습니까?");
 
@@ -125,6 +239,7 @@ function deleteCustomAddrRequest(){
         alert("삭제 취소");
     }  
   }
+}
 	
 function updateHomeAddr() {
     // homeAddrSearch div 안에 있는 form을 선택하여 submit
@@ -142,7 +257,9 @@ function updateCustomAddr() {
      var customAddrInput = document.getElementById('customAddrKeyword');
      var customAddr = customAddrInput.value;
      
-       if(customName == ''){
+     if(customName == '집'|| customName == '회사'){
+    	 alert("집 혹은 회사 외의 다른 별칭을 입력해주세요.");
+     } else if(customName == ''){
          alert("별칭을 입력해주세요.");
        } else if(customAddr == '' ){
     	   alert("주소를 입력해주세요.");
@@ -155,15 +272,15 @@ function updateCustomAddr() {
 }
 
 function deleteHomeAddr() {
-   $(".homeAddrSearch form").attr("method", "POST").attr("action", "/callreq/deleteLikeAddr?userNo=${user.userNo }").submit();
+   self.location = "/callreq/deleteLikeAddr?userNo=${user.userNo }&likeNo=1000"
 }
 
 function deleteCompanyAddr() {
-    $(".companyAddrSearch form").attr("method", "POST").attr("action", "/callreq/deleteLikeAddr?userNo=${user.userNo }").submit();
+	self.location = "/callreq/deleteLikeAddr?userNo=${user.userNo }&likeNo=1001"
 }
 
 function deleteCustomAddr() {
-    $(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/deleteLikeAddr?userNo=${user.userNo }").submit();
+	self.location = "/callreq/deleteLikeAddr?userNo=${user.userNo }&likeNo=1002"
 }
 
 //마커를 담을 배열입니다
@@ -321,7 +438,7 @@ function getListItem(index, places, type) {
     }
                  
       itemStr += '  <span class="tel">' + places.phone  + '</span>' +
-                '</div>';           
+                '</div><hr>';           
  
     el.innerHTML = itemStr;
     el.className = 'item';
@@ -376,32 +493,46 @@ function displayPagination(pagination) {
     while (paginationEl.hasChildNodes()) {
         paginationEl.removeChild (paginationEl.lastChild);
     }
+    
+    var ul = document.createElement('ul');
+    ul.className = 'pagination px-3';
  
-    for (i=1; i<=pagination.last; i++) {
+    for (i = 1; i <= pagination.last; i++) {
+        var li = document.createElement('li');
+        li.className = 'page-item';
+
         var el = document.createElement('a');
+        el.className = 'page-link rounded-xs bg-dark-dark shadow-l border-0';
         el.href = "#";
         el.innerHTML = i;
- 
-        if (i===pagination.current) {
-            el.className = 'on';
+
+        if (i === pagination.current) {
+            li.className += ' active';
         } else {
-            el.onclick = (function(i) {
-                return function() {
+            el.onclick = (function (i) {
+                return function () {
                     pagination.gotoPage(i);
-                }
+                };
             })(i);
         }
- 
-        fragment.appendChild(el);
+
+        li.appendChild(el);
+        ul.appendChild(li);
     }
+
+    fragment.appendChild(ul);
     paginationEl.appendChild(fragment);
 }
  
 // 검색결과 목록 클릭했을 때 호출되는 함수입니다
 // 인포윈도우에 장소명을 표시합니다
 async function displayInfowindow(title, position, type) {
+
   console.log("displayInfowindow type : "+type);
   console.log("title : "+title);
+  
+  var latitude = parseFloat(position.getLat());
+  var longitude = parseFloat(position.getLng());
   
     var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
  
@@ -419,17 +550,31 @@ async function displayInfowindow(title, position, type) {
         console.log('Clicked Position:', position);
         console.log('Detail Address:', detailAddr);
         
+        
+        
         // 결과를 input text에 넣어줍니다
         var keywordId = null;
+        var latId = null;
+        var lngId = null;
         
         if(type === 'home'){
         	keywordId = 'homeAddrKeyword';
+        	latId = 'homeAddrKeywordLat';
+        	lngId = 'homeAddrKeywordLng';
+        	
         } else if(type === 'company'){
         	keywordId = 'companyAddrKeyword';
+        	latId = 'companyAddrKeywordLat';
+          lngId = 'companyAddrKeywordLng';
         } else {
         	keywordId = 'customAddrKeyword';
+        	latId = 'customAddrKeywordLat';
+          lngId = 'customAddrKeywordLng';
         }
         var keywordInput = document.getElementById(keywordId);
+        var latIdInput = document.getElementById(latId);
+        var lngIdInput = document.getElementById(lngId);
+
         if (keywordInput) {
         	/*  
            if(title == null){            
@@ -439,6 +584,8 @@ async function displayInfowindow(title, position, type) {
            }*/
            
            keywordInput.value = detailAddr;
+           latIdInput.value = latitude;
+           lngIdInput.value = longitude;
            
            if(type === 'home'){
         	   updateHomeAddr();
@@ -467,29 +614,29 @@ function searchDetailAddrFromCoords(coords, callback) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-	  var homeAddrKeyword = document.getElementById('homeAddrKeyword');
-	  homeAddrKeyword.addEventListener('click', function() {
-		  homeAddrKeyword.value = '';
-		  homeAddrKeyword.placeholder = '주소를 입력해주세요';
-    });
-	  
-	   var companyAddrKeyword = document.getElementById('companyAddrKeyword');
-	   companyAddrKeyword.addEventListener('click', function() {
-		   companyAddrKeyword.value = '';
-		   companyAddrKeyword.placeholder = '주소를 입력해주세요';
-	    });
-	   
-	     var customAddrKeyword = document.getElementById('customAddrKeyword');
-	     customAddrKeyword.addEventListener('click', function() {
-	    	 customAddrKeyword.value = '';
-	    	 customAddrKeyword.placeholder = '주소를 입력해주세요';
-	      });
-    
-	       var customNameKeyword = document.getElementById('customNameKeyword');
-	       customNameKeyword.addEventListener('click', function() {
-	    	   customNameKeyword.value = '';
-	    	   customNameKeyword.placeholder = '별칭을 입력해주세요';
-	        });
+	
+    // 각 input 요소에 대한 이벤트 핸들러 등록
+    function registerInputEvents(inputElement, defaultValue) {
+        inputElement.addEventListener('click', function(event) {
+            // 클릭 시 입력 값 초기화
+            inputElement.value = '';
+            inputElement.placeholder = '주소를 입력해주세요';
+
+            // 이벤트 전파 방지
+            event.stopPropagation();
+        });
+
+        document.addEventListener('click', function() {
+            // 다른 곳을 클릭하면서 이전 값 복원
+          if (inputElement.value === '') {
+                inputElement.value = defaultValue;
+                inputElement.placeholder = '';
+            }
+
+            // 이벤트 전파 방지
+            event.stopPropagation();
+        });
+    }
 	       
     var homeKeywordInput = document.getElementById('homeAddrKeyword'); // Add quotes around the ID
     var companyKeywordInput = document.getElementById('companyAddrKeyword'); // Add quotes around the ID
@@ -500,6 +647,13 @@ document.addEventListener('DOMContentLoaded', function() {
     var likeCompanyAddrSpan = document.getElementById('likeCompanyAddr');
     var likeCustomAddrSpan = document.getElementById('likeCustomAddr');
     var likeCustomNameSpan = document.getElementById('likeCustomName');
+    
+    var homeAddrKeywordLngSpan= document.getElementById('homeAddrKeywordLng');
+    var homeAddrKeywordLatSpan = document.getElementById('homeAddrKeywordLat');
+    var companyAddrKeywordLngSpan = document.getElementById('companyAddrKeywordLng');
+    var companyAddrKeywordLatSpan = document.getElementById('companyAddrKeywordLat');
+    var customAddrKeywordLngSpan = document.getElementById('customAddrKeywordLng');
+    var customAddrKeywordLatSpan = document.getElementById('customAddrKeywordLat');
 
     // db에 저장된 즐겨찾기 가져오기
     var likeHomeAddr = likeHomeAddrSpan.textContent.trim();
@@ -513,24 +667,65 @@ document.addEventListener('DOMContentLoaded', function() {
     
     var likeCustomName = likeCustomNameSpan.textContent.trim();
     console.log('likeCustomName:', likeCustomName);
+    
+    var homeAddrLng = homeAddrKeywordLngSpan.textContent.trim();
+    console.log('homeAddrLng:', homeAddrLng);
+    
+    var homeAddrLat = homeAddrKeywordLatSpan.textContent.trim();
+    console.log('homeAddrLat:', homeAddrLat);
+    
+    var companyAddrLng = companyAddrKeywordLngSpan.textContent.trim();
+    console.log('companyAddrLng:', companyAddrLng);
+    
+    var companyAddrLat = companyAddrKeywordLatSpan.textContent.trim();
+    console.log('companyAddrLat:', companyAddrLat);
+    
+    var customAddrLng = customAddrKeywordLngSpan.textContent.trim();
+    console.log('customAddrLng:', customAddrLng);
+    
+    var customAddrLat = customAddrKeywordLatSpan.textContent.trim();
+    console.log('customAddrLat:', customAddrLat);
 
 
     //데이터가 있을 때만 처리
     if (homeKeywordInput && likeHomeAddr != null) {
     	 homeKeywordInput.value = likeHomeAddr;
+    	 registerInputEvents(homeAddrKeyword, likeHomeAddr);
     }
     
     if (companyKeywordInput && likeCompanyAddr != null) {
         companyKeywordInput.value = likeCompanyAddr;
+        registerInputEvents(companyAddrKeyword, likeCompanyAddr);
     } 
     
     if (customKeywordInput && likeCustomAddr != null) {
         customKeywordInput.value = likeCustomAddr;
+        registerInputEvents(customAddrKeyword, likeCustomAddr);
     } 
     
     if (customNameInput && likeCustomName != null) {
     	customNameInput.value = likeCustomName;
+    	registerInputEvents(customNameKeyword, likeCustomName);
     }
+    
+    if (homeAddrKeywordLngSpan && homeAddrLng != null) {
+    	  homeAddrKeywordLngSpan.value = homeAddrLng;
+      }
+    if (homeAddrKeywordLatSpan && homeAddrLat != null) {
+    	homeAddrKeywordLatSpan.value = homeAddrLat;
+      }
+    if (companyAddrKeywordLngSpan && companyAddrLng != null) {
+    	companyAddrKeywordLngSpan.value = companyAddrLng;
+        }
+    if (companyAddrKeywordLatSpan && companyAddrLat != null) {
+    	companyAddrKeywordLatSpan.value = companyAddrLat;
+          }
+    if (customAddrKeywordLngSpan && customAddrLng != null) {
+    	customAddrKeywordLngSpan.value = customAddrLng;
+            }
+    if (customAddrKeywordLatSpan && customAddrLat != null) {
+    	customAddrKeywordLatSpan.value = customAddrLat;
+              }
 
 });
 

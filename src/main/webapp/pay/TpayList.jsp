@@ -123,7 +123,7 @@ function TpayCharge(Tpay) {
 	          buyer_email : userEmail,
 	          buyer_tel : userPhone,  //필수입력
 	          //buyer_postcode : '123-456',
-	          //m_redirect_url : '{/purchase/addPurchase.jsp}' // 예: https://www.my-service.com/payments/complete/mobile
+	          m_redirect_url : '{/purchase/addPurchase.jsp}' // 예: https://www.my-service.com/payments/complete/mobile
 	    }, function (rsp) { // callback
 	        if (rsp.success) {
 	            alert(Tpay+"원 충전이 완료되었습니다.");
