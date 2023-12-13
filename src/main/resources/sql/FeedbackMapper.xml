@@ -55,13 +55,13 @@
 		WHERE CALL_NO = #{callNo}
 	</update>
 	
-	<select id="getStar" parameterType="star">
+	<select id="getStar" parameterType="star" resultType="int">
 		select star
 		from call
 		where call_no = #{callNo}
 	</select>
 	
-	<select id="getShareStar" parameterType="star" resultMap="starSelectMap">
+	<select id="getShareStar" parameterType="star" resultType="int">
 		select star 
 		from shares 
 		where call_no = #{callNo}
@@ -83,8 +83,8 @@
 		AND PASSENGER_NO = #{passengerNo}
 	</delete>
 	
-	<select id="getBlacklist" parameterType="blacklist" resultMap="blacklistSelectMap">
-		SELECT *
+	<select id="getBlacklistCount" parameterType="blacklist" resultType="int">
+		SELECT count(*)
 		FROM BLACKLIST
 		WHERE DRIVER_NO = #{driverNo}
 		AND PASSENGER_NO = #{passengerNo}
@@ -99,13 +99,14 @@
 		#{reportUserNo}, 
 		#{badCallNo},
 		#{reportCategory},
-		0,
+		1,
 		#{reportDetail},
-		#{role},
+		#{reportRole},
 		sysdate)
 	</insert>
 	
 	<select id="getReport" parameterType="report" resultMap="reportSelectMap">
+		
 		select 
 		r.report_no as report_no, 
 		r.report_user_no as report_user_no,
@@ -115,19 +116,17 @@
 		r.report_detail as report_detail,
 		r.report_date as report_date,
 		r.role as role,
-		r.reg_date as reg_date,
-		p.user_no as USER_NO
-		from report r,  pay p
-		where r.bad_call_no = p.call_no
-		and r.bad_call_no = #{badCallNo}
-		and p.pay_type = '실결제'
-		and r.report_no = #{reportNo}
 		<if test="reportRole == 'passenger'">
-		and p.role = 'driver'
-		</if>
+        m.driver_no as USER_NO,
+        </if>
 		<if test="reportRole == 'driver'">
-		and p.role = 'passenger'
+		m.passenger_no as USER_NO,
 		</if>
+		r.reg_date as reg_date
+		from report r,  match m
+		where r.bad_call_no = m.call_no
+		and r.bad_call_no = #{badCallNo}
+		and r.report_no = #{reportNo}
 	</select>
 	
 	<select  id="getReportList"  parameterType="search"	resultMap="reportSelectMap">
@@ -135,20 +134,20 @@
 	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
 	  			FROM	(	SELECT *
 							FROM REPORT
-							<if test="searchCondition != null">
+							
 							<where>
-								<if test="code != 3">
+								<if test="code != 0">
 					 				REPORT_CODE = #{code}
 								</if>
-								<if test="searchCondition != 0 and searchCondition != '' ">
+								<if test="searchCondition != null and !searchCondition.equals('선택') and !searchCondition.equals('') ">
 					 				AND REPORT_CATEGORY = #{searchCondition}
 								</if>
-								<if test="searchKeyword !='' ">
+								<if test="searchKeyword !=''and searchKeyword != null ">
 					 				AND REPORT_USER_NO like #{searchKeyword}||'%'
 								</if>
 							</where>
-							</if>
-							ORDER BY REG_DATE ) inner_table
+							
+							ORDER BY REG_DATE desc ) inner_table
 		WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 	 </select>
@@ -156,24 +155,26 @@
 	 <select id="getCall" parameterType="int" resultMap="callSelectMap">
 		SELECT *
 		FROM CALL
-		WHERE CALL_NO = #{CallNo}
+		WHERE CALL_NO = #{callNo}
 	</select>
 	
 	<update id="updateReportCode" parameterType="int">
 		update report
 		set
-		report_code = 1
+		report_code = 2,
+		report_date = sysdate
 		where report_no = #{reportNo}
 	</update>
 	
 	<update id="updateDisReportCode" parameterType="int">
 		update report
 		set
-		report_code = 2
+		report_code = 3,
+		report_date = sysdate
 		where report_no = #{reportNo}
 	</update>
 	
-	<select id="getReportCode" parameterType="int" resultMap="reportSelectMap">
+	<select id="getReportCode" parameterType="int" resultType="int">
 		SELECT REPORT_CODE
 		FROM Report
 		WHERE REPORT_NO = #{reportNo}
@@ -228,10 +229,10 @@
 		select avg(star)
 		from(
 			select COALESCE(s.star, c.star) as star
-			from call c, pay p, shares s
-			where c.call_no = p.call_no(+)
+			from call c, match m, shares s
+			where c.call_no = m.call_no
 			and c.call_no = s.call_no(+)
-			and p.pay_type = '실결제'
+			and c.call_state_code = '운행후'
 			and p.user_no = #{userNo})
 		where star > 0
 	</select>
@@ -241,6 +242,97 @@
 			set STAR = #{star}
 		WHERE CALL_NO = #{callNo}
 		and user_no = #{passengerNo}
+	</update>
+	
+	<select id="getCallNo" parameterType="user" resultType="int">
+		select * from
+			(select call_no from pay
+			where user_no = #{userNo}
+			and pay_type = '실결제'
+			order by pay_date desc)
+		where rownum = 1
+	</select>
+	
+	<select id="getDriverNoByCallNo" parameterType="int" resultType="int">
+		select driver_no from match
+			where call_no = #{callNo}
+	</select>
+	
+	<select  id="getUserReportList"  parameterType="search"	resultMap="reportSelectMap">
+	  	SELECT *
+	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
+	  			FROM	(	SELECT *
+							FROM REPORT
+							where report_user_no = #{searchKeyword}
+							ORDER BY REG_DATE desc) inner_table
+				WHERE ROWNUM &lt;= #{endRowNum} )
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
+	 </select>
+	 
+	 <select  id="getUserReportTotalCount"  parameterType="search"	resultType="int">
+	  	SELECT count(*)
+	  	FROM	(	SELECT *
+					FROM REPORT
+					where report_user_no = #{searchKeyword}
+					ORDER BY REG_DATE desc) inner_table
+	 </select>
+	 
+	 <select  id="getReportTotalCount"  parameterType="search"	resultType="int">
+	  	SELECT count(*)
+  		FROM	(	SELECT *
+					FROM REPORT
+					<where>
+						<if test="code != 0">
+			 				REPORT_CODE = #{code}
+						</if>
+						<if test="searchCondition != null and !searchCondition.equals('선택') and !searchCondition.equals('') ">
+			 				AND REPORT_CATEGORY = #{searchCondition}
+						</if>
+						<if test="searchKeyword !=''and searchKeyword != null ">
+			 				AND REPORT_USER_NO like #{searchKeyword}||'%'
+						</if>
+					</where>
+					ORDER BY REG_DATE desc) inner_table
+	 </select>
+	 
+	 <select id="getPassNoByCallNo" parameterType="int" resultType="int">
+		select PASSENGER_NO from match
+			where call_no = #{callNo}
+	</select>
+	
+	<select id="getBlacklistList" parameterType="int" resultMap="blacklistSelectMap">
+		select s.user_no as PASSENGER_NO, m.driver_no as DRIVER_NO
+		from shares s, match m
+		where s.call_no = m.call_no
+		and s.call_no = #{call_no}
+	</select>
+	 
+	 <select id="getShareReport" parameterType="report" resultMap="reportSelectMap">
+		
+		select 
+		r.report_no as report_no, 
+		r.report_user_no as report_user_no,
+		r.bad_call_no as bad_call_no,
+		r.report_category as report_category,
+		r.report_code as report_code, 
+		r.report_detail as report_detail,
+		r.report_date as report_date,
+		r.role as role,
+        s.user_no as USER_NO,
+		r.reg_date as reg_date
+		from report r,  shares s
+		where r.bad_call_no = s.call_no
+		and r.bad_call_no = #{badCallNo}
+		and r.report_no = #{reportNo}
+		
+	</select>
+	
+	<update id="addBlockCode" parameterType="block">
+		update users
+		<set>
+			block_code = 1
+		</set> 
+		where user_no = #{userNo}
 	</update>
 	
 </mapper>

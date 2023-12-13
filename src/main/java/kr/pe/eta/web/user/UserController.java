@@ -116,7 +116,7 @@ public class UserController {
 
 		System.out.println("/user/login : POST");
 		ModelAndView modelAndView = new ModelAndView();
-		System.out.println("user" + user);
+		System.out.println("user : " + user);
 		User db = userService.getUser(user.getEmail());
 
 		System.out.println(db);
@@ -128,6 +128,15 @@ public class UserController {
 		double Y = location.getY();
 		System.out.println("Y : " + Y);
 
+		if (db.getRole().equals("driver")) {
+			RedisEntity redisEntity = new RedisEntity();
+			String userNo = String.valueOf(db.getUserNo());
+			redisEntity.setId(userNo);
+			redisEntity.setCurrentX(X);
+			redisEntity.setCurrentY(Y);
+			redisService.addUser(redisEntity);
+		}
+
 		if (db.isBlockCode()) {
 			// feedback 로직
 			int result = feedback.updateBlockCode(db);
@@ -136,32 +145,28 @@ public class UserController {
 			// 다시 code 확인
 			if (result == 1) {
 				// 블록 코드가 false이면 로그인 로직을 타게 하거나 다른 처리를 수행
-				if (db.getRole().equals("driver")) {
-					RedisEntity redisEntity = new RedisEntity();
-					String userNo = String.valueOf(db.getUserNo());
-					redisEntity.setId(userNo);
-					redisEntity.setCurrentX(X);
-					redisEntity.setCurrentY(Y);
-					redisService.addUser(redisEntity);
+				if (user.getEmail().equals(db.getEmail()) && user.getPwd().equals(db.getPwd())) {
+					session.setAttribute("user", db);
+					System.out.println("로그인성공");
+					session.setAttribute("user", db);
+					modelAndView.setViewName("redirect:/home.jsp");
 				}
-				session.setAttribute("user", db);
+				System.out.println("로그인실패");
 				modelAndView.setViewName("redirect:/home.jsp");
 			} else {
 				// 여전히 true인 경우, home 화면으로 이동
+				System.out.println("로그인실패");
 				modelAndView.setViewName("redirect:/home.jsp");
 			}
 		} else {
 			// 코드가 이미 false인 경우, 로그인 로직 수행
-			if (db.getRole().equals("driver")) {
-				RedisEntity redisEntity = new RedisEntity();
-				String userNo = String.valueOf(db.getUserNo());
-				redisEntity.setId(userNo);
-				redisEntity.setCurrentX(X);
-				redisEntity.setCurrentY(Y);
-				redisService.addUser(redisEntity);
+			if (user.getEmail().equals(db.getEmail()) && user.getPwd().equals(db.getPwd())) {
+				session.setAttribute("user", db);
+				System.out.println("로그인성공");
+				modelAndView.addObject("successMessage", "로그인 성공");
+				modelAndView.setViewName("redirect:/home.jsp");
 			}
-
-			session.setAttribute("user", db);
+			System.out.println("로그인실패");
 			modelAndView.setViewName("redirect:/home.jsp");
 		}
 
@@ -199,7 +204,7 @@ public class UserController {
 
 	@RequestMapping(value = "/getUser", method = RequestMethod.GET)
 	public ModelAndView getUser(@RequestParam(name = "email", required = false) String email,
-			@RequestParam(name = "userNo") int userNo) throws Exception {
+			@RequestParam(name = "userNo", required = false) Integer userNo) throws Exception {
 		System.out.println("/user/getUser : GET");
 		ModelAndView model = new ModelAndView();
 		User user = null;
@@ -278,7 +283,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "listUser", method = RequestMethod.GET)
-	public ModelAndView getUserList(Search search) throws Exception {
+	public ModelAndView getUserList(@ModelAttribute("search") Search search) throws Exception {
 		System.out.println("/user/listUser : POST");
 		if (search.getCurrentPage() == 0) {
 			search.setCurrentPage(1);
