@@ -10,9 +10,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
 <meta charset="UTF-8">
 <title>input Address Map</title>
-<link rel="stylesheet" type="text/css" href="../styles/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="../fonts/bootstrap-icons.css">
-<link rel="stylesheet" type="text/css" href="../styles/style.css">
+<link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
+<link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="manifest" href="../_manifest.json">
