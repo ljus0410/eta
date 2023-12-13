@@ -64,8 +64,9 @@ public class RedisService {
 		// Redis에서 사용자 정보를 삭제합니다.
 
 		User user = (User) session.getAttribute("user");
+		String userNo = String.valueOf(user.getUserNo());
 
-		repository.deleteById(user.getEmail());
+		repository.deleteById(userNo);
 	}
 
 }
