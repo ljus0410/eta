@@ -13,7 +13,7 @@
       display: none;
     }
   </style>
-</head>
+</head> 
 <body>
 
  <button type="button" class="inputAddress" onclick="inputAddress('N')">일반콜</button>
@@ -29,6 +29,7 @@
   <br>
   <button type="button" class="myCashList" onclick="myCashList()">정산 내역 리스트</button>
   <br>
+  <button type="button" class="test" onclick="test()">ui test</button>
  <!-- <input type="text" placeholder="도착지" class="content">
  <input type="text" placeholder="경로옵션" class="content">
  <input type="text" placeholder="가격" class="content">
@@ -41,6 +42,9 @@
      -->
 </body>
 <script>
+function test() {    
+    self.location = "https://localhost:8000/callreq/ui_test.jsp"
+  }
 function myCashList() {    
     self.location = "/pay/myCashList?userNo="+${user.userNo }+"&month=all"
   }
