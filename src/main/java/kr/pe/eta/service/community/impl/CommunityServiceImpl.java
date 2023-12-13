@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.DealReq;
+import kr.pe.eta.domain.ShareReq;
 import kr.pe.eta.service.community.CommunityDao;
 import kr.pe.eta.service.community.CommunityService;
 
@@ -102,6 +103,39 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public void deleteDealReqDriver(int userNo) throws Exception {
 		communityDao.deleteDealReqDriver(userNo);
+	}
+
+	@Override
+	public void addShareReq(ShareReq shareReq) throws Exception {
+		communityDao.addShareReq(shareReq);
+	}
+
+	@Override
+	public void updateShareCode(int userNo) throws Exception {
+		communityDao.updateShareCode(userNo);
+	}
+
+	@Override
+	public Map<String, Object> getShareList(Search search) throws Exception {
+		List<ShareReq> shareList = communityDao.getShareList(search);
+		List<Call> callList = communityDao.getShareCallList(search);
+		int totalCount = communityDao.getTotalCountPassShare(search);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("shareList", shareList);
+		map.put("callList", callList);
+		map.put("totalCount", totalCount);
+		return map;
+	}
+
+	@Override
+	public ShareReq getShare(int userNo) throws Exception {
+		ShareReq shareReq = communityDao.getShare(userNo);
+		return shareReq;
+	}
+
+	@Override
+	public void deleteShareReq(int callNo) throws Exception {
+		communityDao.deleteShareReq(callNo);
 	}
 
 }

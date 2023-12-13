@@ -9,7 +9,8 @@
 <body>
 <jsp:include page="/home/top.jsp" />
 
-
+<a href="/community/getDealReq">딜 상세</a>
+<a href="/community/getDealList">딜 리스트</a>
 <!-- <a href="/community/home.jsp">Label</a>
 <a href="/user/home.jsp">로그인</a> -->
 <!-- <a href= -->

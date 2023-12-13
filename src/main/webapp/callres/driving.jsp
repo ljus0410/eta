@@ -1,18 +1,37 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Insert title here</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62&libraries=services"></script>
-    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/css/bootstrap-icons.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="_manifest.json">
+<meta id="theme-check" name="theme-color" content="#FFFFFF">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62&libraries=services"></script>
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
-    <script>
+<script>
+    	
+    	var passengerNo = "${passengerNo}";
+    	var driverNo = "${driverNo}";
+    	var waypointCoordinates; //경유지 좌표
+    	
         async function loadMapData() {
-            const apiUrl = 'https://apis-navi.kakaomobility.com/v1/directions?origin=${call.startX},${call.startY}&destination=${call.endX},${call.endY}';
+        	
+        	
+            const apiUrl = "https://apis-navi.kakaomobility.com/v1/directions?origin=${currentY},${currentX}&destination=${call.endY},${call.endX}&waypoints=${call.startY},${call.startX}&priority=${call.routeOpt}";
             console.log("Generated URL:", apiUrl);
 
             try {
@@ -31,22 +50,32 @@
                 const data = await response.json();
                 console.log(data);
                 drawPolylineAndMoveMarker(data, map);
+                
+                var waypoint = data.routes[0].sections.find(section => 
+                section.guides.some(guide => guide.name === "경유지")
+            	).guides.find(guide => guide.name === "경유지");
+
+            	waypointCoordinates = { lat: waypoint.y, lng: waypoint.x };
+            	console.log(waypointCoordinates);//경유지
+
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         }
 
-        loadMapData();
+        
 
         const drawPolylineAndMoveMarker = (data, map) => {
             const linePath = [];
-            data.routes[0].sections[0].roads.forEach(router => {
-                router.vertexes.forEach((vertex, index) => {
-                    if (index % 2 === 0) {
-                        const lat = router.vertexes[index + 1];
-                        const lng = router.vertexes[index];
-                        linePath.push(new kakao.maps.LatLng(lat, lng));
-                    }
+            data.routes[0].sections.forEach(section => {
+                section.roads.forEach(road => {
+                    road.vertexes.forEach((vertex, index) => {
+                        if (index % 2 === 0) {
+                            const lat = road.vertexes[index + 1];
+                            const lng = road.vertexes[index];
+                            linePath.push(new kakao.maps.LatLng(lat, lng));
+                        }
+                    });
                 });
             });
 
@@ -78,13 +107,13 @@
                 }
             };
 
-            const intervalId = setInterval(moveMarker, 500);
+            const intervalId = setInterval(moveMarker, 100);
         };
 
         var locationBuffer = [];
         var firstLocation = null;
         var lastLocation = null;
-        var passengerNo = "${passengerNo}";
+        
         var stompClient = null;
 
         function sendLocationToServer(index) {
@@ -92,6 +121,7 @@
                 const location = index;
                 const locationData = { lat: location.getLat(), lng: location.getLng() };
                 stompClient.send("/sendLocation/" + passengerNo, {}, JSON.stringify(locationData));
+                
                 addLocation(locationData);
 
                 if (!firstLocation) {
@@ -103,9 +133,19 @@
                 console.error("Websocket is not connected.");
             }
         }
+        var passedWaypoint = false;//경유지 지났는지 확인
 
         function addLocation(locationData) {
-            locationBuffer.push(locationData);
+            // 경유지 좌표와 현재 위치가 일치하는지 확인
+            if (locationData.lat === waypointCoordinates.lat && locationData.lng === waypointCoordinates.lng) {
+                passedWaypoint = true; // 경유지를 지났음을 표시
+                showPassedWaypointAlert();// 승객을 태웠을 때 알림창 표시
+            }
+
+            // 경유지를 지난 후의 위치 데이터만 추가
+            if (passedWaypoint) {
+                locationBuffer.push(locationData);
+            }
         }
 
         function connectWebSocket() {
@@ -114,6 +154,7 @@
 
             stompClient.connect({}, function (frame) {
                 console.log('Connected: ' + frame);
+                loadMapData();
                 socket.onclose = function () {
                     console.log('WebSocket connection closed');
                 };
@@ -137,10 +178,10 @@
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        startX: firstLocation.lng,
-                        startY: firstLocation.lat,
-                        endX: lastLocation.lng,
-                        endY: lastLocation.lat,
+                        startX: firstLocation.lat,
+                        startY: firstLocation.lng,
+                        endX: lastLocation.lat,
+                        endY: lastLocation.lng,
                         callNo: callNo
                     }),
                     success: function(response) {
@@ -187,19 +228,43 @@
         var stompClient2 = Stomp.over(socket2);
 
         function sendEndDriving() {
-            stompClient2.send("/sendNotification" + passengerNo, {}, '운행종료');
+            stompClient2.send("/sendNotification/" + passengerNo, {}, '운행종료');
         }
+        
+        function showPassedWaypointAlert() {
+            var toastContainer = document.createElement('div');
+            toastContainer.innerHTML = '<div id="toast-top-3" class="toast toast-bar toast-top rounded-l bg-green-dark shadow-bg shadow-bg-s" data-bs-delay="3000">' +
+                '<div class="align-self-center">' +
+                '<i class="icon icon-s bg-green-light rounded-l bi bi-check font-28 me-2"></i>' +
+                '</div>' +
+                '<div class="align-self-center ps-1">' +
+                '<strong class="font-13 mb-n2">Logged In</strong>' +
+                '<span class="font-10 mt-n1 opacity-70">Welcome back, John!</span>' +
+                '</div>' +
+                '<div class="align-self-center ms-auto">' +
+                '<button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>' +
+                '</div>' +
+                '</div>';
+
+            document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+            $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+        }
+
     </script>
 </head>
 <body>
-    <div class="col-md-6">
-        <div id="map" style="width: 100%; height: 710px;"></div>
-    </div>
-    <button onclick="updateLocationData()">운행종료</button>
-    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62&libraries=services"></script>
-    <script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62"></script>
-    <script>
+	<div class="col-md-6">
+		<div id="map" style="width: 100%; height: 700px;"></div>
+	</div>
+	<button onclick="updateLocationData()" class="btn btn-xxl gradient-highlight">운행종료</button>
+
+	<script
+		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<script
+		src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62&libraries=services"></script>
+	<script type="text/javascript"
+		src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62"></script>
+	<script>
         var mapContainer = document.getElementById('map'),
             mapOption = {
                 center: new kakao.maps.LatLng(37.4939072071976, 127.0143838311636),
@@ -208,5 +273,7 @@
 
         var map = new kakao.maps.Map(mapContainer, mapOption);
     </script>
+    <script src="/javascript/callres/bootstrap.min.js"></script>
+	<script src="/javascript/callres/custom.js"></script>
 </body>
 </html>
