@@ -81,8 +81,9 @@ public class CallReqServiceImpl implements CallReqService {
 		callReqDao.updateShareCode(callNo);
 	}
 
-	public void updateLikeAddr(String likeAddr, String likeName, int userNo, int likeNo) throws Exception {
-		callReqDao.updateLikeAddr(likeAddr, likeName, userNo, likeNo);
+	public void updateLikeAddr(String likeAddr, String likeName, int userNo, int likeNo, double likeX, double likeY)
+			throws Exception {
+		callReqDao.updateLikeAddr(likeAddr, likeName, userNo, likeNo, likeX, likeY);
 	}
 
 	public void deleteLikeAddr(int likeNo, int userNo) throws Exception {
@@ -98,6 +99,13 @@ public class CallReqServiceImpl implements CallReqService {
 		List<Integer> blackNoList = callReqDao.getBlackList(passengerNo);
 
 		return blackNoList;
+	}
+
+	public Call getCall(int callNo) throws Exception {
+
+		Call call = callReqDao.getCall(callNo);
+
+		return call;
 	}
 
 }

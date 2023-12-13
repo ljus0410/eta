@@ -25,12 +25,15 @@ public interface CallReqService {
 
 	public void updateShareCode(int callNo) throws Exception;
 
-	public void updateLikeAddr(String likeAddr, String likeName, int userNo, int likeNo) throws Exception;
+	public void updateLikeAddr(String likeAddr, String likeName, int userNo, int likeNo, double likeX, double likeY)
+			throws Exception;
 
 	public void deleteLikeAddr(int likeNo, int userNo) throws Exception;
 
 	public void deleteCustomName(int userNo) throws Exception;
 
 	public List<Integer> getBlackList(int passnegerNo) throws Exception;
+
+	public Call getCall(int callNo) throws Exception;
 
 }

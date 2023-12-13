@@ -9,6 +9,7 @@
   <resultMap id="callReqSelectMap" type="Call">
     <result property="callNo"       column="call_no"       jdbcType="NUMERIC"/>
     <result property="callCode" column="call_code"    jdbcType="VARCHAR" />
+    <result property="userNo" column="passenger_no"    jdbcType="NUMERIC" />
     <result property="callDate" column="call_date"    jdbcType="DATE" />
     <result property="realPay"         column="real_pay"          jdbcType="NUMERIC" />
     <result property="startAddr"         column="start_addr"          jdbcType="VARCHAR" />
@@ -109,20 +110,26 @@
    </update>
    
    <update id="updateLikeAddr" parameterType="map">
-    UPDATE likes SET like_addr = #{likeAddr:VARCHAR}, like_name = #{likeName:VARCHAR} WHERE user_no = #{userNo:NUMERIC} AND like_no = #{likeNo:NUMERIC}
+    UPDATE likes SET like_addr = #{likeAddr:VARCHAR}, like_name = #{likeName:VARCHAR}, like_X = #{likeX:NUMERIC}, like_Y = #{likeY:NUMERIC} WHERE user_no = #{userNo:NUMERIC} AND like_no = #{likeNo:NUMERIC}
    </update>
    
    <update id="deleteLikeAddr" parameterType="map">
     <if test="likeNo != 1002">
-    UPDATE likes SET like_addr = null WHERE user_no = #{userNo:NUMERIC} AND like_no= #{likeNo:NUMERIC}
+    UPDATE likes SET like_addr = null, like_X = null, like_Y = null WHERE user_no = #{userNo:NUMERIC} AND like_no= #{likeNo:NUMERIC}
     </if>
     <if test="likeNo == 1002">
-    UPDATE likes SET like_addr = null, like_name = null WHERE user_no = #{userNo:NUMERIC} AND like_no= #{likeNo:NUMERIC}
+    UPDATE likes SET like_addr = null, like_name = null, like_X=null, like_Y=null WHERE user_no = #{userNo:NUMERIC} AND like_no= #{likeNo:NUMERIC}
     </if>
    </update>
    
    <select id="getBlackList" parameterType="int" resultType="int">
-      SELECT blacklist_no FROM blacklist WHERE passenger_no = #{passengerNo:NUMERIC}
+      SELECT driver_no FROM blacklist WHERE passenger_no = #{passengerNo:NUMERIC}
    </select>
 
+  <select id="getCall" parameterType="int" resultMap="callReqSelectMap">
+        SELECT C.*, M.passenger_no
+				FROM call C
+				JOIN match M ON C.call_no = M.call_no
+				WHERE C.call_no = #{callNo:NUMERIC}
+  </select>
 </mapper>

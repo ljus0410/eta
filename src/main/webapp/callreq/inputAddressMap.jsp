@@ -4,8 +4,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
 <meta charset="UTF-8">
 <title>input Address Map</title>
+<link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
+<link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="../_manifest.json">
+<meta id="theme-check" name="theme-color" content="#FFFFFF">
+<link rel="apple-touch-icon" sizes="180x180" href="../app/icons/icon-192x192.png">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=70ef6f6883ad97593a97af6324198ac0&libraries=services"></script>
 <script>
 
@@ -121,10 +133,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initMap(lat, lng);
 
     // 버튼 생성
-    var buttonContainer = document.body;
+    var buttonContainer = document.querySelector('.card.card-style');
 
     if (type === 'start') {
         var startButton = document.createElement('button');
+        startButton.className = 'btn btn-full bg-blue-dark rounded-xs text-uppercase font-700 w-100 btn-s mt-4';
         startButton.id = 'getStartAddress';
         startButton.textContent = '출발지로 설정';
 
@@ -153,6 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
         buttonContainer.appendChild(startButton);
     } else if (type === 'end') {
         var endButton = document.createElement('button');
+        endButton.className = 'btn btn-full bg-blue-dark rounded-xs text-uppercase font-700 w-100 btn-s mt-4';
         endButton.id = 'getEndAddress';
         endButton.textContent = '도착지로 설정';
 
@@ -184,12 +198,23 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 </script>
+<style>
+#clickLatlng{
+    font-weight: bold;
+}
+</style>
 </head>
-<body>
-    <div id="map" style="width:100%;height:350px;"></div> 
-    <div id="clickLatlng"></div>
-    <div id="address"></div>
-    <div id="lat" style="display: none;"></div>
-    <div id="lng" style="display: none;"></div>
+<body class="theme-light">
+<div id="page">
+    <div class="page-content header-clear-medium">
+	    <div class="card card-style">
+		    <div id="map" style="width:100%;height:350px;"></div> 
+		    <div id="clickLatlng"></div>
+		    <div id="address"></div>
+		    <div id="lat" style="display: none;"></div>
+		    <div id="lng" style="display: none;"></div>
+		  </div>
+		</div>
+	</div>
 </body>
 </html>

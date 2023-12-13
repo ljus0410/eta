@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-
+<jsp:include page="../home/top.jsp" />
 <form id="login" method="post" action="/user/deleteUser">
 <input id ="pwd" type="text" name="pwd" value="${user.pwd}"><br>
 <input id ="detailPwd" type="text" name="detailPwd" value=''>
