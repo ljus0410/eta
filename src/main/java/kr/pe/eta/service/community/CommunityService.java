@@ -5,6 +5,7 @@ import java.util.Map;
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.DealReq;
+import kr.pe.eta.domain.ShareReq;
 
 public interface CommunityService {
 
@@ -29,5 +30,15 @@ public interface CommunityService {
 	public int getDealNo(int userNo, String callCode) throws Exception;
 
 	public void deleteDealReqDriver(int userNo) throws Exception;
+
+	public void addShareReq(ShareReq shareReq) throws Exception;
+
+	public void updateShareCode(int userNo) throws Exception;
+
+	public Map<String, Object> getShareList(Search search) throws Exception;
+
+	public ShareReq getShare(int userNo) throws Exception;
+
+	public void deleteShareReq(int callNo) throws Exception;
 
 }
