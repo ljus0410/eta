@@ -21,10 +21,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.servlet.http.HttpSession;
 import kr.pe.eta.common.Search;
 import kr.pe.eta.domain.User;
+import kr.pe.eta.redis.RedisService;
+import kr.pe.eta.service.callreq.CallReqService;
+import kr.pe.eta.service.feedback.FeedbackService;
 import kr.pe.eta.service.user.AccountToken;
 import kr.pe.eta.service.user.IamportApiRequest;
+import kr.pe.eta.service.user.LoginService;
 import kr.pe.eta.service.user.UserService;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -40,6 +45,15 @@ public class UserRestController {
 	private UserService userService;
 
 	@Autowired
+	private FeedbackService feedback;
+
+	@Autowired
+	private LoginService loginService;
+
+	@Autowired
+	private CallReqService callReqService;
+
+	@Autowired
 	private IamportApiRequest port;
 
 	@Value("${search.pageSize}")
@@ -53,10 +67,13 @@ public class UserRestController {
 
 	final DefaultMessageService messageService;
 
-	public UserRestController() {
+	private final RedisService redisService;
+
+	public UserRestController(RedisService redisService) {
 		System.out.println(this.getClass());
 		this.messageService = NurigoApp.INSTANCE.initialize("NCSMOXVRHXMS5UNM", "ACJ94REWVJTBOWKDKHSM3NBX4KZF1ERP",
 				"https://api.coolsms.co.kr");
+		this.redisService = redisService;
 	}
 
 	@GetMapping("/send-one")
@@ -178,5 +195,49 @@ public class UserRestController {
 		return bankName;
 	}
 
-	// @@RequestMapping(value = "json/listUser")
+	@RequestMapping(value = "login", method = RequestMethod.POST)
+	public Map<String, Object> login(@RequestBody User user, HttpSession session) throws Exception {
+		System.out.println("json");
+		// Business Logic
+		User db = userService.getUser(user.getEmail());
+		System.out.println(db);
+		System.out.println("user : " + user);
+		System.out.println("login code : " + db.isBlockCode());
+		String success = null;
+		String fail = null;
+		String ment = null;
+
+		// 블락테이블 여부를 확인할 수 있는거 해서 있으면 메세지 띄우고
+		// 없으면 그냥 로그인 되는걸로 블락여부 로긍여부 만
+		if (db.isBlockCode()) {
+			int result = feedback.updateBlockCode(db);
+
+			if (result == 1) {
+				if (user.getEmail().equals(db.getEmail()) && user.getPwd().equals(db.getPwd())) {
+					System.out.println("result = 0 :성공");
+					success = "로그인 성공";
+				} else {
+					System.out.println("실패");
+					fail = "로그인 실패";
+				}
+			} else {
+				System.out.println("실패");
+				ment = "비활성화 상태입니다.";
+			}
+		} else {
+			if (user.getEmail().equals(db.getEmail()) && user.getPwd().equals(db.getPwd())) {
+				System.out.println("fasle : 성공");
+				success = "로그인 성공";
+			} else {
+				System.out.println("실패");
+				fail = "로그인 실패";
+			}
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("success", success);
+		map.put("fail", fail);
+		map.put("ment", ment);
+		return map;
+	}
+
 }
