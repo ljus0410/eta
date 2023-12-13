@@ -43,6 +43,8 @@
 		<result property="callDate" column="call_Date"
 
 			jdbcType="VARCHAR" />
+			
+		<result property="routeOpt" column="route_opt" jdbcType="VARCHAR" />
 
 	</resultMap>
 
