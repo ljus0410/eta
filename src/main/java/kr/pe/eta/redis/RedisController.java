@@ -31,9 +31,9 @@ public class RedisController {
 	}// save
 
 	@GetMapping("/redis/v1/getUser")
-	public RedisEntity getUser(@RequestParam String email) {
-		RedisEntity userEmail = serivce.getUserById(email);
-		return userEmail;
+	public RedisEntity getUser(@RequestParam String userNo) {
+		RedisEntity Current = serivce.getUserById(userNo);
+		return Current;
 	}
 
 	@DeleteMapping("/redis/v1/deleteUser")

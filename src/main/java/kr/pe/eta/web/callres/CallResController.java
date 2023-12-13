@@ -22,6 +22,8 @@ import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Pay;
 import kr.pe.eta.domain.ShareReq;
 import kr.pe.eta.domain.User;
+import kr.pe.eta.redis.RedisEntity;
+import kr.pe.eta.redis.RedisService;
 import kr.pe.eta.service.callres.CallResService;
 import kr.pe.eta.service.pay.PayService;
 
@@ -35,7 +37,11 @@ public class CallResController {
 	@Autowired
 	private PayService payService;
 
-	public CallResController() {
+	@Autowired
+	private final RedisService redisService;
+
+	public CallResController(RedisService redisService) {
+		this.redisService = redisService;
 		System.out.println(this.getClass());
 	}
 
@@ -105,6 +111,12 @@ public class CallResController {
 	@ResponseBody
 	public void callEnd(@RequestBody Call call) throws Exception {
 		call.setCallStateCode("운행후");
+		RedisEntity redisEntity = new RedisEntity();
+		String userNo = String.valueOf(call.getCallNo());
+		redisEntity.setId(userNo);
+		redisEntity.setCurrentX(call.getEndX());
+		redisEntity.setCurrentY(call.getEndY());
+		redisService.addUser(redisEntity);
 		callResService.updateCallStateCode(call);
 		callResService.updateEndXY(call);
 	}
@@ -212,8 +224,16 @@ public class CallResController {
 			int currentMoney = payService.getMyMoney(passengerNo);
 			payService.updateMyMoney(passengerNo, currentMoney - call.getRealPay());
 
-			model.addAttribute("call", callResService.getRecordDriver(callNo));
+			String driverNo1 = String.valueOf(driverNo);
+			RedisEntity location = redisService.getUserById(driverNo1);
+			double currentX = location.getCurrentX().doubleValue();
+			double currentY = location.getCurrentY().doubleValue();
+
+			model.addAttribute("currentX", currentX);
+			model.addAttribute("currentY", currentY);
+			model.addAttribute("call", call);
 			model.addAttribute("passengerNo", passengerNo);
+			model.addAttribute("driverNo", driverNo);
 			return "forward:/callres/driving.jsp";
 
 		} else if (call.getCallCode().equals("R")) {
@@ -258,9 +278,10 @@ public class CallResController {
 				payService.updateMyMoney(share.getFirstSharePassengerNo(), currentMoney - myAccount);
 			}
 
-			model.addAttribute("call", callResService.getCallByNo(callNo));
+			model.addAttribute("call", call);
 			model.addAttribute(shares);
 			model.addAttribute("passengerNo", 1001);// 일단 이렇게 보내줌 driving.jsp 고쳐야됌
+			model.addAttribute("driverNo", driverNo);
 
 			return "forward:/callres/driving.jsp";
 
