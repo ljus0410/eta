@@ -59,4 +59,6 @@ public interface FeedbackService {
 	public int getPassNoByCallNo(int callNo) throws Exception;
 
 	public List<Blacklist> getBlacklistList(int callno) throws Exception;
+
+	public Map<String, Object> getShareReport(Report report) throws Exception;
 }

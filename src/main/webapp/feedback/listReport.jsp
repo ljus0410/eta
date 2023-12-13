@@ -14,6 +14,86 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" ></script>
 <script type="text/javascript">
 $(function () {
+	function countCurrentPage() {
+		let count =  $("#currentPage").val();
+	    let newcount = parseInt(count) + 1;
+	    $("#currentPage").val(newcount);
+	}
+	let isAjaxInProgress = false;
+	let lastScroll = 0;
+
+	$(document).scroll(function(e){
+	    //현재 높이 저장
+	    var currentScroll = $(this).scrollTop();
+	    //전체 문서의 높이
+	    var documentHeight = $(document).height();
+
+	    //(현재 화면상단 + 현재 화면 높이)
+	    var nowHeight = $(this).scrollTop() + $(window).height();
+
+
+	    //스크롤이 아래로 내려갔을때만 해당 이벤트 진행.
+	    if(currentScroll > lastScroll){
+
+	        //nowHeight을 통해 현재 화면의 끝이 어디까지 내려왔는지 파악가능 
+	        //즉 전체 문서의 높이에 일정량 근접했을때 글 더 불러오기)
+	        if(documentHeight < (nowHeight + (documentHeight*0.05))){
+	            console.log("이제 여기서 데이터를 더 불러와 주면 된다.");
+	            if (!isAjaxInProgress) {
+                    isAjaxInProgress = true;
+	            countCurrentPage();
+	            
+	            if($("#currentPage").val() <= ${resultPage.maxPage}){
+	            	let data = {
+	        				code :  $("input[name='code']:checked").val(),
+	        				currentPage : $("#currentPage").val(),
+	        				searchCondition : $("select[name='searchCondition'] option:selected").val(),
+	        				searchKeyword : $("input:text[name='searchKeyword']").val()
+	        		}
+				$.ajax( 
+						{
+						url : "/feedback/json/listReport",
+						method : "POST" ,
+						dataType : "json" ,
+						headers : {
+							"Accept" : "application/json",
+							"Content-Type" : "application/json"
+						},
+						data		:  JSON.stringify(data),
+						success : function(reportList, status) {
+							$.each(reportList, function (index, report) {
+					            // 새로운 행 추가
+					            var newRow = '<tr class="appendlist"'+(index+1)+'>' +
+					                '<td>' + (index + 1) + '&nbsp;&nbsp;<a href="/feedback/getReport?reportNo=' + report.reportNo + '&badCallNo='+report.badCallNo+'&reportRole='+report.reportRole+'">상세보기</a></td>' +
+					                '<td>' + report.reportCode + '</td>' +
+					                '<td>' + report.reportNo + '</td>' +
+					                '<td>' + report.reportUserNo + '</td>' +
+					                '<td>' + report.badCallNo + '</td>' +
+					                '<td>' + report.reportCategory + '</td>' +
+					                '</tr>';
+					            // 적절한 위치에 행 추가
+					            $('#muhanlist').append(newRow);
+					            isAjaxInProgress = false;	
+					        });
+								   
+							},
+							error: function (xhr, status, error) {
+						        console.error("Error:", xhr);
+						}
+						
+					});
+				
+	        	}else{
+	        		isAjaxInProgress = true;
+	        		}
+	        	}
+	        }
+	    }
+
+	    //현재위치 최신화
+	    lastScroll = currentScroll;
+
+	});
 	$("a:contains('검색')").on("click", function () {
 			
 		$("form").attr("method","POST").attr("action","/feedback/listReport").submit();

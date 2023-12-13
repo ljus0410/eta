@@ -11,5 +11,6 @@
 <a href="/feedback/updateStar">별점업데이트</a><br/>
 <a href="/feedback/listReport">신고내역</a><br/>
 <a href="/feedback/addBlacklist">블랙리스트추가</a><br/>
+<a href="/feedback/updateBlacklist">블랙리스트업데이트</a><br/>
 </body>
 </html>
