@@ -109,7 +109,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 	public int addBlock(Block block) throws Exception {
 		block.setBlockCount(this.feedbackDao.getBlockCount(block));
 		int result = 0;
-		if (block.getBlockCount() <= 4) {
+		if (block.getBlockCount() < 4) {
 			result = feedbackDao.addBlock(block);
 			feedbackDao.addBlockCode(block);
 		}
