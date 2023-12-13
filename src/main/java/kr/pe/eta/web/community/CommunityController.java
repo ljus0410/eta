@@ -231,7 +231,7 @@ public class CommunityController {
 		model.addAttribute("search", search);
 		model.addAttribute("callNo", callNo);
 
-		return "/community/listDeal2.jsp";
+		return "/community/listDeal.jsp";
 	}
 
 	@RequestMapping(value = "addShare", method = RequestMethod.POST)

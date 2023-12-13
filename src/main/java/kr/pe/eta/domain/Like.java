@@ -16,8 +16,8 @@ public class Like {
 
 	@Override
 	public String toString() {
-		return "Like [userNo=" + userNo + ", likeNo=" + likeNo + ", likeName=" + likeName + ", likeAddr=" + likeAddr
-				+ "], likeX=" + likeX + ", likeY=" + likeY;
+		return "Like userNo=" + userNo + ", likeNo=" + likeNo + ", likeName=" + likeName + ", likeAddr=" + likeAddr
+				+ ", likeX=" + likeX + ", likeY=" + likeY;
 	}
 
 }
