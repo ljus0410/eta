@@ -75,7 +75,7 @@ $(function () {
 							$.each(noticeList, function (index, notice) {
 					            // 새로운 행 추가
 					            var newRow = '<tr class="appendlist"'+(index+1)+'>' +
-					                '<td>' + notice.noticeNo + '&nbsp;&nbsp;<a href="/notice/getNotice?noticeNo=' + notice.noticeNo + '">상세보기</a></td>' +
+					                '<td>' + notice.noticeNo + '</td>' +
 					                '<td>' + notice.noticeTitle + '</td>' +
 					                '<td>' + notice.noticeDate + '</td>' +
 					                '</tr>';
@@ -105,68 +105,77 @@ $(function () {
 		
 		$("form").attr("method","POST").attr("action","/notice/listNotice").submit();
 	}) 
+	$(document).on("click","tr", function () {
+		
+		self.location="/notice/getNotice?noticeNo="+$(this).children().eq(0).text()
+	})
 	
 
 })
 
 </script>
 </head>
-<body>
 <body class="theme-light">
-<form name="detailform">
+	<form name="detailform">
 		<div id="page">
-			<div class="page-content header-clear-medium"">
-			<div class="card card-style">
-			<div class="content">
-				<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
-				
-				<h1 class="pb-2"><i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;공지사항</h1>
-				
-			</div>
-		</div>
-				
-				<div class="card overflow-visible card-style" >
-			<div class="content mb-0" >
-				<div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
-				<input type="text" class="form-control rounded-xs" style="width: 40%;display: inline-block" name="searchKeyword"
-					value="${!empty search.searchKeyword ? search.searchKeyword : ''}">
-				
-				
-						<a class="btn btn-xxs border-blue-dark color-blue-dark" style="display: inline-block; padding-top: 3px;padding-bottom: 3px" >검색</a>
+			<div class="page-content header-clear-medium">
+				<div class="card card-style">
+					<div class="content">
+						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
+
+						<h1 class="pb-2">
+							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;공지사항
+						</h1>
+
 					</div>
-					<a href="../notice/addNotice">공지사항 등록</a>
-				<div class="table-responsive">
-					<table class="table color-theme mb-2" id="muhanlist">
-					<thead>
-						<tr>
-						  <th scope="col">번호</th>
-						  <th scope="col">제목</th>
-						  <th scope="col">날짜</th>
-						</tr>
-					  </thead>
-					  <tbody>
-						<c:forEach var="noticelist" items="${noticelist }" begin="0"
-						step="1" varStatus="status">
-						<tr class="list">
-						
-								<td>${noticelist.noticeNo }&nbsp;&nbsp;<a
-									href="/notice/getNotice?noticeNo=${noticelist.noticeNo }">상세보기</a></td>
-								<td>${noticelist.noticeTitle }</td>
-								<td>${noticelist.noticeDate }</td>
-							
-							
-						</tr>
-					</c:forEach>
-					  </tbody>
-					</table>
 				</div>
-			</div>
-		</div>
-				
-					<input type="hidden" id="currentPage" name="currentPage" value=1>
-					
-					
-				
+
+				<div class="card overflow-visible card-style">
+					<div class="content mb-0">
+						<div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
+							<a class="btn btn-xxs bg-fade2-blue color-blue-dark"
+								href="../notice/addNotice"
+								style="display: inline-block; padding-top: 3px; padding-bottom: 3px; float: left;">등록</a>
+							<input type="text" class="form-control rounded-xs"
+								style="width: 40%; display: inline-block" name="searchKeyword"
+								value="${!empty search.searchKeyword ? search.searchKeyword : ''}">
+
+
+							<a class="btn btn-xxs border-blue-dark color-blue-dark"
+								style="display: inline-block; padding-top: 3px; padding-bottom: 3px">검색</a>
+						</div>
+
+						<div class="table-responsive">
+							<table class="table color-theme mb-2" id="muhanlist">
+								<thead>
+									<tr>
+										<th scope="col">번호</th>
+										<th scope="col">제목</th>
+										<th scope="col">날짜</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach var="noticelist" items="${noticelist }" begin="0"
+										step="1" varStatus="status">
+										<tr class="list">
+
+											<td>${noticelist.noticeNo }</td>
+											<td>${noticelist.noticeTitle }</td>
+											<td>${noticelist.noticeDate }</td>
+
+
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<input type="hidden" id="currentPage" name="currentPage" value=1>
+
+
+
 			</div>
 		</div>
 	</form>
