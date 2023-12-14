@@ -40,7 +40,7 @@
 				 					notice_title LIKE '%'||#{searchKeyword}||'%'
 								</if>	
 								</where>
-								ORDER BY notice_date desc) inner_table
+								ORDER BY notice_no desc) inner_table
 					WHERE ROWNUM &lt;= #{endRowNum} )
 			WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>

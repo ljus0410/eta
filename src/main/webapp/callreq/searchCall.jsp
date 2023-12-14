@@ -11,9 +11,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
 <meta charset="UTF-8">
 <title>searchCall</title>
-<link rel="stylesheet" type="text/css" href="../styles/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="../fonts/bootstrap-icons.css">
-<link rel="stylesheet" type="text/css" href="../styles/style.css">
+<link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
+<link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="manifest" href="../_manifest.json">
@@ -30,8 +30,9 @@
 </style>
 </head>
 <body class="theme-light">
+<jsp:include page="/home/top.jsp" />
 <div id="page">
-    <div class="page-content header-clear-medium">
+<div class="page-content header-clear-medium">
       <div class="card card-style">
 		    <div class="center-container">
 		      배차 탐색 중<br>
@@ -47,9 +48,9 @@
       <input type="hidden" value="${callDriverNo}" id="driverNo">
       </div>
     </c:forEach>
-    
 <form>
 <input type="hidden" name="callNo" id="callNo" value="${callNo}">
+<input type="hidden" value="${driverNoResult}" name=driverNoResult>
 <button type="button" class="btn btn-full bg-blue-dark rounded-xs text-uppercase font-700 w-100 btn-s mt-4" onclick="deleteCall()">취소</button>
 </form>
 </div>
@@ -65,13 +66,14 @@ document.addEventListener('DOMContentLoaded', function() {
     window.callNo = {
     		callNo: callNo
             };
+    
 });
 
 
 function removeMessage() {
 
 	   alert("배차에 실패하였습니다.");
-	   $("form").attr("method" , "POST").attr("action" , "/callreq/deleteCall").submit();
+	   $("form").attr("method" , "GET").attr("action" , "/callreq/deleteCall").submit();
 }
 
 function deleteCall(){
@@ -79,13 +81,13 @@ function deleteCall(){
 	 var result = confirm("배차 탐색을 취소하시겠습니까?");
 
 	  if (result == true) {
-		  $("form").attr("method" , "POST").attr("action" , "/callreq/deleteCall").submit();
+		  $("form").attr("method" , "GET").attr("action" , "/callreq/deleteCall").submit();
 	  } else {
 
 	  }  
 }
 
-function connectWebSocket() {
+/*function connectWebSocket() {
     var socket = new SockJS('/ws'); // '/ws'는 서버의 웹소켓 연결 URL
     stompClient = Stomp.over(socket);
 
@@ -123,7 +125,7 @@ function sendLocationToServer(driverNo) {
       console.error("Websocket is not connected.");
   }
 }
-connectWebSocket();
+connectWebSocket();*/
 
 </script>
 </html>

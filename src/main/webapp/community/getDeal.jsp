@@ -7,31 +7,26 @@
   <meta charset="UTF-8">
   <title>택시비 딜 상세조회</title>
   
-  <!-- templates 설정 -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-  <link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
-  <link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
-  <link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <!-- templates 설정 끝 -->
-  
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-  
+
   <script>
+
+    function deleteReq() {
+      self.location="/community/deleteDealReq?callNo="+${dealReq.callNo};
+    }
   
     $(function() {
       
-        $( "#delete" ).on("click" , function() {
-          self.location="/community/deleteDealReq?callNo="+${dealReq.callNo};
+        $( "#deletebt" ).on("click" , function() {
+          $('#dealdeleteToast').removeClass('notification-bar glass-effect detached rounded-s shadow-l')
+                  .addClass('notification-bar glass-effect detached rounded-s shadow-l fade show');
         });
 
-        $( "#select" ).on("click" , function() {
-          alert("driver 선택")
+        $( "#match" ).on("click" , function() {
+          let driverNo = $("input[name='driverNo']:checked").val();
+          self.location = "/community/match?driverNo="+driverNo;
         });
-        
+
     });
     
   </script>
@@ -41,51 +36,83 @@
 <body class="theme-light">
 
   <div id="page">
+
+    <jsp:include page="../home/top.jsp" />
   
     <div class="page-content header-clear-medium">
-    
+
       <div class="card card-style">
         <div class="content">
-          <h1 class="pb-2">택시비 딜 상세조회</h1>
-            <ul class="mb-0 ps-3">
-              <li><strong>출발</strong> : ${call.startAddr}</li>
-              <li><strong>도착</strong> : ${call.endAddr}</li>
-              <li><strong>경로 옵션</strong> : ${call.routeOpt}</li>
-              <li><strong>제시 금액</strong> : ${dealReq.passengerOffer}</li>
-            </ul>
-        </div>
-      </div><!-- card card-style 끝 -->
-      
-      <div class="card card-style">
-        <div class="content">
-            <c:choose>
-              <c:when test="${empty list}">
-                <h5 class="pb-2">참여한 driver가 없습니다.</h5>
-              </c:when>
-              <c:otherwise>
-                <div class="list-group list-custom list-group-m rounded-xs">
-                  <ul class="driver-list">
-                    <c:forEach var="driver" items="${list}">
-                      <li class="list-group-item">
-                        <input type="radio" name="driverNo" id="driverNo"> ${driver.userNo} : ${driver.driverOffer} /
-                      </li>
-                    </c:forEach>
-                  </ul>
-                </div>
-              </c:otherwise>
-            </c:choose>
+          <div class="row">
+            <div class="col-9">
+              <h2 class="pb-2" style=" margin-top: 10px;">택시비 딜 상세조회</h2>
+            </div>
+            <div class="col-3">
+              <a class="btn btn-xxs border-red-dark color-red-dark" id="deletebt" style=" margin-top: 5px;">삭제</a>
+            </div>
           </div>
         </div>
       </div><!-- card card-style 끝 -->
     
+      <div class="card card-style">
+        <div class="content">
+          <ul class="mb-0 ps-3">
+            <li><strong>출발</strong> : ${call.startAddr}</li>
+            <li><strong>도착</strong> : ${call.endAddr}</li>
+            <li><strong>경로 옵션</strong> : ${call.routeOpt}</li>
+            <li><strong>제시 금액</strong> : ${dealReq.passengerOffer}</li>
+            <li><strong>종료 시간</strong> : ${call.callDate}</li>
+          </ul>
+        </div>
+      </div><!-- card card-style 끝 -->
+      
+      <div class="card card-style" style="margin-bottom: 20px;">
+        <div class="content">
+            <c:choose>
+              <c:when test="${empty driverList}">
+                <h5 class="pb-2" style=" margin-top: 10px;">참여한 driver가 없습니다.</h5>
+              </c:when>
+              <c:otherwise>
+                <form>
+                <c:forEach var="driver" items="${driverList}">
+                  <input type="radio" name="driverNo" id="driverNo" value="${driver.userNo}"> &nbsp; &nbsp; ${driver.userNo} : ${driver.driverOffer} 원 / ${driver.starAvg} 점 <br/>
+                </c:forEach>
+                </form>
+              </c:otherwise>
+            </c:choose>
+          </div>
+        </div>
+
+      <button class="btn-full btn bg-fade2-blue color-blue-dark" type="submit" style="float: right; margin-right: 15px;" id="match">선택하기</button>
+    
     </div><!-- page-content header-clear-medium 끝 -->
+
+  <!-- iOS Toast Bar-->
+  <div id="dealdeleteToast" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
+    <div class="toast-body px-3 py-3">
+      <div class="d-flex">
+        <div class="align-self-center">
+          <span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>
+        </div>
+        <div class="align-self-center">
+          <h5 class="font-16 ps-2 ms-1 mb-0">택시비 딜을 취소하시겠습니까?</h5>
+        </div>
+      </div>
+      <p class="font-12 pt-2 mb-3">
+      </p>
+      <div class="row">
+        <div class="col-6">
+          <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">취소</a>
+        </div>
+        <div class="col-6">
+          <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border bg-red-dark color-red-dark" aria-label="Close"  onclick="deleteReq()">삭제</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- iOS Toast Bar 끝-->
   
   </div><!-- page 끝 -->
-
-  <!-- templates 설정 -->
-  <script src="/templates/scripts/bootstrap.min.js"></script>
-  <script src="/templates/scripts/custom.js"></script>
-  <!-- templates 설정 끝 -->
 
 </body>
 </html>

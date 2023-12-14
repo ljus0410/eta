@@ -24,6 +24,7 @@ import kr.pe.eta.redis.RedisEntity;
 import kr.pe.eta.redis.RedisService;
 import kr.pe.eta.service.callreq.CallReqService;
 import kr.pe.eta.service.community.CommunityService;
+import kr.pe.eta.service.feedback.FeedbackService;
 import kr.pe.eta.service.pay.PayService;
 import kr.pe.eta.service.user.UserService;
 
@@ -42,6 +43,9 @@ public class CommunityController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private FeedbackService feedbackService;
 
 	@Autowired
 	private final RedisService redisService;
@@ -145,7 +149,6 @@ public class CommunityController {
 		callReqService.addCall(call);
 		int callNo = communityService.getCallNo(userNo, call.getCallCode());
 		int money = call.getRealPay();
-		int myMoney = payService.getMyMoney(userNo);
 		model.addAttribute("callNo", callNo);
 		model.addAttribute("money", money);
 
@@ -180,11 +183,21 @@ public class CommunityController {
 		int userNo = ((User) session.getAttribute("user")).getUserNo();
 		DealReq dealReq = communityService.getDeal(userNo);
 		Call call = communityService.getCall(dealReq.getCallNo());
-		Map<String, Object> map = communityService.getDealDriverList(dealReq.getCallNo());
+		List<DealReq> list = communityService.getDealDriverList(dealReq.getCallNo());
+		List<DealReq> driverList = new ArrayList<>();
+
+		for (int i = 0; i < list.size(); i++) {
+			DealReq listItem = list.get(i);
+			int driverNo = list.get(i).getUserNo();
+			User driver = userService.getUsers(driverNo);
+			double starAvg = feedbackService.avgStar(driver);
+			listItem.setStarAvg(starAvg);
+			driverList.add(listItem);
+		}
 
 		model.addAttribute("call", call);
 		model.addAttribute("dealReq", dealReq);
-		model.addAttribute("list", map.get("list"));
+		model.addAttribute("driverList", driverList);
 
 		return "/community/getDeal.jsp";
 	}
@@ -203,22 +216,12 @@ public class CommunityController {
 	}
 
 	@RequestMapping(value = "getDealList")
-	public String getDealList(@ModelAttribute("search") Search search, HttpSession session, Model model)
-			throws Exception {
+	public String getDealList(HttpSession session, Model model) throws Exception {
 
 		System.out.println("/getDealList");
 
-		System.out.println(search);
-		if (search.getCurrentPage() == 0) {
-			search.setCurrentPage(1);
-		}
-		search.setPageSize(pageSize);
+		Map<String, Object> map = communityService.getDealList();
 
-		Map<String, Object> map = communityService.getDealList(search);
-		System.out.println(map);
-		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
-				pageSize);
-		System.out.println(resultPage);
 		int callNo = 0;
 		int userNo = ((User) session.getAttribute("user")).getUserNo();
 		if (((User) session.getAttribute("user")).isDealCode()) {
@@ -227,8 +230,6 @@ public class CommunityController {
 
 		model.addAttribute("dealList", map.get("dealList"));
 		model.addAttribute("callList", map.get("callList"));
-		model.addAttribute("resultPage", resultPage);
-		model.addAttribute("search", search);
 		model.addAttribute("callNo", callNo);
 
 		return "/community/listDeal.jsp";
@@ -254,7 +255,7 @@ public class CommunityController {
 		model.addAttribute("callNo", callNo);
 		model.addAttribute("maxShareCount", maxShareCount);
 
-		return "/community/addShare.jsp";
+		return "/community/addShare2.jsp";
 	}
 
 	@RequestMapping(value = "addShareReq", method = RequestMethod.POST)
