@@ -42,11 +42,13 @@
 </style>
 </head>
 <body class="theme-light">
-<jsp:include page="/home/top.jsp" /><br>
+<jsp:include page="/home/top.jsp" />
+<div id="page">
+<div class="page-content header-clear-medium">
        <div class="card card-style">
           <div class="content">
             <h1 class="pb-2">
-              <i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;즐겨찾기
+              <i class="has-bg rounded-s bi bg-yellow-dark bi-star">&nbsp;</i>&nbsp;&nbsp;즐겨찾기
             </h1>
 
           </div>
@@ -185,7 +187,8 @@
       ${likeList[2].likeNo} <span id="likeCustomName">${likeList[2].likeName}</span> <span id="likeCustomAddr">${likeList[2].likeAddr}</span>     
       </div>
     
-       
+    </div>
+    </div>   
 </body>
 <script>
 

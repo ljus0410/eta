@@ -31,8 +31,8 @@
 </head>
 <body class="theme-light">
 <jsp:include page="/home/top.jsp" />
-<br>
 <div id="page">
+<div class="page-content header-clear-medium">
       <div class="card card-style">
 		    <div class="center-container">
 		      배차 탐색 중<br>
@@ -48,11 +48,12 @@
       <input type="hidden" value="${callDriverNo}" id="driverNo">
       </div>
     </c:forEach>
-    
 <form>
 <input type="hidden" name="callNo" id="callNo" value="${callNo}">
+<input type="hidden" value="${driverNoResult}" name=driverNoResult>
 <button type="button" class="btn btn-full bg-blue-dark rounded-xs text-uppercase font-700 w-100 btn-s mt-4" onclick="deleteCall()">취소</button>
 </form>
+</div>
 </div>
 </div>
 </body>
@@ -65,13 +66,14 @@ document.addEventListener('DOMContentLoaded', function() {
     window.callNo = {
     		callNo: callNo
             };
+    
 });
 
 
 function removeMessage() {
 
 	   alert("배차에 실패하였습니다.");
-	   $("form").attr("method" , "POST").attr("action" , "/callreq/deleteCall").submit();
+	   $("form").attr("method" , "GET").attr("action" , "/callreq/deleteCall").submit();
 }
 
 function deleteCall(){
@@ -79,13 +81,13 @@ function deleteCall(){
 	 var result = confirm("배차 탐색을 취소하시겠습니까?");
 
 	  if (result == true) {
-		  $("form").attr("method" , "POST").attr("action" , "/callreq/deleteCall").submit();
+		  $("form").attr("method" , "GET").attr("action" , "/callreq/deleteCall").submit();
 	  } else {
 
 	  }  
 }
 
-function connectWebSocket() {
+/*function connectWebSocket() {
     var socket = new SockJS('/ws'); // '/ws'는 서버의 웹소켓 연결 URL
     stompClient = Stomp.over(socket);
 
@@ -123,7 +125,7 @@ function sendLocationToServer(driverNo) {
       console.error("Websocket is not connected.");
   }
 }
-connectWebSocket();
+connectWebSocket();*/
 
 </script>
 </html>
