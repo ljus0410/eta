@@ -117,7 +117,7 @@ public class NoticeController {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName(viewName);
 
-		noticeService.addNotice(notice);
+		noticeService.updateNotice(notice);
 
 		return modelAndView;
 	}
