@@ -29,11 +29,11 @@ public interface CommunityDao {
 
 	public void deleteDealReq(int callNo) throws Exception;
 
-	public List<DealReq> getDealList(Search search) throws Exception;
+	public List<DealReq> getDealList() throws Exception;
 
-	public List<Call> getDealCallList(Search search) throws Exception;
+	public List<Call> getDealCallList() throws Exception;
 
-	public int getDealCount(Search search) throws Exception;
+	public int getDealCount() throws Exception;
 
 	public int getDealNo(Map param) throws Exception;
 

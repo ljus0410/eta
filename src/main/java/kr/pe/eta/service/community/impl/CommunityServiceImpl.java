@@ -63,13 +63,11 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 
 	@Override
-	public Map<String, Object> getDealDriverList(int callNo) throws Exception {
+	public List<DealReq> getDealDriverList(int callNo) throws Exception {
 
-		Map<String, Object> map = new HashMap<String, Object>();
 		List<DealReq> list = communityDao.getDealDriverList(callNo);
 
-		map.put("list", list);
-		return map;
+		return list;
 	}
 
 	@Override
@@ -78,10 +76,10 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 
 	@Override
-	public Map<String, Object> getDealList(Search search) throws Exception {
-		List<DealReq> dealList = communityDao.getDealList(search);
-		List<Call> callList = communityDao.getDealCallList(search);
-		int totalCount = communityDao.getDealCount(search);
+	public Map<String, Object> getDealList() throws Exception {
+		List<DealReq> dealList = communityDao.getDealList();
+		List<Call> callList = communityDao.getDealCallList();
+		int totalCount = communityDao.getDealCount();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("dealList", dealList);
 		map.put("callList", callList);
