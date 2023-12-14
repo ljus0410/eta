@@ -10,8 +10,33 @@
         #phone, #authButton {
             display: inline-block; /* 인라인 블록으로 설정하여 같은 줄에 위치하도록 함 */
             vertical-align: middle; /* 수직 정렬을 중앙에 맞춤 */
-        }
+            }       
+.custom-border {
+    width: 522.5px;
+    height: 53px;
+    padding: 0px 15px 0px 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: #77777;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-family: "Inter", sans-serif;
+    font-weight: 550;
+    font-size: 11px !important;
+}
+
+.custom-border .col-6 {
+    width: 70%;
+}
+.custom-border .col-6 i {
+    margin-left: -20px; /* 여기에 원하는 마진 값을 설정하세요 */
+
+}
     </style>
+    
     <script>
         $(document).ready(function () {
             // 버튼에 대한 클릭 이벤트 처리
@@ -46,12 +71,15 @@
         });
     </script>
 </head>
-<body>
+<body class="theme-light">
 <jsp:include page="../home/top.jsp" />
 
 
 
 <div id="page">
+
+
+<div class="page-content header-clear-medium">
 
 <div class="card card-style">
       <div class="content">
@@ -85,34 +113,35 @@
           <label for="c2" class="color-theme">Password</label>
           <span>(required)</span>
         </div>
+        
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-calendar-date" font-12"></i>
           <input type="text" class="form-control rounded-xs" id="c5" placeholder="생년월일(ex 19000821)"/>
           <label for="c2" class="color-theme">Password</label>
           <span>(required)</span>
         </div>
-<div class="form-custom form-label form-icon mb-3 d-flex align-items-center">
-    <i class="bi bi-person-fill font-12"></i>
-    <input type="text" class="form-control rounded-m" id="c6" placeholder="성별" readonly>
+        
+<div class="custom-border mx-auto">
+    <div class="col-6">
+        <i class="bi bi-person-check-fill">성별</i>
+    </div>
+    <div class="col-6">
+        <div class="form-check form-check-custom ">
+            <input class="form-check-input" type="checkbox" value="" id="c3a">
+            <label class="form-check-label" for="c3a">성별</label>
+            <i class="is-checked color-green-dark  bi bi-gender-male"></i>
+            <i class="is-unchecked color-blue-dark bi bi-gender-female"></i>
+        </div>
+    </div>
 </div>
-<div class="form-check form-check-inline d-flex align-items-center">
-    <input class="form-check-input" type="checkbox" id="maleCheckbox" value="male">
-    <label class="form-check-label" for="maleCheckbox">남성</label>
-</div>
-<div class="form-check form-check-inline d-flex align-items-center">
-    <input class="form-check-input" type="checkbox" id="femaleCheckbox" value="female">
-    <label class="form-check-label" for="femaleCheckbox">여성</label>
-</div>
-
-
-
-
+         
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-telephone font-12"></i>
           <input type="text" class="form-control rounded-xs" id="c7" placeholder="전화번호('-' 제외)"/>
           <label for="c2" class="color-theme">Password</label>
           <span>(required)</span>
         </div>
+        
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-asterisk font-12"></i>
           <input type="text" class="form-control rounded-xs" id="c8" placeholder="phone 인증"/>
@@ -156,8 +185,9 @@
           </div>
         </div>
       </div>
+   
     </div>
-    
+   </div> 
 </div>
 </body>
 </html>
