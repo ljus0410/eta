@@ -117,13 +117,14 @@ $(function () {
 </head>
 <body class="theme-light">
 	<form name="detailform">
-		<div id="page">
-			<div class="page-content header-clear-medium">
+		<div id="page" >
+		<jsp:include page="/home/top.jsp" />
+			<div class="page-content header-clear-medium" >
 				<div class="card card-style" style="margin-bottom: 15px;">
 					<div class="content"style="margin-bottom: 9px; ">
 						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
-						<h1 class="pb-2" >
+						<h1 class="pb-2" style="width: 140px; display: inline-block;">
 							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;공지사항
 						</h1>
 

@@ -26,10 +26,12 @@
 
 <script type="text/javascript">
 $(function () {
-	$("h3:cantains('등록')").on("click",function(){
-		$('#toast-bottom-4').removeClass('toast toast-pill toast-bottom toast-s rounded-l bg-green-dark shadow-bg shadow-bg-s').addClass('toast toast-pill toast-bottom toast-s rounded-l bg-green-dark shadow-bg shadow-bg-s fade show');
-	})
-	setTimeout( "document.form.submit()", 3000 );
+	$("button:contains('등록')").on("click", function() {
+        setTimeout(function() {
+            $("form").submit();
+        }, 2000);
+    });
+	
 	
 })
 </script>
@@ -45,10 +47,10 @@ $(function () {
 <body class="theme-light">
 	<form action="/notice/addNotice" method="post">
 		<div id="page">
-		
+		<jsp:include page="/home/top.jsp" />
 			<div class="page-content header-clear-medium">
-				<div class="card card-style">
-					<div class="content">
+				<div class="card card-style" style="margin-bottom: 15px;">
+					<div class="content"style="margin-bottom: 9px; ">
 						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
 						<h1 class="pb-2" style="width: 140px; display: inline-block;">
@@ -87,12 +89,12 @@ $(function () {
 				</div>
 				
 
-				<button data-toast="toast-bottom-4" class="btn-full btn bg-fade2-blue color-blue-dark"
-					type="submit" style="float: right; margin-right: 15px;">등록하기</button>
+				<button data-toast="toast-bottom-4" class="btn-full btn bg-blue-dark"
+					style="float: right; margin-right: 15px; padding-top: 5px; padding-bottom: 5px;">등록</button>
 				
 
 			</div>
-		<div id="toast-bottom-4"  class="toast toast-pill toast-bottom toast-s rounded-l bg-blue-dark shadow-bg shadow-bg-s " data-bs-delay="2000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>등록되었습니다!</span></div>
+		<div id="toast-bottom-4"  class="toast toast-pill toast-bottom toast-s rounded-l bg-blue-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>등록되었습니다!</span></div>
 		</div>
 		
 	</form>
