@@ -226,14 +226,14 @@
 	</update>
 	
 	<select id="avgStar" parameterType="user">
-		select avg(star)
+		select nvl(avg(star),0)
 		from(
 			select COALESCE(s.star, c.star) as star
 			from call c, match m, shares s
 			where c.call_no = m.call_no
 			and c.call_no = s.call_no(+)
 			and c.call_state_code = '운행후'
-			and p.user_no = #{userNo})
+			and m.driver_no = #{userNo})
 		where star > 0
 	</select>
 	
