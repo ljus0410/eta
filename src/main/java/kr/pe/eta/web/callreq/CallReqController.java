@@ -264,7 +264,7 @@ public class CallReqController {
 			session.removeAttribute("custom");
 		}
 
-		return "forward:/callreq/likeAddrList.jsp";
+		return "redirect:/callreq/likeAddress?userNo=" + userNo;
 	}
 
 	@RequestMapping(value = "deleteCustomName", method = RequestMethod.POST)
