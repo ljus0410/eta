@@ -156,6 +156,7 @@ $(function () {
 <body class="theme-light">
 	<form name="detailform">
 		<div id="page">
+	<jsp:include page="/home/top.jsp" />
 			<div class="page-content header-clear-medium">
 				<div class="card card-style">
 					<div class="content">

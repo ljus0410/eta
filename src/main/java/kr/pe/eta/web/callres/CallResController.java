@@ -23,6 +23,7 @@ import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Pay;
 import kr.pe.eta.domain.ShareReq;
 import kr.pe.eta.domain.User;
+import kr.pe.eta.redis.AddCallEntity;
 import kr.pe.eta.redis.RedisEntity;
 import kr.pe.eta.redis.RedisService;
 import kr.pe.eta.service.callres.CallResService;
@@ -332,7 +333,7 @@ public class CallResController {
 		model.addAttribute("list", map.get("list"));
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
-		model.addAttribute("user", users);
+		model.addAttribute("users", users);
 
 		return "forward:/callres/getRecordList.jsp";
 	}
@@ -383,6 +384,18 @@ public class CallResController {
 		modelAndView.addObject("list", map.get("list"));
 		modelAndView.addObject("resultPage", resultPage);
 		return modelAndView;
+	}
+
+	@GetMapping(value = "getRequest")
+	public String getRequest(Model model, HttpSession session) throws Exception {
+		int userNo = ((User) session.getAttribute("user")).getUserNo();
+		String driverNo = String.valueOf(userNo);
+		AddCallEntity callRequest = redisService.getCallById(driverNo);
+		int callNo = callRequest.getCallNo();
+		Call call = callResService.getCallByNo(callNo);
+		model.addAttribute("call", call);
+		System.out.println(call);
+		return "forward:/callres/callAcceptReject.jsp";
 	}
 
 }
