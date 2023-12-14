@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.Session;
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Like;
+import kr.pe.eta.redis.AddCallEntity;
 import kr.pe.eta.redis.RedisEntity;
 import kr.pe.eta.redis.RedisService;
 import kr.pe.eta.service.callreq.CallReqService;
@@ -125,7 +126,7 @@ public class CallReqController {
 			driverX = driverList.get(i).getCurrentX();
 			driverY = driverList.get(i).getCurrentY();
 
-			double distance = userService.haversineDistance(passengerX, passengerY, driverX, driverY);
+			double distance = userService.haversineDistance(passengerX, passengerY, driverY, driverX);
 
 			if (distance <= 3) { // passenger의 출발 위치로부터 3km 이내의 driver List
 				String driverNo = driverList.get(i).getId();
@@ -149,6 +150,7 @@ public class CallReqController {
 			}
 		}
 
+		int callNo = callReqService.getCallNo(); // getCallNo()
 		int passengerNo = call.getUserNo();
 		List<Integer> blackNo = callReqService.getBlackList(passengerNo);
 		if (blackNo != null && !blackNo.isEmpty()) {
@@ -169,12 +171,16 @@ public class CallReqController {
 			System.out.println("blackList 없음");
 			for (int i = 0; i < callDriverNoList.size(); i++) {
 				driverNoResult.add(callDriverNoList.get(i));
+				String driverNo = String.valueOf(callDriverNoList.get(i));
+				AddCallEntity addCallEntity = new AddCallEntity();
+				addCallEntity.setId(driverNo);
+				addCallEntity.setCallNo(callNo);
+				redisService.addCall(addCallEntity);
 			}
 		}
 
-		int callNo = callReqService.getCallNo(); // getCallNo()
-
 		System.out.println("driverNoResult : " + driverNoResult);
+		System.out.println("callNo : " + callNo);
 		model.addAttribute("call", call);
 		model.addAttribute("callNo", callNo);
 		model.addAttribute("driverNoResult", driverNoResult);
@@ -182,8 +188,9 @@ public class CallReqController {
 		return "forward:/callreq/searchCall.jsp";
 	}
 
-	@RequestMapping(value = "deleteCall", method = RequestMethod.POST)
-	public String deleteCall(@RequestParam("callNo") int callNo, Model model) throws Exception {
+	@RequestMapping(value = "deleteCall", method = RequestMethod.GET)
+	public String deleteCall(@RequestParam("callNo") int callNo,
+			@RequestParam("driverNoResult") List<String> driverNoResult, Model model) throws Exception {
 
 		System.out.println("/callreq/deleteCall");
 
@@ -195,6 +202,16 @@ public class CallReqController {
 		System.out.println("callCode : " + callCode);
 
 		callReqService.deleteCall(callNo);
+
+		for (int i = 0; i < driverNoResult.size(); i++) {
+			String driverNo = driverNoResult.get(i).replaceAll("[\\[\\]]", "");
+			System.out.println("driverNo : " + driverNo);
+			AddCallEntity addCallEntity = new AddCallEntity();
+			addCallEntity.setId(driverNo);
+			addCallEntity.setCallNo(callNo);
+			redisService.deleteCall(addCallEntity);
+		}
+
 		return "redirect:/callreq/selectOptions?userNo=" + userNo + "&callCode=" + callCode;
 	}
 

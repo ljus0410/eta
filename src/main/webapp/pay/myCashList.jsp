@@ -27,6 +27,7 @@
 </style>
 </head>
 <body class="theme-light">
+<jsp:include page="/home/top.jsp" />
   <form name="detailform">
     <div id="page">
       <div class="page-content header-clear-medium">

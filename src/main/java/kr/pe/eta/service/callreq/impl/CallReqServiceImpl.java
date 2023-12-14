@@ -66,7 +66,7 @@ public class CallReqServiceImpl implements CallReqService {
 		System.out.println("serviceImpl getCallDriverList carOpt : " + carOpt);
 		System.out.println("serviceImpl getCallDriverList petOpt : " + petOpt);
 		System.out.println("serviceImpl getCallDriverList driverNo : " + driverNo);
-		int callDriverNo = callReqDao.getCallDriver(carOpt, petOpt, driverNo);
+		Integer callDriverNo = callReqDao.getCallDriver(carOpt, petOpt, driverNo);
 
 		return callDriverNo;
 	}
