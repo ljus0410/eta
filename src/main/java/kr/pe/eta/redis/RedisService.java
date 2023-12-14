@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RedisService {
 
 	private final RedisRepository repository;
+	private final AddCallRepository addCallRepository;
 
 	@Transactional
 	public RedisEntity addUser(RedisEntity user) {
@@ -67,6 +68,32 @@ public class RedisService {
 		String userNo = String.valueOf(user.getUserNo());
 
 		repository.deleteById(userNo);
+	}
+
+	@Transactional
+	public void addCall(AddCallEntity call) {
+		// save
+		addCallRepository.save(call);
+
+	}
+
+	@Transactional
+	public void deleteCall(AddCallEntity call) {
+		// Redis에서 사용자 정보를 삭제합니다.
+
+		addCallRepository.delete(call);
+	}
+
+	@Transactional(readOnly = true)
+	public AddCallEntity getCallById(String reqId) {
+		Optional<AddCallEntity> result = addCallRepository.findById(reqId);
+
+		// Handling
+		if (result.isPresent()) {
+			return result.get();
+		} else {
+			throw new RuntimeException("Database has no Data");
+		}
 	}
 
 }

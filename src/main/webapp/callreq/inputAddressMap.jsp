@@ -205,8 +205,9 @@ document.addEventListener('DOMContentLoaded', function() {
 </style>
 </head>
 <body class="theme-light">
+<jsp:include page="/home/top.jsp" />
 <div id="page">
-    <div class="page-content header-clear-medium">
+<div class="page-content header-clear-medium">
 	    <div class="card card-style">
 		    <div id="map" style="width:100%;height:350px;"></div> 
 		    <div id="clickLatlng"></div>

@@ -10,9 +10,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="_manifest.json">
@@ -35,13 +32,20 @@
 </head>
 <body class="theme-light">
     <div id="page">
+	<jsp:include page="/home/top.jsp" />
         <div class="page-content header-clear-medium">
+        <div class="card card-style">
+					<div class="content">
+						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
+
+						<h1 class="pb-2">
+							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;예약
+						</h1>
+
+					</div>
+				</div>
             <c:forEach var="record" items="${list}" varStatus="status">
-                <div class="align-self-center">
-                    <span class="icon icon-xxl gradient-red color-white shadow-bg shadow-bg-s rounded-m">
-                        <i class="bi bi-heart-fill font-24"></i>
-                    </span>
-                </div>
+ 
                 <div class="w-100" data-callno="${record.callNo}">
                     <div class="card card-style mb-0">
                         <div class="content">
@@ -69,7 +73,7 @@
             });
         });
     </script>
-    <script src="/javascript/callres/bootstrap.min.js"></script>
-    <script src="/javascript/callres/custom.js"></script>
+    <script src="/templates/scripts/bootstrap.min.js"></script>
+    <script src="/templates/scripts/custom.js"></script>
 </body>
 </html>

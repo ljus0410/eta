@@ -1,5 +1,6 @@
 package kr.pe.eta.service.community;
 
+import java.util.List;
 import java.util.Map;
 
 import kr.pe.eta.common.Search;
@@ -21,11 +22,11 @@ public interface CommunityService {
 
 	public DealReq getDeal(int userNo) throws Exception;
 
-	public Map<String, Object> getDealDriverList(int callNo) throws Exception;
+	public List<DealReq> getDealDriverList(int callNo) throws Exception;
 
 	public void deleteDealReq(int callNo) throws Exception;
 
-	public Map<String, Object> getDealList(Search search) throws Exception;
+	public Map<String, Object> getDealList() throws Exception;
 
 	public int getDealNo(int userNo, String callCode) throws Exception;
 

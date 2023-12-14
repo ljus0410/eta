@@ -110,7 +110,7 @@ public class CommunityRestController {
 		}
 		search.setPageSize(pageSize);
 
-		Map<String, Object> map = communityService.getDealList(search);
+		Map<String, Object> map = communityService.getDealList();
 		System.out.println(map);
 		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
 				pageSize);

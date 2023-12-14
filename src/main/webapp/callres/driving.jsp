@@ -31,7 +31,7 @@
         async function loadMapData() {
         	
         	
-            const apiUrl = "https://apis-navi.kakaomobility.com/v1/directions?origin=${currentY},${currentX}&destination=${call.endY},${call.endX}&waypoints=${call.startY},${call.startX}&priority=${call.routeOpt}";
+            const apiUrl = "https://apis-navi.kakaomobility.com/v1/directions?origin=${currentY},${currentX}&destination=${call.endX},${call.endY}&waypoints=${call.startX},${call.startY}&priority=${call.routeOpt}";
             console.log("Generated URL:", apiUrl);
 
             try {
@@ -273,7 +273,7 @@
 
         var map = new kakao.maps.Map(mapContainer, mapOption);
     </script>
-    <script src="/javascript/callres/bootstrap.min.js"></script>
-	<script src="/javascript/callres/custom.js"></script>
+    <script src="/templates/scripts/bootstrap.min.js"></script>
+    <script src="/templates/scripts/custom.js"></script>
 </body>
 </html>

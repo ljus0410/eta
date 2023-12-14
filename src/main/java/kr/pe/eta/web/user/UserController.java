@@ -197,7 +197,7 @@ public class UserController {
 		}
 		System.out.println("방금 만든 회원 : " + userService.getUser(user.getEmail()));
 		System.out.println("즐겨찾기 보자 : " + callReqService.getLikeList(newuser.getUserNo()));
-		model.setViewName("forward:/user/home.jsp");
+		model.setViewName("redirect:/home.jsp");
 		return model;
 
 	}
@@ -221,12 +221,12 @@ public class UserController {
 		return model;
 	}
 
-	@RequestMapping(value = "updateUser", method = RequestMethod.GET)
+	@RequestMapping(value = "updateUserView", method = RequestMethod.GET)
 	public ModelAndView updateUserView(@RequestParam("email") String eamil, HttpSession session) throws Exception {
-		System.out.println("/user/updateUser : POST");
+		System.out.println("/user/updateUser : GET");
 		ModelAndView model = new ModelAndView();
 
-		model.setViewName("forward:/user/updateUserView.jsp");
+		model.setViewName("redirect:/user/updateUserView.jsp");
 		return model;
 	}
 
@@ -242,19 +242,17 @@ public class UserController {
 			session.setAttribute("user", user);
 		}
 
-		model.setViewName("forward:/user/home.jsp");
+		model.setViewName("forward:/home.jsp");
 		return model;
 	}
 
 	@RequestMapping(value = "updatePwd", method = RequestMethod.GET)
-	public ModelAndView updatePwdView(@RequestParam("email") String eamil) throws Exception {
+	public ModelAndView updatePwdView() throws Exception {
 		System.out.println("/user/updatePwd : GET");
 		ModelAndView model = new ModelAndView();
 
-		User user = userService.getUser(eamil);
+		model.setViewName("redirect:/user/updatepwd.jsp");
 
-		model.setViewName("forward:/user/updatepwd.jsp");
-		model.addObject("user", user);
 		return model;
 
 	}
@@ -309,12 +307,11 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "deleteUserView", method = RequestMethod.GET)
-	public ModelAndView deleteUserVuew(@RequestParam("email") String email, ModelAndView model) throws Exception {
+	public ModelAndView deleteUserVuew(ModelAndView model) throws Exception {
 		System.out.println("/user/deleteUser : GET");
 
-		User user = userService.getUser(email);
 		model.setViewName("forward:/user/delete.jsp");
-		model.addObject("user", user);
+
 		return model;
 
 	}

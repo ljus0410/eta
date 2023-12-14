@@ -7,13 +7,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+    <%@ page import="kr.pe.eta.domain.User"%>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-<link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="/css/bootstrap-icons.css">
-<link rel="stylesheet" type="text/css" href="/css/style.css">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="manifest" href="_manifest.json">
@@ -64,47 +62,51 @@
 	});
 </script>
 </head>
-<body>
+<body class="theme-light">
+<% 
+User user = (User) session.getAttribute("user");
+%>
 
-	<div class="page-content header-clear-medium">
-		<div class="card card-style">
-			<div class="content">
-				<h6 class="font-700 mb-n1 color-highlight">Gorgeous Styles</h6>
-				<h1 class="pb-2">Card & Content Styles</h1>
-				<p class="mb-2">All the styles you'll ever need to create
-					amazing designs for your content elements.</p>
-				<ul class="mb-0 ps-3">
-					<li>${call.callDate} </li>
-					<li>${call.startKeyword} </li>
-					<li>${call.endKeyword}</li>
-					<li>${call.realPay}</li>
-
-					<c:if test="${user.role == 'driver'}">
-				        택시 정보
-				        <li>${user.phone}</li>
-				        <li>${call.callNo}</li>
-				        <li>${user.carNum}</li>
-				        <li>${call.star}</li>
-				    </c:if>
-
-					<c:if test="${user.role == 'passenger'}">
-				        passenger 정보
-				        <li>${user.userNo}</li>
-				        <li>${call.callNo}</li>
-				    </c:if>
-				</ul>
-			</div>
-		</div>
-	</div>
-
-
-
-
-
-
-	<div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-    	<div id="map" style="width: 90%; height: 300px; border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);"></div>
-	</div>
+<div id='page'>
+<jsp:include page="/home/top.jsp" />
+	 <div class="page-content header-clear-medium">
+        <div class="card card-style">
+            <div class="content">
+                <h6 class="font-700 mb-n1 color-highlight">Gorgeous Styles</h6>
+                <h1 class="pb-2">
+                    <c:choose>
+                        <c:when test="${sessionScope.user.role == 'passenger'}">
+                            이용기록
+                        </c:when>
+                        <c:otherwise>
+                            운행기록
+                        </c:otherwise>
+                    </c:choose>
+                </h1>
+                <ul class="mb-0 ps-3">
+                    <li>${call.callDate} </li>
+                    <li>${call.startKeyword} </li>
+                    <li>${call.endKeyword}</li>
+                    <li>${call.realPay}</li>
+                    <c:if test="${sessionScope.user.role == 'passenger'}">
+                        <li>택시 정보: ${users.phone}, ${call.callNo}, ${users.carNum}, ${call.star}</li>
+                    </c:if>
+                    <c:if test="${sessionScope.user.role == 'driver'}">
+                        <li>passenger 정보: ${users.userNo}, ${call.callNo}</li>
+                    </c:if>
+                    <c:if test="${sessionScope.user.role == 'admin'}">
+                        <li>passenger 정보: ${users.userNo}, ${call.callNo}</li>
+                        <li>택시 정보: ${users.phone}, ${call.callNo}, ${users.carNum}, ${call.star}</li>
+                    </c:if>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; height: 100%;">
+            <div id="map" style="width: 90%; height: 300px; border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);"></div>
+        </div>
+    </div>
+    </div>
 
 
 	<script>
@@ -115,7 +117,8 @@
 		var map = new kakao.maps.Map(mapContainer, mapOption);
 	</script>
 
-	<script src="/javascript/callres/bootstrap.min.js"></script>
-	<script src="/javascript/callres/custom.js"></script>
+
+    <script src="/templates/scripts/bootstrap.min.js"></script>
+    <script src="/templates/scripts/custom.js"></script>
 </body>
 </html>
