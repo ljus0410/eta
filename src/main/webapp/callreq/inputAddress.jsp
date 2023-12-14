@@ -144,8 +144,8 @@ if (navigator.geolocation) {
 </head>
 <body class="theme-light">
 <jsp:include page="/home/top.jsp" />
-<br>
 <div id="page">
+  <div class="page-content header-clear-medium">
     <div class="card card-style">
         <div class="map_wrap">
             <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
@@ -255,6 +255,7 @@ if (navigator.geolocation) {
 			      </div>
 			    </c:forEach> 
         </div>
+</div>
 </div>
 </div>
 <script>
@@ -648,8 +649,9 @@ document.addEventListener('DOMContentLoaded', function() {
             startLat: startLat,
             startLng: startLng
         };
+    
+
 });
- 
 function handleButtonClick(Addr, Name, X, Y) {
     
     /*alert(likeAddr);
@@ -672,7 +674,6 @@ function handleButtonClick(Addr, Name, X, Y) {
                 endLat: Y
             };
   }
-
 function selectOptions(callCode){
   
   // 출발/도착지 값 둘다 있는지 체크
