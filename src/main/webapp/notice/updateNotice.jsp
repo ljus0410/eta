@@ -27,7 +27,7 @@
 <script type="text/javascript">
 $(function () {
 	$("a:contains('초기화')").on("click",function(){
-		$("form[name='updateNoticeform']")[0].reset();
+		 document.updateNoticeform.reset();
 		
 	})
 	
