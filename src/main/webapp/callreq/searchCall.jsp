@@ -5,33 +5,56 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
 <meta charset="UTF-8">
 <title>searchCall</title>
+<link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
+<link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="../_manifest.json">
+<meta id="theme-check" name="theme-color" content="#FFFFFF">
+<link rel="apple-touch-icon" sizes="180x180" href="../app/icons/icon-192x192.png">
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<style>
+  .center-container {
+    text-align: center;
+    font-weight: bold;
+  }
+</style>
 </head>
-<body>
+<body class="theme-light">
+<div id="page">
+    <div class="page-content header-clear-medium">
+      <div class="card card-style">
+		    <div class="center-container">
+		      배차 탐색 중<br>
+		      <img src="../images/Taxi.gif" width="300" height="200">
+		    </div>
 
-<div class="msgArea"></div>   <!--websocket 전송받기 test -->
-
-배차 탐색 중<br>
-배차번호 : ${callNo} <br>
+					
 
     <c:set var="i" value="0" />
-    <c:forEach var="callDriverList" items="${callDriverList}">
+    <c:forEach var="callDriverNo" items="${driverNoResult}">
       <c:set var="i" value="${ i+1 }" />
-      
-      <div id="callDriverList">
-      <p> petOpt, carOpt에 해당하는 driver : ${callDriverList.userNo}</p>        
+      <div id="callDriverNo">
+      <input type="hidden" value="${callDriverNo}" id="driverNo">
       </div>
     </c:forEach>
     
 <form>
 <input type="hidden" name="callNo" id="callNo" value="${callNo}">
-<button type="button" onclick="deleteCall()">취소</button>
+<button type="button" class="btn btn-full bg-blue-dark rounded-xs text-uppercase font-700 w-100 btn-s mt-4" onclick="deleteCall()">취소</button>
 </form>
-
+</div>
+</div>
+</div>
 </body>
 <script>
 
@@ -49,7 +72,6 @@ function removeMessage() {
 
 	   alert("배차에 실패하였습니다.");
 	   $("form").attr("method" , "POST").attr("action" , "/callreq/deleteCall").submit();
-
 }
 
 function deleteCall(){
@@ -74,9 +96,13 @@ function connectWebSocket() {
         socket.onclose = function () {
             console.log('WebSocket connection closed');
           };
+          
+          var driverNo = document.getElementById('driverNo').value;
 
-          var driverNo = 1012;
-          sendLocationToServer(driverNo);
+          //alert(driverNo);        
+          
+          sendLocationToServer(driverNo);     
+          
     }, function (error) {
         console.error('Websocket connection error: ', error);
     
@@ -86,9 +112,8 @@ function connectWebSocket() {
 
 function sendLocationToServer(driverNo) {
   if (stompClient && stompClient.connected) {
-	    const sendDriverNo = driverNo;
       const callNo = window.callNo.callNo;
-      stompClient.send("/sendCall/" + sendDriverNo, {}, callNo);
+      stompClient.send("/sendCall/" + driverNo, {}, callNo);
       
       setTimeout(() => {
     	  removeMessage();

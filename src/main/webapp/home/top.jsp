@@ -36,7 +36,7 @@
   
   <script type="text/javascript">
   $(document).ready(function() {
-      // id가 "logoutLink"인 요소에 클릭 이벤트를 추가
+      // id가 "logoutLink"인 요소에 클릭 이벤트를 추가 
       $("#logOutButton").on("click", function() {
           // 쿠키에서 토큰 값을 가져옴
           var naverAccessToken = getCookie("naverAccessToken");
@@ -78,7 +78,7 @@
     //신고내역
     $(".report-list").on("click", function() {
     	alert('신고내역 클릭했습니다!');
-        self.location = "/callres/listReport"
+        self.location = "/feedback/listReport"
     }); 
     //내정보
     $(".get-User").on("click", function() {
@@ -232,9 +232,12 @@
 </head>
 
 <body class="theme-light">
+ 
 <div id="preloader"><div class="spinner-border color-highlight" role="status"></div></div>
  
-   <div class="header-bar header-app shadow-m header-center">
+
+   
+    <div class="header-bar header-fixed header-app header-center header-bar-detached">
       <a class="bi bi-list" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" style="font-size: 30px;"></a>
       <a href="#" class="header-title">eTa</a>
      <c:choose>
@@ -251,6 +254,29 @@
         </c:otherwise>
     </c:choose>
 </div>
+
+ <div id="footer-bar" class="footer-bar footer-bar-detached">
+    <a data-back-button href="#"><i class="bi bi-caret-left-fill font-16 color-theme ps-2"></i><span>Back</span></a>
+        <a href="/home.jsp"><i class="bi bi-house-fill font-16"></i><span>Home</span></a>
+        <a href="#offcanvasExample" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"><i class="bi bi-list"></i><span>Menu</span></a>
+    </div>
+    
+  <div id="menu-main" data-menu-active="nav-comps" data-menu-load="menu-main.html"
+    style="width:280px;" class="offcanvas offcanvas-start offcanvas-detached rounded-m">
+  </div>
+  <!-- Menu Highlights-->
+  <div id="menu-color" data-menu-load="menu-highlights.html"
+    style="height:340px" class="offcanvas offcanvas-bottom offcanvas-detached rounded-m">
+  </div>
+    
+    <div id="menu-main" data-menu-active="nav-comps" data-menu-load="menu-main.html"
+    style="width:280px;" class="offcanvas offcanvas-start offcanvas-detached rounded-m">
+  </div>
+  <!-- Menu Highlights-->
+  <div id="menu-color" data-menu-load="menu-highlights.html"
+    style="height:340px" class="offcanvas offcanvas-bottom offcanvas-detached rounded-m">
+  </div>
+
 <div class="offcanvas offcanvas-start offcanvas-detached rounded-m" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" style="width: 300px;">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menu</h5>
@@ -335,6 +361,9 @@
   <br>
 
   </div>
+  
+
+    
 <form>
 <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-login">
     <div class="content">
@@ -360,6 +389,7 @@
       </div>
     </div>
    </div>
+   
    
   
    <!-- 로그인 실패 모달 -->
@@ -396,7 +426,10 @@
       <a href="#" data-bs-dismiss="offcanvas" class="default-link btn btn-full btn-s bg-white color-black" id="confirmationButton">확인</a>
   </div>
   </div>
-  
+ 
  </form>
+ 
+ 
+
 </body>
 </html>
