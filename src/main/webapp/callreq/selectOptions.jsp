@@ -348,61 +348,8 @@ async function getRoute(type, map) {
         var fareInput = document.getElementById('fare');
             fareInput.innerHTML  = recommendFare + "원";
  
-     // 차량 옵션 선택값 가져오기
-        var carOption = document.getElementsByName('carOpt')[0].value;
-     // 반려동물 옵션 선택값 가져오기
-            var petOptionElements = document.getElementsByName('petOpt');
-            var petOption;
-        
-            for (var i = 0; i < petOptionElements.length; i++) {
-                if (petOptionElements[i].checked) {
-                    petOption = petOptionElements[i].value;
-                    break; // 선택된 경우 반복문 종료
-                }
-            }
-            
-            if(carOption == '4'){
-                carOptContent.innerHTML = '소형 | 5인승 | 추가요금 없음';
-              } else if(carOption == '5'){
-                recommendFare = recommendFare * 1.2;
-                carOptContent.innerHTML = '중형 | 6인승 | 기본요금 X 1.2';
-              } else if(carOption == '7' ){
-                recommendFare = recommendFare * 1.4;
-                carOptContent.innerHTML = '대형 | 8인승 | 기본요금 X 1.4';
-              } else if(carOption == '0'){
-                recommendFare = recommendFare * 1.4;
-                carOptContent.innerHTML = '장애인 | 기본요금 X 1.4';
-              }
-              
-              if(petOption == '1'){ 
-            	  recommendFare = recommendFare + 5000;
-              }
-              
-              var callCode = document.getElementById('callCode').value;
-              
-              if(callCode == 'R'){
-                recommendFare = recommendFare + 2000;
-              }
-              
-              var prepayInput = document.getElementById('prepay');    
-              prepayInput.value = recommendFare.toFixed(0);
-              
-              var showPrepayInput = document.getElementById('showPrepay');    
-              showPrepayInput.innerHTML = '선결제 예상금액 '+recommendFare.toFixed(0)+' 원';
-              
-              var moneyAlert = document.getElementById('moneyAlert');    
-              var myMoney = document.getElementById('mymoney').value;
-              var callButton = document.getElementById('callButton');
-              
-              if(callCode == 'R' || callCode == 'N' || callCode == 'S'){
-            	  if(myMoney < parseInt(recommendFare.toFixed(0)) + 10000){
-            		  moneyAlert.innerHTML = 'Tpay를 선결제 예상금액의 1만원 이상으로 충전해주세요.';
-            		  callButton.disabled = true;
-            	  }else{
-                      moneyAlert.innerHTML = '';
-                      callButton.disabled = false;
-                    }
-              }
+
+        updatePrepay();
 
         // Distance 값 출력
         console.log("Distance:", data.routes[0].summary.distance);

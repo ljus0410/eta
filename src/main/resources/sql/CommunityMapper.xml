@@ -113,35 +113,27 @@
         WHERE call_no=#{callNo}
     </delete>
 
-    <select id="getDealList" parameterType="search" resultMap="dealreqSelectMap">
-        SELECT *
-        FROM (  SELECT inner_table.* , ROWNUM AS row_seq
-                FROM( SELECT deal.call_no, deal.user_no, deal.passenger_offer
+    <select id="getDealList" resultMap="dealreqSelectMap">
+SELECT deal.call_no, deal.user_no, deal.passenger_offer
                       FROM call, deal, users
                       WHERE deal.call_no=call.call_no
                       AND users.user_no=deal.user_no
                       AND users.role='passenger'
                       AND call.call_state_code='운행전'
-                              ORDER BY call.call_no) inner_table
-                WHERE ROWNUM &lt;= #{endRowNum} )
-        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+                              ORDER BY call.call_no
     </select>
 
-    <select id="getDealCallList" parameterType="search" resultMap="callSelectMap">
-        SELECT *
-        FROM (  SELECT inner_table.* , ROWNUM AS row_seq
-                FROM( SELECT call.start_addr, call.end_addr, call.call_no
+    <select id="getDealCallList" resultMap="callSelectMap">
+SELECT call.start_addr, call.end_addr, call.call_no
                       FROM call, deal, users
                       WHERE deal.call_no=call.call_no
                         AND users.user_no=deal.user_no
                         AND users.role='passenger'
                         AND call.call_state_code='운행전'
-                      ORDER BY call.call_no) inner_table
-                WHERE ROWNUM &lt;= #{endRowNum} )
-        WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+                      ORDER BY call.call_no
     </select>
 
-    <select  id="getDealCount"  parameterType="search"  resultType="int">
+    <select  id="getDealCount" resultType="int">
         SELECT COUNT(*)
         FROM( SELECT deal.call_no, deal.deal_no, deal.user_no, deal.passenger_offer
                  FROM call, deal, users
