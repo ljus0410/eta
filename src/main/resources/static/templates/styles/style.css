@@ -1456,9 +1456,7 @@ p {
 }
 
 .header-clear-medium {
-  padding-top: calc(55px + 30px);
-  padding-top: calc((55px + 30px) + constant(safe-area-inset-top) * 0.8) !important;
-  padding-top: calc((55px + 30px) + env(safe-area-inset-top) * 0.8) !important;
+  padding-top: 20px;
 }
 
 .header-clear-large {
