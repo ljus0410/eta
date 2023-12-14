@@ -124,7 +124,8 @@ if (navigator.geolocation) {
                     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
                         resolve(detailAddr);
                     } else if (status === kakao.maps.services.Status.ERROR) {
-                        alert('검색 결과 중 오류가 발생했습니다.');
+                        var message = '검색 결과 중 오류가 발생했습니다';
+                        messageAlert(message);
                         resolve(detailAddr);
                     }
                 });
@@ -133,7 +134,23 @@ if (navigator.geolocation) {
 
     });
 }
+function messageAlert(message) {
+    var toastContainer = document.createElement('div');
+    toastContainer.innerHTML = '<div class="toast-body px-3 py-3">' +
+        '<div class="d-flex">'+
+        '<div class="align-self-center">' + 
+        '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+        '</div>' +
+        '<div class="align-self-center">' +
+        '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+        '</div>' +
+        '</div>' +
+        '<a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
+        '</div>';
 
+    document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+    $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+}
 
 </script>
 <style>
@@ -304,7 +321,8 @@ function searchPlaces(keywordId, type) {
     var keyword = document.getElementById(keywordId).value;
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
-        alert('키워드를 입력해주세요!');
+    	var message = '키워드를 입력해주세요!';
+    	  messageAlert(message);
         return false;
     }
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
@@ -326,13 +344,13 @@ function placesSearchCB(data, status, pagination, type) {
         displayPagination(pagination);
  
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
- 
-        alert('검색 결과가 존재하지 않습니다.');
+    	  var message='검색 결과가 존재하지 않습니다';
+        messageAlert(message);
         return;
  
     } else if (status === kakao.maps.services.Status.ERROR) {
- 
-        alert('검색 결과 중 오류가 발생했습니다.');
+    	  var message='검색 결과 중 오류가 발생했습니다';
+    	  messageAlert(message);
         return;
  
     }
@@ -682,7 +700,9 @@ function selectOptions(callCode){
     var endAddrInput = document.getElementById('endAddrKeyword');
     
     if(startAddrInput.value == '' || endAddrInput.value == ''){
-       alert("출발지와 목적지를 모두 입력해주세요.");
+      var message = '출발지와 목적지를 모두 입력해주세요';
+      messageAlert(message);       
+       return false;
     } else if (startAddrInput.value.trim() !== '' && endAddrInput.value.trim() !== '') {
     
     // 세션 스토리지에 정보 저장  
@@ -707,5 +727,7 @@ function selectOptions(callCode){
   }
 }
 </script>
+<script src="/templates/bootstrap.min.js"></script>
+<script src="/templates/custom.js"></script>
 </body>
 </html>
