@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import jakarta.servlet.http.HttpSession;
 import kr.pe.eta.common.Page;
@@ -366,29 +367,22 @@ public class CallResController {
 	}
 
 	@GetMapping(value = "getCallResList")
-	public String getCallResList(@ModelAttribute Search search, Model model) throws Exception {
-		System.out.println("crContRL");
+	public ModelAndView getCallResList(@ModelAttribute Search search, Model model) throws Exception {
+		String viewName = "/callres/getCallRecordList.jsp";
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName(viewName);
 
-		if (search.getCurrentPage() == 0) {
-			search.setCurrentPage(1);
-		}
+		search.setCurrentPage(1);
+
 		search.setPageSize(pageSize);
-		search.setSearchCondition(null);
-
-		System.out.println(search);
 
 		Map<String, Object> map = callResService.getCallResList(search);
-		System.out.println("search::" + search);
-		System.out.println("MAP:: " + map);
 		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
 				pageSize);
-		System.out.println(resultPage);
 
-		model.addAttribute("list", map.get("list"));
-		model.addAttribute("resultPage", resultPage);
-		model.addAttribute("search", search);
-
-		return "forward:/callres/getCallResList.jsp";
+		modelAndView.addObject("list", map.get("list"));
+		modelAndView.addObject("resultPage", resultPage);
+		return modelAndView;
 	}
 
 }
