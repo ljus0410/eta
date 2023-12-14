@@ -23,13 +23,34 @@
 <link rel="apple-touch-icon" sizes="180x180"
 	href="/templates/app/icons/icon-192x192.png">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/templates/scripts/bootstrap.min.js"></script>
+<script src="/templates/scripts/custom.js"></script>
 
 <script type="text/javascript">
 $(function () {
-	$("button:contains('등록')").on("click", function() {
-        setTimeout(function() {
-            $("form").submit();
-        }, 2000);
+	let notificationToast = new bootstrap.Toast($("#toast-bottom-4"));
+	 
+	$("a:contains('등록')").on("click", function() {
+		
+		 
+		if($("input:text[name='noticeTitle']").val() != ''){
+			
+			if($("textarea[name='noticeDetail']").val() != ''){
+				$(this).attr('data-toast','toast-bottom-4');
+				
+				notificationToast.show();
+				
+				setTimeout(function() {
+		            $("form").submit();
+		            init_template();
+		        }, 1000); 
+			}else{
+				alert('내용을 입력해주세요')
+			}
+		}else{
+			alert('제목을 입력해주세요')
+		}
+      
     });
 	
 	
@@ -71,7 +92,7 @@ $(function () {
 							<div class="divider bg-fade-blue" style="width: 9%;margin-bottom: 15px"></div>
 							<i class="bi bi-pencil-fill font-12"></i> <input type="text"
 								name="noticeTitle" class="form-control rounded-xs" id="c1"
-								placeholder="입력해주세요." required />
+								placeholder="입력해주세요." />
 
 
 						</div>
@@ -89,8 +110,8 @@ $(function () {
 				</div>
 				
 
-				<button data-toast="toast-bottom-4" class="btn-full btn bg-blue-dark"
-					style="float: right; margin-right: 15px; padding-top: 5px; padding-bottom: 5px;">등록</button>
+				<a class="btn-full btn bg-blue-dark" 
+					style="float: right; margin-right: 15px; padding-top: 5px; padding-bottom: 5px;">등록</a>
 				
 
 			</div>
@@ -98,7 +119,6 @@ $(function () {
 		</div>
 		
 	</form>
-<script src="/templates/scripts/bootstrap.min.js"></script>
-<script src="/templates/scripts/custom.js"></script>
+
 </body>
 </html>
