@@ -226,7 +226,7 @@
 	</update>
 	
 	<select id="avgStar" parameterType="user">
-		select nvl(avg(star),0)
+		select Round(nvl(avg(star),0),1)
 		from(
 			select COALESCE(s.star, c.star) as star
 			from call c, match m, shares s
