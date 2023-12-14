@@ -15,7 +15,7 @@ public class DealReq {
 	private int passengerOffer;
 	private Date limitTime;
 	private int driverOffer;
-	private int starAvg;
+	private double starAvg;
 
 	@Override
 	public String toString() {

@@ -15,7 +15,6 @@
 <link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="manifest" href="../_manifest.json">
 <meta id="theme-check" name="theme-color" content="#FFFFFF">
 <link rel="apple-touch-icon" sizes="180x180" href="../app/icons/icon-192x192.png">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=70ef6f6883ad97593a97af6324198ac0&libraries=services"></script>
@@ -125,7 +124,8 @@ if (navigator.geolocation) {
                     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
                         resolve(detailAddr);
                     } else if (status === kakao.maps.services.Status.ERROR) {
-                        alert('검색 결과 중 오류가 발생했습니다.');
+                        var message = '검색 결과 중 오류가 발생했습니다';
+                        messageAlert(message);
                         resolve(detailAddr);
                     }
                 });
@@ -134,7 +134,23 @@ if (navigator.geolocation) {
 
     });
 }
+function messageAlert(message) {
+    var toastContainer = document.createElement('div');
+    toastContainer.innerHTML = '<div class="toast-body px-3 py-3">' +
+        '<div class="d-flex">'+
+        '<div class="align-self-center">' + 
+        '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+        '</div>' +
+        '<div class="align-self-center">' +
+        '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+        '</div>' +
+        '</div>' +
+        '<a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
+        '</div>';
 
+    document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+    $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+}
 
 </script>
 <style>
@@ -144,9 +160,9 @@ if (navigator.geolocation) {
 </style>
 </head>
 <body class="theme-light">
-
+<jsp:include page="/home/top.jsp" />
 <div id="page">
-    <div class="page-content header-clear-medium">
+  <div class="page-content header-clear-medium">
     <div class="card card-style">
         <div class="map_wrap">
             <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
@@ -215,7 +231,7 @@ if (navigator.geolocation) {
               </button>     
         </c:when>
         <c:when test="${!empty likeList.likeAddr && !empty likeList.likeName && likeList.likeName eq '집'}">
-                <button type="button" class="btn btn-success" onclick="handleButtonClick('${likeList.likeAddr}','${likeList.likeName}','${likeList.likeX}','${likeList.likeY}')">
+                <button type="button" class="btn-full btn border-blue-dark color-blue-dark" onclick="handleButtonClick('${likeList.likeAddr}','${likeList.likeName}','${likeList.likeX}','${likeList.likeY}')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-check-fill" viewBox="0 0 16 16">
 									  <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
 									  <path d="m8 3.293 4.712 4.712A4.5 4.5 0 0 0 8.758 15H3.5A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
@@ -224,7 +240,7 @@ if (navigator.geolocation) {
               </button>
         </c:when>
         <c:when test="${!empty likeList.likeAddr && !empty likeList.likeName && likeList.likeName eq '회사'}">
-              <button type="button" class="btn btn-success" onclick="handleButtonClick('${likeList.likeAddr}','${likeList.likeName}','${likeList.likeX}','${likeList.likeY}')">
+              <button type="button" class="btn-full btn border-blue-dark color-blue-dark" onclick="handleButtonClick('${likeList.likeAddr}','${likeList.likeName}','${likeList.likeX}','${likeList.likeY}')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building-fill-check" viewBox="0 0 16 16">
 								  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514Z"/>
 								  <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7.256A4.493 4.493 0 0 0 12.5 8a4.493 4.493 0 0 0-3.59 1.787A.498.498 0 0 0 9 9.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .39-.187A4.476 4.476 0 0 0 8.027 12H6.5a.5.5 0 0 0-.5.5V16H3a1 1 0 0 1-1-1zm2 1.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5m3 0v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5m3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5M7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5M4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
@@ -232,7 +248,7 @@ if (navigator.geolocation) {
               </button> 
         </c:when>
         <c:otherwise>
-         <button type="button" class="btn btn-success" onclick="handleButtonClick('${likeList.likeAddr}','${likeList.likeName}','${likeList.likeX}','${likeList.likeY}')">
+         <button type="button" class="btn-full btn border-blue-dark color-blue-dark" onclick="handleButtonClick('${likeList.likeAddr}','${likeList.likeName}','${likeList.likeX}','${likeList.likeY}')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-star-fill" viewBox="0 0 16 16">
 								  <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5M8.16 4.1a.178.178 0 0 0-.32 0l-.634 1.285a.178.178 0 0 1-.134.098l-1.42.206a.178.178 0 0 0-.098.303L6.58 6.993c.042.041.061.1.051.158L6.39 8.565a.178.178 0 0 0 .258.187l1.27-.668a.178.178 0 0 1 .165 0l1.27.668a.178.178 0 0 0 .257-.187L9.368 7.15a.178.178 0 0 1 .05-.158l1.028-1.001a.178.178 0 0 0-.098-.303l-1.42-.206a.178.178 0 0 1-.134-.098z"/>
 								</svg>
@@ -305,7 +321,8 @@ function searchPlaces(keywordId, type) {
     var keyword = document.getElementById(keywordId).value;
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
-        alert('키워드를 입력해주세요!');
+    	var message = '키워드를 입력해주세요!';
+    	  messageAlert(message);
         return false;
     }
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
@@ -327,13 +344,13 @@ function placesSearchCB(data, status, pagination, type) {
         displayPagination(pagination);
  
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
- 
-        alert('검색 결과가 존재하지 않습니다.');
+    	  var message='검색 결과가 존재하지 않습니다';
+        messageAlert(message);
         return;
  
     } else if (status === kakao.maps.services.Status.ERROR) {
- 
-        alert('검색 결과 중 오류가 발생했습니다.');
+    	  var message='검색 결과 중 오류가 발생했습니다';
+    	  messageAlert(message);
         return;
  
     }
@@ -650,8 +667,9 @@ document.addEventListener('DOMContentLoaded', function() {
             startLat: startLat,
             startLng: startLng
         };
+    
+
 });
- 
 function handleButtonClick(Addr, Name, X, Y) {
     
     /*alert(likeAddr);
@@ -674,7 +692,6 @@ function handleButtonClick(Addr, Name, X, Y) {
                 endLat: Y
             };
   }
-
 function selectOptions(callCode){
   
   // 출발/도착지 값 둘다 있는지 체크
@@ -683,7 +700,9 @@ function selectOptions(callCode){
     var endAddrInput = document.getElementById('endAddrKeyword');
     
     if(startAddrInput.value == '' || endAddrInput.value == ''){
-       alert("출발지와 목적지를 모두 입력해주세요.");
+      var message = '출발지와 목적지를 모두 입력해주세요';
+      messageAlert(message);       
+       return false;
     } else if (startAddrInput.value.trim() !== '' && endAddrInput.value.trim() !== '') {
     
     // 세션 스토리지에 정보 저장  
@@ -708,5 +727,7 @@ function selectOptions(callCode){
   }
 }
 </script>
+<script src="/templates/bootstrap.min.js"></script>
+<script src="/templates/custom.js"></script>
 </body>
 </html>

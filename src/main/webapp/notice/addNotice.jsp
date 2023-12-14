@@ -23,13 +23,36 @@
 <link rel="apple-touch-icon" sizes="180x180"
 	href="/templates/app/icons/icon-192x192.png">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/templates/scripts/bootstrap.min.js"></script>
+<script src="/templates/scripts/custom.js"></script>
 
 <script type="text/javascript">
 $(function () {
-	$("h3:cantains('등록')").on("click",function(){
-		$('#toast-bottom-4').removeClass('toast toast-pill toast-bottom toast-s rounded-l bg-green-dark shadow-bg shadow-bg-s').addClass('toast toast-pill toast-bottom toast-s rounded-l bg-green-dark shadow-bg shadow-bg-s fade show');
-	})
-	setTimeout( "document.form.submit()", 3000 );
+	let notificationToast = new bootstrap.Toast($("#toast-bottom-4"));
+	 
+	$("a:contains('등록')").on("click", function() {
+		
+		 
+		if($("input:text[name='noticeTitle']").val() != ''){
+			
+			if($("textarea[name='noticeDetail']").val() != ''){
+				$(this).attr('data-toast','toast-bottom-4');
+				
+				notificationToast.show();
+				
+				setTimeout(function() {
+		            $("form").submit();
+		            init_template();
+		        }, 1000); 
+			}else{
+				alert('내용을 입력해주세요')
+			}
+		}else{
+			alert('제목을 입력해주세요')
+		}
+      
+    });
+	
 	
 })
 </script>
@@ -45,10 +68,10 @@ $(function () {
 <body class="theme-light">
 	<form action="/notice/addNotice" method="post">
 		<div id="page">
-		
+		<jsp:include page="/home/top.jsp" />
 			<div class="page-content header-clear-medium">
-				<div class="card card-style">
-					<div class="content">
+				<div class="card card-style" style="margin-bottom: 15px;">
+					<div class="content"style="margin-bottom: 9px; ">
 						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
 						<h1 class="pb-2" style="width: 140px; display: inline-block;">
@@ -69,7 +92,7 @@ $(function () {
 							<div class="divider bg-fade-blue" style="width: 9%;margin-bottom: 15px"></div>
 							<i class="bi bi-pencil-fill font-12"></i> <input type="text"
 								name="noticeTitle" class="form-control rounded-xs" id="c1"
-								placeholder="입력해주세요." required />
+								placeholder="입력해주세요." />
 
 
 						</div>
@@ -87,16 +110,15 @@ $(function () {
 				</div>
 				
 
-				<button data-toast="toast-bottom-4" class="btn-full btn bg-fade2-blue color-blue-dark"
-					type="submit" style="float: right; margin-right: 15px;">등록하기</button>
+				<a class="btn-full btn bg-blue-dark" 
+					style="float: right; margin-right: 15px; padding-top: 5px; padding-bottom: 5px;">등록</a>
 				
 
 			</div>
-		<div id="toast-bottom-4"  class="toast toast-pill toast-bottom toast-s rounded-l bg-blue-dark shadow-bg shadow-bg-s " data-bs-delay="2000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>등록되었습니다!</span></div>
+		<div id="toast-bottom-4"  class="toast toast-pill toast-bottom toast-s rounded-l bg-blue-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>등록되었습니다!</span></div>
 		</div>
 		
 	</form>
-<script src="/templates/scripts/bootstrap.min.js"></script>
-<script src="/templates/scripts/custom.js"></script>
+
 </body>
 </html>
