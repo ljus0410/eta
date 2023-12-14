@@ -47,9 +47,10 @@ $(function () {
 </head>
 <body class="theme-light">
 	<div id="page">
+	<jsp:include page="/home/top.jsp" />
 		<div class="page-content header-clear-medium">
-			<div class="card card-style">
-				<div class="content">
+			<div class="card card-style" style="margin-bottom: 15px;">
+					<div class="content"style="margin-bottom: 9px; ">
 					<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
 					<h1 class="pb-2" style="width: 140px; display: inline-block;">
@@ -80,10 +81,10 @@ $(function () {
 					</div>
 				</div>
 				<div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
-					<a class="btn btn-xxs border-red-dark color-red-dark"
-									style="display: inline-block; padding-top: 3px; padding-bottom: 3px; margin-right: 15px">수정</a>
 					<a class="btn btn-xxs border-blue-dark color-blue-dark"
-									style="display: inline-block; padding-top: 3px; padding-bottom: 3px; margin-right: 20px">삭제</a>
+									style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-right: 10px ">수정</a>
+					<a class="btn btn-xxs border-red-dark color-red-dark"
+									style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-right: 20px">삭제</a>
 				</div>
 			</div>
 

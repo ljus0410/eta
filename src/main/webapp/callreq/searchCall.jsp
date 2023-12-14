@@ -30,8 +30,9 @@
 </style>
 </head>
 <body class="theme-light">
+<jsp:include page="/home/top.jsp" />
+<br>
 <div id="page">
-    <div class="page-content header-clear-medium">
       <div class="card card-style">
 		    <div class="center-container">
 		      배차 탐색 중<br>
@@ -52,7 +53,6 @@
 <input type="hidden" name="callNo" id="callNo" value="${callNo}">
 <button type="button" class="btn btn-full bg-blue-dark rounded-xs text-uppercase font-700 w-100 btn-s mt-4" onclick="deleteCall()">취소</button>
 </form>
-</div>
 </div>
 </div>
 </body>

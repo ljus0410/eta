@@ -46,7 +46,7 @@
         WHERE call_no IN (
             SELECT call_no
             FROM match
-            WHERE passenger_no = #{userNo:NUMERIC} AND call_state_code = '운행완료'
+            WHERE passenger_no = #{userNo:NUMERIC} AND call_state_code = '운행후'
         )
         ORDER BY call_date DESC
   </select>
