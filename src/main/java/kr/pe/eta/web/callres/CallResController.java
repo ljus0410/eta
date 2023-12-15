@@ -392,8 +392,10 @@ public class CallResController {
 		String driverNo = String.valueOf(userNo);
 		AddCallEntity callRequest = redisService.getCallById(driverNo);
 		int callNo = callRequest.getCallNo();
+		int passengerNo = callResService.getMatchByCallnod(callNo);
 		Call call = callResService.getCallByNo(callNo);
 		model.addAttribute("call", call);
+		model.addAttribute("passengerNo", passengerNo);
 		System.out.println(call);
 		return "forward:/callres/callAcceptReject.jsp";
 	}
