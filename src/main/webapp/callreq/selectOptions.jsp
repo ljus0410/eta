@@ -197,6 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         getRoute('recommend', map);
 });
+	
 const drawPolylineAndMoveMarker = (data, map) => {
 
     const linePath = [];

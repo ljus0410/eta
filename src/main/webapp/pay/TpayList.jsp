@@ -19,8 +19,9 @@
 <meta id="theme-check" name="theme-color" content="#FFFFFF">
 <link rel="apple-touch-icon" sizes="180x180" href="/templates/app/icons/icon-192x192.png">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
 <style type="text/css">
   td{
     height: 100px;
@@ -122,6 +123,78 @@
     </form>
 </body>
 <script>
+function messageAlert(message) {
+    var toastContainer = document.createElement('div');
+      toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+          '<div class="toast-body px-3 py-3">' +
+          '<div class="d-flex">' +
+          '<div class="align-self-center">' +
+          '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+          '</div>' +
+          '<div class="align-self-center">' +
+          '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+          '</div>' +
+          '</div><br>' +
+          '<a href="#" data-bs-dismiss="toast" id="confirmBtn" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
+          '</div>' +
+          '</div>';
+
+      document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+      
+      document.getElementById('confirmBtn').addEventListener('click', function () {
+          // Remove the toast element from the DOM
+          document.getElementById('notification-bar-5').remove();
+      });
+      $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+ }
+function moneyInputAlert(message) {
+    var toastContainer = document.createElement('div');
+      toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+          '<div class="toast-body px-3 py-3">' +
+          '<div class="d-flex">' +
+          '<div class="align-self-center">' + 
+          '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+          '</div>' +
+          '<div class="align-self-center">' +
+          '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+          '</div>' +
+          '</div><br>' +
+          '<input type="text" value="" id="money" class="form-control rounded-xs"> <br>'+
+          '<div class="row">' +
+          '<div class="col-6">' +
+          '<a href="#" id="cancel" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">취소</a>' +
+          '</div>' +
+          '<div class="col-6">' +
+          '<a href="#" id="ok" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
+          '</div>' +
+          '</div>' +
+          '</div>' +
+          '</div>';
+
+      document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+      
+      document.getElementById('cancel').addEventListener('click', function () {
+          // Remove the toast element from the DOM
+          document.getElementById('notification-bar-5').remove();
+      });
+      document.getElementById('ok').addEventListener('click', function () {
+        
+			 var money = document.getElementById('money').value;
+			          
+			          if(money !== null && money < 10000){
+			              var message = '10000원 이상 충전이 가능합니다';
+			              messageAlert(message);
+			              payRequest();
+			              
+			            } else if (money !== null && money >= 10000) {
+			              
+			              TpayCharge(money);
+			              
+			            } 
+          
+      });
+      $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+ }
 
 $(function() {
 	   
@@ -139,20 +212,10 @@ $(function() {
 
 function payRequest(){
 	
-	  var userInput = prompt("충전할 금액을 입력하세요 :");
+	  var message = '충전할 금액을 입력하세요';
 	  
-	  if(userInput !== null && userInput < 10000){
-		  alert("10000원 이상 충전이 가능합니다.");
-		  payRequest();
-		  
-	  } else if (userInput !== null && userInput >= 10000) {
-	    
-		  TpayCharge(userInput);
-		  
-	  } else {
-	    alert("충전이 취소되었습니다.");
-	  }
-
+	  moneyInputAlert(message);
+	  
 }
 function TpayCharge(Tpay) {
 	  
@@ -184,11 +247,14 @@ function TpayCharge(Tpay) {
 	          m_redirect_url : '{/purchase/addPurchase.jsp}' // 예: https://www.my-service.com/payments/complete/mobile
 	    }, function (rsp) { // callback
 	        if (rsp.success) {
-	            alert(Tpay+"원 충전이 완료되었습니다.");
+
+	            var message = Tpay+'원 충전이 완료되었습니다';
+	            messageAlert(message);
 	            addCharge(Tpay, userNo);
 	          
 	        } else {
-	           alert("충전이 실패하였습니다.");
+	           var message = '충전이 실패하였습니다';
+	           messageAlert(message);
 	        }
 	    });
 	  }
@@ -204,10 +270,13 @@ function addCharge(Tpay, userNo){
 		    success: function (response) {
 		    	console.log("addCharge() 성공");		    	
 		    	if (response.success) {
-		            alert(response.message);
+		            var message = response.message;
+		            messageAlert(message);
+		            
 		            location.reload();
 		        } else {
-		            alert(response.message);
+		            var message = response.message;
+		            messageAlert(message);
 		        }
 		    },
 		    error: function (error) {
