@@ -20,6 +20,12 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/templates/app/icons/icon-192x192.png">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=70ef6f6883ad97593a97af6324198ac0&libraries=services"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 <style>
 #homeSubmit {
   display: none;
@@ -191,21 +197,75 @@
     </div>   
 </body>
 <script>
+function messageAlert(message) {
+    var toastContainer = document.createElement('div');
+      toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+          '<div class="toast-body px-3 py-3">' +
+          '<div class="d-flex">' +
+          '<div class="align-self-center">' +
+          '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+          '</div>' +
+          '<div class="align-self-center">' +
+          '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+          '</div>' +
+          '</div><br>' +
+          '<a href="#" data-bs-dismiss="toast" id="confirmBtn" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
+          '</div>' +
+          '</div>';
 
+      document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+      
+      document.getElementById('confirmBtn').addEventListener('click', function () {
+          // Remove the toast element from the DOM
+          document.getElementById('notification-bar-5').remove();
+      });
+      $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+ }
+function confirmAlert(message) {
+    var toastContainer = document.createElement('div');
+      toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+          '<div class="toast-body px-3 py-3">' +
+          '<div class="d-flex">' +
+          '<div class="align-self-center">' + 
+          '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+          '</div>' +
+          '<div class="align-self-center">' +
+          '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+          '</div>' +
+          '</div><br>' +
+          '<div class="row">' +
+          '<div class="col-6">' +
+          '<a href="#" id="cancel" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">아니오</a>' +
+          '</div>' +
+          '<div class="col-6">' +
+          '<a href="#" id="ok" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">예</a>' +
+          '</div>' +
+          '</div>' +
+          '</div>' +
+          '</div>';
+
+      document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+      
+      document.getElementById('cancel').addEventListener('click', function () {
+          // Remove the toast element from the DOM
+          document.getElementById('notification-bar-5').remove();
+      });
+      document.getElementById('ok').addEventListener('click', function () {
+    	    deleteHomeAddr();
+        
+      });
+      $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+ }
 function deleteHomeAddrRequest(){
 	  
 	  if (document.getElementById('homeAddrKeyword').value == '' || document.getElementById('homeAddrKeyword').value == null){
 		  
-		  alert("삭제할 값이 없습니다.");
+		  var message ='삭제할 값이 없습니다';
+		  messageAlert(message);
 		  
 	  }else {
-		  var result = confirm("삭제하시겠습니까?");
-		    if (result == true) {
-		        alert("삭제가 완료되었습니다.");
-		        deleteHomeAddr();
-		    } else {
-		        alert("삭제 취소");
-		    }  
+		  var message ='삭제하시겠습니까?';
+		  confirmAlert(message);
 		  
 	  }
 	}
@@ -214,17 +274,12 @@ function deleteCompanyAddrRequest(){
 	
 	   if (document.getElementById('companyAddrKeyword').value == '' || document.getElementById('companyAddrKeyword').value == null){
 		      
-		      alert("삭제할 값이 없습니다.");
+		   var message ='삭제할 값이 없습니다';
+		      messageAlert(message);
 	   } else {
     
-    var result = confirm("삭제하시겠습니까?");
-
-    if (result == true) {
-        alert("삭제가 완료되었습니다.");
-        deleteCompanyAddr();
-    } else {
-        alert("삭제 취소");
-    }  
+		   var message ='삭제하시겠습니까?';
+		      confirmAlert(message);
   }
 }
   
@@ -232,17 +287,12 @@ function deleteCustomAddrRequest(){
 	
     if (document.getElementById('customAddrKeyword').value == '' || document.getElementById('customAddrKeyword').value == null){
         
-        alert("삭제할 값이 없습니다.");
+    	var message ='삭제할 값이 없습니다';
+        messageAlert(message);
    } else {
     
-    var result = confirm("삭제하시겠습니까?");
-
-    if (result == true) {
-        alert("삭제가 완료되었습니다.");
-        deleteCustomAddr();
-    } else {
-        alert("삭제 취소");
-    }  
+	   var message ='삭제하시겠습니까?';
+       confirmAlert(message); 
   }
 }
 	
@@ -263,11 +313,14 @@ function updateCustomAddr() {
      var customAddr = customAddrInput.value;
      
      if(customName == '집'|| customName == '회사'){
-    	 alert("집 혹은 회사 외의 다른 별칭을 입력해주세요.");
+    	 var message = '집, 회사 외의 다른 별칭을 입력해주세요';
+    	 messageAlert(message);
      } else if(customName == ''){
-         alert("별칭을 입력해주세요.");
+         var message = '별칭을 입력해주세요';
+         messageAlert(message);
        } else if(customAddr == '' ){
-    	   alert("주소를 입력해주세요.");
+    	   var message = '주소를 입력해주세요';
+           messageAlert(message);
        } else if(customName != '' && customAddr != ''){
     	   $(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/updateLikeAddr?userNo=${user.userNo }").submit();
        }
@@ -340,7 +393,8 @@ function searchPlaces(keywordId, type) {
     var keyword = document.getElementById(keywordId).value;
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
-        alert('키워드를 입력해주세요!');
+        var message = '키워드를 입력해주세요!';
+        messageAlert(message);
         return false;
     }
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
@@ -363,12 +417,14 @@ function placesSearchCB(data, status, pagination, type) {
  
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
  
-        alert('검색 결과가 존재하지 않습니다.');
+        var message = '검색 결과가 존재하지 않습니다';
+        messageAlert(message);
         return;
  
     } else if (status === kakao.maps.services.Status.ERROR) {
  
-        alert('검색 결과 중 오류가 발생했습니다.');
+        var message = '검색 결과 중 오류가 발생했습니다';
+        messageAlert(message);
         return;
  
     }
