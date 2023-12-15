@@ -16,8 +16,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <meta id="theme-check" name="theme-color" content="#FFFFFF">
-<link rel="apple-touch-icon" sizes="180x180" href="../app/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/templates/app/icons/icon-192x192.png">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=70ef6f6883ad97593a97af6324198ac0&libraries=services"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 <script>
 // 각 input 요소에 대한 이벤트 핸들러 등록
 function registerInputEvents(inputElement, defaultValue) {
@@ -135,21 +141,28 @@ if (navigator.geolocation) {
     });
 }
 function messageAlert(message) {
-    var toastContainer = document.createElement('div');
-    toastContainer.innerHTML = '<div class="toast-body px-3 py-3">' +
-        '<div class="d-flex">'+
-        '<div class="align-self-center">' + 
-        '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
-        '</div>' +
-        '<div class="align-self-center">' +
-        '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
-        '</div>' +
-        '</div>' +
-        '<a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
-        '</div>';
+	 var toastContainer = document.createElement('div');
+     toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+         '<div class="toast-body px-3 py-3">' +
+         '<div class="d-flex">' +
+         '<div class="align-self-center">' +
+         '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+         '</div>' +
+         '<div class="align-self-center">' +
+         '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+         '</div>' +
+         '</div><br>' +
+         '<a href="#" data-bs-dismiss="toast" id="confirmBtn" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
+         '</div>' +
+         '</div>';
 
-    document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
-    $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+     document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+     
+     document.getElementById('confirmBtn').addEventListener('click', function () {
+         // Remove the toast element from the DOM
+         document.getElementById('notification-bar-5').remove();
+     });
+     $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
 }
 
 </script>
@@ -727,7 +740,7 @@ function selectOptions(callCode){
   }
 }
 </script>
-<script src="/templates/bootstrap.min.js"></script>
-<script src="/templates/custom.js"></script>
+<script src="/templates/scripts/bootstrap.min.js"></script>
+<script src="/templates/scripts/custom.js"></script>
 </body>
 </html>

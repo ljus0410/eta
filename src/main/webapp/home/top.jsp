@@ -122,7 +122,7 @@
     //운행기록=getCallResList?
     $(".get-driving").on("click", function() {
     	alert('운행기록 클릭했습니다!');
-        self.location = "/callres/getCallResList"
+        self.location = "/callres/getRecordList"
     });
     //정산내역
     $(".my-money").on("click", function() {
@@ -225,8 +225,38 @@
 	    loginWarning.show();
 	}
 
+  function deleteUserView() {
 
+	    self.location = '/user/deleteUserView';
 
+	    }
+  
+//비밀번호 확인
+function checkPassword() {
+    var password1 = document.getElementById('ca1').value;
+    var password2 = document.getElementById('ca2').value;
+    var passwordMatchMessage = document.getElementById('passwordMatchMessage');
+
+    if (password2 === "") {
+        passwordMatchMessage.innerHTML = '비밀번호를 입력하세요.';
+        passwordMatchMessage.style.color = 'red';  // 일치하지 않을 때의 메시지 색상
+        return;
+    }
+
+    // 비밀번호 일치 여부 확인
+    if (password1 === password2) {
+        passwordMatchMessage.innerHTML = '비밀번호가 일치합니다.';
+        passwordMatchMessage.style.color = 'blue';  // 일치할 때의 메시지 색상
+        submitForm();
+    } else {
+        passwordMatchMessage.innerHTML = '비밀번호가 일치하지 않습니다.';
+        passwordMatchMessage.style.color = 'red';  // 일치하지 않을 때의 메시지 색상
+    }
+}
+function submitForm() {
+    // 비밀번호가 일치하면 현재 페이지를 지정된 URL로 전환    
+    self.location = "/user/deleteUserView"
+}
     </script>
   
 </head>
@@ -336,7 +366,8 @@
         <li>
             <c:choose>
                 <c:when test="${user.role eq 'passenger'}">
-                <a class="dropdown-item get-use" href="#">이용내역</a></c:when>
+                <a class="dropdown-item get-use" href="#">이용내역</a>
+                </c:when>
                 <c:otherwise>
                 <a class="dropdown-item get-driving" href="#">운행기록</a>
                 </c:otherwise>
@@ -351,7 +382,9 @@
                 </c:otherwise>
             </c:choose>
         </li>
-        <li><a class="dropdown-item get-User" href="#">회원정보</a></li>
+        <li><a class="dropdown-item" data-bs-toggle="offcanvas" data-bs-target="#menu-register" href="#">내정보</a>
+        <a class="dropdown-item" data-bs-toggle="offcanvas" data-bs-target="#menu-register2" href="#">비밀번호 변경</a>
+                <a class="dropdown-item" onclick="deleteUserView()"href="#">회원탈퇴</a></li>
     </ul>
 </div>
   <br>
@@ -427,9 +460,51 @@
   </div>
   </div>
  
+ 
+  <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-register">
+    <div class="content">
+      <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
+      <h1 class="font-24 font-800 mb-3">내정보</h1>
+      <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
+        <i class="bi bi-person-circle font-13"></i>
+        <input type="text" class="form-control rounded-xs readonly" id="c1" value = "${user.name}" readonly placeholder="${user.name}" />
+        <label for="c1" class="color-theme">Name</label>
+  <span>name</span>
+      </div>
+      <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
+        <i class="bi bi-at font-17"></i>
+        <input type="text" class="form-control rounded-xs readonly" id="c1" value = "${user.email}" readonly  placeholder="${user.email}" />
+        <label for="c1" class="color-theme">Email</label>
+  <span>email</span>
+      </div>
+      <div class="form-custom form-label form-border form-icon mb-4 bg-transparent">
+        <i class="bi bi bi-currency-dollar font-13"></i>
+        <input type="text" class="form-control rounded-xs readonly" id="c2" value ="${user.myMoney}원" readonly placeholder="${user.myMoney}" />
+        <label for="c2" class="color-theme">myMoney</label>
+  <span>Tpay</span>
+      </div>
+      <a href="#" class="btn btn-full get-User gradient-blue shadow-bg shadow-bg-s mt-4">더보기</a>
+    </div>
+   </div>
+   
+   <<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-register2">
+    <div class="content">
+        <h1 class="font-24 font-800 mb-3">비밀번호변경</h1>
+        
+        <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
+            <i class="bi bi-person-circle font-13"></i>
+            <input type="password" class="form-control rounded-xs" id="ca1" value="${user.pwd}" readonly/>
+        </div>
+
+        <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
+            <i class="bi bi-at font-17"></i>
+            <input type="password" class="form-control rounded-xs" id="ca2" placeholder="비밀번호 확인" value='' oninput="checkPassword()" />
+            <div id="passwordMatchMessage" style="font-size: 10px; color: red;"></div>
+        </div>
+    </div>
+</div>
+    
  </form>
- 
- 
 
 </body>
 </html>

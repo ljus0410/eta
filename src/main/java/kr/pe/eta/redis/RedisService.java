@@ -84,4 +84,16 @@ public class RedisService {
 		addCallRepository.delete(call);
 	}
 
+	@Transactional(readOnly = true)
+	public AddCallEntity getCallById(String reqId) {
+		Optional<AddCallEntity> result = addCallRepository.findById(reqId);
+
+		// Handling
+		if (result.isPresent()) {
+			return result.get();
+		} else {
+			throw new RuntimeException("Database has no Data");
+		}
+	}
+
 }

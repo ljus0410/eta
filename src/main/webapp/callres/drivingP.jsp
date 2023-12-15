@@ -123,8 +123,8 @@
         }
     </script>
     
-    <script src="/templates/bootstrap.min.js"></script>
-    <script src="/templates/custom.js"></script>
+    <script src="/templates/scripts/bootstrap.min.js"></script>
+    <script src="/templates/scripts/custom.js"></script>
 </body>
 </html>
                 
