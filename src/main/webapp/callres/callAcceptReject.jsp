@@ -5,8 +5,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Websocket Call Handler</title>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script>
+	var passengerNo = ${passengerNo};
+	console.log(passengerNo);
     window.onload = function() {
         var acceptButton = document.querySelector('.btn.border-green-dark');
         var rejectButton = document.querySelector('.btn.border-blue-dark');
@@ -20,6 +23,17 @@
             xhrDelete.open('POST', '/callres/json/deleteRequest/' + callNo, true);
             xhrDelete.onload = function() {
                 if (this.status === 200) {
+                	var socket = new SockJS('/websoket');
+                    var stompClient = Stomp.over(socket);
+
+                    stompClient.connect({}, function(frame) {
+                        // 연결 성공 시 콜백
+                        stompClient.send("/sendStartNotification/" + passengerNo, {}, '운행시작');
+                    }, function(error) {
+                        // 연결 실패 시 콜백
+                        console.error('Stomp connection error: ' + error);
+                    });
+
                     // 두 번째 요청 (수락 처리)
                     window.location.href = '/callres/callAccept?callNo=' + callNo;
                 } else {
