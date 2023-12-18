@@ -22,6 +22,6 @@ public class Report {
 	private int badUserNo;
 	private Date reportDate;
 	private String reportRole;
-	private Date regDate;
+	private String regDate;
 
 }
