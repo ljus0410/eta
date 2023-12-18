@@ -79,7 +79,7 @@
         stompClient2.connect({}, function(frame) {
         	console.log('Connected: ' + frame);
             confirmBtn.onclick = function() {
-                window.location.href = '/callres/home.jsp';
+                window.location.href = '/feedback/addStar';
             }
             stompClient2.subscribe('/topic/notifications/' + passengerNo, function(notification) {
             	var messageElement = document.getElementById('notificationMessage');

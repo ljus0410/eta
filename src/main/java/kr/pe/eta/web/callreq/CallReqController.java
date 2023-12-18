@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import jakarta.websocket.Session;
 import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Like;
 import kr.pe.eta.redis.AddCallEntity;
 import kr.pe.eta.redis.RedisEntity;
 import kr.pe.eta.redis.RedisService;
+import kr.pe.eta.redis.RedisService.DatabaseHasNoDataException;
 import kr.pe.eta.service.callreq.CallReqService;
 import kr.pe.eta.service.pay.PayService;
 import kr.pe.eta.service.user.UserService;
@@ -106,15 +109,29 @@ public class CallReqController {
 
 		System.out.println("call : " + call);
 
-		callReqService.addCall(call); // addCall()
-
 		double passengerX = call.getStartX();
 		double passengerY = call.getStartY();
 		double driverX = 0;
 		double driverY = 0;
 
-		List<RedisEntity> driverList = redisService.getAllUser();
+		List<RedisEntity> driverList = null;
+		try {
+			driverList = redisService.getAllUser();
+			callReqService.addCall(call); // addCall()
+		} catch (DatabaseHasNoDataException ex) {
+			String errorMessage = ex.getMessage();
+			System.out.print(errorMessage);
 
+			int userNo = call.getUserNo();
+			String callCode = call.getCallCode();
+			int myMoney = payService.getMyMoney(userNo);
+
+			model.addAttribute("myMoney", myMoney);
+			model.addAttribute("callCode", callCode);
+
+			return "forward:/callreq/selectOptions.jsp";
+
+		}
 		List<String> driverNoList = new ArrayList<>();
 		List<Integer> callDriverNoList = new ArrayList<>();
 		List<Integer> driverNoResult = new ArrayList<>();
@@ -232,29 +249,40 @@ public class CallReqController {
 	}
 
 	@RequestMapping(value = "updateLikeAddr", method = RequestMethod.POST)
-	public String updateLikeAddr(@ModelAttribute("like") Like like, @RequestParam("userNo") int userNo, Model model)
-			throws Exception {
+	public String updateLikeAddr(@ModelAttribute @Valid Like like, BindingResult result,
+			@RequestParam("userNo") int userNo, Model model) throws Exception {
 
-		System.out.println("/callreq/updateHomeAddr");
-		System.out.println("like : " + like);
-		System.out.println("userNo : " + userNo);
-		// userNo = "1004";
-		// Business Logic
+		if (result.hasErrors()) {
 
-		String likeAddr = like.getLikeAddr();
-		String likeName = like.getLikeName();
-		int likeNo = like.getLikeNo();
-		double likeX = like.getLikeX();
-		double likeY = like.getLikeY();
+			List<Like> likeList = callReqService.getLikeList(userNo); // 즐겨찾기 리스트
 
-		callReqService.updateLikeAddr(likeAddr, likeName, userNo, likeNo, likeX, likeY);
+			// Model 과 View 연결
+			model.addAttribute("likeList", likeList);
 
-		List<Like> likeList = callReqService.getLikeList(userNo); // 즐겨찾기 리스트
+			return "forward:/callreq/likeAddrList.jsp";
+		} else {
 
-		// Model 과 View 연결
-		model.addAttribute("likeList", likeList);
+			System.out.println("/callreq/updateHomeAddr");
+			System.out.println("like : " + like);
+			System.out.println("userNo : " + userNo);
+			// userNo = "1004";
+			// Business Logic
 
-		return "forward:/callreq/likeAddrList.jsp";
+			String likeAddr = like.getLikeAddr();
+			String likeName = like.getLikeName();
+			int likeNo = like.getLikeNo();
+			double likeX = like.getLikeX();
+			double likeY = like.getLikeY();
+
+			callReqService.updateLikeAddr(likeAddr, likeName, userNo, likeNo, likeX, likeY);
+
+			List<Like> likeList = callReqService.getLikeList(userNo); // 즐겨찾기 리스트
+
+			// Model 과 View 연결
+			model.addAttribute("likeList", likeList);
+
+			return "forward:/callreq/likeAddrList.jsp";
+		}
 	}
 
 	@RequestMapping(value = "deleteLikeAddr", method = RequestMethod.GET)

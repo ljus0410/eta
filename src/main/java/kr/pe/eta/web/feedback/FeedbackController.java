@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,7 +44,7 @@ public class FeedbackController {
 	int pageUnit;
 
 	@GetMapping(value = "addStar/{callNo}")
-	public ModelAndView addStar(HttpSession session, @RequestParam int callNo) throws Exception {
+	public ModelAndView addStar(HttpSession session, @PathVariable int callNo) throws Exception {
 		System.out.println("/feedback/addStar : GET");
 		String viewName = "/feedback/addStar.jsp";
 		ModelAndView modelAndView = new ModelAndView();
@@ -76,7 +77,7 @@ public class FeedbackController {
 	}
 
 	@GetMapping(value = "updateStar/{callNo}")
-	public ModelAndView updateStar(HttpSession session, @RequestParam int callNo) throws Exception {
+	public ModelAndView updateStar(HttpSession session, @PathVariable int callNo) throws Exception {
 		System.out.println("/feedback/updateStar : GET");
 		String viewName = "/feedback/updateStar.jsp";
 		ModelAndView modelAndView = new ModelAndView();
@@ -150,7 +151,7 @@ public class FeedbackController {
 		if (user.getRole().equals("admin") && feedbackService.getReportCode(reportNo) == 1)
 			feedbackService.updateReportCode(reportNo);
 
-		map = user.getRole().equals("driver") && feedbackService.getCall(badCallNo).getCallCode().equals("S")
+		map = reportRole.equals("driver") && feedbackService.getCall(badCallNo).getCallCode().equals("S")
 				? feedbackService.getShareReport(report)
 				: feedbackService.getReport(report);
 
@@ -160,7 +161,7 @@ public class FeedbackController {
 	}
 
 	@GetMapping(value = "addBlacklist/{callNo}")
-	public ModelAndView addBlacklist(HttpSession session, @RequestParam int callNo) throws Exception {
+	public ModelAndView addBlacklist(HttpSession session, @PathVariable int callNo) throws Exception {
 		System.out.println("/feedback/addBlacklist : GET");
 		String viewName = "/feedback/addBlacklist.jsp";
 		ModelAndView modelAndView = new ModelAndView();
@@ -195,7 +196,7 @@ public class FeedbackController {
 
 	// update또한 현재는 최신배차만 가능 why? 이용기록 또는 운행기록을 통해서 들어오기떄문에 get이 필요없음
 	@GetMapping(value = "updateBlacklist/{callNo}")
-	public ModelAndView updateBlacklist(HttpSession session, @RequestParam int callNo) throws Exception {
+	public ModelAndView updateBlacklist(HttpSession session, @PathVariable int callNo) throws Exception {
 		System.out.println("/feedback/updateBlacklist : GET");
 		String viewName = "/feedback/updateBlacklist.jsp";
 		ModelAndView modelAndView = new ModelAndView();
