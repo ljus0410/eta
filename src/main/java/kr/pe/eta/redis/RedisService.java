@@ -56,7 +56,13 @@ public class RedisService {
 		if (!userList.isEmpty()) {
 			return userList;
 		} else {
-			throw new RuntimeException("Database has no Data");
+			throw new DatabaseHasNoDataException("Database has no Data");
+		}
+	}
+
+	public class DatabaseHasNoDataException extends RuntimeException {
+		public DatabaseHasNoDataException(String message) {
+			super(message);
 		}
 	}
 
@@ -82,6 +88,18 @@ public class RedisService {
 		// Redis에서 사용자 정보를 삭제합니다.
 
 		addCallRepository.delete(call);
+	}
+
+	@Transactional(readOnly = true)
+	public AddCallEntity getCallById(String reqId) {
+		Optional<AddCallEntity> result = addCallRepository.findById(reqId);
+
+		// Handling
+		if (result.isPresent()) {
+			return result.get();
+		} else {
+			throw new RuntimeException("Database has no Data");
+		}
 	}
 
 }

@@ -147,7 +147,7 @@
 								</if>
 							</where>
 							
-							ORDER BY REG_DATE desc ) inner_table
+							ORDER BY REPORT_NO desc ) inner_table
 		WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 	 </select>
@@ -264,7 +264,7 @@
 	  			FROM	(	SELECT *
 							FROM REPORT
 							where report_user_no = #{searchKeyword}
-							ORDER BY REG_DATE desc) inner_table
+							ORDER BY REPORT_NO desc) inner_table
 				WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 	 </select>

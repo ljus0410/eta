@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import jakarta.servlet.http.HttpSession;
 import kr.pe.eta.common.Page;
@@ -22,6 +23,7 @@ import kr.pe.eta.domain.Call;
 import kr.pe.eta.domain.Pay;
 import kr.pe.eta.domain.ShareReq;
 import kr.pe.eta.domain.User;
+import kr.pe.eta.redis.AddCallEntity;
 import kr.pe.eta.redis.RedisEntity;
 import kr.pe.eta.redis.RedisService;
 import kr.pe.eta.service.callres.CallResService;
@@ -331,7 +333,7 @@ public class CallResController {
 		model.addAttribute("list", map.get("list"));
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
-		model.addAttribute("user", users);
+		model.addAttribute("users", users);
 
 		return "forward:/callres/getRecordList.jsp";
 	}
@@ -366,29 +368,36 @@ public class CallResController {
 	}
 
 	@GetMapping(value = "getCallResList")
-	public String getCallResList(@ModelAttribute Search search, Model model) throws Exception {
-		System.out.println("crContRL");
+	public ModelAndView getCallResList(@ModelAttribute Search search, Model model) throws Exception {
+		String viewName = "/callres/getCallRecordList.jsp";
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName(viewName);
 
-		if (search.getCurrentPage() == 0) {
-			search.setCurrentPage(1);
-		}
+		search.setCurrentPage(1);
+
 		search.setPageSize(pageSize);
-		search.setSearchCondition(null);
-
-		System.out.println(search);
 
 		Map<String, Object> map = callResService.getCallResList(search);
-		System.out.println("search::" + search);
-		System.out.println("MAP:: " + map);
 		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
 				pageSize);
-		System.out.println(resultPage);
 
-		model.addAttribute("list", map.get("list"));
-		model.addAttribute("resultPage", resultPage);
-		model.addAttribute("search", search);
+		modelAndView.addObject("list", map.get("list"));
+		modelAndView.addObject("resultPage", resultPage);
+		return modelAndView;
+	}
 
-		return "forward:/callres/getCallResList.jsp";
+	@GetMapping(value = "getRequest")
+	public String getRequest(Model model, HttpSession session) throws Exception {
+		int userNo = ((User) session.getAttribute("user")).getUserNo();
+		String driverNo = String.valueOf(userNo);
+		AddCallEntity callRequest = redisService.getCallById(driverNo);
+		int callNo = callRequest.getCallNo();
+		int passengerNo = callResService.getMatchByCallnod(callNo);
+		Call call = callResService.getCallByNo(callNo);
+		model.addAttribute("call", call);
+		model.addAttribute("passengerNo", passengerNo);
+		System.out.println(call);
+		return "forward:/callres/callAcceptReject.jsp";
 	}
 
 }

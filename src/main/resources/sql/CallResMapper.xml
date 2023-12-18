@@ -43,8 +43,9 @@
 		<result property="callDate" column="call_Date"
 
 			jdbcType="VARCHAR" />
-			
-		<result property="routeOpt" column="route_opt" jdbcType="VARCHAR" />
+
+		<result property="routeOpt" column="route_opt"
+			jdbcType="VARCHAR" />
 
 	</resultMap>
 
@@ -313,13 +314,17 @@
 		FROM
 		call c
 		JOIN
-		match m ON c.call_no = m.call_no
+		match m ON c.call_no =
+		m.call_no
 		JOIN
 		users u ON m.passenger_no = u.user_no
 		LEFT JOIN
-		(SELECT DISTINCT ON (call_no) * FROM shares) s ON c.call_no = s.call_no
-		LEFT JOIN
-		blacklist bl ON m.driver_no = bl.driver_no AND m.passenger_no = bl.passenger_no
+		(SELECT
+		DISTINCT ON (call_no) * FROM shares) s ON c.call_no = s.call_no
+		LEFT
+		JOIN
+		blacklist bl ON m.driver_no = bl.driver_no AND m.passenger_no =
+		bl.passenger_no
 		WHERE
 		c.call_no = #{callNo}
 
@@ -393,31 +398,20 @@
 		resultMap="callSelectMap">
 
 		SELECT *
-
 		FROM (
-
-		SELECT inner_table.*, ROWNUM AS row_seq
-
-		FROM (
-
-		SELECT c.*, m.passenger_no, m.driver_no
-
-		FROM call c
-
-		JOIN match m ON
-		c.call_no = m.call_no
-
-		ORDER BY c.call_date DESC
-
-		) inner_table
-
-		WHERE
-		ROWNUM &lt;= #{endRowNum}
-
+			SELECT inner_table.*, ROWNUM AS row_seq
+			FROM (
+				SELECT c.*,
+					m.passenger_no,
+					m.driver_no
+				FROM call c
+				JOIN match m ON c.call_no = m.call_no
+				WHERE c.call_state_code = '운행후'
+				ORDER BY c.call_date DESC
+			) inner_table
+		WHERE ROWNUM &lt;= #{endRowNum}
 		)
-
-		WHERE row_seq BETWEEN #{startRowNum} AND
-		#{endRowNum}
+		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
 
 	</select>
 
@@ -475,11 +469,11 @@
 
 		from call
 
-		<if test="searchCondition != null">
-
-			AND EXTRACT(MONTH FROM call_date) = #{month}
-
-		</if>
+		<where>
+			<if test="searchKeyword !='' and searchKeyword !=null">
+				call_no LIKE '%'||#{searchKeyword}||'%'
+			</if>
+		</where>
 
 		) countTable
 

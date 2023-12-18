@@ -7,18 +7,21 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<%@ page import="kr.pe.eta.domain.User"%>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-<link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
-<link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
+<meta name="apple-mobile-web-app-status-bar-style"
+	content="black-translucent">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
 <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap"
+	rel="stylesheet">
 <link rel="manifest" href="_manifest.json">
 <meta id="theme-check" name="theme-color" content="#FFFFFF">
-<link rel="apple-touch-icon" sizes="180x180" href="app/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180"
+	href="app/icons/icon-192x192.png">
 </head>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -62,48 +65,124 @@
 			console.error("Error fetching route data from MongoDB: ", error);
 		}
 	});
+
+	$(document).ready(function() {
+		$("#accordion4-3-button").click(function() {
+			var callNo = routeId;
+			$.ajax({
+				url : '/feedback/updateBlacklist/' + callNo,
+				type : 'GET',
+				success : function(response) {
+					// 성공 시, 아코디언 본문에 내용 삽입
+					$("#accordion4-3").html(response);
+				},
+				error : function(error) {
+					// 에러 처리
+					console.log(error);
+				}
+			});
+		});
+	});
+	$(document).ready(function() {
+		$("#accordion4-2-button").click(function() {
+			var callNo = routeId;
+			$.ajax({
+				url : '/feedback/updateStar/' + callNo,
+				type : 'GET',
+				success : function(response) {
+					// 성공 시, 아코디언 본문에 내용 삽입
+					$("#accordion4-2").html(response);
+				},
+				error : function(error) {
+					// 에러 처리
+					console.log(error);
+				}
+			});
+		});
+	});
 </script>
 </head>
-<body>
+<body class="theme-light">
+	<%
+	User user = (User) session.getAttribute("user");
+	%>
 
-	<div class="page-content header-clear-medium">
-		<div class="card card-style">
-			<div class="content">
-				<h6 class="font-700 mb-n1 color-highlight">Gorgeous Styles</h6>
-				<h1 class="pb-2">Card & Content Styles</h1>
-				<p class="mb-2">All the styles you'll ever need to create
-					amazing designs for your content elements.</p>
-				<ul class="mb-0 ps-3">
-					<li>${call.callDate} </li>
-					<li>${call.startKeyword} </li>
-					<li>${call.endKeyword}</li>
-					<li>${call.realPay}</li>
+	<div id='page'>
+		<jsp:include page="/home/top.jsp" />
+		<div class="page-content header-clear-medium">
+			<div class="card card-style">
+				<div class="content">
+					<h6 class="font-700 mb-n1 color-highlight">Gorgeous Styles</h6>
+					<h1 class="pb-2">
+						<c:choose>
+							<c:when test="${sessionScope.user.role == 'passenger'}">
+                            이용기록
+                        </c:when>
+							<c:otherwise>
+                            운행기록
+                        </c:otherwise>
+						</c:choose>
+					</h1>
+					<ul class="mb-0 ps-3">
+						<li>${call.callDate}</li>
+						<li>${call.startKeyword}</li>
+						<li>${call.endKeyword}</li>
+						<li>${call.realPay}</li>
+						<c:if test="${sessionScope.user.role == 'passenger'}">
+							<li>택시 정보: ${users.phone}, ${call.callNo}, ${users.carNum},
+								${call.star}</li>
 
-					<c:if test="${user.role == 'driver'}">
-				        택시 정보
-				        <li>${user.phone}</li>
-				        <li>${call.callNo}</li>
-				        <li>${user.carNum}</li>
-				        <li>${call.star}</li>
-				    </c:if>
+							<div class="accordion-item bg-green-dark">
+								<button class="accordion-button collapsed" type="button"
+									data-bs-toggle="collapse" data-bs-target="#accordion4-2" id="accordion4-2-button">
+									<i class="bi bi-star-fill color-white pe-3 font-14"></i> <span
+										class="font-600 font-13 color-white">Accordion Item 2</span> <i
+										class="bi bi-plus font-20 color-white"></i>
+								</button>
+								<div id="accordion4-2" class="accordion-collapse collapse"
+									data-bs-parent="#accordion-group-4">
+									<p class="px-3 mb-0 py-3 color-white opacity-80">This is
+										the accordion body. It can support most content you want
+										without restrictions. You can use images, videos lists or
+										whatever you want.</p>
 
-					<c:if test="${user.role == 'passenger'}">
-				        passenger 정보
-				        <li>${user.userNo}</li>
-				        <li>${call.callNo}</li>
-				    </c:if>
-				</ul>
+								</div>
+							</div>
+						</c:if>
+						<c:if test="${sessionScope.user.role == 'driver'}">
+							<li>passenger 정보: ${users.userNo}, ${call.callNo}</li>
+
+							<div class="accordion accordion-m rounded-m"
+								id="accordion-group-4">
+								<div class="accordion-item bg-red-dark">
+									<button class="accordion-button collapsed" type="button"
+										data-bs-toggle="collapse" data-bs-target="#accordion4-3"
+										id="accordion4-3-button">
+										<i class="bi bi-check-circle-fill color-white pe-3 font-14"></i>
+										<span class="font-600 font-13 color-white">Accordion
+											Item 3</span> <i class="bi bi-arrow-down-short font-20 color-white"></i>
+									</button>
+									<div id="accordion4-3" class="accordion-collapse collapse"
+										data-bs-parent="#accordion-group-4"></div>
+								</div>
+							</div>
+
+						</c:if>
+						<c:if test="${sessionScope.user.role == 'admin'}">
+							<li>passenger 정보: ${users.userNo}, ${call.callNo}</li>
+							<li>택시 정보: ${users.phone}, ${call.callNo}, ${users.carNum},
+								${call.star}</li>
+						</c:if>
+					</ul>
+				</div>
+			</div>
+
+			<div
+				style="margin-top: 10px; display: flex; justify-content: center; align-items: center; height: 100%;">
+				<div id="map"
+					style="width: 90%; height: 300px; border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);"></div>
 			</div>
 		</div>
-	</div>
-
-
-
-
-
-
-	<div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-    	<div id="map" style="width: 90%; height: 300px; border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);"></div>
 	</div>
 
 
@@ -115,7 +194,8 @@
 		var map = new kakao.maps.Map(mapContainer, mapOption);
 	</script>
 
-    <script src="/templates/bootstrap.min.js"></script>
-    <script src="/templates/custom.js"></script>
+
+	<script src="/templates/scripts/bootstrap.min.js"></script>
+	<script src="/templates/scripts/custom.js"></script>
 </body>
 </html>
