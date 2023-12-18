@@ -51,19 +51,19 @@
 <jsp:include page="/home/top.jsp" />
 <div id="page">
 <div class="page-content header-clear-medium">
-       <div class="card card-style">
-          <div class="content">
+       <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px;">
             <h1 class="pb-2">
-              <i class="has-bg rounded-s bi bg-yellow-dark bi-star">&nbsp;</i>&nbsp;&nbsp;즐겨찾기
+              <i class="has-bg rounded-s bi bg-green-dark bi-heart"></i>&nbsp;&nbsp;즐겨찾기
             </h1>
 
           </div>
         </div>
-        <div class="card card-style">
+        <div class="card card-style" style="margin-bottom: 15px ;">
           <div class="map_wrap">
             <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
              <div id="menu_wrap" class="bg_white">
-            <div class="content"> 
+            <div class="content" style="margin-bottom: 9px;"> 
               <div class="d-flex pb-1">
                 <div>
                   <h3>집
@@ -84,7 +84,7 @@
                     </c:choose> </h3>
                 </div>
                 <div class="align-self-center ms-auto">
-                    <a onclick="deleteHomeAddrRequest()" class="btn btn-xxs border-red-dark color-red-dark" style="display: inline-block; padding-top: 3px; padding-bottom: 3px">삭제</a>
+                    <a onclick="deleteHomeAddrRequest()" class="btn btn-xxs border-red-dark color-red-dark" style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-left: 5px; ">삭제</a>
                 </div>
               </div>
               <div class="homeAddrSearch">
@@ -103,8 +103,8 @@
           </div>
           </div>
           </div>
-          <div class="card card-style">
-            <div class="content"> 
+          <div class="card card-style" style="margin-bottom: 15px ;">
+            <div class="content" style="margin-bottom: 9px ;"> 
               <div class="d-flex pb-1">
                 <div>
                   <h3>회사
@@ -125,7 +125,7 @@
                     </c:choose> </h3>
                 </div>
                 <div class="align-self-center ms-auto">
-                    <a onclick="deleteCompanyAddrRequest()" class="btn btn-xxs border-red-dark color-red-dark" style="display: inline-block; padding-top: 3px; padding-bottom: 3px">삭제 </a>
+                    <a onclick="deleteCompanyAddrRequest()" class="btn btn-xxs border-red-dark color-red-dark" style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-left: 5px; ">삭제 </a>
                 </div>
               </div>
               <div class="companyAddrSearch">
@@ -142,11 +142,11 @@
                 </div>
             </div>
           </div>
-          <div class="card card-style">
-            <div class="content"> 
+          <div class="card card-style" style="margin-bottom: 15px ;">
+            <div class="content" style="margin-bottom: 9px ;"> 
               <div class="d-flex pb-1">
                 <div>
-                  <h3>즐겨찾는장소
+                  <h3>즐겨 찾는 장소
                       <c:choose>
                           <c:when test="${ empty likeList[2].likeName && empty likeList[2].likeAddr}">            
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-x" viewBox="0 0 16 16">
@@ -162,8 +162,8 @@
                         </c:choose>  </h3>
                 </div>
                 <div class="align-self-center ms-auto">
-                <a onclick="updateCustomAddr()" class="btn btn-xxs border-blue-dark color-blue-dark" style="display: inline-block; padding-top: 3px; padding-bottom: 3px">수정</a>
-                <a onclick="deleteCustomAddrRequest()" class="btn btn-xxs border-red-dark color-red-dark" style="display: inline-block; padding-top: 3px; padding-bottom: 3px">삭제</a>                  
+                <a onclick="updateCustomAddr()" class="btn btn-xxs border-blue-dark color-blue-dark" style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-left: 5px; ">수정</a>
+                <a onclick="deleteCustomAddrRequest()" class="btn btn-xxs border-red-dark color-red-dark" style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-left: 5px; ">삭제</a>                  
                 </div>
               </div>
               <div class="customAddrSearch">
@@ -222,12 +222,12 @@ function messageAlert(message) {
       $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
  }
 function confirmAlert(message) {
-    var toastContainer = document.createElement('div');
+    var toastContainer = document.createElement('div');confirmAlert
       toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
           '<div class="toast-body px-3 py-3">' +
           '<div class="d-flex">' +
           '<div class="align-self-center">' + 
-          '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+          '<span class="icon icon-xxs rounded-xs bg-fade-green scale-box"><i class="bi bi-exclamation-triangle color-green-dark font-16"></i></span>' +
           '</div>' +
           '<div class="align-self-center">' +
           '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
@@ -235,10 +235,10 @@ function confirmAlert(message) {
           '</div><br>' +
           '<div class="row">' +
           '<div class="col-6">' +
-          '<a href="#" id="cancel" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">아니오</a>' +
+          '<a href="#" id="cancel" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-green color-green-dark" aria-label="Close">아니오</a>' +
           '</div>' +
           '<div class="col-6">' +
-          '<a href="#" id="ok" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">예</a>' +
+          '<a href="#" id="ok" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-green color-green-dark" aria-label="Close">예</a>' +
           '</div>' +
           '</div>' +
           '</div>' +
@@ -681,7 +681,7 @@ document.addEventListener('DOMContentLoaded', function() {
         inputElement.addEventListener('click', function(event) {
             // 클릭 시 입력 값 초기화
             inputElement.value = '';
-            inputElement.placeholder = '주소를 입력해주세요';
+           // inputElement.placeholder = '주소를 입력해주세요';
 
             // 이벤트 전파 방지
             event.stopPropagation();

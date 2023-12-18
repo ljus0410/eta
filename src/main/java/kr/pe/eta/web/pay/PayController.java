@@ -38,6 +38,7 @@ public class PayController {
 
 		model.addAttribute("TpayList", TpayList);
 		model.addAttribute("myMoney", myMoney);
+		model.addAttribute("month", month);
 
 		return "forward:/pay/TpayList.jsp";
 	}
@@ -90,10 +91,8 @@ public class PayController {
 
 		int monthTotal = 0;
 
-		if (!month.equals("all")) {
-			for (int i = 0; i < cashDriverList.size(); i++) {
-				monthTotal += cashDriverList.get(i).getRealPay();
-			}
+		for (int i = 0; i < cashDriverList.size(); i++) {
+			monthTotal += cashDriverList.get(i).getRealPay();
 		}
 
 		model.addAttribute("cashDriverList", cashDriverList);
@@ -114,10 +113,13 @@ public class PayController {
 
 		int monthTotal = 0;
 
-		if (!month.equals("all")) {
-			for (int i = 0; i < myCashList.size(); i++) {
-				monthTotal += myCashList.get(i).getRealPay();
-			}
+		for (int i = 0; i < myCashList.size(); i++) {
+			monthTotal += myCashList.get(i).getRealPay();
+			String calldate = myCashList.get(i).getCallDate();
+			String[] parts = calldate.split(" ");
+			String callDateResult = parts[0];
+			myCashList.get(i).setCallDate(callDateResult);
+
 		}
 
 		model.addAttribute("myCashList", myCashList);
