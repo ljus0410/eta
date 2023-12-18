@@ -34,4 +34,10 @@ public class LocationWebSocketController {
 		return message;
 	}
 
+	@MessageMapping("/sendStartNotification/{passengerNo}")
+	@SendTo("/topic/startnotifications/{passengerNo}")
+	public String sendStartNotification(String message) {
+		return message;
+	}
+
 }

@@ -16,8 +16,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <meta id="theme-check" name="theme-color" content="#FFFFFF">
-<link rel="apple-touch-icon" sizes="180x180" href="../app/icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/templates/app/icons/icon-192x192.png">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=70ef6f6883ad97593a97af6324198ac0&libraries=services"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 <script>
 // 각 input 요소에 대한 이벤트 핸들러 등록
 function registerInputEvents(inputElement, defaultValue) {
@@ -124,7 +130,8 @@ if (navigator.geolocation) {
                     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
                         resolve(detailAddr);
                     } else if (status === kakao.maps.services.Status.ERROR) {
-                        alert('검색 결과 중 오류가 발생했습니다.');
+                        var message = '검색 결과 중 오류가 발생했습니다';
+                        messageAlert(message);
                         resolve(detailAddr);
                     }
                 });
@@ -133,7 +140,30 @@ if (navigator.geolocation) {
 
     });
 }
+function messageAlert(message) {
+	 var toastContainer = document.createElement('div');
+     toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+         '<div class="toast-body px-3 py-3">' +
+         '<div class="d-flex">' +
+         '<div class="align-self-center">' +
+         '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+         '</div>' +
+         '<div class="align-self-center">' +
+         '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+         '</div>' +
+         '</div><br>' +
+         '<a href="#" data-bs-dismiss="toast" id="confirmBtn" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
+         '</div>' +
+         '</div>';
 
+     document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+     
+     document.getElementById('confirmBtn').addEventListener('click', function () {
+         // Remove the toast element from the DOM
+         document.getElementById('notification-bar-5').remove();
+     });
+     $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+}
 
 </script>
 <style>
@@ -144,8 +174,8 @@ if (navigator.geolocation) {
 </head>
 <body class="theme-light">
 <jsp:include page="/home/top.jsp" />
-<br>
 <div id="page">
+  <div class="page-content header-clear-medium">
     <div class="card card-style">
         <div class="map_wrap">
             <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
@@ -257,6 +287,7 @@ if (navigator.geolocation) {
         </div>
 </div>
 </div>
+</div>
 <script>
 
 //마커를 담을 배열입니다
@@ -303,7 +334,8 @@ function searchPlaces(keywordId, type) {
     var keyword = document.getElementById(keywordId).value;
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
-        alert('키워드를 입력해주세요!');
+    	var message = '키워드를 입력해주세요!';
+    	  messageAlert(message);
         return false;
     }
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
@@ -325,13 +357,13 @@ function placesSearchCB(data, status, pagination, type) {
         displayPagination(pagination);
  
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
- 
-        alert('검색 결과가 존재하지 않습니다.');
+    	  var message='검색 결과가 존재하지 않습니다';
+        messageAlert(message);
         return;
  
     } else if (status === kakao.maps.services.Status.ERROR) {
- 
-        alert('검색 결과 중 오류가 발생했습니다.');
+    	  var message='검색 결과 중 오류가 발생했습니다';
+    	  messageAlert(message);
         return;
  
     }
@@ -648,8 +680,9 @@ document.addEventListener('DOMContentLoaded', function() {
             startLat: startLat,
             startLng: startLng
         };
+    
+
 });
- 
 function handleButtonClick(Addr, Name, X, Y) {
     
     /*alert(likeAddr);
@@ -672,7 +705,6 @@ function handleButtonClick(Addr, Name, X, Y) {
                 endLat: Y
             };
   }
-
 function selectOptions(callCode){
   
   // 출발/도착지 값 둘다 있는지 체크
@@ -681,7 +713,9 @@ function selectOptions(callCode){
     var endAddrInput = document.getElementById('endAddrKeyword');
     
     if(startAddrInput.value == '' || endAddrInput.value == ''){
-       alert("출발지와 목적지를 모두 입력해주세요.");
+      var message = '출발지와 목적지를 모두 입력해주세요';
+      messageAlert(message);       
+       return false;
     } else if (startAddrInput.value.trim() !== '' && endAddrInput.value.trim() !== '') {
     
     // 세션 스토리지에 정보 저장  
@@ -706,5 +740,7 @@ function selectOptions(callCode){
   }
 }
 </script>
+<script src="/templates/scripts/bootstrap.min.js"></script>
+<script src="/templates/scripts/custom.js"></script>
 </body>
 </html>

@@ -4,8 +4,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
+<link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="manifest" href="/templates/_manifest.json">
+<meta id="theme-check" name="theme-color" content="#FFFFFF">
+<link rel="apple-touch-icon" sizes="180x180" href="/templates/app/icons/icon-192x192.png">
 <style type="text/css">
 	td{
 		height: 100px;
@@ -64,12 +75,12 @@ $(function () {
 							$.each(reportList, function (index, report) {
 					            // 새로운 행 추가
 					            var newRow = '<tr class="appendlist"'+(index+1)+'>' +
-					                '<td>' + (index + 1) + '&nbsp;&nbsp;<a href="/feedback/getReport?reportNo=' + report.reportNo + '&badCallNo='+report.badCallNo+'&reportRole='+report.reportRole+'">상세보기</a></td>' +
-					                '<td>' + report.reportCode + '</td>' +
 					                '<td>' + report.reportNo + '</td>' +
+					                '<td>' + report.reportCode + '</td>' +
 					                '<td>' + report.reportUserNo + '</td>' +
 					                '<td>' + report.badCallNo + '</td>' +
 					                '<td>' + report.reportCategory + '</td>' +
+					               ' <td style="display: none">' +report.reportRole + '</td>' +
 					                '</tr>';
 					            // 적절한 위치에 행 추가
 					            $('#muhanlist').append(newRow);
@@ -98,66 +109,114 @@ $(function () {
 			
 		$("form").attr("method","POST").attr("action","/feedback/listReport").submit();
 	})
+	$(document).on("click","tr", function () {
+		
+		self.location="/feedback/getReport?reportNo="+$(this).children().eq(0).text()+"&badCallNo="+$(this).children().eq(3).text()+"&reportRole="+$(this).children().eq(5).text()
+		
+	})
 	
 })
 
 </script>
 </head>
-<body>
+<body class="theme-light">
 	<form name="detailform">
-		<input type="radio" name="code" value = "0"
-		${ ! empty search.code && search.code == 0 ? "checked" : "" }>모두
-		<input type="radio" name="code" value = "1"
-		${ ! empty search.code && search.code == 1 ? "checked" : "" }>미처리
-		<input type="radio" name="code" value = "2"
-		${ ! empty search.code && search.code == 2 ? "checked" : "" }>처리중
-		<input type="radio" name="code" value = "3"
-		${ ! empty search.code && search.code == 3 ? "checked" : "" }>처리완료
+	<div id="page" >
+		<jsp:include page="/home/top.jsp" />
 		
-		<select 	name="searchCondition" >
-			<option value="선택" 
-			${ ! empty search.searchCondition && search.searchCondition == '선택' ? "selected" : "" }>
-			신고카테고리를 선택해주세요</option>
-			<option value="폭언 및 욕설" 
-			${ ! empty search.searchCondition && search.searchCondition == '폭언 및 욕설' ? "selected" : "" }>
-			폭언 및 욕설</option>
-			<option value="성희롱 및 성추행" 
-			${ ! empty search.searchCondition && search.searchCondition == '성희롱 및 성추행' ? "selected" : "" }>
-			성희롱 및 성추행</option>
-			<option value="요금 관련"
-			${ ! empty search.searchCondition && search.searchCondition == '요금 관련' ? "selected" : "" } >
-			요금 관련</option>
-			<option value="호출 및 탑승 중 불편사항" 
-			${ ! empty search.searchCondition && search.searchCondition == '호출 및 탑승 중 불편사항' ? "selected" : "" }>
-			호출 및 탑승 중 불편사항</option>
-			<option value="기타" 
-			${ ! empty search.searchCondition && search.searchCondition == '기타' ? "selected" : "" }>
-			기타</option>
-		</select>
-		<input 	type="text" name="searchKeyword"  value="${!empty search.searchKeyword ? search.searchKeyword : ""}">
-		<a>검색</a>
-		<table id ="muhanlist">	
-			<tr>
-				<td>넘버</td>
-				<td>처리상태</td>
-				<td>신고접수번호</td>
-				<td>신고자</td>
-				<td>피신고배차번호</td>
-				<td>신고카테고리</td>
-				
-			</tr>
-			<c:forEach var="reportlist" items="${reportlist }" begin="0" step="1" varStatus="status">
-				<tr class = "list${reportlist.reportNo }">
-					<td>${status.count }&nbsp;&nbsp;<a href="/feedback/getReport?reportNo=${reportlist.reportNo }&badCallNo=${reportlist.badCallNo}&reportRole=${reportlist.reportRole}">상세보기</a></td>
-					<td>${reportlist.reportCode }</td>
-					<td>${reportlist.reportNo }</td>
-					<td>${reportlist.reportUserNo }</td>
-					<td>${reportlist.badCallNo }</td>
-					<td>${reportlist.reportCategory }</td>
-				</tr>
-			</c:forEach>
-			<input type="hidden" id="currentPage"name ="currentPage" value=1></br>
-		</table>
+		
+	<div class="page-content header-clear-medium" >
+				<div class="card card-style" style="margin-bottom: 15px;">
+					<div class="content"style="margin-bottom: 9px; ">
+						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
+
+						<h1 class="pb-2" style="width: 140px; display: inline-block;">
+							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;신고내역
+						</h1>
+
+					</div>
+				</div>
+
+				<div class="card overflow-visible card-style">
+					<div class="content mb-0">
+						<div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
+
+							<input type="radio" name="code" value="0"
+								${ ! empty search.code && search.code == 0 ? "checked" : "" }>모두
+							<input type="radio" name="code" value="1"
+								${ ! empty search.code && search.code == 1 ? "checked" : "" }>미처리
+							<input type="radio" name="code" value="2"
+								${ ! empty search.code && search.code == 2 ? "checked" : "" }>처리중
+							<input type="radio" name="code" value="3"
+								${ ! empty search.code && search.code == 3 ? "checked" : "" }>처리완료
+
+							<select name="searchCondition">
+								<option value="선택"
+									${ ! empty search.searchCondition && search.searchCondition == '선택' ? "selected" : "" }>
+									신고카테고리를 선택해주세요</option>
+								<option value="폭언 및 욕설"
+									${ ! empty search.searchCondition && search.searchCondition == '폭언 및 욕설' ? "selected" : "" }>
+									폭언 및 욕설</option>
+								<option value="성희롱 및 성추행"
+									${ ! empty search.searchCondition && search.searchCondition == '성희롱 및 성추행' ? "selected" : "" }>
+									성희롱 및 성추행</option>
+								<option value="요금 관련"
+									${ ! empty search.searchCondition && search.searchCondition == '요금 관련' ? "selected" : "" }>
+									요금 관련</option>
+								<option value="호출 및 탑승 중 불편사항"
+									${ ! empty search.searchCondition && search.searchCondition == '호출 및 탑승 중 불편사항' ? "selected" : "" }>
+									호출 및 탑승 중 불편사항</option>
+								<option value="기타"
+									${ ! empty search.searchCondition && search.searchCondition == '기타' ? "selected" : "" }>
+									기타</option>
+							</select> <input type="text" class="form-control rounded-xs"
+								style="width: 40%; display: inline-block" name="searchKeyword"
+								value="${!empty search.searchKeyword ? search.searchKeyword : ''}">
+								<div class="mb-3 pb-2"></div>
+
+
+							<a class="btn btn-xxs border-blue-dark color-blue-dark"
+								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-left: 5px;">검색</a>
+						</div>
+						<div class="mb-3 pb-2"></div>
+						<div class="mb-3 pb-2"></div>
+						<div class="mb-3 pb-2"></div>
+						
+						<div class="table-responsive">
+							<table class="table color-theme mb-2" id="muhanlist">
+								<thead>
+									<tr>
+										<th scope="col">번호</th>
+										<th scope="col">처리상태</th>
+										<th scope="col">신고자</th>
+										<th scope="col">피신고배차번호</th>
+										<th scope="col">신고카테고리</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach var="reportlist" items="${reportlist }" begin="0"
+										step="1" varStatus="status">
+										<tr class="list${reportlist.reportNo }">
+											<td>${reportlist.reportNo }</td>
+											<td>${reportlist.reportCode }</td>
+											<td>${reportlist.reportUserNo }</td>
+											<td>${reportlist.badCallNo }</td>
+											<td>${reportlist.reportCategory }</td>
+											<td style="display: none;">${reportlist.reportRole}</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<input type="hidden" id="currentPage" name="currentPage" value=1>
+
+
+
+			</div>
+		</div>
 	</form>
 </body>
 </html>

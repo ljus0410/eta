@@ -12,9 +12,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-<link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
-<link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="manifest" href="_manifest.json">
@@ -38,6 +35,15 @@
 .record-container p {
 	margin-right: 20px;
 }
+
+.content p {
+            margin-top: 3px; /* 상단 간격을 줄임 */
+            margin-bottom: 3px; /* 하단 간격을 줄임 */
+        }
+        
+        .w-100 {
+            margin-bottom: 15px; /* 각 결과 항목 사이의 거리를 조정 */
+        }
 </style>
 
 
@@ -47,28 +53,48 @@
 
 
 	<div id="page">
+	<jsp:include page="/home/top.jsp" />
 		<div class="page-content header-clear-medium">
-			<c:forEach var="record" items="${list}" varStatus="status">
-				<div class="align-self-center">
-					<span
-						class="icon icon-xxl gradient-red color-white shadow-bg shadow-bg-s rounded-m"><i
-						class="bi bi-heart-fill font-24"></i></span>
-				</div>
+				<div class="card card-style">
+					<div class="content">
+						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
-				<div class="w-100" data-callno="${record.callNo}">
-					<div class="card card-style mb-0">
-						<div class="content">
-							<h4 class="font-20 font-800">날짜/시간: ${record.callDate}</h4>
-							<p class="mt-0">호출: ${record.callCode}</p>
-							<p class="mt-0">출발: ${record.startKeyword}</p>
-							<p class="mt-0">도착: ${record.endKeyword}</p>
-							<p class="mt-0">금액: ${record.realPay}</p>
-						</div>
+						
+						<c:if test="${user.role == 'driver'}">
+						<h1 class="pb-2">
+							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;운행기록
+						</h1>
+
+                    	</c:if>
+
+                    	<c:if test="${user.role == 'passenger'}">
+                    	<h1 class="pb-2">
+							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;이용기록
+						</h1>
+
+                    	</c:if>
+
 					</div>
 				</div>
-
-
-			</c:forEach>
+			<c:forEach var="record" items="${list}" varStatus="status">
+                <div class="w-100" data-callno="${record.callNo}">
+                    <div class="card card-style mb-0">
+                        <div class="content">
+                            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                <img src="/images/taxi.png" style="height: 1.5em; margin-right: 10px;">
+                                <h4 class="font-20 font-800" style="margin-bottom: 0;">택시</h4>
+                            </div>
+                            <div style="margin-left: 2.5em;">
+                                <p>날짜/시간: ${record.callDate}</p>
+                                <p>호출: ${record.callCode}</p>
+                                <p>출발: ${record.startKeyword}</p>
+                                <p>도착: ${record.endKeyword}</p>
+                                <p>금액: ${record.realPay}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </c:forEach>
 		</div>
 	</div>
 
@@ -100,8 +126,8 @@
 		});
 	</script>
 
-    <script src="/templates/bootstrap.min.js"></script>
-    <script src="/templates/custom.js"></script>
+    <script src="/templates/scripts/bootstrap.min.js"></script>
+    <script src="/templates/scripts/custom.js"></script>
 
 </body>
 

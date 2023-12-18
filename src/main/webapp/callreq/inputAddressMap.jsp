@@ -19,6 +19,12 @@
 <meta id="theme-check" name="theme-color" content="#FFFFFF">
 <link rel="apple-touch-icon" sizes="180x180" href="../app/icons/icon-192x192.png">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=70ef6f6883ad97593a97af6324198ac0&libraries=services"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 <script>
 
 var map;
@@ -88,10 +94,12 @@ function getPlaceName(detailAddr) {
                     resolve(detailAddr);
                 }
             } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-                //alert('검색 결과가 존재하지 않습니다.');
+            	  var message = '검색 결과가 존재하지 않습니다';
+                messageAlert(message);
                 resolve(detailAddr);
             } else if (status === kakao.maps.services.Status.ERROR) {
-                alert('검색 결과 중 오류가 발생했습니다.');
+                var message = '검색 결과 중 오류가 발생했습니다';
+                messageAlert(message);
                 resolve(detailAddr);
             }
         });
@@ -122,6 +130,31 @@ function initMap(lat, lng) {
         getAddressFromCoords(lat, lng);
     });
 }
+
+function messageAlert(message) {
+	   var toastContainer = document.createElement('div');
+	     toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+	         '<div class="toast-body px-3 py-3">' +
+	         '<div class="d-flex">' +
+	         '<div class="align-self-center">' +
+	         '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+	         '</div>' +
+	         '<div class="align-self-center">' +
+	         '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+	         '</div>' +
+	         '</div><br>' +
+	         '<a href="#" data-bs-dismiss="toast" id="confirmBtn" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
+	         '</div>' +
+	         '</div>';
+
+	     document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+	     
+	     document.getElementById('confirmBtn').addEventListener('click', function () {
+	         // Remove the toast element from the DOM
+	         document.getElementById('notification-bar-5').remove();
+	     });
+	     $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+	}
 
 document.addEventListener('DOMContentLoaded', function() {
     // 세션 스토리지에서 데이터 가져오기
@@ -206,8 +239,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </head>
 <body class="theme-light">
 <jsp:include page="/home/top.jsp" />
-<br>
 <div id="page">
+<div class="page-content header-clear-medium">
 	    <div class="card card-style">
 		    <div id="map" style="width:100%;height:350px;"></div> 
 		    <div id="clickLatlng"></div>
@@ -215,6 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		    <div id="lat" style="display: none;"></div>
 		    <div id="lng" style="display: none;"></div>
 		  </div>
+		</div>
 	</div>
 </body>
 </html>

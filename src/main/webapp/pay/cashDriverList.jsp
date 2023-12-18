@@ -27,6 +27,7 @@
 </style>
 </head>
 <body class="theme-light">
+<jsp:include page="/home/top.jsp" />
   <form name="detailform">
     <div id="page">
       <div class="page-content header-clear-medium">
@@ -94,7 +95,7 @@
 								         <c:set var="i" value="0" />   
 									        <c:forEach var="cashDriverList" items="${cashDriverList}">
 									        <c:set var="i" value="${ i+1 }" />        
-									        <form id="cashForm" class="cashItem" data-star="${cashDriverList.star}">
+									        <form class="cashItem" data-star="${cashDriverList.star}">
 									          <input type="hidden" name="cashDriverNo" value="${cashDriverList.userNo}">
 								            <input type="hidden" name="cashMonth" value="${cashDriverList.callDate}">
 								            <input type="hidden" name="cashTotal" value="${cashDriverList.realPay}">

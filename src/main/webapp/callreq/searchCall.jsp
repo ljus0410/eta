@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,6 +23,12 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 <style>
   .center-container {
     text-align: center;
@@ -31,16 +38,35 @@
 </head>
 <body class="theme-light">
 <jsp:include page="/home/top.jsp" />
-<br>
 <div id="page">
+<div id="notification-bar-6" class="notification-bar bg-dark-dark detached rounded-s shadow-l" data-bs-delay="15000">
+            <div class="toast-body px-3 py-3">
+                <div class="d-flex">
+                    <div class="align-self-center">
+                        <span class="icon icon-xxs rounded-xl bg-fade2-green scale-box">
+                            <i class="bi bi-check-circle color-green-dark font-17"></i>
+                        </span>
+                    </div>
+                    <div class="align-self-center">
+                        <h5 class="font-16 ps-2 ms-1 mb-0 color-white">Call to Action</h5>
+                    </div>
+                </div>
+                <p id="notificationMessage" class="font-12 pt-2 mb-3 color-white opacity-70">
+                    Please click a button to dismiss the notification. These are user action based.
+                </p>
+                <div class="row">
+                    <div class="col-6">
+                        <a href="#" data-bs-dismiss="toast" id="confirmButton" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-green color-green-dark" aria-label="Close">Okay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+<div class="page-content header-clear-medium">
       <div class="card card-style">
 		    <div class="center-container">
 		      배차 탐색 중<br>
 		      <img src="../images/Taxi.gif" width="300" height="200">
 		    </div>
-
-					
-
     <c:set var="i" value="0" />
     <c:forEach var="callDriverNo" items="${driverNoResult}">
       <c:set var="i" value="${ i+1 }" />
@@ -48,16 +74,51 @@
       <input type="hidden" value="${callDriverNo}" id="driverNo">
       </div>
     </c:forEach>
-    
 <form>
 <input type="hidden" name="callNo" id="callNo" value="${callNo}">
+<input type="hidden" value="${driverNoResult}" name=driverNoResult>
 <button type="button" class="btn btn-full bg-blue-dark rounded-xs text-uppercase font-700 w-100 btn-s mt-4" onclick="deleteCall()">취소</button>
 </form>
+<input type="hidden" value="${user.userNo}" id="userNo">
+</div>
 </div>
 </div>
 </body>
 <script>
 
+var passengerNo = document.getElementById('userNo').value;
+console.log(passengerNo);
+
+var socket = new SockJS('/websoket');
+var stompClient = Stomp.over(socket);
+var modal = document.getElementById('notification-bar-6');
+var confirmBtn = document.getElementById('confirmButton');
+
+
+stompClient.connect({}, function(frame) {
+   console.log('Connected: ' + frame);
+    confirmBtn.onclick = function() {
+        window.location.href = '/callres/drivingP.jsp';
+    }
+    stompClient.subscribe('/topic/startnotifications/' + passengerNo, function(notification) {
+       var messageElement = document.getElementById('notificationMessage');
+        if (messageElement) {
+            messageElement.innerText = notification.body;
+            console.log(notification.body);
+            showModal(); // 모달 표시
+        } else {
+            console.error('notificationMessage element not found');
+        }
+    });
+});
+
+function showModal() {
+    // Bootstrap의 Toast 컴포넌트를 활용하여 모달 표시
+    var toastEl = new bootstrap.Toast(modal, {
+        autohide: false // 자동 숨김 비활성화
+    });
+    toastEl.show();
+}
 document.addEventListener('DOMContentLoaded', function() {
 	
 	var callNo = document.getElementById('callNo').value;
@@ -65,27 +126,83 @@ document.addEventListener('DOMContentLoaded', function() {
     window.callNo = {
     		callNo: callNo
             };
+    
 });
 
 
 function removeMessage() {
-
-	   alert("배차에 실패하였습니다.");
-	   $("form").attr("method" , "POST").attr("action" , "/callreq/deleteCall").submit();
+	   var message = '배차에 실패하였습니다';
+	   messageAlert(message)
+	   $("form").attr("method" , "GET").attr("action" , "/callreq/deleteCall").submit();
 }
 
 function deleteCall(){
 	
-	 var result = confirm("배차 탐색을 취소하시겠습니까?");
+	 var message = '배차 탐색을 취소하시겠습니까?';
+	 confirmAlert(message);
 
-	  if (result == true) {
-		  $("form").attr("method" , "POST").attr("action" , "/callreq/deleteCall").submit();
-	  } else {
-
-	  }  
 }
+function messageAlert(message) {
+	   var toastContainer = document.createElement('div');
+	     toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+	         '<div class="toast-body px-3 py-3">' +
+	         '<div class="d-flex">' +
+	         '<div class="align-self-center">' +
+	         '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+	         '</div>' +
+	         '<div class="align-self-center">' +
+	         '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+	         '</div>' +
+	         '</div><br>' +
+	         '<a href="#" data-bs-dismiss="toast" id="confirmBtn" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
+	         '</div>' +
+	         '</div>';
 
-function connectWebSocket() {
+	     document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+	     
+	     document.getElementById('confirmBtn').addEventListener('click', function () {
+	         // Remove the toast element from the DOM
+	         document.getElementById('notification-bar-5').remove();
+	     });
+	     $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+	}
+	
+function confirmAlert(message) {
+    var toastContainer = document.createElement('div');
+      toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+          '<div class="toast-body px-3 py-3">' +
+          '<div class="d-flex">' +
+          '<div class="align-self-center">' + 
+          '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+          '</div>' +
+          '<div class="align-self-center">' +
+          '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+          '</div>' +
+          '</div><br>' +
+          '<div class="row">' +
+          '<div class="col-6">' +
+          '<a href="#" id="cancel" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">아니오</a>' +
+          '</div>' +
+          '<div class="col-6">' +
+          '<a href="#" id="ok" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">예</a>' +
+          '</div>' +
+          '</div>' +
+          '</div>' +
+          '</div>';
+
+      document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+      
+      document.getElementById('cancel').addEventListener('click', function () {
+          // Remove the toast element from the DOM
+          document.getElementById('notification-bar-5').remove();
+      });
+      document.getElementById('ok').addEventListener('click', function () {
+    	  $("form").attr("method" , "GET").attr("action" , "/callreq/deleteCall").submit();
+    	  
+      });
+      $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+ }
+/*function connectWebSocket() {
     var socket = new SockJS('/ws'); // '/ws'는 서버의 웹소켓 연결 URL
     stompClient = Stomp.over(socket);
 
@@ -123,7 +240,7 @@ function sendLocationToServer(driverNo) {
       console.error("Websocket is not connected.");
   }
 }
-connectWebSocket();
+connectWebSocket();*/
 
 </script>
 </html>
