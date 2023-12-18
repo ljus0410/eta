@@ -31,7 +31,7 @@
 
 <script type="text/javascript">
 	window.closeModal = function() {
-	 $( '#menu-register' ).offcanvas( 'hide' );
+	 $( '#menu-report' ).offcanvas( 'hide' );
 	}
 	window.removeReport= function () {
 	$( "button:contains('신고')").remove();
@@ -160,7 +160,7 @@ $(function () {
 
 							<button type="button"
 								class="btn btn-xxs border-red-dark color-red-dark"
-								data-bs-toggle="offcanvas" data-bs-target="#menu-register"
+								data-bs-toggle="offcanvas" data-bs-target="#menu-report"
 								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 0px">신고</button>
 						</div>
 					</div>
@@ -171,7 +171,7 @@ $(function () {
 
 			<div
 				class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme"
-				style="width: 340px;" id="menu-register">
+				style="width: 340px;" id="menu-report">
 				<div class="content">
 					<iframe
 						src="/feedback/addReport?badCallNo=${star.callNo }&${param.userNo}"

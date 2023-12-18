@@ -80,12 +80,14 @@ $(function () {
 						<p>${notice.noticeDetail }
 					</div>
 				</div>
+				<c:if test="${user.role eq 'admin'}">
 				<div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
 					<a class="btn btn-xxs border-blue-dark color-blue-dark"
 									style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-right: 10px ">수정</a>
 					<a class="btn btn-xxs border-red-dark color-red-dark"
 									style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-right: 20px">삭제</a>
 				</div>
+				</c:if>
 			</div>
 
 		</div>

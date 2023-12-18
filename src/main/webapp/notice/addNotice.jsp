@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,15 +29,16 @@
 
 <script type="text/javascript">
 $(function () {
-	let notificationToast = new bootstrap.Toast($("#toast-bottom-4"));
-	 
+	let notificationToast = new bootstrap.Toast($("#toast-notice-add"));
+	let noticeTitleToast = new bootstrap.Toast($("#toast-notice-title-reject"));
+	let noticeDetailToast = new bootstrap.Toast($("#toast-notice-detail-reject"));
 	$("a:contains('등록')").on("click", function() {
 		
 		 
 		if($("input:text[name='noticeTitle']").val() != ''){
 			
 			if($("textarea[name='noticeDetail']").val() != ''){
-				$(this).attr('data-toast','toast-bottom-4');
+				
 				
 				notificationToast.show();
 				
@@ -45,10 +47,10 @@ $(function () {
 		            init_template();
 		        }, 1000); 
 			}else{
-				alert('내용을 입력해주세요')
+				noticeDetailToast.show()
 			}
 		}else{
-			alert('제목을 입력해주세요')
+			noticeTitleToast.show()
 		}
       
     });
@@ -78,8 +80,10 @@ $(function () {
 						<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;공지사항
 						/
 					</h1>
+					
+					
 					<h3 class="font-400 mb-0"style="display: inline-block;">등록</h3>
-
+					
 					</div>
 				</div>
 
@@ -109,13 +113,49 @@ $(function () {
 					</div>
 				</div>
 				
-
+				
 				<a class="btn-full btn bg-blue-dark" 
 					style="float: right; margin-right: 15px; padding-top: 5px; padding-bottom: 5px;">등록</a>
 				
 
 			</div>
-		<div id="toast-bottom-4"  class="toast toast-pill toast-bottom toast-s rounded-l bg-blue-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>등록되었습니다!</span></div>
+		<div id="toast-notice-add"  class="toast toast-pill toast-bottom toast-s rounded-l bg-blue-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>등록되었습니다!</span></div>
+		
+			<div id="toast-notice-title-reject"
+					class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s"
+					data-bs-delay="3000">
+					<div class="align-self-center">
+						<i
+							class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+					</div>
+					<div class="align-self-center">
+						<strong class="font-13 mb-n2">미입력 오류</strong> <span
+							class="font-10 mt-n1 opacity-70">공지사항 제목을 입력해주세요.</span>
+					</div>
+					<div class="align-self-center ms-auto">
+						<button type="button"
+							class="btn-close btn-close-white me-2 m-auto font-9"
+							data-bs-dismiss="toast"></button>
+					</div>
+				</div>
+				<div id="toast-notice-detail-reject"
+					class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s"
+					data-bs-delay="3000">
+					<div class="align-self-center">
+						<i
+							class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+					</div>
+					<div class="align-self-center">
+						<strong class="font-13 mb-n2">미입력 오류</strong> <span
+							class="font-10 mt-n1 opacity-70">공지사항 내용을 입력해주세요.</span>
+					</div>
+					<div class="align-self-center ms-auto">
+						<button type="button"
+							class="btn-close btn-close-white me-2 m-auto font-9"
+							data-bs-dismiss="toast"></button>
+					</div>
+				</div>
+		
 		</div>
 		
 	</form>
