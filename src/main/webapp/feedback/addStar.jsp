@@ -3,24 +3,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" ></script>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style"
+	content="black-translucent">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<title>별점 등록</title>
+<link rel="stylesheet" type="text/css"
+	href="/templates/styles/bootstrap.css">
+<link rel="stylesheet" type="text/css"
+	href="/templates/fonts/bootstrap-icons.css">
+<link rel="stylesheet" type="text/css"
+	href="/templates/styles/style.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap"
+	rel="stylesheet">
+<link rel="manifest" href="/templates/_manifest.json">
+<meta id="theme-check" name="theme-color" content="#FFFFFF">
+<link rel="apple-touch-icon" sizes="180x180"
+	href="/templates/app/icons/icon-192x192.png">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/templates/scripts/bootstrap.min.js"></script>
+<script src="/templates/scripts/custom.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 <script type="text/javascript">
 	window.closeModal = function() {
-	 $( '#reportModal' ).modal( 'hide' );
+	 $( '#menu-register' ).offcanvas( 'hide' );
+	}
+	window.removeReport= function () {
+	$( "button:contains('신고')").remove();
 	}
 $(function () {
 		
-		$("a:contains('추가하기')").on("click",function(){
+		$("a:contains('등록')").on("click",function(){
 			let data = {
 					driverNo : ${star.driverNo},
 					callNo : ${star.callNo},
-					star :  $("select[name='star']").val()
+					star :  $("input:radio[checked='checked']").val()
 			}
 			$.ajax(
 					{
@@ -42,54 +64,121 @@ $(function () {
 			            }
 					})
 		})
-		$('a:contains("홈")').on("click",function(){
-		self.location = "/"
+		
+		$("input:radio[name='star']").on("click",function(){
+			
+			$("input:radio[checked='checked']").removeAttr("checked");
+			$(this).attr("checked", true)
+			let starValue = $(this).val();
+			for (let i = 1; i <= 5; i++) {
+	            let starSpan = $("#star" + i).siblings("span");
+	
+	            if (i <= starValue) {
+	                // 선택한 별 이하의 별에 클래스 추가
+	                starSpan.removeClass("is-unchecked color-gray-dark bi bi-star");
+	                starSpan.addClass("is-checked color-yellow-dark bi bi-star-fill");
+	            } else {
+	                // 선택하지 않은 별에 클래스 추가
+	                starSpan.removeClass("is-checked color-yellow-dark bi bi-star-fill");
+	                starSpan.addClass("is-unchecked color-gray-dark bi bi-star");
+	            }
+       	 	}
+			
+		})
+		
 	})
 </script>
 </head>
-<body>
-<form name="detailform">
-<a>홈</a></br></br>
-드라이버번호<input type="text" name ="driverNo" readonly="readonly" value ="${star.driverNo }"></br>
-배차번호<input type="text" name ="callNo" readonly="readonly" value="${star.callNo }"></br>
+<body class="theme-light">
+	<form name="detailform">
+		<div id="page">
+			<jsp:include page="/home/top.jsp" />
+			<div class="page-content header-clear-medium">
+				<div class="card card-style" style="margin-bottom: 15px;">
+					<div class="content" style="margin-bottom: 9px;">
+						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
-<select 	name="star" >
-	<option value="0" >선택안함</option>
-	<option value="1" >1 점</option>
-	<option value="2" >2 점</option>
-	<option value="3" >3 점</option>
-	<option value="4" >4 점</option>
-	<option value="5" >5 점</option>
-</select>
-<a>추가하기</a>
+						<h1 class="pb-2" style="width: 140px; display: inline-block;">
+							<i class="has-bg rounded-s bi bg-yellow-dark bi-star">&nbsp;</i>&nbsp;&nbsp;별점등록
+							/
+						</h1>
+						<h3 class="font-400 mb-0" style="display: inline-block;">배차번호
+							: ${star.callNo }</h3>
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reportModal">
-    신고하기
-</button>
+					</div>
+				</div>
+				<div class="card card-style mb-3">
+					<div class="content">
 
-<div class="modal" id="reportModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
+						<input type="hidden" name="driverNo" value="${star.driverNo }">
+						<input type="hidden" name="callNo" value="${star.callNo }">
+						<i class="has-bg rounded-s bi bg-blue-dark bi-person-fill"
+							style="font-size: 20px"></i>&nbsp;
+						<h5 class="font-300 mb-0" style="display: inline-block;">${star.driverNo }</h5>
+						<div class="mb-3 pb-2"></div>
+						<div class="mb-3 pb-2"></div>
+						<h3 class="font-400 mb-0" align="center">운행만족도를 별점으로 남겨주세요 :)</h3>
+						<div class="mb-3 pb-2"></div>
+						<div class="rating" align="center">
+							<label class="rating__label rating__label--full" for="star1"
+								style="padding: 2px"> <input type="radio" id="star1"
+								class="rating__input" name="star" value="1"
+								style="display: none"> <span
+								class="is-unchecked color-gray-dark bi bi-star"
+								style="font-size: 30px"></span>
+							</label> <label class="rating__label rating__label--full" for="star2"
+								style="padding: 2px"> <input type="radio" id="star2"
+								class="rating__input" name="star" value="2"
+								style="display: none"> <span
+								class="is-unchecked color-gray-dark bi bi-star"
+								style="font-size: 30px"></span>
+							</label> <label class="rating__label rating__label--full" for="star3"
+								style="padding: 2px"> <input type="radio" id="star3"
+								class="rating__input" name="star" value="3"
+								style="display: none"> <span
+								class="is-unchecked color-gray-dark bi bi-star"
+								style="font-size: 30px"></span>
+							</label> <label class="rating__label rating__label--full" for="star4"
+								style="padding: 2px"> <input type="radio" id="star4"
+								class="rating__input" name="star" value="4"
+								style="display: none"> <span
+								class="is-unchecked color-gray-dark bi bi-star"
+								style="font-size: 30px"></span>
+							</label> <label class="rating__label rating__label--full" for="star5"
+								style="padding: 2px"> <input type="radio" id="star5"
+								class="rating__input" name="star" value="5"
+								style="display: none"> <span
+								class="is-unchecked color-gray-dark bi bi-star"
+								style="font-size: 30px"></span>
+							</label>
+						</div>
+						<div class="mb-3 pb-2"></div>
+						<div class="mb-3 pb-2"></div>
+						<div align="right">
+							<a class="btn btn-xxs border-blue-dark color-blue-dark"
+								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">등록</a>
 
-            <!-- 모달 헤더 -->
-            <div class="modal-header">
-                <h4 class="modal-title">신고하기</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
+							<button type="button"
+								class="btn btn-xxs border-red-dark color-red-dark"
+								data-bs-toggle="offcanvas" data-bs-target="#menu-register"
+								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 0px">신고</button>
+						</div>
+					</div>
 
-            <!-- 모달 내용 (iframe으로 JSP 페이지 띄우기) -->
-            <div class="modal-body">
-                <iframe src="/feedback/addReport?badCallNo=${star.callNo }" style="width: 100%; height: 400px; border: none;"></iframe>
-            </div>
+				</div>
+			</div>
 
-            <!-- 모달 닫기 버튼 -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">닫기</button>
-            </div>
 
-        </div>
-    </div>
-</div>
-</form>
+			<div
+				class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme"
+				style="width: 340px;" id="menu-register">
+				<div class="content">
+					<iframe
+						src="/feedback/addReport?badCallNo=${star.callNo }&${param.userNo}"
+						style="width: 100%; height: 400px; border: none;"></iframe>
+				</div>
+			</div>
+		</div>
+	</form>
 </body>
 </html>
