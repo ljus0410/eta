@@ -39,7 +39,8 @@ window.removeReport= function () {
 
 
 $(function () {
-	
+	let blacklistAddToast = new bootstrap.Toast($("#toast-blacklist-add"));
+	let blacklistDelToast = new bootstrap.Toast($("#toast-blacklist-del"));
 	$('input:checkbox').on( "click", function(){
 		let data = {
 				driverNo :  $("input:hidden[name=driverNo]").val(),
@@ -62,7 +63,7 @@ $(function () {
 					success: function (result) {
 		                // 요청이 완료되면 호출되는 콜백
 	                	if(result === 1){
-	                		alert('블랙리스트 취소하였습니다.');	
+	                		blacklistDelToast.show();
 	                	}
 		               	
 		            }
@@ -84,7 +85,7 @@ $(function () {
 					success: function (result) {
 		                // 요청이 완료되면 호출되는 콜백
 	                	if(result === 1){
-	                		alert('블랙리스트 등록하였습니다.');		
+	                		blacklistAddToast.show();	
 	                	}  	
 		            }
 				})
@@ -126,6 +127,8 @@ $(function () {
 											value=${blacklistList.blacklistCode }> <input
 											type="hidden" name="passengerNo"
 											value="${blacklistList.passengerNo }"> <input
+											type="hidden" name="driverNo"
+											value="${blacklistList.driverNo }"><input
 											type="checkbox" class="ios-input"
 											id="switch-4a${blacklistList.passengerNo }"
 											${ ! empty blacklistList.blacklistCode && blacklistList.blacklistCode eq "true" ? "checked='checked'" : "" }>
@@ -166,6 +169,8 @@ $(function () {
 				</div>
 			</div>
 		</div>
+		<div id="toast-blacklist-add"  class="toast toast-pill toast-bottom toast-s rounded-l bg-blue-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>등록되었습니다!</span></div>
+		<div id="toast-blacklist-del"  class="toast toast-pill toast-bottom toast-s rounded-l bg-green-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>해제되었습니다!</span></div>
 	</form>
 </body>
 </html>

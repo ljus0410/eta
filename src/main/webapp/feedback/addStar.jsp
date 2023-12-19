@@ -37,7 +37,7 @@
 	$( "button:contains('신고')").remove();
 	}
 $(function () {
-		
+	let starAddToast = new bootstrap.Toast($("#toast-star-add"));
 		$("a:contains('등록')").on("click",function(){
 			let data = {
 					driverNo : ${star.driverNo},
@@ -58,7 +58,7 @@ $(function () {
 						complete: function (xhr, status) {
 			                // 요청이 완료되면 호출되는 콜백
 			                if(xhr.status == 200){
-			                	alert('등록되었습니다!')
+			                	starAddToast.show();	
 			                }
 			                	
 			            }
@@ -179,6 +179,7 @@ $(function () {
 				</div>
 			</div>
 		</div>
+		<div id="toast-star-add"  class="toast toast-pill toast-bottom toast-s rounded-l bg-blue-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>등록되었습니다!</span></div>
 	</form>
 </body>
 </html>
