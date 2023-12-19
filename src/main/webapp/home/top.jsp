@@ -21,6 +21,8 @@
  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="/templates/scripts/bootstrap.min.js"></script>
 <script src="/templates/scripts/custom.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+ <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
   <style>
         .dropdown-menu {
@@ -31,233 +33,11 @@
        .dropdown-menu a {
       color: rgba(0, 0, 0, 0.8); /* 메뉴 텍스트 색상을 검은색으로 설정합니다. */
     }
+    .content2 {
+  position: relative;
+  margin: 15px 15px 15px 15px;
+}
   </style>
-  
-  
-  <script type="text/javascript">
-  $(document).ready(function() {
-      // id가 "logoutLink"인 요소에 클릭 이벤트를 추가 
-      $("#logOutButton").on("click", function() {
-          // 쿠키에서 토큰 값을 가져옴
-          var naverAccessToken = getCookie("naverAccessToken");
-           console.log("Naver Access Token:", naverAccessToken);
-          // 로그아웃 URL 구성 (토큰 값이 있다면 추가)
-          var logoutUrl = "/user/kakao-logOut" + (naverAccessToken ? "?token=" + encodeURIComponent(naverAccessToken) : "");
-
-          // 페이지 이동
-          window.location.href = logoutUrl;
-      });
-
-      // 쿠키에서 특정 이름의 값을 가져오는 함수
-      function getCookie(name) {
-          var value = "; " + document.cookie;
-          var parts = value.split("; " + name + "=");
-          if (parts.length == 2) return parts.pop().split(";").shift();
-      }
-  
-  });
-  
-  $(document).ready(function() {
-  $(function() {
-	  //로그인
-       document.getElementById('loginButton').addEventListener('click', function(event) {
-        event.preventDefault(); // 기본 동작을 막음 (링크의 href로 이동하는 것을 막음)
-
-        // 오프캔버스 모달을 토글
-        var menuLoginOffcanvas = new bootstrap.Offcanvas(document.getElementById('menu-login'));
-        menuLoginOffcanvas.show();
-    });
-  });
-  
-  $(function() {
-    //즐겨찾기
-    $(".getLike-AddrList").on("click", function() {
-    	 alert('즐겨찾기을 클릭했습니다!');
-        self.location = "/callreq/likeAddress?userNo=${user.userNo}";
-    });
-    //신고내역
-    $(".report-list").on("click", function() {
-    	alert('신고내역 클릭했습니다!');
-        self.location = "/feedback/listReport"
-    }); 
-    //내정보
-    $(".get-User").on("click", function() {
-    	alert('내정보 클릭했습니다!');
-        self.location = "/user/getUser?userNo=${user.userNo}"
-    });
-    
-    //Tpay 이용내역
-    $(".tpay-charge").on("click", function() {
-    	 alert('이용내역 클릭했습니다!');
-        self.location = "/pay/TpayList?userNo=${user.userNo}&month=all"
-    });
-    
-    //공지사항
-    $(".info-notice").on("click", function() {
-    	alert('공지사항 클릭했습니다!');
-        self.location = "/notice/listNotice"
-    });
-    
-    //합승
-    $(".taxi-toge").on("click", function() {
-    	alert('합승 클릭했습니다!');
-        self.location = "/community/getShareList"
-    });
-    
-    //예약 
-    $(".reserva-tion").on("click", function() {
-    	alert('예약 클릭했습니다!');
-        self.location = "/callres/getReservationList"
-    });
-    //회원리스트
-    $(".user-list").on("click", function() {
-    	alert('user 클릭했습니다!');
-        self.location = "/user/listUser"
-    });
-    //이용내역=getRecordList?
-    $(".get-use").on("click", function() {
-    	alert('이용내역 클릭했습니다!');
-        self.location = "/callres/getRecordList"
-    });
-    //운행기록=getCallResList?
-    $(".get-driving").on("click", function() {
-    	alert('운행기록 클릭했습니다!');
-        self.location = "/callres/getRecordList"
-    });
-    //정산내역
-    $(".my-money").on("click", function() {
-    	alert('정산내역 클릭했습니다!');
-        self.location =  "/pay/myCashList?userNo=${user.userNo}&month=all"
-    }); 
-    //정산승인
-    $(".settlement-approval").on("click", function() {
-    	alert('정산승인 클릭했습니다!');
-        self.location = "/pay/cashDriverList?month=all"
-    });
-    //회원가입
-    $('#createAccountLink').on('click', function() {
-    	alert('회원가입 클릭했습니다!');
-        self.location = "/user/addUser"
-    });
-
-
-  
-  document.getElementById("dropdownMenuButton").addEventListener("click", function(e) {
-      e.preventDefault(); // 클릭 이벤트의 기본 동작을 막음
-      e.stopPropagation(); // 이벤트 버블링을 중지
-      // 여기에 드롭다운 메뉴를 표시하는 로직 추가 가능
-    });
-});
-  });
-  //로그인 부분
-  $(document).ready(function() {
-	    $("#loginBtn").on("click", function() {
-	        var id = $("#c1").val();
-	        var pw = $("#c2").val();
-	        var warningMessage = $("#warningMessage"); // 메시지를 동적으로 변경할 요소
-
-	        if (id == null || id.length < 1) {
-	            // 얼럿(alert) 대신 모달(offcanvas) 표시
-	            warningMessage.text('ID를 입력하지 않으셨습니다.');
-	            $('#loginWarning').offcanvas('show');
-	            $("#c1").focus();
-	            return;
-	        }
-
-	        if (pw == null || pw.length < 1) {
-	            // 얼럿(alert) 대신 모달(offcanvas) 표시
-	            warningMessage.text('패스워드를 입력하지 않으셨습니다.');
-	            $('#loginWarning').offcanvas('show');
-	            $("#c2").focus();
-	            return;
-	        }
-
-	        // 서버로 로그인 요청을 보냄
-	        $.ajax({
-	            type: "POST",
-	            url: "/user/json/login", // 수정이 필요할 수 있음
-	            contentType: "application/json",
-	            data: JSON.stringify({
-	                email: id,
-	                pwd: pw
-	            }),
-	            success: function(data) {
-	            	console.log("data: "+data.success);
-	            	 if (data.success) {
-	                     // 성공 메시지 처리
-	                     showSuccessModal(data.success);
-	                 } else if (data.fail || data.ment) {
-	                     // 실패 메시지 처리 (fail 또는 ment 중 하나라도 존재할 경우)
-	                     showLoginFailed(data.fail || data.ment);
-	            	    }
-	            	},
-	            error: function(xhr, status, error) {
-	                // 서버 오류 등의 예외 처리
-	                showLoginFailed("서버 오류가 발생했습니다");//이메일과 비밀번호를 확인해 주세요
-	                console.error("Ajax request failed:", status, error);
-	            }
-	        });
-	    });
-	});
-
-  
-  function showSuccessModal(message) {
-	    // 모달에 동적으로 메시지 설정
-	    var menuSuccess = new bootstrap.Offcanvas(document.getElementById('menu-success'));
-	    var successMessage = menuSuccess._element.querySelector('.opacity-90'); // 성공 메시지가 있는 요소 선택
-	    successMessage.textContent = message;
-	    menuSuccess.show();
-	}
-
-
-  $( function() {
-      $("#confirmationButton").on("click" , function() {
-    	  $("form").attr("method", "POST").attr("action", "/user/login").submit();
-      });
-    });
-
-	        
-  function showLoginFailed(message) {
-	    // 모달에 동적으로 메시지 설정 및 표시
-	    var loginWarning = new bootstrap.Offcanvas(document.getElementById('menu-warning'));
-	    var warningMessage = document.getElementById('menu-warning').querySelector('.opacity-60'); // 경고 메시지가 있는 요소 선택
-	    warningMessage.textContent = message;
-	    loginWarning.show();
-	}
-
-  function deleteUserView() {
-
-	    self.location = '/user/deleteUserView';
-
-	    }
-  
-//비밀번호 확인
-function checkPassword() {
-    var password1 = document.getElementById('ca1').value;
-    var password2 = document.getElementById('ca2').value;
-    var passwordMatchMessage = document.getElementById('passwordMatchMessage');
-
-    if (password2 === "") {
-        passwordMatchMessage.innerHTML = '비밀번호를 입력하세요.';
-        passwordMatchMessage.style.color = 'red';  // 일치하지 않을 때의 메시지 색상
-        return;
-    }
-
-    // 비밀번호 일치 여부 확인
-    if (password1 === password2) {
-        passwordMatchMessage.innerHTML = '비밀번호가 일치합니다.';
-        passwordMatchMessage.style.color = 'blue';  // 일치할 때의 메시지 색상
-        submitForm();
-    } else {
-        passwordMatchMessage.innerHTML = '비밀번호가 일치하지 않습니다.';
-        passwordMatchMessage.style.color = 'red';  // 일치하지 않을 때의 메시지 색상
-    }
-}
-function submitForm() {
-    // 비밀번호가 일치하면 현재 페이지를 지정된 URL로 전환    
-    self.location = "/user/deleteUserView"
-}
-    </script>
   
 </head>
 
@@ -348,7 +128,7 @@ function submitForm() {
 </div>
 
 <div class="dropdown dropend">
-<a id="dropdownMenuButton" data-bs-toggle="dropdown" style="font-size: 18px;">
+<a id=topdropdown data-bs-toggle="dropdown" style="font-size: 18px;">
     <c:if test="${user.role ne null and user.role ne 'admin'}">
         <i class="bi bi-person-square color-black pe-3 font-20"></i>
         <strong>
@@ -359,7 +139,7 @@ function submitForm() {
         </strong>
     </c:if>
 </a>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <ul class="dropdown-menu" aria-labelledby=topdropdown>
         <c:if test="${user.role eq 'passenger'}">
             <li><a class="dropdown-item getLike-AddrList" href="#">즐겨찾기</a></li>
         </c:if>
@@ -398,33 +178,46 @@ function submitForm() {
 
     
 <form>
+
 <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-login">
     <div class="content">
       <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
       <h1 class="font-24 font-800 mb-3">Login</h1>
       <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
         <i class="bi bi-person-circle font-13"></i>
-        <input type="text" class="form-control rounded-xs" id="c1" name="email" placeholder="email" />
+        <input type="text" class="form-control rounded-xs" id="email" name="email" placeholder="email" />
       </div>
       <div class="form-custom form-label form-border form-icon mb-4 bg-transparent">
         <i class="bi bi-asterisk font-13"></i>
-        <input type="password" class="form-control rounded-xs" id="c2" name="pwd" placeholder="Password"/>
+        <input type="password" class="form-control rounded-xs" id="pwd" name="pwd" placeholder="Password"/>
 
       </div>
-      <a href="#" id="loginBtn" class="btn btn-full gradient-green shadow-bg shadow-bg-s mt-4">SIGN IN</a>
-      <div class="row">
+     
+    
+      
+     <div style="text-align: center; margin: -18px auto 0;">
+    <a href="#" id="loginBtn" style="color: white; width: 250px; display: inline-block;" class="btn-full gradient-blue mt-1">SIGN IN</a>
+
+    <a href="#" id="kakao" class="btn-full mt-1">
+        <img src="/images/kakao.png" class="btn-full" data-bs-toggle="offcanvas" data-bs-target="#menu-kakao" style="width: 250px; height: 24px; display: block; margin: 0 auto;" />
+    </a>
+
+    <a href="#" id="naver" class="btn-full mt-1">
+        <img src="/images/naver.png" class="btn-full" data-bs-toggle="offcanvas" data-bs-target="#menu-role" style="width: 250px; height: 24px; display: block; margin: 0 auto;" />
+    </a>
+</div>
+      <div class="row" style="margin: -18px auto 0;">
         <div class="col-6 text-start">
-          <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-forgot" class="font-11 color-theme opacity-40 pt-3 d-block">Forgot Password?</a>
+          <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-forgot" class="font-11 color-theme opacity-40 pt-3 d-block"">비밀번호 찾기</a>
         </div>
         <div class="col-6 text-end">
-          <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-register" class="font-11 color-theme opacity-40 pt-3 d-block" id="createAccountLink">>Create Account</a>
-        </div>
+          <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-role" class="font-11 color-theme opacity-40 pt-3 d-block">>회원가입</a>
+        </div>     
       </div>
     </div>
    </div>
-   
-   
-  
+ 
+  </form> 
    <!-- 로그인 실패 모달 -->
  <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-warning">
      <div class="gradient-red px-3 py-3">
@@ -467,27 +260,34 @@ function submitForm() {
       <h1 class="font-24 font-800 mb-3">내정보</h1>
       <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
         <i class="bi bi-person-circle font-13"></i>
-        <input type="text" class="form-control rounded-xs readonly" id="c1" value = "${user.name}" readonly placeholder="${user.name}" />
+        <input type="text" class="form-control rounded-xs readonly" id="c1" value = "${user.name}" readonly />
         <label for="c1" class="color-theme">Name</label>
   <span>name</span>
       </div>
       <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
         <i class="bi bi-at font-17"></i>
-        <input type="text" class="form-control rounded-xs readonly" id="c1" value = "${user.email}" readonly  placeholder="${user.email}" />
+        <input type="text" class="form-control rounded-xs readonly" id="c2" value = "${user.email}" readonly   />
         <label for="c1" class="color-theme">Email</label>
   <span>email</span>
       </div>
+     
+      <c:if test="${user.role eq 'passenger'}">
       <div class="form-custom form-label form-border form-icon mb-4 bg-transparent">
         <i class="bi bi bi-currency-dollar font-13"></i>
-        <input type="text" class="form-control rounded-xs readonly" id="c2" value ="${user.myMoney}원" readonly placeholder="${user.myMoney}" />
+        <input type="text" class="form-control rounded-xs readonly" id="c3" value ="${money}원" readonly />
         <label for="c2" class="color-theme">myMoney</label>
   <span>Tpay</span>
       </div>
+      </c:if>
       <a href="#" class="btn btn-full get-User gradient-blue shadow-bg shadow-bg-s mt-4">더보기</a>
     </div>
    </div>
+  
    
-   <<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-register2">
+  
+   
+   
+   <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-register2">
     <div class="content">
         <h1 class="font-24 font-800 mb-3">비밀번호변경</h1>
         
@@ -504,7 +304,320 @@ function submitForm() {
     </div>
 </div>
     
- </form>
+ 
+  <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px; height:240px;" id="menu-role">
+    <div class="content2 text-center">
+      <div class="d-flex pb-2">
+        <div class="align-self-center">
+          <h4 class="font-700">회원가입</h4>
+        </div>
+      </div>
+      <div class="list-group list-custom list-group-m rounded-xs list-group-flush bg-theme">     
+      </div>
+    </div>
+    <div class="card card-style" style="display: flex; align-items: flex-start; margin-top:-20px;">
 
+  <div class="content mb-0">
+    <div class="row" style="display: flex; align-items: center;">
+
+      <div class="col text-center" id="passenger">
+        <img src="../images/신한.png" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
+        <p style = "align-left:40px;" class="font-600 color-theme font-12 pb-3">passenger</p>
+      </div>
+
+      <div class="col text-center" id="driver">
+        <img src="../images/신한.png" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
+        <p  class="font-600 color-theme font-12 pb-3">driver</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+   </div>
+    
+ <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px; height:240px;" id="menu-kakao">
+    <div class="content2 text-center">
+      <div class="d-flex pb-2">
+        <div class="align-self-center">
+          <h4 class="font-700">회원가입</h4>
+        </div>
+      </div>
+      <div class="list-group list-custom list-group-m rounded-xs list-group-flush bg-theme">     
+      </div>
+    </div>
+    <div class="card card-style" style="display: flex; align-items: flex-start; margin-top:-20px;">
+
+  <div class="content mb-0">
+    <div class="row" style="display: flex; align-items: center;">
+
+      <div class="col text-center" id="kakaopaseen">
+        <img src="../images/신한.png" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
+        <p style = "align-left:40px;" class="font-600 color-theme font-12 pb-3">passenger</p>
+      </div>
+
+      <div class="col text-center" id="kakaodriver">
+        <img src="../images/신한.png" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
+        <p  class="font-600 color-theme font-12 pb-3">driver</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+   </div>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 </body>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+      // id가 "logoutLink"인 요소에 클릭 이벤트를 추가 
+      $("#logOutButton").on("click", function() {
+          // 쿠키에서 토큰 값을 가져옴
+          var naverAccessToken = getCookie("naverAccessToken");
+           console.log("Naver Access Token:", naverAccessToken);
+          // 로그아웃 URL 구성 (토큰 값이 있다면 추가)
+          var logoutUrl = "/user/kakao-logOut" + (naverAccessToken ? "?token=" + encodeURIComponent(naverAccessToken) : "");
+
+          // 페이지 이동
+          window.location.href = logoutUrl;
+      });
+
+      // 쿠키에서 특정 이름의 값을 가져오는 함수
+      function getCookie(name) {
+          var value = "; " + document.cookie;
+          var parts = value.split("; " + name + "=");
+          if (parts.length == 2) return parts.pop().split(";").shift();
+      }
+  
+  });
+  
+  $(document).ready(function() {
+  $(function() {
+    //로그인
+       document.getElementById('loginButton').addEventListener('click', function(event) {
+        event.preventDefault(); // 기본 동작을 막음 (링크의 href로 이동하는 것을 막음)
+
+        // 오프캔버스 모달을 토글
+        var menuLoginOffcanvas = new bootstrap.Offcanvas(document.getElementById('menu-login'));
+        menuLoginOffcanvas.show();
+    });
+  });
+  
+  $(function() {
+    //즐겨찾기
+    $(".getLike-AddrList").on("click", function() {
+      
+        self.location = "/callreq/likeAddress?userNo=${user.userNo}";
+    });
+    //신고내역
+    $(".report-list").on("click", function() {
+      
+        self.location = "/feedback/listReport"
+    }); 
+    //내정보
+    $(".get-User").on("click", function() {
+      
+        self.location = "/user/getUser?userNo=${user.userNo}"
+    });
+    
+    //Tpay 이용내역
+    $(".tpay-charge").on("click", function() {
+       
+        self.location = "/pay/TpayList?userNo=${user.userNo}&month=all"
+    });
+    
+    //공지사항
+    $(".info-notice").on("click", function() {
+      
+        self.location = "/notice/listNotice"
+    });
+    
+    //합승
+    $(".taxi-toge").on("click", function() {
+      
+        self.location = "/community/getShareList"
+    });
+    
+    //예약 
+    $(".reserva-tion").on("click", function() {
+      
+        self.location = "/callres/getReservationList"
+    });
+    //회원리스트
+    $(".user-list").on("click", function() {
+      
+        self.location = "/user/listUser"
+    });
+    //이용내역=getRecordList?
+    $(".get-use").on("click", function() {
+      
+        self.location = "/callres/getRecordList"
+    });
+    //운행기록=getCallResList?
+    $(".get-driving").on("click", function() {
+      
+        self.location = "/callres/getRecordList"
+    });
+    //정산내역
+    $(".my-money").on("click", function() {
+      
+        self.location =  "/pay/myCashList?userNo=${user.userNo}&month=all"
+    }); 
+    //정산승인
+    $(".settlement-approval").on("click", function() {
+      
+        self.location = "/pay/cashDriverList?month=all"
+    });
+    //회원가입
+    $('#createAccountLink').on('click', function() {
+      
+        self.location = "/user/addUser"
+    });
+    
+    $('#naver').on('click', function() {
+        
+          self.location = "/user/naver-login"
+      });
+    
+     $('#kakaopaseen').on('click', function() {
+        
+          self.location = "/user/kakao-login?role=passenger"
+      }); 
+     $('#kakaodriver').on('click', function() {
+         
+         self.location = "/user/kakao-login?role=driver"
+     });
+    $('#passenger').on('click', function() {
+        
+        self.location = "/user/addUser?role=passenger"
+    });
+    $('#driver').on('click', function() {
+        
+      self.location = "/user/addUser?role=driver"
+    });
+
+ 
+  document.getElementById(topdropdown).addEventListener("click", function(e) {
+      e.preventDefault(); // 클릭 이벤트의 기본 동작을 막음
+      e.stopPropagation(); // 이벤트 버블링을 중지
+      // 여기에 드롭다운 메뉴를 표시하는 로직 추가 가능
+    });
+});
+  });
+  //로그인 부분
+  $(document).ready(function() {
+      $("#loginBtn").on("click", function() {
+          var id = $("#email").val();
+          var pw = $("#pwd").val();
+          var warningMessage = $("#warningMessage"); // 메시지를 동적으로 변경할 요소
+
+          if (id == null || id.length < 1) {
+              // 얼럿(alert) 대신 모달(offcanvas) 표시
+              warningMessage.text('이메일를 입력하지 않으셨습니다.');
+              $('#loginWarning').offcanvas('show');
+              $("#email").focus();
+              return;
+          }
+
+          if (pw == null || pw.length < 1) {
+              // 얼럿(alert) 대신 모달(offcanvas) 표시
+              warningMessage.text('패스워드를 입력하지 않으셨습니다.');
+              $('#loginWarning').offcanvas('show');
+              $("#pwd").focus();
+              return;
+          }
+
+          // 서버로 로그인 요청을 보냄
+          $.ajax({
+              type: "POST",
+              url: "/user/json/login", // 수정이 필요할 수 있음
+              contentType: "application/json",
+              data: JSON.stringify({
+                  email: id,
+                  pwd: pw
+              }),
+              success: function(data) {
+                console.log("data: "+data.success);
+                 if (data.success) {
+                       // 성공 메시지 처리
+                       showSuccessModal(data.success);
+                   } else if (data.fail || data.ment) {
+                       // 실패 메시지 처리 (fail 또는 ment 중 하나라도 존재할 경우)
+                       showLoginFailed(data.fail || data.ment);
+                    }
+                },
+              error: function(xhr, status, error) {
+                  // 서버 오류 등의 예외 처리
+                  showLoginFailed("일치하는 정보가 없습니다");//이메일과 비밀번호를 확인해 주세요
+                  console.error("Ajax request failed:", status, error);
+              }
+          });
+      });
+  });
+
+  
+  function showSuccessModal(message) {
+      // 모달에 동적으로 메시지 설정
+      var menuSuccess = new bootstrap.Offcanvas(document.getElementById('menu-success'));
+      var successMessage = menuSuccess._element.querySelector('.opacity-90'); // 성공 메시지가 있는 요소 선택
+      successMessage.textContent = message;
+      menuSuccess.show();
+  }
+
+
+  $( function() {
+      $("#confirmationButton").on("click" , function() {
+        $("form").attr("method", "POST").attr("action", "/user/login").submit();
+      });
+    });
+
+          
+  function showLoginFailed(message) {
+      // 모달에 동적으로 메시지 설정 및 표시
+      var loginWarning = new bootstrap.Offcanvas(document.getElementById('menu-warning'));
+      var warningMessage = document.getElementById('menu-warning').querySelector('.opacity-60'); // 경고 메시지가 있는 요소 선택
+      warningMessage.textContent = message;
+      loginWarning.show();
+  }
+
+  
+//비밀번호 확인
+function checkPassword() {
+    var password1 = document.getElementById('ca1').value;
+    var password2 = document.getElementById('ca2').value;
+    var passwordMatchMessage = document.getElementById('passwordMatchMessage');
+
+    if (password2 === "") {
+        passwordMatchMessage.innerHTML = '비밀번호를 입력하세요.';
+        passwordMatchMessage.style.color = 'red';  // 일치하지 않을 때의 메시지 색상
+        return;
+    }
+
+    // 비밀번호 일치 여부 확인
+    if (password1 === password2) {
+        passwordMatchMessage.innerHTML = '비밀번호가 일치합니다.';
+        passwordMatchMessage.style.color = 'blue';  // 일치할 때의 메시지 색상
+        submitForm();
+    } else {
+        passwordMatchMessage.innerHTML = '비밀번호가 일치하지 않습니다.';
+        passwordMatchMessage.style.color = 'red';  // 일치하지 않을 때의 메시지 색상
+    }
+}
+function submitForm() {
+    // 비밀번호가 일치하면 현재 페이지를 지정된 URL로 전환    
+    self.location = "/user/updatePwd"
+}
+
+function deleteUserView(){
+   self.location = "/user/deleteUserView"
+}
+    </script>
+  
 </html>

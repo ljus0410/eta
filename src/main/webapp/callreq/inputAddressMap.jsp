@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
 <meta charset="UTF-8">
-<title>input Address Map</title>
+<title>eTa</title>
 <link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
 <link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
@@ -19,6 +20,12 @@
 <meta id="theme-check" name="theme-color" content="#FFFFFF">
 <link rel="apple-touch-icon" sizes="180x180" href="../app/icons/icon-192x192.png">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=70ef6f6883ad97593a97af6324198ac0&libraries=services"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 <script>
 
 var map;
@@ -88,10 +95,12 @@ function getPlaceName(detailAddr) {
                     resolve(detailAddr);
                 }
             } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-                //alert('검색 결과가 존재하지 않습니다.');
+            	  var message = '검색 결과가 존재하지 않습니다';
+                messageAlert(message);
                 resolve(detailAddr);
             } else if (status === kakao.maps.services.Status.ERROR) {
-                alert('검색 결과 중 오류가 발생했습니다.');
+                var message = '검색 결과 중 오류가 발생했습니다';
+                messageAlert(message);
                 resolve(detailAddr);
             }
         });
@@ -122,6 +131,31 @@ function initMap(lat, lng) {
         getAddressFromCoords(lat, lng);
     });
 }
+
+function messageAlert(message) {
+	   var toastContainer = document.createElement('div');
+	     toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+	         '<div class="toast-body px-3 py-3">' +
+	         '<div class="d-flex">' +
+	         '<div class="align-self-center">' +
+	         '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+	         '</div>' +
+	         '<div class="align-self-center">' +
+	         '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+	         '</div>' +
+	         '</div><br>' +
+	         '<a href="#" data-bs-dismiss="toast" id="confirmBtn" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
+	         '</div>' +
+	         '</div>';
+
+	     document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+	     
+	     document.getElementById('confirmBtn').addEventListener('click', function () {
+	         // Remove the toast element from the DOM
+	         document.getElementById('notification-bar-5').remove();
+	     });
+	     $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+	}
 
 document.addEventListener('DOMContentLoaded', function() {
     // 세션 스토리지에서 데이터 가져오기
@@ -206,6 +240,38 @@ document.addEventListener('DOMContentLoaded', function() {
 </head>
 <body class="theme-light">
 <jsp:include page="/home/top.jsp" />
+<c:choose>
+    <c:when test="${empty user.role}">
+        <form name="detailform">
+        <div id="page">
+        <div class="page-content header-clear-medium">
+        <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px ;">
+         <div class="alert border-red-dark alert-dismissible color-red-dark rounded-s fade show" >
+           <i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle"></i>&nbsp;<strong>로그인해주세요.</strong>
+         </div>
+         </div>
+         </div>
+         </div>
+         </div>
+        </form>
+    </c:when>
+   <c:when test="${!empty user.role && user.role eq 'driver'}">
+                 <form name="detailform">
+        <div id="page">
+        <div class="page-content header-clear-medium">
+        <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px ;">
+         <div class="alert border-red-dark alert-dismissible color-red-dark rounded-s fade show" >
+           <i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle"></i>&nbsp;<strong>권한이 없습니다.</strong>
+         </div>
+         </div>
+         </div>
+         </div>
+         </div>
+        </form>
+    </c:when>
+    <c:otherwise>
 <div id="page">
 <div class="page-content header-clear-medium">
 	    <div class="card card-style">
@@ -217,5 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		  </div>
 		</div>
 	</div>
+	</c:otherwise>
+	</c:choose>
 </body>
 </html>

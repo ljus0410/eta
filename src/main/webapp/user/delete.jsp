@@ -7,9 +7,10 @@
 <title>Insert title here</title>
 
 <script>
+
 function checkPasswordAndDeleteUser() {
-    var password = document.getElementById('c1').value;
-    var confirmPassword = document.getElementById('c2').value;
+    var password = document.getElementById('czxc1').value;
+    var confirmPassword = document.getElementById('czxc2').value;
 
     var passwordMessage = document.getElementById('passwordMessage');
     var confirmPasswordMessage = document.getElementById('confirmPasswordMessage');
@@ -31,14 +32,16 @@ function checkPasswordAndDeleteUser() {
         confirmPasswordMessage.innerHTML = '비밀번호가 일치하지 않습니다.';
         confirmPasswordMessage.style.color = 'red';  // 일치하지 않을 때의 메시지 색상
         // 비밀번호가 일치하지 않을 때 얼럿을 띄우는 부분 추가
-        alert('비밀번호가 일치하지 않습니다. 다시 확인해주세요.');
     }
 }
 
-function deleteUser() {
+
     
-     $("form").attr("method", "POST").attr("action", "/user/deleteUser").submit();
-}
+  function deleteUser() {
+      $("form").attr("method", "POST").attr("action", "/user/deleteUser").submit();
+  }
+
+
      
 
 
@@ -61,35 +64,36 @@ function deleteUser() {
           </div>
         </div>
         
+        
+        
         <div class="card card-style">
       <div class="content">
        <div class="form-custom form-label form-icon mb-3">
     <i class="bi bi-at font-16"></i>
-    <input type="password" class="form-control rounded-xs" id="c1" value="${user.pwd}" />
-    <label for="c1" class="color-theme">비밀번호</label>
+    <input type="password" class="form-control rounded-xs" id="czxc1" value="${user.pwd}" />
     <span id="passwordMessage">비밀번호</span>
 </div>
 
 <div class="form-custom form-label form-icon mb-3">
     <i class="bi bi-at font-16"></i>
-    <input type="password" class="form-control rounded-xs" id="c2" name="detailPwd" value="" placeholder="password"/>
-    <label for="c2" class="color-theme">비밀번호 확인</label>
-    <span id="confirmPasswordMessage">비밀번호 확인</span>
+    <input type="password" class="form-control rounded-xs" id="czxc2" name="pwd" value="" placeholder="password"/>
+    <span id="passwordMessage">비밀번호 확인</span>
+    <div id="confirmPasswordMessage"></div> 
 </div>
         <a href="#" onclick="checkPasswordAndDeleteUser()"class='btn rounded-sm btn-m gradient-red text-uppercase font-700 mt-4 mb-3 btn-full shadow-bg shadow-bg-s'>회원탈퇴</a>
         
       </div>
-    </div>
-        
-        <input type="hidden" name="email" value="${user.email}">
+    </div>       
         </div>
-        
+        <input type="hidden" name="userNo" value="${user.userNo}">
+    </form>    
         
         
         <div id="toast-top-2" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
     <div class="align-self-center">
       <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
     </div>
+    
     <div class="align-self-center">
       <strong class="font-13 mb-n2">Password Incorrect</strong>
       <span class="font-10 mt-n1 opacity-70">Account Login Failed. Try again.</span>
@@ -98,6 +102,6 @@ function deleteUser() {
       <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
     </div>
   </div>
-</form>
+
 </body>
 </html>

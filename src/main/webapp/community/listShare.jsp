@@ -1,75 +1,29 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<html lang="ko">
+<!DOCTYPE html>
+<html>
 <head>
-    <title>합승 목록 조회</title>
     <meta charset="UTF-8">
+    <title>합승 리스트 조회</title>
 
-    <!-- 참조 : http://getbootstrap.com/css/ -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- ///// Bootstrap, jQuery CDN ///// -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <style>
-
-        @font-face {
-            font-family: 'NanumSquare';
-            src: url('https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        body {
-            font-family: NanumSquare;
-            font-weight:300;
-        }
-
-    </style>
-
     <script>
-
-        $(function() {
-            // JavaScript에서 callNos 배열 사용 예시
-            for (let i = 0; i < callNos.length; i++) {
-                console.log(callNos[i]);
-                $.ajax({
-                    url: "/community/json/getShareall?callNo="+callNos[i],
-                    type: "GET",
-                    dataType: "json",
-                    success: function (JSONData) {
-                        var shareDateValue = JSONData.shareDate;
-                        var shareDate = new Date(shareDateValue);
-                        var currentDate = new Date();
-
-                        if (currentDate > shareDate) {
-                            let currentCallNo = callNos[i];
-                            $.ajax({
-                                url: "/community/json/deleteShareReq?callNo="+currentCallNo,
-                                type: "GET",
-                                dataType: "json",
-                                success: function (JSONData) {
-                                    console.log(JSONData)
-                                    self.location="/community/getShareList"
-                                }
-                            })
-                        }
-                    }
-                })
-            }
-        });
-
         $(function (){
+            $.ajax({
+                url: "/community/json/getShareCallNo",
+                type: "GET",
+                dataType: "json",
+                success: function (response) {
+                    let receiveInt = parseInt(response);
+                    $("#"+receiveInt+" #reqbt").removeClass("btn-xxs btn border-blue-dark color-blue-dark")
+                        .addClass("btn btn-xxs border-red-dark color-red-dark")
+                        .attr("onclick","deleteShare()").text("삭제");
+                }
+            })
+
             $("#chat").on("click", function () {
-                alert(${user.shareCode});
                 if(${user.shareCode}) {
-
-
                     $.ajax({
                         url: "/community/json/getShare",
                         type: "GET",
@@ -80,14 +34,14 @@
                             var callNo = JSONData.callNo;
                             var currentDate = new Date();
 
-                            var tenMinutesAgo = new Date(shareDate.getTime() - 10 * 60 * 1000);
+                            var tenMinutesAgo = new Date(shareDate.getTime() - 60 * 60 * 1000);
 
                             if (currentDate > tenMinutesAgo && currentDate < shareDate) {
-                                alert("dd")
+                                self.location="/community/chat?callNo="+callNo;
                             } else if (currentDate < tenMinutesAgo ) {
-                                alert("아직 시간이 되지 않았습니다.");
+                                $('#beforeShare').addClass('fade show');
                             } else if (currentDate > shareDate) {
-                                alert("시간이 지났습니다.");
+                                $('#timeOver').addClass('fade show');
                             }
                         }
                     })
@@ -95,7 +49,7 @@
                             alert("에러가 발생했습니다");
                         })
                 } else {
-                    alert("참여한 합승이 없습니다.")
+                    $('#noShareAlert').addClass('fade show');
                 }
             })
         })
@@ -104,26 +58,24 @@
             self.location ="/community/deleteShareReq"
         }
 
-        function openModal(callNo) {
-            Swal.fire({
-                title: '참여하기',
-                input: 'text',
-                inputPlaceholder: '참여인원수를 입력하세요', // 입력 필드에 표시되는 플레이스홀더
-                showCancelButton: true,
-                confirmButtonText: '확인',
-                cancelButtonText: '취소',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // 확인 버튼이 눌렸을 때, 입력된 값에 대한 처리 수행
-                    const inputValue = result.value;
-                    // AJAX 요청 수행
-                    sendDataToServer(inputValue, callNo, () => {
+        $(function () {
+            $("#reqbt").on("click", function () {
+                var row = $(this).closest('div.card');
+
+                // 부모 행에서 배차 번호와 제시 금액을 가져오기
+                var callNo = row.find('.callNo').text().trim();
+                alert(callNo);
+                $('#shareReq').addClass('fade show');
+                $(".offerbt").off("click").on("click", function () {
+                    $("form")[0].reset();
+                    let passengerCount = parseFloat($("#passengerCount").val());
+                    sendDataToServer(passengerCount, callNo, () => {
                         // AJAX 요청이 완료된 후에 페이지 reload
                         self.location ="/community/getShareList"
                     });
-                }
-            });
-        }
+                })
+            })
+        })
 
         function sendDataToServer(inputValue, callNo, callback) {
             // AJAX 요청 설정
@@ -151,97 +103,206 @@
 
             xhr.send(JSON.stringify(data));
         }
+
     </script>
 
-
 </head>
-<body>
-<jsp:include page="/home/top.jsp" />
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
-<div class="container">
-    <div class="page-header text-info">
-        <h3>합승목록조회</h3>
-    </div>
 
-    <div class="row">
-        <div class="col-md-6 text-left">
-            <p class="text-primary">
-                전체  ${resultPage.totalCount } 건수, 현재 ${resultPage.currentPage}  페이지
-            </p>
-        </div>
+<body class="theme-light">
 
-        <div class="col-md-6 text-right">
-            <form class="form-inline" name="detailForm">
-                <div class="form-group">
-                    <select class="form-control" name="searchCondition">
-                        <option value="0" ${ ! empty search.searchCondition && search.searchCondition == 0 ? "selected" : "" }>출발</option>
-                        <option value="1" ${ ! empty search.searchCondition && search.searchCondition == 1 ? "selected" : "" }>도착</option>
-                    </select>
-                </div>
+<div id="page">
 
-                <div class="form-group">
-                    <label class="sr-only" for="searchKeyword">검색어</label>
-                    <input type="text" class="form-control" id="searchKeyword" name="searchKeyword" placeholder="검색어"
-                           value="${! empty search.searchKeyword ? search.searchKeyword : '' }">
-                </div>
+    <jsp:include page="../community/top.jsp" />
 
-                <button type="submit" class="btn btn-default">검색</button>
+    <div class="page-content header-clear-medium">
 
-                <input type="hidden" id="currentPage" name="currentPage" value=""/>
-            </form>
-        </div>
-    </div>
+        <div class="card card-style">
+            <div class="content">
+                <h2 class="pb-2" style=" margin-top: 10px;">합승 리스트 조회</h2>
+            </div>
+        </div><!-- card card-style 끝 -->
 
-    <table class="table table-hover table-striped">
-        <thead>
-        <tr>
-            <th align="center">No</th>
-            <th align="center">No</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <script>
-            // JSP에서 JavaScript로 데이터 전달
-            var callNos = []; // callNo 값을 저장할 배열
-
-            <c:forEach var="call" items="${callList}">
-            callNos.push(${call.callNo}); // 배열에 callNo 값을 추가
-            </c:forEach>
-        </script>
         <c:forEach var="call" items="${callList}" varStatus="status">
-            <tr>
-                <td>
-                    배차 번호 : ${call.callNo}<br/>
-                    출발 : ${call.startAddr}<br/>
-                    도착 : ${call.startAddr}<br/>
-
-                    <!-- dealList에서 동일한 인덱스의 요소에 액세스 -->
-                    <c:set var="share" value="${shareList[status.index]}"/>
-
-                    <!-- dealList 정보 표시 -->
-                    배차 번호 : ${share.firstSharePassengerNo}<br/>
-                    제시 금액 : ${share.shareDate}<br/>
-                </td>
-                <td>
-                    <c:if test="${user.userNo==share.firstSharePassengerNo}">
-                        <button type="button" onclick="deleteShare()">
-                            삭제 하기
-                        </button>
-                    </c:if>
-                    <c:if test="${user.userNo!=share.firstSharePassengerNo}">
-                        <button type="button" onclick="openModal(${call.callNo})">
-                            제시 하기
-                        </button>
-                    </c:if>
-                </td>
-            </tr>
+            <div class="card card-style" style="margin-bottom: 10px;">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-12">
+                            배차 번호 : <span class="callNo">${call.callNo}</span><br/>
+                            출발 : ${call.startAddr}<br/>
+                            도착 : ${call.endAddr}<br/>
+                        </div>
+                        <div class="col-9">
+                            <c:set var="share" value="${shareList[status.index]}"/>
+                            출발 날짜 : ${share.shareDate} <br/>
+                            참여 인원 : ${share.firstShareCount} / ${share.maxShareCount}
+                        </div>
+                        <div class="col-3" style="margin-top: 10px; float: right;" id="${call.callNo}">
+                            <c:if test="${user.shareCode && user.userNo==share.firstSharePassengerNo}">
+                                <button type="button" onclick="deleteShare()" class="btn btn-xxs border-red-dark color-red-dark">
+                                    삭제
+                                </button>
+                            </c:if>
+                            <c:if test="${user.userNo!=share.firstSharePassengerNo}">
+                                <button type="button" class="btn-xxs btn border-blue-dark color-blue-dark" id="reqbt">
+                                    참여
+                                </button>
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </c:forEach>
-        </tbody>
 
-    </table>
-    <button type="button" class="btn btn-primary" id="chat">채팅</button>
-</div>
+    </div> <!-- page-content header-clear-medium -->
+
+    <!-- iOS Toast Bar-->
+    <div id="shareReq" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
+        <div class="toast-body px-3 py-3">
+            <div class="d-flex">
+                <div class="align-self-center">
+                    <span class="icon icon-xxs rounded-xs bg-fade-green scale-box"><i class="bi bi-exclamation-triangle color-green-dark font-16"></i></span>
+                </div>
+                <div class="align-self-center">
+                    <h5 class="font-16 ps-2 ms-1 mb-0">참여 인원수</h5>
+                </div>
+            </div>
+            <p class="font-12 pt-2 mb-3">
+            </p>
+            <div class="align-self-center">
+                <form class="demo-animation needs-validation m-0" novalidate>
+                    <input type="text" class="form-control rounded-xs" id="passengerCount" name="passengerCount" placeholder="참여할 인원수를 입력하세요."/>
+                </form>
+            </div>
+            <p class="font-12 pt-2 mb-3">
+            </p>
+            <div class="row">
+                <div class="col-6">
+                    <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-green color-green-dark" aria-label="Close">취소</a>
+                </div>
+                <div class="col-6">
+                    <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border bg-green-dark color-green-dark offerbt" aria-label="Close">참여</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- iOS Toast Bar 끝-->
+
+    <!-- iOS Toast Bar-->
+    <div id="notification-bar-6" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
+        <div class="toast-body px-3 py-3">
+            <div class="d-flex">
+                <div class="align-self-center">
+                    <span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>
+                </div>
+                <div class="align-self-center">
+                    <h5 class="font-16 ps-2 ms-1 mb-0">합승 참여를 취소하시겠습니까?</h5>
+                </div>
+            </div>
+            <p class="font-12 pt-2 mb-3">
+            </p>
+            <div class="row">
+                <div class="col-6">
+                    <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">취소</a>
+                </div>
+                <div class="col-6">
+                    <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border bg-red-dark color-red-dark delbt" aria-label="Close">확인</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- iOS Toast Bar 끝-->
+
+    <!--Warning Toast Bar-->
+    <div id="toast-top-2" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+
+        <div class="align-self-center">
+            <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+        </div>
+
+        <div class="align-self-center">
+            <span class="font-11 mt-n1 opacity-70">입력된 참여 인원수가<br/> 최대 참여 인원수를 초과합니다</span>
+        </div>
+
+        <div class="align-self-center ms-auto">
+            <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+        </div>
+
+    </div>
+    <!--Warning Toast Bar 끝 -->
+
+    <!--Warning Toast Bar-->
+    <div id="toast-top-3" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+
+        <div class="align-self-center">
+            <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+        </div>
+
+        <div class="align-self-center">
+            <span class="font-11 mt-n1 opacity-70">이미 참여한 합승이 있습니다.</span>
+        </div>
+
+        <div class="align-self-center ms-auto">
+            <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+        </div>
+
+    </div>
+    <!--Warning Toast Bar 끝 -->
+
+    <!--Warning Toast Bar-->
+    <div id="noShareAlert" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+
+        <div class="align-self-center">
+            <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+        </div>
+
+        <div class="align-self-center">
+            <span class="font-11 mt-n1 opacity-70">참여한 합승이 없습니다.</span>
+        </div>
+
+        <div class="align-self-center ms-auto">
+            <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+        </div>
+
+    </div>
+    <!--Warning Toast Bar 끝 -->
+
+    <!--Warning Toast Bar-->
+    <div id="timeOver" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+
+        <div class="align-self-center">
+            <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+        </div>
+
+        <div class="align-self-center">
+            <span class="font-11 mt-n1 opacity-70">시간이 지났습니다.</span>
+        </div>
+
+        <div class="align-self-center ms-auto">
+            <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+        </div>
+
+    </div>
+    <!--Warning Toast Bar 끝 -->
+
+    <!--Warning Toast Bar-->
+    <div id="beforeShare" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+
+        <div class="align-self-center">
+            <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+        </div>
+
+        <div class="align-self-center">
+            <span class="font-11 mt-n1 opacity-70">아직 시간이 되지 않았습니다.</span>
+        </div>
+
+        <div class="align-self-center ms-auto">
+            <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+        </div>
+
+    </div>
+    <!--Warning Toast Bar 끝 -->
+
+</div> <!-- page -->
 
 </body>
 </html>

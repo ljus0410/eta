@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-<title>like Address</title>
+<title>eTa</title>
 <link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
 <link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
@@ -20,6 +20,12 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/templates/app/icons/icon-192x192.png">
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=70ef6f6883ad97593a97af6324198ac0&libraries=services"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 <style>
 #homeSubmit {
   display: none;
@@ -43,21 +49,53 @@
 </head>
 <body class="theme-light">
 <jsp:include page="/home/top.jsp" />
+<c:choose>
+    <c:when test="${empty user.role}">
+        <form name="detailform">
+        <div id="page">
+        <div class="page-content header-clear-medium">
+        <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px ;">
+         <div class="alert border-red-dark alert-dismissible color-red-dark rounded-s fade show" >
+           <i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle"></i>&nbsp;<strong>로그인해주세요.</strong>
+         </div>
+         </div>
+         </div>
+         </div>
+         </div>
+        </form>
+    </c:when>
+   <c:when test="${!empty user.role && user.role eq 'driver'}">
+                 <form name="detailform">
+        <div id="page">
+        <div class="page-content header-clear-medium">
+        <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px ;">
+         <div class="alert border-red-dark alert-dismissible color-red-dark rounded-s fade show" >
+           <i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle"></i>&nbsp;<strong>권한이 없습니다.</strong>
+         </div>
+         </div>
+         </div>
+         </div>
+         </div>
+        </form>
+    </c:when>
+    <c:otherwise>
 <div id="page">
 <div class="page-content header-clear-medium">
-       <div class="card card-style">
-          <div class="content">
+       <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px;">
             <h1 class="pb-2">
-              <i class="has-bg rounded-s bi bg-yellow-dark bi-star">&nbsp;</i>&nbsp;&nbsp;즐겨찾기
+              <i class="has-bg rounded-s bi bg-green-dark bi-heart"></i>&nbsp;&nbsp;즐겨찾기
             </h1>
 
           </div>
         </div>
-        <div class="card card-style">
+        <div class="card card-style" style="margin-bottom: 15px ;">
           <div class="map_wrap">
             <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
              <div id="menu_wrap" class="bg_white">
-            <div class="content"> 
+            <div class="content" style="margin-bottom: 9px;"> 
               <div class="d-flex pb-1">
                 <div>
                   <h3>집
@@ -78,7 +116,7 @@
                     </c:choose> </h3>
                 </div>
                 <div class="align-self-center ms-auto">
-                    <a onclick="deleteHomeAddrRequest()" class="btn btn-xxs border-red-dark color-red-dark" style="display: inline-block; padding-top: 3px; padding-bottom: 3px">삭제</a>
+                    <a onclick="deleteHomeAddrRequest()" class="btn btn-xxs border-red-dark color-red-dark" style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-left: 5px; ">삭제</a>
                 </div>
               </div>
               <div class="homeAddrSearch">
@@ -97,8 +135,8 @@
           </div>
           </div>
           </div>
-          <div class="card card-style">
-            <div class="content"> 
+          <div class="card card-style" style="margin-bottom: 15px ;">
+            <div class="content" style="margin-bottom: 9px ;"> 
               <div class="d-flex pb-1">
                 <div>
                   <h3>회사
@@ -119,7 +157,7 @@
                     </c:choose> </h3>
                 </div>
                 <div class="align-self-center ms-auto">
-                    <a onclick="deleteCompanyAddrRequest()" class="btn btn-xxs border-red-dark color-red-dark" style="display: inline-block; padding-top: 3px; padding-bottom: 3px">삭제 </a>
+                    <a onclick="deleteCompanyAddrRequest()" class="btn btn-xxs border-red-dark color-red-dark" style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-left: 5px; ">삭제 </a>
                 </div>
               </div>
               <div class="companyAddrSearch">
@@ -136,11 +174,11 @@
                 </div>
             </div>
           </div>
-          <div class="card card-style">
-            <div class="content"> 
+          <div class="card card-style" style="margin-bottom: 15px ;">
+            <div class="content" style="margin-bottom: 9px ;"> 
               <div class="d-flex pb-1">
                 <div>
-                  <h3>즐겨찾는장소
+                  <h3>즐겨 찾는 장소
                       <c:choose>
                           <c:when test="${ empty likeList[2].likeName && empty likeList[2].likeAddr}">            
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-x" viewBox="0 0 16 16">
@@ -156,8 +194,8 @@
                         </c:choose>  </h3>
                 </div>
                 <div class="align-self-center ms-auto">
-                <a onclick="updateCustomAddr()" class="btn btn-xxs border-blue-dark color-blue-dark" style="display: inline-block; padding-top: 3px; padding-bottom: 3px">수정</a>
-                <a onclick="deleteCustomAddrRequest()" class="btn btn-xxs border-red-dark color-red-dark" style="display: inline-block; padding-top: 3px; padding-bottom: 3px">삭제</a>                  
+                <a onclick="updateCustomAddr()" class="btn btn-xxs border-blue-dark color-blue-dark" style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-left: 5px; ">수정</a>
+                <a onclick="deleteCustomAddrRequest()" class="btn btn-xxs border-red-dark color-red-dark" style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-left: 5px; ">삭제</a>                  
                 </div>
               </div>
               <div class="customAddrSearch">
@@ -189,23 +227,79 @@
     
     </div>
     </div>   
+    </c:otherwise>
+    </c:choose>
 </body>
 <script>
+function messageAlert(message) {
+    var toastContainer = document.createElement('div');
+      toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+          '<div class="toast-body px-3 py-3">' +
+          '<div class="d-flex">' +
+          '<div class="align-self-center">' +
+          '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+          '</div>' +
+          '<div class="align-self-center">' +
+          '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+          '</div>' +
+          '</div><br>' +
+          '<a href="#" data-bs-dismiss="toast" id="confirmBtn" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
+          '</div>' +
+          '</div>';
 
+      document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+      
+      document.getElementById('confirmBtn').addEventListener('click', function () {
+          // Remove the toast element from the DOM
+          document.getElementById('notification-bar-5').remove();
+      });
+      $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+ }
+function confirmAlert(message) {
+    var toastContainer = document.createElement('div');confirmAlert
+      toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+          '<div class="toast-body px-3 py-3">' +
+          '<div class="d-flex">' +
+          '<div class="align-self-center">' + 
+          '<span class="icon icon-xxs rounded-xs bg-fade-green scale-box"><i class="bi bi-exclamation-triangle color-green-dark font-16"></i></span>' +
+          '</div>' +
+          '<div class="align-self-center">' +
+          '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+          '</div>' +
+          '</div><br>' +
+          '<div class="row">' +
+          '<div class="col-6">' +
+          '<a href="#" id="cancel" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-green color-green-dark" aria-label="Close">아니오</a>' +
+          '</div>' +
+          '<div class="col-6">' +
+          '<a href="#" id="ok" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-green color-green-dark" aria-label="Close">예</a>' +
+          '</div>' +
+          '</div>' +
+          '</div>' +
+          '</div>';
+
+      document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+      
+      document.getElementById('cancel').addEventListener('click', function () {
+          // Remove the toast element from the DOM
+          document.getElementById('notification-bar-5').remove();
+      });
+      document.getElementById('ok').addEventListener('click', function () {
+    	    deleteHomeAddr();
+        
+      });
+      $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+ }
 function deleteHomeAddrRequest(){
 	  
 	  if (document.getElementById('homeAddrKeyword').value == '' || document.getElementById('homeAddrKeyword').value == null){
 		  
-		  alert("삭제할 값이 없습니다.");
+		  var message ='삭제할 값이 없습니다';
+		  messageAlert(message);
 		  
 	  }else {
-		  var result = confirm("삭제하시겠습니까?");
-		    if (result == true) {
-		        alert("삭제가 완료되었습니다.");
-		        deleteHomeAddr();
-		    } else {
-		        alert("삭제 취소");
-		    }  
+		  var message ='삭제하시겠습니까?';
+		  confirmAlert(message);
 		  
 	  }
 	}
@@ -214,17 +308,12 @@ function deleteCompanyAddrRequest(){
 	
 	   if (document.getElementById('companyAddrKeyword').value == '' || document.getElementById('companyAddrKeyword').value == null){
 		      
-		      alert("삭제할 값이 없습니다.");
+		   var message ='삭제할 값이 없습니다';
+		      messageAlert(message);
 	   } else {
     
-    var result = confirm("삭제하시겠습니까?");
-
-    if (result == true) {
-        alert("삭제가 완료되었습니다.");
-        deleteCompanyAddr();
-    } else {
-        alert("삭제 취소");
-    }  
+		   var message ='삭제하시겠습니까?';
+		      confirmAlert(message);
   }
 }
   
@@ -232,17 +321,12 @@ function deleteCustomAddrRequest(){
 	
     if (document.getElementById('customAddrKeyword').value == '' || document.getElementById('customAddrKeyword').value == null){
         
-        alert("삭제할 값이 없습니다.");
+    	var message ='삭제할 값이 없습니다';
+        messageAlert(message);
    } else {
     
-    var result = confirm("삭제하시겠습니까?");
-
-    if (result == true) {
-        alert("삭제가 완료되었습니다.");
-        deleteCustomAddr();
-    } else {
-        alert("삭제 취소");
-    }  
+	   var message ='삭제하시겠습니까?';
+       confirmAlert(message); 
   }
 }
 	
@@ -263,11 +347,14 @@ function updateCustomAddr() {
      var customAddr = customAddrInput.value;
      
      if(customName == '집'|| customName == '회사'){
-    	 alert("집 혹은 회사 외의 다른 별칭을 입력해주세요.");
+    	 var message = '집, 회사 외의 다른 별칭을 입력해주세요';
+    	 messageAlert(message);
      } else if(customName == ''){
-         alert("별칭을 입력해주세요.");
+         var message = '별칭을 입력해주세요';
+         messageAlert(message);
        } else if(customAddr == '' ){
-    	   alert("주소를 입력해주세요.");
+    	   var message = '주소를 입력해주세요';
+           messageAlert(message);
        } else if(customName != '' && customAddr != ''){
     	   $(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/updateLikeAddr?userNo=${user.userNo }").submit();
        }
@@ -340,7 +427,8 @@ function searchPlaces(keywordId, type) {
     var keyword = document.getElementById(keywordId).value;
 
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
-        alert('키워드를 입력해주세요!');
+        var message = '키워드를 입력해주세요!';
+        messageAlert(message);
         return false;
     }
     // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
@@ -363,12 +451,14 @@ function placesSearchCB(data, status, pagination, type) {
  
     } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
  
-        alert('검색 결과가 존재하지 않습니다.');
+        var message = '검색 결과가 존재하지 않습니다';
+        messageAlert(message);
         return;
  
     } else if (status === kakao.maps.services.Status.ERROR) {
  
-        alert('검색 결과 중 오류가 발생했습니다.');
+        var message = '검색 결과 중 오류가 발생했습니다';
+        messageAlert(message);
         return;
  
     }
@@ -625,7 +715,7 @@ document.addEventListener('DOMContentLoaded', function() {
         inputElement.addEventListener('click', function(event) {
             // 클릭 시 입력 값 초기화
             inputElement.value = '';
-            inputElement.placeholder = '주소를 입력해주세요';
+           // inputElement.placeholder = '주소를 입력해주세요';
 
             // 이벤트 전파 방지
             event.stopPropagation();

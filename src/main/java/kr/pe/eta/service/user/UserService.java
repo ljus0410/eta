@@ -34,7 +34,7 @@ public interface UserService {
 	public boolean dupNickname(String nickName) throws Exception;
 
 	// 회원탈퇴
-	public void deleteUser(String eamil) throws Exception;
+	public int deleteUser(int userNo) throws Exception;
 
 	// aoto
 	public Map<String, Object> autoUserList(Search search) throws Exception;
