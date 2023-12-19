@@ -61,4 +61,6 @@ public interface FeedbackService {
 	public List<Blacklist> getBlacklistList(int callno) throws Exception;
 
 	public Map<String, Object> getShareReport(Report report) throws Exception;
+
+	public int getBlockCount(int userNo) throws Exception;
 }

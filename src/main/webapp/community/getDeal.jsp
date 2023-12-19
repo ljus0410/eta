@@ -5,32 +5,10 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>택시비 딜 상세조회</title>
+  <title>택시비 딜 상세 조회</title>
   
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
-  <script>
-
-    function deleteReq() {
-      self.location="/community/deleteDealReq?callNo="+${dealReq.callNo};
-    }
-  
-    $(function() {
-      
-        $( "#deletebt" ).on("click" , function() {
-          $('#dealdeleteToast').removeClass('notification-bar glass-effect detached rounded-s shadow-l')
-                  .addClass('notification-bar glass-effect detached rounded-s shadow-l fade show');
-        });
-
-        $( "#match" ).on("click" , function() {
-          let driverNo = $("input[name='driverNo']:checked").val();
-          self.location = "/community/match?driverNo="+driverNo;
-        });
-
-    });
-    
-  </script>
-  
 </head>
 
 <body class="theme-light">
@@ -48,7 +26,7 @@
               <h2 class="pb-2" style=" margin-top: 10px;">택시비 딜 상세조회</h2>
             </div>
             <div class="col-3">
-              <a class="btn btn-xxs border-red-dark color-red-dark" id="deletebt" style=" margin-top: 5px;">삭제</a>
+              <a class="btn btn-xxs border-red-dark color-red-dark" id="dealDelete" style=" margin-top: 5px;">삭제</a>
             </div>
           </div>
         </div>
@@ -57,6 +35,8 @@
       <div class="card card-style">
         <div class="content">
           <ul class="mb-0 ps-3">
+            <input type="hidden" id="callNo" value="${call.callNo}">
+            <input type="hidden" id="userNo" value="${user.userNo}">
             <li><strong>출발</strong> : ${call.startAddr}</li>
             <li><strong>도착</strong> : ${call.endAddr}</li>
             <li><strong>경로 옵션</strong> : ${call.routeOpt}</li>
@@ -88,7 +68,7 @@
     </div><!-- page-content header-clear-medium 끝 -->
 
   <!-- iOS Toast Bar-->
-  <div id="dealdeleteToast" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
+  <div id="dealDeleteAlert" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
     <div class="toast-body px-3 py-3">
       <div class="d-flex">
         <div class="align-self-center">
@@ -114,5 +94,42 @@
   
   </div><!-- page 끝 -->
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+  <script>
+    const socket = new SockJS('/ws');
+    const stompClient = Stomp.over(socket);
+
+    function sendDeal(driverNo) {
+      const callNo = document.getElementById('callNo').value;
+
+      const message = {
+        callNo: callNo,
+        content: "택시비 딜 배차를 시작하시겠습니까?"
+      };
+
+      stompClient.send("/deal/"+driverNo, {}, JSON.stringify(message));
+      self.location='/callres/drivingP.jsp';
+    }
+
+    function deleteReq() {
+      self.location="/community/deleteDealReq?callNo="+${dealReq.callNo};
+    }
+
+    $(function() {
+
+      $( "#dealDelete" ).on("click" , function() {
+        $('#dealDeleteAlert').addClass('fade show');
+      });
+
+      $( "#match" ).on("click" , function() {
+        let driverNo = $("input[name='driverNo']:checked").val();
+        sendDeal(driverNo);
+      });
+
+    });
+
+  </script>
 </body>
 </html>

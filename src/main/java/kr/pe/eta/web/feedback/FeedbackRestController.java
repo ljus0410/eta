@@ -43,7 +43,7 @@ public class FeedbackRestController {
 	@PostMapping(value = "addStar")
 	public void addStar(@RequestBody Star star, HttpSession session) throws Exception {
 		System.out.println("/feedback/json/addStar : POST");
-		
+
 		System.out.println(star);
 		star.setPassengerNo(((User) session.getAttribute("user")).getUserNo());
 		Call call = feedbackService.getCall(star.getCallNo());
@@ -91,9 +91,9 @@ public class FeedbackRestController {
 	}
 
 	@GetMapping(value = "addBlock/{userNo}")
-	public void addBlock(@PathVariable int userNo) throws Exception {
+	public int addBlock(@PathVariable int userNo) throws Exception {
 		Block block = Block.builder().userNo(userNo).build();
-		feedbackService.addBlock(block);
+		return feedbackService.addBlock(block);
 	}
 
 	@PostMapping(value = "addBlacklist")
