@@ -114,7 +114,7 @@
 		r.report_category as report_category,
 		r.report_code as report_code, 
 		r.report_detail as report_detail,
-		r.report_date as report_date,
+		TO_CHAR(r.reg_date, 'YY/MM/DD') as reg_date,
 		r.role as role,
 		<if test="reportRole == 'passenger'">
         m.driver_no as USER_NO,
@@ -316,7 +316,7 @@
 		r.report_category as report_category,
 		r.report_code as report_code, 
 		r.report_detail as report_detail,
-		r.report_date as report_date,
+		TO_CHAR(r.reg_date, 'YY/MM/DD') as reg_date,
 		r.role as role,
         s.user_no as USER_NO,
 		r.reg_date as reg_date
