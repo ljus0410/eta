@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
 <meta charset="UTF-8">
-<title>searchCall</title>
+<title>eTa</title>
 <link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
 <link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
@@ -38,6 +38,38 @@
 </head>
 <body class="theme-light">
 <jsp:include page="/home/top.jsp" />
+<c:choose>
+    <c:when test="${empty user.role}">
+        <form name="detailform">
+        <div id="page">
+        <div class="page-content header-clear-medium">
+        <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px ;">
+         <div class="alert border-red-dark alert-dismissible color-red-dark rounded-s fade show" >
+           <i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle"></i>&nbsp;<strong>로그인해주세요.</strong>
+         </div>
+         </div>
+         </div>
+         </div>
+         </div>
+        </form>
+    </c:when>
+   <c:when test="${!empty user.role && user.role eq 'driver'}">
+                 <form name="detailform">
+        <div id="page">
+        <div class="page-content header-clear-medium">
+        <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px ;">
+         <div class="alert border-red-dark alert-dismissible color-red-dark rounded-s fade show" >
+           <i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle"></i>&nbsp;<strong>권한이 없습니다.</strong>
+         </div>
+         </div>
+         </div>
+         </div>
+         </div>
+        </form>
+    </c:when>
+    <c:otherwise>
 <div id="page">
 <div id="notification-bar-6" class="notification-bar bg-dark-dark detached rounded-s shadow-l" data-bs-delay="15000">
             <div class="toast-body px-3 py-3">
@@ -83,8 +115,12 @@
 </div>
 </div>
 </div>
+</c:otherwise>
+</c:choose>
 </body>
 <script>
+
+
 
 var passengerNo = document.getElementById('userNo').value;
 console.log(passengerNo);
@@ -127,13 +163,16 @@ document.addEventListener('DOMContentLoaded', function() {
     		callNo: callNo
             };
     
+    setTimeout(function() {
+    	  removeMessage();
+    	}, 120000);
+    
 });
 
 
 function removeMessage() {
 	   var message = '배차에 실패하였습니다';
-	   messageAlert(message)
-	   $("form").attr("method" , "GET").attr("action" , "/callreq/deleteCall").submit();
+	   messageAlert(message);
 }
 
 function deleteCall(){
@@ -162,7 +201,8 @@ function messageAlert(message) {
 	     
 	     document.getElementById('confirmBtn').addEventListener('click', function () {
 	         // Remove the toast element from the DOM
-	         document.getElementById('notification-bar-5').remove();
+	       document.getElementById('notification-bar-5').remove();
+	    	 $("form").attr("method" , "GET").attr("action" , "/callreq/deleteCall").submit();
 	     });
 	     $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
 	}
