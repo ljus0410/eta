@@ -33,7 +33,7 @@ window.closeModal = function() {
 	 $( '#menu-report' ).offcanvas( 'hide' );
 	}
 	window.removeReport= function () {
-	$( "button:contains('신고')").remove();
+	$( "a:contains('신고')").remove();
 	}
 
 function setStar(star) {
@@ -92,6 +92,11 @@ function setStar(star) {
 			let starValue = $(this).val();
 			setStar(starValue);
 			
+		})
+		let reportActivate = new bootstrap.Offcanvas($("#menu-report"))
+		$("a:contains('신고')").on("click",function(){
+			
+			reportActivate.show();
 		})
 	})
 </script>
@@ -152,10 +157,8 @@ function setStar(star) {
 							<a class="btn btn-xxs border-blue-dark color-blue-dark"
 								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">수정</a>
 
-							<button type="button"
-								class="btn btn-xxs border-red-dark color-red-dark"
-								data-bs-toggle="offcanvas" data-bs-target="#menu-report"
-								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 0px">신고</button>
+							<a class="btn btn-xxs border-red-dark color-red-dark"
+								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">신고</a>
 						</div>
 					</div>
 
@@ -168,7 +171,7 @@ function setStar(star) {
 				style="width: 340px;" id="menu-report">
 				<div class="content">
 					<iframe
-						src="/feedback/addReport?badCallNo=${star.callNo }&${param.userNo}"
+						src="/feedback/addReport?badCallNo=${star.callNo }&userNo=${user.userNo}"
 						style="width: 100%; height: 400px; border: none;"></iframe>
 				</div>
 			</div>
