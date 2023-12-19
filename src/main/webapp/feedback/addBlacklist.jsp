@@ -34,7 +34,7 @@ window.closeModal = function() {
 	 $( '#menu-report' ).offcanvas( 'hide' );
 	}
 window.removeReport= function () {
-	$( "button:contains('신고')").remove();
+	$( "a:contains('신고')").remove();
 	}
 
 
@@ -94,6 +94,11 @@ $(function () {
 		
 		
 	})
+	let reportActivate = new bootstrap.Offcanvas($("#menu-report"))
+		$("a:contains('신고')").on("click",function(){
+			
+			reportActivate.show();
+		})
 	
 	
 })
@@ -109,7 +114,7 @@ $(function () {
 						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
 						<h1 class="pb-2" style="width: 200px; display: inline-block;">
-							<i class="has-bg rounded-s bi bg-yellow-dark bi-star">&nbsp;</i>&nbsp;&nbsp;블랙리스트관리
+							<i class="has-bg rounded-s bi bg-teal-dark bi-toggle-on" style="vertical-align:bottom !important; background-color: #6187D9 !important;line-height: 0px!important;height: 30px !important;font-size: 30px !important; all:initial; display: inline-block;"></i>&nbsp;&nbsp;블랙리스트관리
 							/
 						</h1>
 
@@ -118,7 +123,7 @@ $(function () {
 							<c:if test="${status.index eq 0 }">
 							<input type="hidden" name="driverNo" value="${blacklistList.driverNo }">
 							<input type="hidden" name="callNo" value="${blacklistList.callNo }">
-								<h3 class="font-400 mb-0" style="display: inline-block;">배차번호
+								<h3 class="font-400 mb-0" style="display: inline-block; float: right">배차번호
 									: ${blacklistList.callNo }</h3>
 							</c:if>
 						</c:forEach>
@@ -135,14 +140,16 @@ $(function () {
 						<c:forEach var="blacklistList" items="${blacklistList }" begin="0"
 							step="1" varStatus="status">
 
-							<div id="${blacklistList.passengerNo } list" style="padding-bottom: 10px;vertical-align: center; ">
+							<div id="${blacklistList.passengerNo } list" style="padding-bottom: 10px; ">
+								<div style="align-items:  center !important;display: inline-block;width: 70px;">
 								<i class="has-bg rounded-s bi bg-blue-dark bi-person-fill"
-									style="font-size: 20px"></i>&nbsp;
+									style="font-size: 20px; "></i>&nbsp;
 								<h5 class="font-300 mb-0" style="display: inline-block;">${blacklistList.passengerNo }</h5>
 								
+								</div>
 									
 					
-										<div class="ms-auto align-self-center" style="display: inline-block; ">
+										<div class="ms-auto align-self-center" style="display: inline-block; vertical-align: bottom;">
 											<div class="form-switch ios-switch switch-blue switch-s">
 												<input type="hidden" name="blacklistCode" value =${blacklistList.blacklistCode }>
 												<input type="hidden" name="passengerNo" value="${blacklistList.passengerNo }">
@@ -159,10 +166,8 @@ $(function () {
 						<div align="right">
 							
 
-							<button type="button"
-								class="btn btn-xxs border-red-dark color-red-dark"
-								data-bs-toggle="offcanvas" data-bs-target="#menu-report"
-								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 0px">신고</button>
+							<a class="btn btn-xxs border-red-dark color-red-dark"
+								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">신고</a>
 						</div>
 					</div>
 
@@ -176,7 +181,7 @@ $(function () {
 						step="1" varStatus="status">
 						<c:if test="${status.index eq 0 }">
 							<iframe
-								src="/feedback/addReport?badCallNo=${blacklistList.callNo }&${param.userNo}"
+								src="/feedback/addReport?badCallNo=${blacklistList.callNo }&userNo=${user.userNo}"
 								style="width: 100%; height: 400px; border: none;"></iframe>
 						</c:if>
 					</c:forEach>
