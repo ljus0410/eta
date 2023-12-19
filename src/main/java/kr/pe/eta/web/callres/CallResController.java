@@ -70,7 +70,7 @@ public class CallResController {
 		List<ShareReq> shares = callResService.getSharesByCallNop(callNo);
 		System.out.println("shares:" + shares);
 		model.addAttribute("call", call);
-		model.addAttribute("user", user);
+		model.addAttribute("users", user);
 		model.addAttribute("share", shares);
 
 		if (!"예약중".equals(call.getCallStateCode())) {
@@ -96,7 +96,7 @@ public class CallResController {
 
 		// Model 과 View 연결
 		model.addAttribute("call", call);
-		model.addAttribute("user", user);
+		model.addAttribute("users", user);
 		model.addAttribute("share", shares);
 		model.addAttribute("passengerNo", passengerNo);
 		model.addAttribute("blacklist", blacklist);

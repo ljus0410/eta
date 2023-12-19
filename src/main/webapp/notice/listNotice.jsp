@@ -125,7 +125,7 @@ $(function () {
 						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
 						<h1 class="pb-2" style="width: 140px; display: inline-block;">
-							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;공지사항
+							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns" style="vertical-align:bottom !important; line-height: 0px!important;height: 30px !important;font-size: 30px !important; all:initial; display: inline-block;"></i>&nbsp;&nbsp;공지사항
 						</h1>
 
 					</div>
@@ -134,9 +134,11 @@ $(function () {
 				<div class="card overflow-visible card-style">
 					<div class="content mb-0">
 						<div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
+						<c:if test="${user.role eq 'admin'}">
 							<a class="btn-full btn bg-blue-dark"
 								href="../notice/addNotice"
 								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; float: left; margin-top: 2px">등록</a>
+						</c:if>
 							<input type="text" class="form-control rounded-xs"
 								style="width: 40%; display: inline-block" name="searchKeyword"
 								value="${!empty search.searchKeyword ? search.searchKeyword : ''}">

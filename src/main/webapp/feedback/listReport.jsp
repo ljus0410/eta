@@ -76,7 +76,7 @@ $(function () {
 					            // 새로운 행 추가
 					            var newRow = '<tr class="appendlist"'+(index+1)+'>' +
 					                '<td>' + report.reportNo + '</td>' +
-					                '<td>' + report.reportCode + '</td>' +
+					                '<td>' + (report.reportCode == 1 ? '<h5 class="mb-0"><span class="badge bg-highlight color-white" style="background-color: #BB4758 !important">처리전</span></h5>' : report.reportCode == 2 ? '<h5 class="mb-0"><span class="badge bg-highlight color-white" style="background-color: #A7CA65 !important">처리</span></h5>' : report.reportCode == 3 ? '<h5 class="mb-0"><span class="badge bg-highlight color-white">처리완료</span></h5>' : '') + '</td>' +
 					                '<td>' + report.reportUserNo + '</td>' +
 					                '<td>' + report.badCallNo + '</td>' +
 					                '<td>' + report.reportCategory + '</td>' +
@@ -131,7 +131,7 @@ $(function () {
 						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
 						<h1 class="pb-2" style="width: 140px; display: inline-block;">
-							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;신고내역
+							<i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle" style="vertical-align:bottom !important; background-color: #d84558 !important; line-height: 0px!important;height: 30px !important;font-size: 30px !important; all:initial; display: inline-block;"></i>&nbsp;&nbsp;신고내역
 						</h1>
 
 					</div>
@@ -140,20 +140,20 @@ $(function () {
 				<div class="card overflow-visible card-style">
 					<div class="content mb-0">
 						<div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
-
+							<div align="left">
 							<input type="radio" name="code" value="0"
 								${ ! empty search.code && search.code == 0 ? "checked" : "" }>모두
 							<input type="radio" name="code" value="1"
-								${ ! empty search.code && search.code == 1 ? "checked" : "" }>미처리
+								${ ! empty search.code && search.code == 1 ? "checked" : "" }>처리전
 							<input type="radio" name="code" value="2"
-								${ ! empty search.code && search.code == 2 ? "checked" : "" }>처리중
+								${ ! empty search.code && search.code == 2 ? "checked" : "" }>처리
 							<input type="radio" name="code" value="3"
 								${ ! empty search.code && search.code == 3 ? "checked" : "" }>처리완료
-
-							<select name="searchCondition">
+							</div>
+							<select name="searchCondition" class="form-select rounded-xs" style=" width: 63%;margin-bottom: 5px">
 								<option value="선택"
 									${ ! empty search.searchCondition && search.searchCondition == '선택' ? "selected" : "" }>
-									신고카테고리를 선택해주세요</option>
+									신고카테고리</option>
 								<option value="폭언 및 욕설"
 									${ ! empty search.searchCondition && search.searchCondition == '폭언 및 욕설' ? "selected" : "" }>
 									폭언 및 욕설</option>
@@ -169,13 +169,12 @@ $(function () {
 								<option value="기타"
 									${ ! empty search.searchCondition && search.searchCondition == '기타' ? "selected" : "" }>
 									기타</option>
-							</select> <input type="text" class="form-control rounded-xs"
-								style="width: 40%; display: inline-block" name="searchKeyword"
-								value="${!empty search.searchKeyword ? search.searchKeyword : ''}">
-								<div class="mb-3 pb-2"></div>
-
-
-							<a class="btn btn-xxs border-blue-dark color-blue-dark"
+							</select>
+								<input type="text" class="form-control rounded-xs"
+								style="width: 40%; display: ${user.role eq 'admin' ? 'inline-block' : 'none' }"  name="searchKeyword"
+								value="${!empty search.searchKeyword ? search.searchKeyword : ''}" >
+								
+								<a class="btn btn-xxs border-blue-dark color-blue-dark"
 								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-left: 5px;">검색</a>
 						</div>
 						<div class="mb-3 pb-2"></div>
@@ -187,18 +186,21 @@ $(function () {
 								<thead>
 									<tr>
 										<th scope="col">번호</th>
-										<th scope="col">처리상태</th>
+										<th scope="col">상태</th>
 										<th scope="col">신고자</th>
-										<th scope="col">피신고배차번호</th>
-										<th scope="col">신고카테고리</th>
+										<th scope="col">배차번호</th>
+										<th scope="col">카테고리</th>
 									</tr>
 								</thead>
+								
 								<tbody>
 									<c:forEach var="reportlist" items="${reportlist }" begin="0"
 										step="1" varStatus="status">
 										<tr class="list${reportlist.reportNo }">
 											<td>${reportlist.reportNo }</td>
-											<td>${reportlist.reportCode }</td>
+											
+											<td>${reportlist.reportCode == 1 ? '<h5 class="mb-0"><span class="badge bg-highlight color-white" style="background-color: #BB4758 !important">처리전</span></h5>' : reportlist.reportCode == 2 ? '<h5 class="mb-0"><span class="badge bg-highlight color-white" style="background-color: #A7CA65 !important">처리</span></h5>' : reportlist.reportCode == 3 ? '<h5 class="mb-0"><span class="badge bg-highlight color-white">처리완료</span></h5>' : ''}</td>
+											
 											<td>${reportlist.reportUserNo }</td>
 											<td>${reportlist.badCallNo }</td>
 											<td>${reportlist.reportCategory }</td>

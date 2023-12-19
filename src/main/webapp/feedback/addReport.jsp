@@ -33,12 +33,15 @@
 
 
 	$(function () {
+		let reportAddToast = new bootstrap.Toast($("#toast-report-add"));
 		
 		$("a:contains('등록')").on("click",function(){
+			
 			let data = {
 					reportCategory	: $("select[name='reportCategory'] option:selected").val(),
 					reportDetail	: $("textarea[name='reportDetail']").val(),
-					badCallNo		: $("input:hidden[name='badCallNo']").val()
+					badCallNo		: $("input:hidden[name='badCallNo']").val(),
+					reportUserNo	: $("input:hidden[name='reportUserNo']").val()
 			}
 			$.ajax(
 					{
@@ -53,7 +56,7 @@
 						complete: function (xhr, status) {
 			                // 요청이 완료되면 호출되는 콜백
 			                if(xhr.status == 200){
-			                	alert('신고가 접수되었습니다!');
+			                	rportAddToast.show()
 			                	
 			                }
 			                	
@@ -67,6 +70,7 @@
 </script>
 </head>
 <body class="theme-light">
+
 <div class="mb-3 pb-2"></div>
 	<div class="card card-style mb-3">
 		<div class="content">
@@ -88,7 +92,7 @@
 					<option value="요금 관련">요금 관련</option>
 					<option value="호출 및 탑승 중 불편사항">호출 및 탑승 중 불편사항</option>
 					<option value="기타">기타</option>
-				</select> <label for="c1" class="color-theme">Select an Option</label>
+				</select> 
 			</div>
 
 
@@ -116,6 +120,7 @@
 
 		</div>
 	</div>
-
+	<div id="toast-report-add"  class="toast toast-pill toast-bottom toast-s rounded-l bg-green-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>접수되었습니다!</span></div>
+	
 </body>
 </html>

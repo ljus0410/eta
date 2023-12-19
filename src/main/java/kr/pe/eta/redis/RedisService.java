@@ -56,7 +56,13 @@ public class RedisService {
 		if (!userList.isEmpty()) {
 			return userList;
 		} else {
-			throw new RuntimeException("Database has no Data");
+			throw new DatabaseHasNoDataException("Database has no Data");
+		}
+	}
+
+	public class DatabaseHasNoDataException extends RuntimeException {
+		public DatabaseHasNoDataException(String message) {
+			super(message);
 		}
 	}
 

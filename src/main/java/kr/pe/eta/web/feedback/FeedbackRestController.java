@@ -22,6 +22,7 @@ import kr.pe.eta.domain.Report;
 import kr.pe.eta.domain.Star;
 import kr.pe.eta.domain.User;
 import kr.pe.eta.service.feedback.FeedbackService;
+import kr.pe.eta.service.user.UserService;
 
 @RestController
 @RequestMapping("/feedback/json/*")
@@ -29,6 +30,9 @@ public class FeedbackRestController {
 
 	@Autowired
 	private FeedbackService feedbackService;
+
+	@Autowired
+	private UserService userService;
 
 	public FeedbackRestController() {
 		System.out.println(this.getClass());
@@ -43,7 +47,7 @@ public class FeedbackRestController {
 	@PostMapping(value = "addStar")
 	public void addStar(@RequestBody Star star, HttpSession session) throws Exception {
 		System.out.println("/feedback/json/addStar : POST");
-		
+
 		System.out.println(star);
 		star.setPassengerNo(((User) session.getAttribute("user")).getUserNo());
 		Call call = feedbackService.getCall(star.getCallNo());
@@ -71,7 +75,7 @@ public class FeedbackRestController {
 	@PostMapping(value = "addReport")
 	public void addReport(@RequestBody Report report, HttpSession session) throws Exception {
 		System.out.println("/feedback/json/addReport : POST");
-		User user = (User) session.getAttribute("user");
+		User user = userService.getUsers(report.getReportUserNo());
 		System.out.println(user);
 		System.out.println(report);
 		report.setReportUserNo(user.getUserNo());
@@ -91,9 +95,9 @@ public class FeedbackRestController {
 	}
 
 	@GetMapping(value = "addBlock/{userNo}")
-	public void addBlock(@PathVariable int userNo) throws Exception {
+	public int addBlock(@PathVariable int userNo) throws Exception {
 		Block block = Block.builder().userNo(userNo).build();
-		feedbackService.addBlock(block);
+		return feedbackService.addBlock(block) + 1;
 	}
 
 	@PostMapping(value = "addBlacklist")

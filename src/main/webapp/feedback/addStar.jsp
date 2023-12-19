@@ -31,13 +31,14 @@
 
 <script type="text/javascript">
 	window.closeModal = function() {
-	 $( '#menu-register' ).offcanvas( 'hide' );
+	 $( '#menu-report' ).offcanvas( 'hide' );
+	 
 	}
 	window.removeReport= function () {
-	$( "button:contains('신고')").remove();
+	$( "a:contains('신고')").remove();
 	}
 $(function () {
-		
+	let starAddToast = new bootstrap.Toast($("#toast-star-add"));
 		$("a:contains('등록')").on("click",function(){
 			let data = {
 					driverNo : ${star.driverNo},
@@ -58,7 +59,7 @@ $(function () {
 						complete: function (xhr, status) {
 			                // 요청이 완료되면 호출되는 콜백
 			                if(xhr.status == 200){
-			                	alert('등록되었습니다!')
+			                	starAddToast.show();	
 			                }
 			                	
 			            }
@@ -86,6 +87,11 @@ $(function () {
 			
 		})
 		
+		let reportActivate = new bootstrap.Offcanvas($("#menu-report"))
+		$("a:contains('신고')").on("click",function(){
+			
+			reportActivate.show();
+		})
 	})
 </script>
 </head>
@@ -99,7 +105,8 @@ $(function () {
 						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
 						<h1 class="pb-2" style="width: 140px; display: inline-block;">
-							<i class="has-bg rounded-s bi bg-yellow-dark bi-star">&nbsp;</i>&nbsp;&nbsp;별점등록
+							
+							<i class="has-bg rounded-s bi bg-yellow-dark bi-star" style="vertical-align:bottom !important; line-height: 0px!important;height: 30px !important;font-size: 30px !important; all:initial; display: inline-block;"></i>&nbsp;&nbsp;별점등록
 							/
 						</h1>
 						<h3 class="font-400 mb-0" style="display: inline-block;">배차번호
@@ -157,11 +164,9 @@ $(function () {
 						<div align="right">
 							<a class="btn btn-xxs border-blue-dark color-blue-dark"
 								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">등록</a>
-
-							<button type="button"
-								class="btn btn-xxs border-red-dark color-red-dark"
-								data-bs-toggle="offcanvas" data-bs-target="#menu-register"
-								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 0px">신고</button>
+							<a class="btn btn-xxs border-red-dark color-red-dark"
+								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">신고</a>
+							
 						</div>
 					</div>
 
@@ -171,14 +176,15 @@ $(function () {
 
 			<div
 				class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme"
-				style="width: 340px;" id="menu-register">
+				style="width: 340px;" id="menu-report">
 				<div class="content">
 					<iframe
-						src="/feedback/addReport?badCallNo=${star.callNo }&${param.userNo}"
+						src="/feedback/addReport?badCallNo=${star.callNo }&userNo=${user.userNo}"
 						style="width: 100%; height: 400px; border: none;"></iframe>
 				</div>
 			</div>
 		</div>
+		<div id="toast-star-add"  class="toast toast-pill toast-bottom toast-s rounded-l bg-blue-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>등록되었습니다!</span></div>
 	</form>
 </body>
 </html>

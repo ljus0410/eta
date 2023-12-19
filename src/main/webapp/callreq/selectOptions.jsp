@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
 <meta charset="UTF-8">
-<title>selectOptions</title>
+<title>eTa</title>
 <link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
 <link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
@@ -70,6 +70,38 @@
 </head>
 <body class="theme-light">
 <jsp:include page="/home/top.jsp" />
+<c:choose>
+    <c:when test="${empty user.role}">
+        <form name="detailform">
+        <div id="page">
+        <div class="page-content header-clear-medium">
+        <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px ;">
+         <div class="alert border-red-dark alert-dismissible color-red-dark rounded-s fade show" >
+           <i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle"></i>&nbsp;<strong>로그인해주세요.</strong>
+         </div>
+         </div>
+         </div>
+         </div>
+         </div>
+        </form>
+    </c:when>
+   <c:when test="${!empty user.role && user.role eq 'driver'}">
+                 <form name="detailform">
+        <div id="page">
+        <div class="page-content header-clear-medium">
+        <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px ;">
+         <div class="alert border-red-dark alert-dismissible color-red-dark rounded-s fade show" >
+           <i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle"></i>&nbsp;<strong>권한이 없습니다.</strong>
+         </div>
+         </div>
+         </div>
+         </div>
+         </div>
+        </form>
+    </c:when>
+    <c:otherwise>
 <div id="page">
 <div class="page-content header-clear-medium">
 <div class="card card-style">
@@ -124,7 +156,7 @@
 <span class="badge bg-warning-subtle border border-warning-subtle text-warning-emphasis rounded-pill" id="myMoneyFont">
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-currency-dollar" viewBox="0 0 16 16">
   <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/>
-</svg> 잔여 Tpay ${myMoney} 원 </span>
+</svg><span id="TmoneyFormat"></span></span>
  <input type="hidden"  id="mymoney" value="${myMoney}">
  <span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill" id="showPrepay"></span><br>
  <input type="hidden"  name="realPay" id="prepay" value="" readonly>
@@ -134,9 +166,16 @@
 </div>
 </div>
 </div>
+</c:otherwise>
+</c:choose>
 </body>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+	var myMoneyFormatSpan = document.getElementById('TmoneyFormat');
+	var myMoneyFormat= ${myMoney};
+	var formattedMoney = parseFloat(myMoneyFormat).toLocaleString(); // myMoneyFormat를 숫자로 변환 후 형식화
+	myMoneyFormatSpan.textContent = '잔여 Tpay'+formattedMoney + ' 원';
+	
 		var startAddress = sessionStorage.getItem('startAddress');
 		var endAddress = sessionStorage.getItem('endAddress');
 		var startPlaceName = sessionStorage.getItem('startPlaceName');
@@ -271,8 +310,10 @@ const drawPolylineAndMoveMarker = (data, map) => {
 	    var prepayInput = document.getElementById('prepay');
 	    prepayInput.value = recommendFare.toFixed(0);
 	    
+	    var prePayFormat = parseFloat(recommendFare).toLocaleString();
+
 	     var showPrepayInput = document.getElementById('showPrepay');
-	     showPrepayInput.innerHTML = '선결제 예상금액 '+recommendFare.toFixed(0)+' 원';
+	     showPrepayInput.innerHTML = '선결제 예상금액 '+prePayFormat+' 원';
 	     var callButton = document.getElementById('callButton');
          var moneyAlert = document.getElementById('moneyAlert');    
          var myMoney = document.getElementById('mymoney').value;   
@@ -313,14 +354,14 @@ async function getRoute(type, map) {
 
     // 요청 헤더를 추가합니다.
     const headers = {
-        Authorization: 'KakaoAK 16e815ac6b904a963cd94cdb83b0b87d',
-        'Content-Type': 'application/json'
+        'Authorization' : 'KakaoAK 8f0ca1a839a76df15892c48aa41d71dd', 
+        'Content-Type': 'application/json' 
     };
-
+    console.log('headers : '+headers);
     let requestUrl;
     // 요청 URL을 구성합니다.
     if(type == 'recommend'){   	
-    	requestUrl = url+'?origin='+origin+'&destination='+destination+'&priority=RECOMMEND&car_fuel=GASOLINE&car_hipass=false&alternatives=false&road_details=false';
+    	requestUrl = url+'?origin='+origin+'&destination='+destination+'&priority=RECOMMEND';
     } else if(type == 'time'){
     	requestUrl = url+'?origin='+origin+'&destination='+destination+'&priority=TIME&car_fuel=GASOLINE&car_hipass=false&alternatives=false&road_details=false';
     } else if(type == 'distance'){
@@ -336,6 +377,10 @@ async function getRoute(type, map) {
         });
 
         if (!response.ok) {
+        	var moneyAlert = document.getElementById('moneyAlert');    
+        	moneyAlert.innerHTML = '경로를 불러올 수 없습니다.';
+        	var callButton = document.getElementById('callButton');
+        	callButton.disabled = true;
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 

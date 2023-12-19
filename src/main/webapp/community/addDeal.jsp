@@ -38,24 +38,24 @@
             <div class="form-custom form-label form-icon mb-3">
               <i class="bi bi-currency-dollar font-12"></i>
               <input type="text" class="form-control rounded-xs" id="myMoney"  name="myMoney" readonly/>
-              <label for="myMoney" class="form-label-always-active color-theme">잔여 Tpay</label>
+              <label for="myMoney" class="form-label-always-active color-theme">잔여 TPay</label>
             </div>
             
             <div class="form-custom form-label form-icon mb-3">
               <i class="bi bi-cash font-12"></i>
               <input type="text" class="form-control rounded-xs" id="passengerOffer"  name="passengerOffer"/>
-              <label for="passengerOffer" class="form-label-always-active color-theme">제시금액</label>
+              <label for="passengerOffer" class="form-label-always-active color-theme">제시 금액</label>
             </div>
             
-            <button class="btn btn-full bg-blue-dark rounded-xs text-uppercase font-700 w-100 btn-s mt-4" type="submit" id="submitbt">제시 하기</button>
+            <button class="btn btn-full bg-blue-dark rounded-xs text-uppercase font-700 w-100 btn-s mt-4" type="submit" id="dealSubmit">제시 하기</button>
           </form>
         </div><!-- content -->
       </div><!-- card card-style -->
     
     </div><!-- page-content header-clear-medium -->
     
-    <!--Warning Toast Bar-->
-      <div id="toast-top-2" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+    <!--dealAlert-->
+      <div id="dealAlert" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
     
         <div class="align-self-center">
           <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
@@ -71,10 +71,10 @@
         </div>
         
       </div>
-    <!--Warning Toast Bar 끝 -->
+    <!--dealAlert 끝 -->
   
-    <!-- iOS Toast Bar-->
-      <div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
+    <!--dealTpayError -->
+      <div id="dealTpayError" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
         <div class="toast-body px-3 py-3">
           <div class="d-flex">
             <div class="align-self-center">
@@ -92,12 +92,12 @@
               <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">취소</a>
             </div>
             <div class="col-6">
-              <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border bg-red-dark color-red-dark" aria-label="Close"  onclick="payRequest()">충전</a>
+              <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border bg-red-dark color-red-dark" aria-label="Close"  onclick="confirmAlert()">충전</a>
             </div>
           </div>
         </div>
       </div>
-    <!-- iOS Toast Bar 끝-->
+    <!-- dealTpayError 끝-->
     
   </div><!-- page -->
   

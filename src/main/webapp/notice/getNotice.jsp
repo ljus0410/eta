@@ -28,18 +28,26 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script type="text/javascript">
 $(function () {
+	let noticeDelConfirmToast = new bootstrap.Toast($("#notice-del-alert"));
+	let noticeDelToast = new bootstrap.Toast($("#toast-notice-del"));
 	$("a:contains('삭제')").on("click",function(){
-		if(confirm("해당 공지사항을 삭제 하시겠습니까?")){
-			alert("정상적으로 삭제되었습니다.");
-			self.location ="/notice/deleteNotice?noticeNo=${notice.noticeNo}";
-		}else{
-			alert("삭제 취소");
-		}
+		noticeDelConfirmToast.show()
+		
 		
 	})
 	
 	$("a:contains('수정')").on("click",function(){
 			self.location ="/notice/updateNotice?noticeNo=${notice.noticeNo}";
+		
+	})
+	$("a:contains('확인')").on("click",function(){
+		noticeDelConfirmToast.hide();
+		noticeDelToast.show();
+		setTimeout(function() {
+			self.location ="/notice/deleteNotice?noticeNo=${notice.noticeNo}";
+            
+        }, 1000); 
+			
 		
 	})
 })
@@ -54,7 +62,7 @@ $(function () {
 					<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
 					<h1 class="pb-2" style="width: 140px; display: inline-block;">
-						<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;공지사항
+						<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns" style="vertical-align:bottom !important; line-height: 0px!important;height: 30px !important;font-size: 30px !important; all:initial; display: inline-block;"></i>&nbsp;&nbsp;공지사항
 						/
 					</h1>
 					<h3 class="font-400 mb-0"style="display: inline-block;">${notice.noticeNo }</h3>
@@ -80,15 +88,41 @@ $(function () {
 						<p>${notice.noticeDetail }
 					</div>
 				</div>
+				<c:if test="${user.role eq 'admin'}">
 				<div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
 					<a class="btn btn-xxs border-blue-dark color-blue-dark"
 									style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-right: 10px ">수정</a>
 					<a class="btn btn-xxs border-red-dark color-red-dark"
 									style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-right: 20px">삭제</a>
 				</div>
+				</c:if>
 			</div>
 
 		</div>
 	</div>
+	<div id="notice-del-alert" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
+		<div class="toast-body px-3 py-3">
+			<div class="d-flex">
+				<div class="align-self-center">
+					<span class="icon icon-xxs rounded-xs bg-fade-green scale-box"><i class="bi bi-exclamation-triangle color-green-dark font-16"></i></span>
+				</div>
+				<div class="align-self-center">
+					<h5 class="font-16 ps-2 ms-1 mb-0">삭제 알림</h5>
+				</div>
+			</div>
+			<p class="font-12 pt-2 mb-3">
+				해당 공지사항을 삭제하시겠습니까?
+			</p>
+			<div class="row">
+			<div class="col-6">
+			<a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-green color-green-dark" aria-label="Close" >취소</a>
+			</div>
+			<div class="col-6">
+			<a href="#" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn gradient-green shadow-bg shadow-bg-m" >확인</a>
+			</div>
+			</div>
+		</div>
+	</div>
+	<div id="toast-notice-del"  class="toast toast-pill toast-bottom toast-s rounded-l bg-green-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>삭제되었습니다!</span></div>
 </body>
 </html>

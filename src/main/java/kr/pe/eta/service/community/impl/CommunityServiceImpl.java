@@ -104,6 +104,11 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 
 	@Override
+	public void deleteDealOther(DealReq dealReq) throws Exception {
+		communityDao.deleteDealOther(dealReq);
+	}
+
+	@Override
 	public void addShareReq(ShareReq shareReq) throws Exception {
 		communityDao.addShareReq(shareReq);
 	}
@@ -132,8 +137,23 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 
 	@Override
+	public ShareReq getShareall(int callNo) throws Exception {
+		ShareReq shareReq = communityDao.getShareall(callNo);
+		return shareReq;
+	}
+
+	@Override
 	public void deleteShareReq(int callNo) throws Exception {
 		communityDao.deleteShareReq(callNo);
 	}
 
+	@Override
+	public int getShareCount(int callNo) throws Exception {
+		return communityDao.getShareCount(callNo);
+	}
+
+	@Override
+	public int getShareCallNo(int userNo) throws Exception {
+		return communityDao.getShareCallNo(userNo);
+	}
 }
