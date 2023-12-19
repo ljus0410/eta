@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -169,15 +171,17 @@ public class UserController {
 			System.out.println("로그인실패");
 			modelAndView.setViewName("redirect:/home.jsp");
 		}
-
+		modelAndView.addObject("money", user.getMyMoney());
 		return modelAndView;
 	}
 
 	@RequestMapping(value = "addUser", method = RequestMethod.GET)
-	public ModelAndView addUser() throws Exception {
+	public ModelAndView addUser(@RequestParam("role") String role) throws Exception {
 		System.out.println("/user/addUser : GET");
 		ModelAndView model = new ModelAndView();
 
+		System.out.println("role :" + role);
+		model.addObject("role", role);
 		model.setViewName("redirect:/user/addUser.jsp");
 
 		return model;
@@ -188,45 +192,58 @@ public class UserController {
 		System.out.println("/user/addUser: POST");
 
 		ModelAndView model = new ModelAndView();
-
+		System.out.println("gernder: " + user.getGender());
+		user.setMyMoney("0");
+		System.out.println("money" + user.getMyMoney());
+		System.out.println("role: " + user.getRole());
 		userService.addUser(user);
 		session.setAttribute("user", user);
 		User newuser = userService.getUser(user.getEmail());
-		if (newuser.getRole().equals("passenger")) {
+		if (user.getRole().equals("passenger")) {
+
 			callReqService.addLikeList(newuser.getUserNo());
 		}
-		System.out.println("방금 만든 회원 : " + userService.getUser(user.getEmail()));
+		System.out.println("방금 만든 회원 : " + userService.getUser(newuser.getEmail()));
 		System.out.println("즐겨찾기 보자 : " + callReqService.getLikeList(newuser.getUserNo()));
-		model.setViewName("redirect:/home.jsp");
+		model.setViewName("forward:/home.jsp");
 		return model;
 
 	}
 
 	@RequestMapping(value = "/getUser", method = RequestMethod.GET)
 	public ModelAndView getUser(@RequestParam(name = "email", required = false) String email,
-			@RequestParam(name = "userNo", required = false) Integer userNo) throws Exception {
+			@RequestParam(name = "userNo", required = false) Integer userNo, HttpSession session) throws Exception {
 		System.out.println("/user/getUser : GET");
 		ModelAndView model = new ModelAndView();
 		User user = null;
 
 		if (email == null) {
 			user = userService.getUsers(userNo);
+			System.out.println("돈돈돈 : " + user.getMyMoney());
 		} else {
 			user = userService.getUser(email);
+			System.out.println("돈돈돈 : " + user.getMyMoney());
 		}
 
 		System.out.println("userInfo = " + user);
 		model.setViewName("forward:/user/getUser.jsp");
 		model.addObject("user", user);
+		model.addObject("money", user.getMyMoney());
 		return model;
 	}
 
-	@RequestMapping(value = "updateUserView", method = RequestMethod.GET)
-	public ModelAndView updateUserView(@RequestParam("email") String eamil, HttpSession session) throws Exception {
+	@RequestMapping(value = "getadmin", method = RequestMethod.GET)
+	public ModelAndView updateUserView(@RequestParam("userNo") int userNo, HttpSession session) throws Exception {
 		System.out.println("/user/updateUser : GET");
 		ModelAndView model = new ModelAndView();
+		int result = feedback.getBlockCount(userNo);
+		System.out.println("user info :" + userNo);
+		User info = userService.getUsers(userNo);
+		System.out.println("result : " + result);
 
-		model.setViewName("redirect:/user/updateUserView.jsp");
+		model.addObject("users", info);
+		model.addObject("block", result);
+		model.setViewName("forward:/user/getadmin.jsp");
 		return model;
 	}
 
@@ -234,13 +251,10 @@ public class UserController {
 	public ModelAndView updateUser(@ModelAttribute("user") User user, HttpSession session) throws Exception {
 		System.out.println("/user/updateUser : POST");
 		ModelAndView model = new ModelAndView();
-
+		System.out.println("수정한 이름: " + user.getName());
 		userService.updateUser(user);
 
-		String sessionEmail = ((User) session.getAttribute("user")).getEmail();
-		if (sessionEmail.equals(user.getEmail())) {
-			session.setAttribute("user", user);
-		}
+		session.setAttribute("user", user);
 
 		model.setViewName("forward:/home.jsp");
 		return model;
@@ -293,10 +307,14 @@ public class UserController {
 
 		Map<String, Object> map = userService.getUserList(search);
 		System.out.println("map");
+
+		List<User> userList = ((List<User>) map.get("list")).stream().filter(user -> !user.getRole().equals("admin"))
+				.collect(Collectors.toList());
+
 		User user = new User();
 
 		System.out.println("code" + user.isBlockCode());
-		model.addObject("list", map.get("list"));
+		model.addObject("list", userList);
 		model.addObject("passenger", map.get("passengertotalCount"));
 		model.addObject("driver", map.get("drivertotalCount"));
 		model.setViewName("forward:/user/listUser.jsp");
@@ -317,25 +335,33 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "deleteUser", method = RequestMethod.POST)
-	public ModelAndView deleteUser(@RequestParam("detailPwd") String detailPwd, @RequestParam("email") String email)
-			throws Exception {
+	public ModelAndView deleteUser(@RequestParam("pwd") String pwd, @RequestParam("userNo") int userNo,
+			HttpSession session) throws Exception {
 
 		System.out.println("/user/deleteUser : POST");
 
-		User user = userService.getUser(email);
-		if (user.getPwd().equals(detailPwd)) {
-			userService.deleteUser(email);
-		}
+		System.out.println("email : " + userNo);
+		System.out.println("pwd : " + pwd);
+
 		ModelAndView model = new ModelAndView();
 
+		User user = userService.getUsers(userNo);
+		System.out.println("user : " + user);
+		System.out.println("user.getpwd :" + user.getPwd());
+		System.out.println("삭제 : ");
 		model.setViewName("redirect:/home.jsp");
+		int result = userService.deleteUser(userNo);
+		System.out.println("여기야 여기=====" + result);
+		session.invalidate();
+
 		return model;
 
 	}
 
 	@GetMapping("/auth/kakao/callback")
-	public @ResponseBody ModelAndView kakaoCallback(String code, HttpSession session) throws Exception {// Data를 리턴해주는
-																										// 컨트롤러
+	public @ResponseBody ModelAndView kakaoCallback(String code, HttpSession session) throws Exception {// Data를
+																										// 리턴해주는
+		// 컨트롤러
 		System.out.println("카카오톡 로그인");
 		// Post방식으로 key=value 데이터를 요청(카카오쪽으로)
 		// HttpURLConnection
@@ -403,16 +429,19 @@ public class UserController {
 		User user = userService.getUser(email);
 		if (user != null && email.equals(user.getEmail())) {
 			session.setAttribute("user", user);
-			model.setViewName("redirect:/user/home.jsp");
+			model.setViewName("redirect:/home.jsp");
 		} else {
+
+			System.out.println("여기가 데이터없다");
+			model.addObject("kakaoProfile", kakaoprofile.getKakao_account().getEmail());
 			model.setViewName("redirect:/user/addUser.jsp");
+
 		}
 
 		// User
 		System.out.println("kakaoprofile ID" + kakaoprofile.getId());
 		System.out.println("kakaoprofile Email" + kakaoprofile.getKakao_account().getEmail());
 
-		model.addObject("kakaoProfile", kakaoprofile);
 		return model;
 	}
 
@@ -488,25 +517,29 @@ public class UserController {
 		ModelAndView model = new ModelAndView();
 		String email = naverProfile.getResponse().getEmail();
 		User user = userService.getUser(email);
-		if (user != null && email.equals(user.getEmail())) {
+		if (user != null) {
 			session.setAttribute("user", user);
-			model.setViewName("redirect:/user/home.jsp");
+			model.setViewName("redirect:/home.jsp");
 		} else {
+			model.addObject("naver", naverProfile.getResponse().getEmail());
 			model.setViewName("redirect:/user/addUser.jsp");
 		}
 		System.out.println("email" + naverProfile.getResponse().getEmail());
-		model.addObject("naverProfile", naverProfile);
+
 		return model;
 
 	}
 
 	@GetMapping("/kakao-login")
-	public void kakao(HttpServletRequest request, HttpServletResponse response)
+	public void kakao(@RequestParam("role") String role, HttpServletRequest request, HttpServletResponse response)
 			throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
 		System.out.println("kakao-login");
+		System.out.println("role : " + role);
 		String url = loginService.kakaoUrl("authorize");
 		System.out.println("url========" + url);
 		try {
+			HttpSession session = request.getSession();
+			session.setAttribute("role", role);
 			response.sendRedirect(url);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -556,7 +589,7 @@ public class UserController {
 	public @ResponseBody ModelAndView logOut(HttpSession session) throws Exception {
 		System.out.println("카카오 로그아웃 컨트롤");
 		ModelAndView model = new ModelAndView();
-		model.setViewName("redirect:/user/login.jsp");
+		model.setViewName("redirect:/home.jsp");
 		// redisService.deleteUser(session);// 추가
 		session.invalidate();
 
