@@ -30,7 +30,7 @@
 
 <script type="text/javascript">
 window.closeModal = function() {
-	 $( '#menu-register' ).offcanvas( 'hide' );
+	 $( '#menu-report' ).offcanvas( 'hide' );
 	}
 	window.removeReport= function () {
 	$( "button:contains('신고')").remove();
@@ -54,6 +54,8 @@ function setStar(star) {
 }
 	$(function () {
 		setStar(${star.star})
+		let starFixToast = new bootstrap.Toast($("#toast-star-fix"));
+		
 		$($("input:radio[name='star']")[${star.star -1}]).attr("checked", true)
 		
 		$("a:contains('수정')").on("click",function(){
@@ -76,7 +78,7 @@ function setStar(star) {
 						complete: function (xhr, status) {
 			                // 요청이 완료되면 호출되는 콜백
 			                if(xhr.status == 200){
-			                	alert('수정이 완료되었습니다!')
+			                	starFixToast.show()
 			                }
 			                	
 			            }
@@ -152,7 +154,7 @@ function setStar(star) {
 
 							<button type="button"
 								class="btn btn-xxs border-red-dark color-red-dark"
-								data-bs-toggle="offcanvas" data-bs-target="#menu-register"
+								data-bs-toggle="offcanvas" data-bs-target="#menu-report"
 								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 0px">신고</button>
 						</div>
 					</div>
@@ -163,7 +165,7 @@ function setStar(star) {
 
 			<div
 				class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme"
-				style="width: 340px;" id="menu-register">
+				style="width: 340px;" id="menu-report">
 				<div class="content">
 					<iframe
 						src="/feedback/addReport?badCallNo=${star.callNo }&${param.userNo}"
@@ -171,6 +173,7 @@ function setStar(star) {
 				</div>
 			</div>
 		</div>
+		<div id="toast-star-fix"  class="toast toast-pill toast-bottom toast-s rounded-l bg-green-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>수정되었습니다!</span></div>
 </form>
 </body>
 </html>

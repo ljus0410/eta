@@ -84,6 +84,17 @@ public class CommunityController {
 
 		int callNo = communityService.getCallNo(userNo, call.getCallCode());
 
+		List<Integer> driverNoResult = getDriverList(call, userNo);
+
+		model.addAttribute("call", call);
+		model.addAttribute("callNo", callNo);
+		model.addAttribute("callDriverList", driverNoResult);
+
+		return "forward:/callreq/searchCall.jsp";
+	}
+
+	public List<Integer> getDriverList(Call call, int userNo) throws Exception {
+
 		double passengerX = call.getStartX();
 		double passengerY = call.getStartY();
 		double driverX = 0;
@@ -130,11 +141,7 @@ public class CommunityController {
 			}
 		}
 
-		model.addAttribute("call", call);
-		model.addAttribute("callNo", callNo);
-		model.addAttribute("callDriverList", driverNoResult);
-
-		return "forward:/callreq/searchCall.jsp";
+		return driverNoResult;
 	}
 
 	/////////// 딜
@@ -156,8 +163,7 @@ public class CommunityController {
 	}
 
 	@RequestMapping(value = "addDealReq", method = RequestMethod.POST)
-	public String addDealReq(@ModelAttribute("dealReq") DealReq dealReq, HttpSession session, Model model)
-			throws Exception {
+	public String addDealReq(@ModelAttribute("dealReq") DealReq dealReq, HttpSession session) throws Exception {
 
 		System.out.println("/addDealReq POST");
 
@@ -167,12 +173,8 @@ public class CommunityController {
 		communityService.updateDealCode(userNo);
 		User user = userService.getUser(((User) session.getAttribute("user")).getEmail());
 		session.setAttribute("user", user);
-		Call call = communityService.getCall(dealReq.getCallNo());
 
-		model.addAttribute("call", call);
-		model.addAttribute("dealReq", dealReq);
-
-		return "/community/getDeal.jsp";
+		return "redirect:/community/getDealReq";
 	}
 
 	@RequestMapping(value = "getDealReq", method = RequestMethod.GET)
@@ -255,7 +257,7 @@ public class CommunityController {
 		model.addAttribute("callNo", callNo);
 		model.addAttribute("maxShareCount", maxShareCount);
 
-		return "/community/addShare2.jsp";
+		return "/community/addShare.jsp";
 	}
 
 	@RequestMapping(value = "addShareReq", method = RequestMethod.POST)
@@ -289,13 +291,22 @@ public class CommunityController {
 		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
 				pageSize);
 		System.out.println(resultPage);
+		List<ShareReq> list = (List<ShareReq>) map.get("shareList");
+		List<ShareReq> shareList = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			ShareReq listItem = list.get(i);
+			int callNo = list.get(i).getCallNo();
+			int total = communityService.getShareCount(callNo);
+			listItem.setFirstShareCount(total);
+			shareList.add(listItem);
+		}
 
-		model.addAttribute("shareList", map.get("shareList"));
+		model.addAttribute("shareList", shareList);
 		model.addAttribute("callList", map.get("callList"));
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
 
-		return "/community/listShare2.jsp";
+		return "/community/listShare.jsp";
 	}
 
 	@RequestMapping(value = "deleteShareReq", method = RequestMethod.GET)
@@ -310,5 +321,15 @@ public class CommunityController {
 		callReqService.deleteCall(callNo);
 
 		return "redirect:/community/getShareList";
+	}
+
+	@RequestMapping(value = "chat", method = RequestMethod.GET)
+	public String chat(@RequestParam int callNo, HttpSession session, Model model) throws Exception {
+
+		System.out.println("/chat GET");
+
+		model.addAttribute("callNo", callNo);
+
+		return "/community/chat.jsp";
 	}
 }

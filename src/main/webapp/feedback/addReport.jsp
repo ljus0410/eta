@@ -35,6 +35,7 @@
 	$(function () {
 		
 		$("a:contains('등록')").on("click",function(){
+			
 			let data = {
 					reportCategory	: $("select[name='reportCategory'] option:selected").val(),
 					reportDetail	: $("textarea[name='reportDetail']").val(),
@@ -67,6 +68,7 @@
 </script>
 </head>
 <body class="theme-light">
+<div id="page">
 <div class="mb-3 pb-2"></div>
 	<div class="card card-style mb-3">
 		<div class="content">
@@ -88,7 +90,7 @@
 					<option value="요금 관련">요금 관련</option>
 					<option value="호출 및 탑승 중 불편사항">호출 및 탑승 중 불편사항</option>
 					<option value="기타">기타</option>
-				</select> <label for="c1" class="color-theme">Select an Option</label>
+				</select> 
 			</div>
 
 
@@ -116,6 +118,7 @@
 
 		</div>
 	</div>
-
+	</div>
+	
 </body>
 </html>
