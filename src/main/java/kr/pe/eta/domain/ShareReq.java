@@ -1,7 +1,5 @@
 package kr.pe.eta.domain;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +14,7 @@ public class ShareReq {
 	private int firstShareCount;
 	private int startShareCount;
 	private int maxShareCount;
-	private Date shareDate;
+	private String shareDate;
 
 	@Override
 	public String toString() {
