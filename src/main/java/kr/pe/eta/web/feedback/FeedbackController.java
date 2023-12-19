@@ -100,12 +100,14 @@ public class FeedbackController {
 	}
 
 	@GetMapping(value = "addReport")
-	public ModelAndView addReport(@RequestParam("badCallNo") int badCallNo) throws Exception {
+	public ModelAndView addReport(@RequestParam("badCallNo") int badCallNo, @RequestParam("userNo") int userNo)
+			throws Exception {
 		System.out.println("/feedback/addReport : GET");
 		String viewName = "/feedback/addReport.jsp";
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName(viewName);
 		modelAndView.addObject("badCallNo", badCallNo);
+		modelAndView.addObject("userNo", userNo);
 		return modelAndView;
 	}
 

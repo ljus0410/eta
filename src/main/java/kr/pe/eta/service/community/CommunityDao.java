@@ -39,6 +39,8 @@ public interface CommunityDao {
 
 	public void deleteDealReqDriver(int userNo) throws Exception;
 
+	public void deleteDealOther(DealReq dealReq) throws Exception;
+
 	public void addShareReq(ShareReq shareReq) throws Exception;
 
 	public void updateShareCode(int userNo) throws Exception;
@@ -51,6 +53,12 @@ public interface CommunityDao {
 
 	public ShareReq getShare(int userNo) throws Exception;
 
+	public ShareReq getShareall(int callNo) throws Exception;
+
 	public void deleteShareReq(int callNo) throws Exception;
+
+	public int getShareCount(int callNo) throws Exception;
+
+	public int getShareCallNo(int userNo) throws Exception;
 
 }

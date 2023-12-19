@@ -39,17 +39,17 @@
 
           <div class="form-custom form-label form-icon mb-3">
             <i class="bi bi-calendar font-12"></i>
-            <input type="date" class="form-control rounded-xs" id="resdate"  name="resdate"/>
-            <label for="resdate" class="form-label-always-active color-theme">예약 날짜</label>
+            <input type="date" class="form-control rounded-xs" id="resDate"  name="resDate"/>
+            <label for="resDate" class="form-label-always-active color-theme">예약 날짜</label>
           </div>
 
           <div class="form-custom form-label form-icon mb-3">
             <i class="bi bi-clock font-12"></i>
-            <input type="time" class="form-control rounded-xs" id="restime"  name="restime"/>
-            <label for="restime" class="form-label-always-active color-theme">예약 시간</label>
+            <input type="time" class="form-control rounded-xs" id="resTime"  name="resTime"/>
+            <label for="resTime" class="form-label-always-active color-theme">예약 시간</label>
           </div>
 
-          <button class="btn btn-full bg-blue-dark rounded-xs text-uppercase font-700 w-100 btn-s mt-4" type="submit" id="submitbt">예약 하기</button>
+          <button class="btn btn-full bg-blue-dark rounded-xs text-uppercase font-700 w-100 btn-s mt-4" type="submit" id="reservationSubmit">예약 하기</button>
         </form>
       </div><!-- content -->
     </div> <!-- card card-style -->
@@ -57,7 +57,7 @@
   </div> <!-- page-content header-clear-medium -->
 
   <!--Warning Toast Bar-->
-  <div id="toast-top-2" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+  <div id="reservationAlert" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
 
     <div class="align-self-center">
       <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>

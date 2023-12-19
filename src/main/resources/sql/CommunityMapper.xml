@@ -91,20 +91,22 @@
 
     <select id="getDeal" parameterType="int" resultMap="dealreqSelectMap">
         SELECT deal.call_no, deal.passenger_offer
-        FROM deal, users
+        FROM deal, users, call
         WHERE users.user_no=#{userNo}
-          AND users.user_no=deal.user_no
-          AND users.role='passenger'
+        AND users.user_no=deal.user_no
+        AND call.call_no=deal.call_no
+        AND users.role='passenger'
+        AND call.call_state_code='운행전'
     </select>
 
     <select id="getDealDriverList" parameterType="int" resultMap="dealreqSelectMap">
         SELECT deal.driver_offer, deal.call_no, deal.user_no
         FROM call, deal, users
         WHERE deal.call_no=call.call_no
-          AND call.call_no=#{value}
-          AND call.call_state_code='운행전'
-          AND users.user_no=deal.user_no
-          AND users.role='driver'
+        AND call.call_no=#{value}
+        AND call.call_state_code='운행전'
+        AND users.user_no=deal.user_no
+        AND users.role='driver'
     </select>
 
     <delete id="deleteDealReq" parameterType="int">
@@ -114,49 +116,57 @@
     </delete>
 
     <select id="getDealList" resultMap="dealreqSelectMap">
-SELECT deal.call_no, deal.user_no, deal.passenger_offer
-                      FROM call, deal, users
-                      WHERE deal.call_no=call.call_no
-                      AND users.user_no=deal.user_no
-                      AND users.role='passenger'
-                      AND call.call_state_code='운행전'
-                              ORDER BY call.call_no
+        SELECT deal.call_no, deal.user_no, deal.passenger_offer
+        FROM call, deal, users
+        WHERE deal.call_no=call.call_no
+        AND users.user_no=deal.user_no
+        AND users.role='passenger'
+        AND call.call_state_code='운행전'
+        ORDER BY call.call_no
     </select>
 
     <select id="getDealCallList" resultMap="callSelectMap">
-SELECT call.start_addr, call.end_addr, call.call_no
-                      FROM call, deal, users
-                      WHERE deal.call_no=call.call_no
-                        AND users.user_no=deal.user_no
-                        AND users.role='passenger'
-                        AND call.call_state_code='운행전'
-                      ORDER BY call.call_no
+        SELECT call.start_addr, call.end_addr, call.call_no, call.call_date
+        FROM call, deal, users
+        WHERE deal.call_no=call.call_no
+        AND users.user_no=deal.user_no
+        AND users.role='passenger'
+        AND call.call_state_code='운행전'
+        ORDER BY call.call_no
     </select>
 
     <select  id="getDealCount" resultType="int">
         SELECT COUNT(*)
         FROM( SELECT deal.call_no, deal.deal_no, deal.user_no, deal.passenger_offer
-                 FROM call, deal, users
-                 WHERE deal.call_no=call.call_no
-                   AND call.call_state_code='운행전'
-                   AND users.user_no=deal.user_no
-                   AND users.role='passenger' ) countTable
+              FROM call, deal, users
+              WHERE deal.call_no=call.call_no
+              AND call.call_state_code='운행전'
+              AND users.user_no=deal.user_no
+              AND users.role='passenger' ) countTable
     </select>
 
     <select id="getDealNo" parameterType="map" resultType="int">
         SELECT deal.call_no
         FROM call, users, deal
         WHERE users.user_no=#{userNo}
-          AND users.user_no=deal.user_no
-          AND call.call_no=deal.call_no
-          AND call.call_state_code='운행전'
-          AND call.call_code=#{callCode}
+        AND users.user_no=deal.user_no
+        AND call.call_no=deal.call_no
+        AND call.call_state_code='운행전'
+        AND call.call_code=#{callCode}
     </select>
 
     <delete id="deleteDealReqDriver" parameterType="int">
         DELETE
         FROM deal
         WHERE user_no=#{userNo}
+    </delete>
+
+    <delete id="deleteDealOther" parameterType="dealreq">
+        DELETE
+        FROM deal
+        WHERE passenger_offer=0
+        AND call_no = #{callNo}
+        AND user_no &lt;&gt; #{userNo}
     </delete>
     
     <insert id="addShareReq" parameterType="sharereq">
@@ -224,10 +234,36 @@ SELECT call.start_addr, call.end_addr, call.call_no
           AND users.user_no=shares.user_no
     </select>
 
+    <select id="getShareall" parameterType="int" resultMap="sharereqSelectMap">
+        SELECT *
+        FROM (
+        SELECT shares.call_no, shares.share_count, shares.start_share_count, shares.share_date
+        FROM shares, users
+        WHERE shares.call_no=#{callNo}
+          AND users.user_no=shares.user_no
+        ORDER BY shares.share_no
+        )
+        WHERE ROWNUM = 1
+    </select>
+
     <delete id="deleteShareReq" parameterType="int">
         DELETE
         FROM shares
         WHERE call_no=#{callNo}
     </delete>
+    
+    <select id="getShareCount" parameterType="int">
+        SELECT sum(share_count)
+        FROM shares
+        WHERE call_no=#{callNo}
+    </select>
+
+    <select id="getShareCallNo" parameterType="int">
+        SELECT shares.call_no
+        FROM shares, call, users
+        WHERE shares.call_no = call.call_no
+        AND shares.user_no = users.user_no
+        AND users.user_no=#{userNo}
+    </select>
 
 </mapper>

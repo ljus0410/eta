@@ -34,7 +34,7 @@ window.closeModal = function() {
 	 $( '#menu-report' ).offcanvas( 'hide' );
 	}
 window.removeReport= function () {
-	$( "button:contains('신고')").remove();
+	$( "a:contains('신고')").remove();
 	}
 
 
@@ -93,6 +93,11 @@ $(function () {
 		
 		
 	})
+	let reportActivate = new bootstrap.Offcanvas($("#menu-report"))
+		$("a:contains('신고')").on("click",function(){
+			
+			reportActivate.show();
+		})
 	
 	
 })
@@ -112,28 +117,22 @@ $(function () {
 						<c:forEach var="blacklistList" items="${blacklistList }" begin="0"
 							step="1" varStatus="status">
 
-							<div id="${blacklistList.passengerNo } list"
-								style="padding-bottom: 10px; vertical-align: center;">
-								<i class="has-bg rounded-s bi bg-blue-dark bi-person-fill"
-									style="font-size: 20px"></i>&nbsp;
-								<h5 class="font-300 mb-0" style="display: inline-block;">${blacklistList.passengerNo }</h5>
+							<div id="${blacklistList.passengerNo } list" style="padding-bottom: 10px; ">
+								<div style="align-items:  center !important;display: inline-block;width: 70px;">
+									<i class="has-bg rounded-s bi bg-blue-dark bi-person-fill"
+										style="font-size: 20px"></i>&nbsp;
+									<h5 class="font-300 mb-0" style="display: inline-block;">${blacklistList.passengerNo }</h5>
+								</div>
 
 
-
-								<div class="ms-auto align-self-center"
-									style="display: inline-block;">
+								<div class="ms-auto align-self-center" style="display: inline-block;vertical-align: bottom;">
 									<div class="form-switch ios-switch switch-blue switch-s">
-										<input type="hidden" name="blacklistCode"
-											value=${blacklistList.blacklistCode }> <input
-											type="hidden" name="passengerNo"
-											value="${blacklistList.passengerNo }"> <input
-											type="hidden" name="driverNo"
-											value="${blacklistList.driverNo }"><input
-											type="checkbox" class="ios-input"
-											id="switch-4a${blacklistList.passengerNo }"
+										<input type="hidden" name="blacklistCode" value=${blacklistList.blacklistCode }>
+										<input type="hidden" name="passengerNo" value="${blacklistList.passengerNo }"> 
+										<input type="hidden" name="driverNo" value="${blacklistList.driverNo }">
+										<input type="checkbox" class="ios-input" id="switch-4a${blacklistList.passengerNo }"
 											${ ! empty blacklistList.blacklistCode && blacklistList.blacklistCode eq "true" ? "checked='checked'" : "" }>
-										<label class="custom-control-label"
-											for="switch-4a${blacklistList.passengerNo }"></label>
+										<label class="custom-control-label" for="switch-4a${blacklistList.passengerNo }"></label>
 									</div>
 								</div>
 
@@ -161,7 +160,7 @@ $(function () {
 						step="1" varStatus="status">
 						<c:if test="${status.index eq 0 }">
 							<iframe
-								src="/feedback/addReport?badCallNo=${blacklistList.callNo }&${param.userNo}"
+								src="/feedback/addReport?badCallNo=${blacklistList.callNo }&userNo=${user.userNo}"
 								style="width: 100%; height: 400px; border: none;"></iframe>
 						</c:if>
 					</c:forEach>
