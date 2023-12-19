@@ -34,11 +34,12 @@
         role, block_code, car_opt, pet_opt, car_num, bank, account, reg_date, my_money,
         deal_code, share_code
             )
-    VALUES (
-        seq_users_user_no.NEXTVAL, #{email:VARCHAR}, #{pwd:VARCHAR}, #{name:VARCHAR}, #{nickName:VARCHAR}, #{birth:VARCHAR}, #{gender:NUMERIC},
-        #{phone:VARCHAR}, #{role:VARCHAR}, 0, #{carOpt:NUMERIC}, #{petOpt:NUMERIC}, #{carNum:VARCHAR}, #{bank:VARCHAR},
-        #{account:VARCHAR}, SYSDATE, 0, 0, 0
-    )
+   VALUES (
+    seq_users_user_no.NEXTVAL, #{email:VARCHAR}, #{pwd:VARCHAR}, #{name:VARCHAR}, #{nickName:VARCHAR}, #{birth:VARCHAR}, #{gender:NUMERIC},
+    #{phone:VARCHAR}, #{role:VARCHAR}, 0, #{carOpt:NUMERIC}, #{petOpt:NUMERIC}, #{carNum:VARCHAR}, #{bank:VARCHAR},
+    #{account:VARCHAR}, SYSDATE, 0, 0, 0
+)
+
 </insert>
 
   
@@ -54,21 +55,29 @@
         WHERE user_no = #{userNo}
     </select>
     
-    <update id="updateUser" parameterType="user" >
-      UPDATE users
-      <set>
-         name = #{name},
-         phone = #{phone},
-         nick_name = #{nickName},
-         car_opt = #{carOpt},
-         car_num = #{carNum},
-         bank = #{bank},
-         account = #{account},
-         pet_opt = #{petOpt}
-         
-      </set>
-      WHERE user_no = #{userNo}
-    </update>
+<update id="updateUser" parameterType="user">
+  UPDATE users
+  <set>
+    <if test="role == 'passenger' ">
+      name = #{name},
+      phone = #{phone}
+    </if>
+    <if test="role == 'driver' ">
+      name = #{name},
+      phone = #{phone},
+      car_opt = #{carOpt},
+      car_num = #{carNum},
+      bank = #{bank},
+      account = #{account},
+      pet_opt = #{petOpt}
+    </if>
+  </set>
+  WHERE user_no = #{userNo}
+</update>
+
+
+
+
     
     <select id= "getUserList" parameterType="search" resultMap="userSelectMap">
      SELECT *
@@ -108,14 +117,13 @@
                    ORDER BY user_no ) inner_table)          
    </select>
     
-    
- <delete id="deleteUser" parameterType="string">
-
+   
+  <delete id="deleteUser" parameterType="int">
    DELETE FROM users
-   WHERE email = #{email}
-
+   WHERE user_no = #{userNo}
 </delete>
-  
+
+
   <update id = "updatePwd" parameterType="user">
     UPDATE users
     <set>

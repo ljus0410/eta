@@ -9,7 +9,6 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,8 +32,6 @@ import kr.pe.eta.service.user.LoginService;
 import kr.pe.eta.service.user.UserService;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 
 @RestController
@@ -88,15 +85,15 @@ public class UserRestController {
 		}
 
 		Message message = new Message();
-		message.setFrom("01066779045");
-		message.setTo(phone);
-		message.setText("[인증번호 안내] 입력하셔야할 인증번호는[" + numStr + "]입니다");
+//		message.setFrom("01066779045");
+//		message.setTo(phone);
+//		message.setText("[인증번호 안내] 입력하셔야할 인증번호는[" + numStr + "]입니다");
 
-		SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+//		SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
 		// Create a map to hold multiple values
 		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("response", response);
+		// resultMap.put("response", response);
 		resultMap.put("num", numStr);
 
 		System.out.println(resultMap);
@@ -104,35 +101,36 @@ public class UserRestController {
 		return resultMap;
 	}
 
-	@RequestMapping(value = "dupNickName/{nickName}", method = RequestMethod.GET)
-	public String dupnickName(@PathVariable String nickName) throws Exception {
+	@RequestMapping(value = "dupNickName", method = RequestMethod.GET)
+	public String dupnickName(@RequestParam("nick") String nickName) throws Exception {
 		System.out.println("/Json/dpuNickName : GET");
 
 		System.out.println("nickName==" + nickName);
 		boolean duplication = userService.dupNickname(nickName);
 		String ment = null;
 		if (duplication == true) {
-			ment = "사용가능한 닉네임 입니다";
+			ment = "1";
 		} else {
-			ment = "사용중인 닉네임 입니다";
+			ment = "2";
 		}
 		System.out.println("result===" + duplication);
 
 		return ment;
 	}
 
-	@RequestMapping(value = "dupEmail/{email}", method = RequestMethod.GET)
-	public String dupEmail(@PathVariable String email) throws Exception {
+	@RequestMapping(value = "dupEmail", method = RequestMethod.GET)
+	public String dupEmail(@RequestParam("email") String email) throws Exception {
 
 		System.out.println("/json/dupEmail : GET");
 
 		System.out.println("email==" + email);
 		boolean duplication = userService.dupEmail(email);
+		System.out.println("결과" + userService.dupEmail(email));
 		String ment = null;
 		if (duplication == true) {
-			ment = "사용가능한 닉네임 입니다";
+			ment = "1";
 		} else {
-			ment = "사용중인 닉네임 입니다";
+			ment = "2";
 		}
 		System.out.println("result===" + duplication);
 		return ment;
@@ -159,24 +157,29 @@ public class UserRestController {
 		List<User> users = (List<User>) map.get("list");
 		List<String> lists = new ArrayList();
 		List<String> userName = new ArrayList();
+		List<Integer> userNo = new ArrayList();
 
 		for (User user : users) {
+			userNo.add(user.getUserNo());
 			lists.add(user.getEmail());
-			userName.add(user.getName());
-		}
-		System.out.println("lists-=====" + lists);
-		System.out.println("listName======" + userName);
+			lists.add(user.getName());
 
-		map.put("list", lists);
-		map.put("listName", userName);
+		}
+		System.out.println("lists-=====" + userNo);
+		System.out.println("lists-=====" + lists);
+
+		map.put("lists", lists);
+		map.put("list", map.get("list"));
+		map.put("userNo", userNo);
 
 		return map;
 	}
 
-	@GetMapping("/vbanks/holder")
+	@GetMapping("/bankName")
 	public String getVbankHolder(@RequestParam("bank_code") String bankCode, @RequestParam("bank_num") String bankNum) {
 		System.out.println("예금주 확인");
-
+		System.out.println("bank_code: " + bankCode);
+		System.out.println("bank_num :" + bankNum);
 		ObjectMapper objectMapper = new ObjectMapper();
 		AccountToken account = null;
 		try {
