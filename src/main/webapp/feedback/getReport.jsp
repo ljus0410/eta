@@ -21,8 +21,9 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" ></script>
 <script type="text/javascript">
 $(function () {
+	let reportCodeToast = new bootstrap.Toast($("#toast-reportCode-udpate"));
 	$("a:contains('신고처리')").on("click", function () {
-		alert($("#reportNo").text().trim())
+		
 		let data = {
 				reportNo	: $("#reportNo").text().trim()
 		}
@@ -39,10 +40,11 @@ $(function () {
 					complete: function (xhr, status) {
 		                // 요청이 완료되면 호출되는 콜백
 		                if(xhr.status == 200){
-		                	alert('신고처리가 완료되었습니다!');
-		                	var newRow = '<a>처리완료</a>' ;
+		                	reportCodeToast.show();
+		                	var newRow = '<a class="btn btn-xxs border-red-dark color-red-dark" style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-right: 20px;" >처리완료</a>' ;
+		                	$("a:contains('신고처리')").after(newRow)
 		                	$("a:contains('신고처리')").remove()
-		                	$('input:text').after(newRow)
+		                	
 							
 		                }
 		                	
@@ -185,5 +187,6 @@ $(function () {
 
 		</div>
 	</div>
+	<div id="toast-reportCode-udpate"  class="toast toast-pill toast-bottom toast-s rounded-l bg-blue-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>처리되었습니다!</span></div>
 </body>
 </html>

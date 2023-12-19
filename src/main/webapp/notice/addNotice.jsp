@@ -44,7 +44,7 @@ $(function () {
 				
 				setTimeout(function() {
 		            $("form").submit();
-		            init_template();
+		            
 		        }, 1000); 
 			}else{
 				noticeDetailToast.show()

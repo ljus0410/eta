@@ -107,13 +107,13 @@ public class FeedbackServiceImpl implements FeedbackService {
 	}
 
 	public int addBlock(Block block) throws Exception {
-		block.setBlockCount(this.feedbackDao.getBlockCount(block));
-		int result = 0;
+		block.setBlockCount(feedbackDao.getBlockCount(block));
+
 		if (block.getBlockCount() < 4) {
-			result = feedbackDao.addBlock(block);
+			feedbackDao.addBlock(block);
 			feedbackDao.addBlockCode(block);
 		}
-		return result;
+		return block.getBlockCount();
 	}
 
 	public int updateBlockCode(User user) throws Exception {
@@ -179,6 +179,11 @@ public class FeedbackServiceImpl implements FeedbackService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("reportlist", reportlist);
 		return map;
+	}
+
+	public int getBlockCount(int userNo) throws Exception {
+		Block block = Block.builder().userNo(userNo).build();
+		return feedbackDao.getBlockCount(block);
 	}
 
 }
