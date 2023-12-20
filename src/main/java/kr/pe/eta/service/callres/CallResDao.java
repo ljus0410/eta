@@ -15,7 +15,7 @@ public interface CallResDao {
 
 	public Call getRecordDriver(int callNo) throws Exception;
 
-	public List<Object> getRecordList(Search search, int userNo) throws Exception;
+	public List<Object> getRecordList(Search search, int userNo, String month) throws Exception;
 
 	public List<Object> getReservationList(Search search, int userNo) throws Exception;
 

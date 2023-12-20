@@ -24,8 +24,7 @@ function checkPasswordAndDeleteUser() {
 
     // 비밀번호 일치 여부 확인
     if (password === confirmPassword) {
-        confirmPasswordMessage.innerHTML = '비밀번호가 일치합니다.';
-        confirmPasswordMessage.style.color = 'blue';  // 일치할 때의 메시지 색상
+ 
         // 여기에서 회원탈퇴 로직을 추가하면 됩니다.
         deleteUser();
     } else {
@@ -52,6 +51,8 @@ function checkPasswordAndDeleteUser() {
 <body>
 <jsp:include page="../home/top.jsp" />
 <form>
+
+
 <div class="page-content header-clear-medium" >
         <div class="card card-style" style="margin-bottom: 15px;">
           <div class="content"style="margin-bottom: 9px; ">
@@ -65,7 +66,7 @@ function checkPasswordAndDeleteUser() {
         </div>
         
         
-        
+ 
         <div class="card card-style">
       <div class="content">
        <div class="form-custom form-label form-icon mb-3">
@@ -78,7 +79,7 @@ function checkPasswordAndDeleteUser() {
     <i class="bi bi-at font-16"></i>
     <input type="password" class="form-control rounded-xs" id="czxc2" name="pwd" value="" placeholder="password"/>
     <span id="passwordMessage">비밀번호 확인</span>
-    <div id="confirmPasswordMessage"></div> 
+    <div style = "margin-left:5px; font-size: 11px;" id="confirmPasswordMessage"></div> 
 </div>
         <a href="#" onclick="checkPasswordAndDeleteUser()"class='btn rounded-sm btn-m gradient-red text-uppercase font-700 mt-4 mb-3 btn-full shadow-bg shadow-bg-s'>회원탈퇴</a>
         
@@ -89,19 +90,6 @@ function checkPasswordAndDeleteUser() {
     </form>    
         
         
-        <div id="toast-top-2" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
-    <div class="align-self-center">
-      <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
-    </div>
-    
-    <div class="align-self-center">
-      <strong class="font-13 mb-n2">Password Incorrect</strong>
-      <span class="font-10 mt-n1 opacity-70">Account Login Failed. Try again.</span>
-    </div>
-    <div class="align-self-center ms-auto">
-      <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
-    </div>
-  </div>
 
 </body>
 </html>
