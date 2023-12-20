@@ -79,7 +79,7 @@ public class LoginService {
 
 		UriComponents uriComponents = UriComponentsBuilder.fromUriString("https://kauth.kakao.com/oauth/logout?")
 				.queryParam("client_id", kaclienId).queryParam("logout_redirect_uri", logout).build();
-		System.out.println("uriComponents" + uriComponents.toString());
+		System.out.println("uriComponents :" + uriComponents.toString());
 		return uriComponents.toString();
 	}
 

@@ -76,7 +76,7 @@ public class UserRestController {
 	@GetMapping("/send-one")
 	public Map<String, Object> sendOne(@RequestParam("phone") String phone) {
 		System.out.println("메시지 전송");
-
+		System.out.println("num :" + phone);
 		Random rand = new Random();
 		String numStr = "";
 		for (int i = 0; i < 4; i++) {

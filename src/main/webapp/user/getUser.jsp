@@ -8,6 +8,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+ <script src="../javascript/user/user.js"></script>
 
 <style>
 
@@ -119,243 +120,7 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
 
 <script type="text/javascript">
 
-$(document).ready(function() {
-    $("#blockButton").on("click", function() {
-        // 여기서 user.userNo 가져오기
-        var userNo = ${user.userNo}; // 예시로 사용, 실제로는 적절한 방식으로 가져와야 함
-        console.log("No : "+userNo);
-        // AJAX 요청 보내기
-        $.ajax({
-            type: "GET",
-            url: "../feedback/json/addBlock/" + userNo,
-            success: function(response) {
-                console.log("response"+response);
-               
-            },
-            error: function(error) {
-                console.error("에러 발생: ", error);
-            }
-        });
-    });
-});
- 
- 
 
-function updateUser() {
-  var newName = $("#name2").val();
-
-  if (newName !== null) {
-      $("#name").val(newName);
-  } else {
-      $("#name").val("#name2").val();
-  }
-
-  var phone2 = $("#phone2").val();
-
-  if (phone2 !== null) {
-      $("#phone").val(phone2);
-  } else {
-      $("#phone").val("#phone2").val();
-  }
-
-  
-  
-  
-  // form 제출
-  $("form").attr("method", "POST").attr("action", "/user/updateUser").submit();
-
-}
- 
- //readonly
- document.getElementById("birth").disabled = true;
- document.getElementById("gender").disabled = true;
- document.getElementById("nickName").disabled = true;
- document.getElementById("email").disabled = true;
- 
- var messege;
- 
- // Ajax 요청 함수
- function phone() {
-     // Get the phone number from the input field
-     var phone = $('#phone').val();
-
-     // Perform AJAX request using jQuery
-     $.ajax({
-         url: '/user/json/send-one', // Specify your server endpoint
-         method: 'GET',
-         data: {
-             phone: phone
-         },
-         success: function (response) {
-             // Handle the success response
-             console.log(response.num);
-             messege = response.num
-             // You can update the UI here based on the response if needed
-         },
-         error: function (error) {
-             // Handle the error
-             console.error(error);
-         }
-     });
- }
-
-function handleBankClick(imgElement) {
- var bankCode = imgElement.getAttribute('data-bank-code');
- var bankName = imgElement.getAttribute("data-bank-name");
- 
- console.log('Bank Code: ' + bankCode);
- console.log('Bank Name: ' + bankName);
- document.getElementById('bankCodeInput').value = bankCode;
- 
- document.getElementById("bank").value = bankName;
- 
-
- // bankname 함수 호출
- 
-
- // 여기서 필요한 로직 수행
-}
-
-function bankname(bankCode) {
- console.log("bankCode: " + bankCode);
- // Get the phone number from the input field
-
- var bank_num  = $('#bank_num').val();
- var bankCode = document.getElementById('bankCodeInput').value;
- var name = $('#accountname').val();
- console.log("번호 :"+bank_num);
- console.log("코드 :"+bankCode);
- console.log("이름 :"+name);
- // Perform AJAX request using jQuery
- $.ajax({
-     url: '/user/json/bankName', // Specify your server endpoint
-     method: 'GET',
-     data: {
-       bank_code: bankCode,
-       bank_num: bank_num
-     },
-     success: function (response) {
-         // Handle the success response
-         console.log(response);
-         if (name === response) {
-           alert( "일치");
-         } else {
-           alert( "불일치");
-         }
-         // You can update the UI here based on the response if needed
-     },
-     error: function (error) {
-         // Handle the error
-         console.error(error);
-     }
- });
-}
-
-
-$(document).ready(function() {
- // 텍스트 입력란에 입력이 발생할 때마다 dupEmail 함수 호출
- $('#nickName').on('keyup', function() {
-      console.log('닉네임 입력이 종료되었습니다.');
-      dupNick();
- })
-function dupNick() {
- 
- // Get the phone number from the input field
-
- var nick = $('#nickName').val();
- console.log("닉네임 :"+nick);
-
- // Perform AJAX request using jQuery
- $.ajax({
-     url: '/user/json/dupNickName', // Specify your server endpoint
-     method: 'GET',
-     data: {
-       nick: nick
-     },
-     success: function (response) {
-         // Handle the success response
-         console.log("response" + response);
-         var resultText = $('#resultText2'); // resultText 변수 추가
-
-         if (response === "1") {
-             resultText.text("사용가능한 닉네임니다.").css('color', 'blue');
-         } else {
-             resultText.text("이미 사용중인 닉네임입니다.").css('color', 'red');
-         }
-     },
-     error: function (error) {
-         // Handle the error
-         console.error(error);
-     }
- });
-}
-});
-
-
-//      document.getElementById("gender").value = "0";
-//여자 남자
-
-
-
-
-//은행값가저오기              
-function openModal() {
- // Bootstrap JavaScript 함수 호출
-var bankOffcanvas = new bootstrap.Offcanvas(document.getElementById('bank_list'));
-  
-  // Check if the offcanvas is currently shown
-  if (bankOffcanvas._isShown) {
-      // If shown, hide the offcanvas (close the modal)
-      bankOffcanvas.hide();
-  } else {
-      // If not shown, show the offcanvas (open the modal)
-      bankOffcanvas.show();
-  }
-}
-
-     
-
-
-
-//인증번호
-function addInput() {
-   console.log("num: " + messege);
-   var userInput = document.getElementById('certify').value;
-   userInput = parseInt(userInput);
-   var resultText = $('#message');
-
-   if (messege == userInput) {
-       console.log("입력값: " + userInput);
-       resultText.text("일치합니다").css('color', 'blue');
-       
-       // 부트스트랩 JavaScript API를 사용하여 모달 닫기
-       $('#menu-forgot').offcanvas('hide');
-       $('#menu-forgot').on('hidden.bs.offcanvas', function () {
-           // 입력 필드 비활성화
-           $('#phone2').prop('disabled', true);
-       });
-   } else {
-       console.log("틀린 입력값: " + userInput);
-       resultText.text("불일치합니다.").css('color', 'red');
-   }
-}
-
-
-
-function updateAnimalOptValue() {
-  var checkbox = document.getElementById("petOpt");
-  var valueInput = document.getElementById("animalOptValue"); // 추가: 값을 전달할 hidden input
-
-  if (checkbox.checked) {              
-      // 체크되었을 때
-      valueInput.value = "1";
-      console.log("동물옵션"+valueInput.value);
-  } else {
-      // 체크되지 않았을 때
-      valueInput.value = "0"; // 또는 다른 기본값으로 설정
-      console.log("동물옵션"+valueInput.value);
-  }
-}
 
 
    
@@ -408,7 +173,7 @@ function updateAnimalOptValue() {
         <div id="inputContainer">
             <input class="rounded-xs" value=""  name="phone" style="color: gray; margin-left: 10px; border: 1px solid #ced4da !important;" type="hidden" id="phone" />
             <input class="rounded-xs" value="${user.phone}"  name="phone2" style="color: gray; margin-left: 10px; border: 1px solid #ced4da !important;" type="text" id="phone2" />
-            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#menu-forgot" style="width: 60px; height: 30px; line-height: 7px; white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
+            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#messegeInfo" style="width: 60px; height: 30px; line-height: 7px; white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
         </div>
     </div>
 </div>
@@ -544,7 +309,7 @@ function updateAnimalOptValue() {
         
         
         
-        <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-forgot">
+        <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="messegeInfo">
     <div class="content">
       <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
       <h1 class="font-24 font-800 mb-3">인증번호</h1>
