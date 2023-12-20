@@ -1,5 +1,8 @@
 package kr.pe.eta.service.community.impl;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,13 +80,24 @@ public class CommunityServiceImpl implements CommunityService {
 
 	@Override
 	public Map<String, Object> getDealList() throws Exception {
-		List<DealReq> dealList = communityDao.getDealList();
+		List<DealReq> list = communityDao.getDealList();
 		List<Call> callList = communityDao.getDealCallList();
-		int totalCount = communityDao.getDealCount();
+		List<DealReq> dealList = new ArrayList<>();
 		Map<String, Object> map = new HashMap<String, Object>();
+
+		for (int i = 0; i < list.size(); i++) {
+			DealReq listItem = list.get(i);
+			String callDate = callList.get(i).getCallDate();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			LocalDateTime parsedTime = LocalDateTime.parse(callDate, formatter);
+			LocalDateTime newTime = parsedTime.plusMinutes(10);
+			String limitTime = newTime.format(formatter);
+			listItem.setLimitTime(limitTime);
+			dealList.add(listItem);
+		}
+
 		map.put("dealList", dealList);
 		map.put("callList", callList);
-		map.put("totalCount", totalCount);
 		return map;
 	}
 

@@ -38,7 +38,7 @@
             <div class="col-9">
               <c:set var="deal" value="${dealList[status.index]}"/>
               제시 금액 : <span class="passengerOffer">${deal.passengerOffer}</span><br/>
-              종료 시간 : <span id="limitDate">${call.callDate}</span>
+              종료 시간 : <span id="limitDate">${deal.limitTime}</span>
             </div>
             <div class="col-3" style="margin-top: 10px; float: right;">
               <c:if test="${deal.callNo==callNo}">
@@ -47,7 +47,7 @@
                 </button>
               </c:if>
               <c:if test="${deal.callNo!=callNo || callNo==null}">
-                <button type="button" class="btn-xxs btn border-blue-dark color-blue-dark" id="offerButton">
+                <button type="button" class="btn-xxs btn border-blue-dark color-blue-dark offerButton">
                   제시
                 </button>
               </c:if>

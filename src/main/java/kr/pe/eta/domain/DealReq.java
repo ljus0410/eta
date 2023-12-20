@@ -1,7 +1,5 @@
 package kr.pe.eta.domain;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +11,7 @@ public class DealReq {
 	private int callNo;
 	private String callCode;
 	private int passengerOffer;
-	private Date limitTime;
+	private String limitTime;
 	private int driverOffer;
 	private double starAvg;
 
