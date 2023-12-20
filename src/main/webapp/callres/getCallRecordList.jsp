@@ -13,34 +13,23 @@
 <html>
 
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style"
-	content="black-translucent">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-<link rel="stylesheet" type="text/css"
-	href="/templates/styles/bootstrap.css">
-<link rel="stylesheet" type="text/css"
-	href="/templates/fonts/bootstrap-icons.css">
-<link rel="stylesheet" type="text/css"
-	href="/templates/styles/style.css">
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link
-	href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap"
-	rel="stylesheet">
-<link rel="manifest" href="_manifest.json">
-<meta id="theme-check" name="theme-color" content="#FFFFFF">
-<link rel="apple-touch-icon" sizes="180x180"
-	href="app/icons/icon-192x192.png">
-
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-
-
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+    <link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="_manifest.json">
+    <meta id="theme-check" name="theme-color" content="#FFFFFF">
+    <link rel="apple-touch-icon" sizes="180x180" href="app/icons/icon-192x192.png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
 <style>
 .record-container {
 	display: flex;
@@ -97,7 +86,7 @@ $(function () {
 				
 				$.ajax( 
 						{
-						url : "/callres/json/listRecord/"+$("#currentPage").val() ,
+						url : "/callres/json/listCallRecord/"+$("#currentPage").val() ,
 						method : "POST" ,
 						dataType : "json" ,
 						headers : {
@@ -155,71 +144,53 @@ $(function () {
 
 <body class="theme-light">
 	<form name="detailform">
-		<div id="page">
-	<jsp:include page="/home/top.jsp" />
-			<div class="page-content header-clear-medium">
-				<div class="card card-style">
-					<div class="content">
+        <div id="page">
+            <jsp:include page="/home/top.jsp" />
+            <div class="page-content header-clear-medium">
+                <div class="card card-style">
+                    <div class="content">
+                        <h1 class="pb-2">
+                            <i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;공지사항
+                        </h1>
+                    </div>
+                </div>
 
-						<h1 class="pb-2">
-							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;공지사항
-						</h1>
+                <div class="card overflow-visible card-style">
+                    <div class="content mb-0">
+                        <div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
+                            <a class="btn btn-xxs bg-fade2-blue color-blue-dark" href="../notice/addNotice" style="display: inline-block; padding-top: 3px; padding-bottom: 3px; float: left;">등록</a>
+                            <input type="text" class="form-control rounded-xs" style="width: 40%; display: inline-block" name="searchKeyword" value="${!empty search.searchKeyword ? search.searchKeyword : ''}">
+                            <a class="btn btn-xxs border-blue-dark color-blue-dark" style="display: inline-block; padding-top: 3px; padding-bottom: 3px">검색</a>
+                        </div>
 
-					</div>
-				</div>
-
-				<div class="card overflow-visible card-style">
-					<div class="content mb-0">
-						<div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
-							<a class="btn btn-xxs bg-fade2-blue color-blue-dark"
-								href="../notice/addNotice"
-								style="display: inline-block; padding-top: 3px; padding-bottom: 3px; float: left;">등록</a>
-							<input type="text" class="form-control rounded-xs"
-								style="width: 40%; display: inline-block" name="searchKeyword"
-								value="${!empty search.searchKeyword ? search.searchKeyword : ''}">
-
-
-							<a class="btn btn-xxs border-blue-dark color-blue-dark"
-								style="display: inline-block; padding-top: 3px; padding-bottom: 3px">검색</a>
-						</div>
-
-						<div class="table-responsive">
-							<table class="table color-theme mb-2" id="muhanlist">
-								<thead>
-									<tr>
-										<th scope="col">호출번호</th>
-										<th scope="col">날짜시간</th>
-										<th scope="col">출발</th>
-										<th scope="col">도착</th>
-
-									</tr>
-								</thead>
-								<tbody>
-									<c:forEach var="record" items="${list }" begin="0" step="1"
-										varStatus="status">
-										<tr class="list">
-											<td>${record.callNo}</td>
-											<td>${record.callDate}</td>
-											<td>${record.startKeyword}</td>
-											<td>${record.endKeyword}</td>
-
-
-
-										</tr>
-									</c:forEach>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-
-				<input type="hidden" id="currentPage" name="currentPage" value=1>
-
-
-
-			</div>
-		</div>
-	</form>
+                        <div class="table-responsive">
+                            <table class="table color-theme mb-2" id="muhanlist">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">호출번호</th>
+                                        <th scope="col">날짜시간</th>
+                                        <th scope="col">출발</th>
+                                        <th scope="col">도착</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="record" items="${list }" begin="0" step="1" varStatus="status">
+                                        <tr class="list">
+                                            <td>${record.callNo}</td>
+                                            <td>${record.callDate}</td>
+                                            <td>${record.startKeyword}</td>
+                                            <td>${record.endKeyword}</td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="currentPage" name="currentPage" value=1>
+            </div>
+        </div>
+    </form>
 
 	<script src="/templates/scripts/bootstrap.min.js"></script>
 	<script src="/templates/scripts/custom.js"></script>

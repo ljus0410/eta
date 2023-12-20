@@ -5,36 +5,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style"
-	content="black-translucent">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+
 <title>Insert title here</title>
-<link rel="stylesheet" type="text/css"
-	href="/templates/styles/bootstrap.css">
-<link rel="stylesheet" type="text/css"
-	href="/templates/fonts/bootstrap-icons.css">
-<link rel="stylesheet" type="text/css"
-	href="/templates/styles/style.css">
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link
-	href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap"
-	rel="stylesheet">
-<link rel="manifest" href="/templates/_manifest.json">
-<meta id="theme-check" name="theme-color" content="#FFFFFF">
-<link rel="apple-touch-icon" sizes="180x180"
-	href="/templates/app/icons/icon-192x192.png">
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="/templates/scripts/bootstrap.min.js"></script>
-<script src="/templates/scripts/custom.js"></script>
+
 <script type="text/javascript">
 
 window.closeModal = function() {
 	 $( '#menu-report' ).offcanvas( 'hide' );
 	}
 window.removeReport= function () {
-	$( "button:contains('신고')").remove();
+	$( "a:contains('신고')").remove();
 	}
 
 
@@ -93,6 +73,11 @@ $(function () {
 		
 		
 	})
+	let reportActivate = new bootstrap.Offcanvas($("#menu-report"))
+		$("a:contains('신고')").on("click",function(){
+			
+			reportActivate.show();
+		})
 	
 	
 })
@@ -112,28 +97,22 @@ $(function () {
 						<c:forEach var="blacklistList" items="${blacklistList }" begin="0"
 							step="1" varStatus="status">
 
-							<div id="${blacklistList.passengerNo } list"
-								style="padding-bottom: 10px; vertical-align: center;">
-								<i class="has-bg rounded-s bi bg-blue-dark bi-person-fill"
-									style="font-size: 20px"></i>&nbsp;
-								<h5 class="font-300 mb-0" style="display: inline-block;">${blacklistList.passengerNo }</h5>
+							<div id="${blacklistList.passengerNo } list" style="padding-bottom: 10px; ">
+								<div style="align-items:  center !important;display: inline-block;width: 70px;">
+									<i class="has-bg rounded-s bi bg-blue-dark bi-person-fill"
+										style="font-size: 20px"></i>&nbsp;
+									<h5 class="font-300 mb-0" style="display: inline-block;">${blacklistList.passengerNo }</h5>
+								</div>
 
 
-
-								<div class="ms-auto align-self-center"
-									style="display: inline-block;">
+								<div class="ms-auto align-self-center" style="display: inline-block;vertical-align: bottom;">
 									<div class="form-switch ios-switch switch-blue switch-s">
-										<input type="hidden" name="blacklistCode"
-											value=${blacklistList.blacklistCode }> <input
-											type="hidden" name="passengerNo"
-											value="${blacklistList.passengerNo }"> <input
-											type="hidden" name="driverNo"
-											value="${blacklistList.driverNo }"><input
-											type="checkbox" class="ios-input"
-											id="switch-4a${blacklistList.passengerNo }"
+										<input type="hidden" name="blacklistCode" value=${blacklistList.blacklistCode }>
+										<input type="hidden" name="passengerNo" value="${blacklistList.passengerNo }"> 
+										<input type="hidden" name="driverNo" value="${blacklistList.driverNo }">
+										<input type="checkbox" class="ios-input" id="switch-4a${blacklistList.passengerNo }"
 											${ ! empty blacklistList.blacklistCode && blacklistList.blacklistCode eq "true" ? "checked='checked'" : "" }>
-										<label class="custom-control-label"
-											for="switch-4a${blacklistList.passengerNo }"></label>
+										<label class="custom-control-label" for="switch-4a${blacklistList.passengerNo }"></label>
 									</div>
 								</div>
 
@@ -144,10 +123,8 @@ $(function () {
 						<div align="right">
 
 
-							<button type="button"
-								class="btn btn-xxs border-red-dark color-red-dark"
-								data-bs-toggle="offcanvas" data-bs-target="#menu-report"
-								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 0px">신고</button>
+							<a class="btn btn-xxs border-red-dark color-red-dark"
+								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">신고</a>
 						</div>
 					</div>
 
@@ -161,7 +138,7 @@ $(function () {
 						step="1" varStatus="status">
 						<c:if test="${status.index eq 0 }">
 							<iframe
-								src="/feedback/addReport?badCallNo=${blacklistList.callNo }&${param.userNo}"
+								src="/feedback/addReport?badCallNo=${blacklistList.callNo }&userNo=${user.userNo}"
 								style="width: 100%; height: 400px; border: none;"></iframe>
 						</c:if>
 					</c:forEach>

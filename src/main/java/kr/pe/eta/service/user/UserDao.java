@@ -26,7 +26,7 @@ public interface UserDao {
 
 	public User getUsers(int userNo) throws Exception;
 
-	public void deleteUser(String eamil) throws Exception;
+	public int deleteUser(int userNo) throws Exception;
 
 	public int getPassengerCount(Search search) throws Exception;
 

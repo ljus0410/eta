@@ -20,13 +20,26 @@
 
 <div id="page">
 
-    <div class="header-bar header-fixed header-app header-bar-detached">
-        <a data-back-button href="#"><i class="bi bi-caret-left-fill font-11 color-theme ps-2"></i></a>
-        <a href="#" class="header-title color-theme font-13">Back to Pages</a>
-        <a data-bs-toggle="offcanvas" data-bs-target="#menu-color" href="#"><i class="bi bi-palette-fill font-13 color-highlight"></i></a>
-        <a href="#" class="show-on-theme-light" data-toggle-theme><i class="bi bi-moon-fill font-13"></i></a>
-        <a href="#" class="show-on-theme-dark" data-toggle-theme ><i class="bi bi-lightbulb-fill color-yellow-dark font-13"></i></a>
+    <div id="preloader">
+        <div class="spinner-border color-highlight" role="status"></div>
     </div>
+
+    <div class="header-bar header-fixed header-app header-center header-bar-detached">
+        <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-main" class="bi bi-list" style="font-size: 30px;"></a>
+        <a href="/home.jsp" class="header-title color-theme font-13">eTa</a>
+
+        <c:choose>
+            <c:when test="${user.role eq null}">
+                <!-- 로그인이 안 된 경우 -->
+                <a id="loginButton" class="btn btn-outline-light me-2" >Login</a>
+            </c:when>
+            <c:otherwise>
+                <!-- 로그인 된 경우 -->
+                <a id="logOutButton" class="btn btn-outline-light me-2">Logout</a>
+            </c:otherwise>
+        </c:choose>
+    </div>
+
     <form id="messageForm">
     <div id="footer-bar" class="footer-bar footer-bar-detached">
 
@@ -44,6 +57,7 @@
 
     </div>
     </form>
+
     <div class="page-content header-clear-medium">
         <div class="content mt-0">
             <div id="chat">
