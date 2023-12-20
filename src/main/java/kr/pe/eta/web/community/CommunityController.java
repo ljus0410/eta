@@ -1,5 +1,7 @@
 package kr.pe.eta.web.community;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -185,6 +187,14 @@ public class CommunityController {
 		int userNo = ((User) session.getAttribute("user")).getUserNo();
 		DealReq dealReq = communityService.getDeal(userNo);
 		Call call = communityService.getCall(dealReq.getCallNo());
+
+		String sysdate = call.getCallDate();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime parsedTime = LocalDateTime.parse(sysdate, formatter);
+		LocalDateTime newTime = parsedTime.plusMinutes(10);
+		String limitTime = newTime.format(formatter);
+		dealReq.setLimitTime(limitTime);
+
 		List<DealReq> list = communityService.getDealDriverList(dealReq.getCallNo());
 		List<DealReq> driverList = new ArrayList<>();
 
@@ -213,6 +223,8 @@ public class CommunityController {
 		communityService.deleteDealReq(callNo);
 		communityService.updateDealCode(userNo);
 		callReqService.deleteCall(callNo);
+		User user = userService.getUser(((User) session.getAttribute("user")).getEmail());
+		session.setAttribute("user", user);
 
 		return "redirect:/home.jsp";
 	}
@@ -319,6 +331,8 @@ public class CommunityController {
 		communityService.deleteShareReq(callNo);
 		communityService.updateShareCode(userNo);
 		callReqService.deleteCall(callNo);
+		User user = userService.getUser(((User) session.getAttribute("user")).getEmail());
+		session.setAttribute("user", user);
 
 		return "redirect:/community/getShareList";
 	}

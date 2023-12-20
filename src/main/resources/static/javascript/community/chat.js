@@ -1,9 +1,9 @@
 // resources/static/js/chat.js
-const socket = new SockJS('/websocket');
+const socket = new SockJS('/ws');
 const stompClient = Stomp.over(socket);
 
 stompClient.connect({}, function (frame) {
-    stompClient.send("/app/chat/start/"+$("#callNo").val(), {}, JSON.stringify({
+    stompClient.send("/chat/start/"+$("#callNo").val(), {}, JSON.stringify({
         sender: "사용자명",
         content: "입장했습니다.",
         callNo: $("#callNo").val(),
@@ -46,7 +46,7 @@ function sendMessage() {
         time: time
     };
 
-    stompClient.send("/app/chat/"+$("#callNo").val(), {}, JSON.stringify(message));
+    stompClient.send("/chat/"+$("#callNo").val(), {}, JSON.stringify(message));
 
 }
 function insertMessage(message) {
