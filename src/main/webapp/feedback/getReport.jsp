@@ -58,7 +58,7 @@ $(function () {
 	$(".userList td:last-child").on("click", function () {
 		if($("#role").val() == "admin"){
 		
-		self.location ="/user/getUser?userNo="+$(this).text();
+		self.location ="/user/getadmin?userNo="+$(this).text();
 		}
 	})
 	
