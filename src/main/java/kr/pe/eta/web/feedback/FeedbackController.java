@@ -218,7 +218,7 @@ public class FeedbackController {
 
 		} else {
 			System.out.println("합승임");
-			blacklistList = feedbackService.getBlacklistList(1001);
+			blacklistList = feedbackService.getBlacklistList(callNo);
 
 			for (int i = 0; i < blacklistList.size(); i++) {
 				feedbackService.getBlacklist(blacklistList.get(i));
