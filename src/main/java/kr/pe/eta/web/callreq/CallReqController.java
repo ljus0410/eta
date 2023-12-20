@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -249,40 +248,32 @@ public class CallReqController {
 	}
 
 	@RequestMapping(value = "updateLikeAddr", method = RequestMethod.POST)
-	public String updateLikeAddr(@ModelAttribute @Valid Like like, BindingResult result,
-			@RequestParam("userNo") int userNo, Model model) throws Exception {
+	// public String updateLikeAddr(@ModelAttribute @Valid Like like, BindingResult
+	// result,
+	// @RequestParam("userNo") int userNo, Model model) throws Exception {
+	public String updateLikeAddr(@ModelAttribute @Valid Like like, @RequestParam("userNo") int userNo, Model model)
+			throws Exception {
 
-		if (result.hasErrors()) {
+		System.out.println("/callreq/updateHomeAddr");
+		System.out.println("like : " + like);
+		System.out.println("userNo : " + userNo);
+		// userNo = "1004";
+		// Business Logic
 
-			List<Like> likeList = callReqService.getLikeList(userNo); // 즐겨찾기 리스트
+		String likeAddr = like.getLikeAddr();
+		String likeName = like.getLikeName();
+		int likeNo = like.getLikeNo();
+		double likeX = like.getLikeX();
+		double likeY = like.getLikeY();
 
-			// Model 과 View 연결
-			model.addAttribute("likeList", likeList);
+		callReqService.updateLikeAddr(likeAddr, likeName, userNo, likeNo, likeX, likeY);
 
-			return "forward:/callreq/likeAddrList.jsp";
-		} else {
+		List<Like> likeList = callReqService.getLikeList(userNo); // 즐겨찾기 리스트
 
-			System.out.println("/callreq/updateHomeAddr");
-			System.out.println("like : " + like);
-			System.out.println("userNo : " + userNo);
-			// userNo = "1004";
-			// Business Logic
+		// Model 과 View 연결
+		model.addAttribute("likeList", likeList);
 
-			String likeAddr = like.getLikeAddr();
-			String likeName = like.getLikeName();
-			int likeNo = like.getLikeNo();
-			double likeX = like.getLikeX();
-			double likeY = like.getLikeY();
-
-			callReqService.updateLikeAddr(likeAddr, likeName, userNo, likeNo, likeX, likeY);
-
-			List<Like> likeList = callReqService.getLikeList(userNo); // 즐겨찾기 리스트
-
-			// Model 과 View 연결
-			model.addAttribute("likeList", likeList);
-
-			return "forward:/callreq/likeAddrList.jsp";
-		}
+		return "forward:/callreq/likeAddrList.jsp";
 	}
 
 	@RequestMapping(value = "deleteLikeAddr", method = RequestMethod.GET)

@@ -74,7 +74,7 @@ $(function () {
 						success : function(reportList, status) {
 							$.each(reportList, function (index, report) {
 					            // 새로운 행 추가
-					            var newRow = '<tr class="appendlist"'+(index+1)+'>' +
+					            var newRow = '<tr class="list '+(report.reportNo)+'">' +
 					                '<td>' + report.reportNo + '</td>' +
 					                '<td>' + (report.reportCode == 1 ? '<h5 class="mb-0"><span class="badge bg-highlight color-white" style="background-color: #BB4758 !important">처리전</span></h5>' : report.reportCode == 2 ? '<h5 class="mb-0"><span class="badge bg-highlight color-white" style="background-color: #A7CA65 !important">처리</span></h5>' : report.reportCode == 3 ? '<h5 class="mb-0"><span class="badge bg-highlight color-white">처리완료</span></h5>' : '') + '</td>' +
 					                '<td>' + report.reportUserNo + '</td>' +
@@ -110,9 +110,9 @@ $(function () {
 		$("form").attr("method","POST").attr("action","/feedback/listReport").submit();
 	})
 	$(document).on("click","tr", function () {
-		
-		self.location="/feedback/getReport?reportNo="+$(this).children().eq(0).text()+"&badCallNo="+$(this).children().eq(3).text()+"&reportRole="+$(this).children().eq(5).text()
-		
+		if($(this).hasClass("list") === true) {
+			self.location="/feedback/getReport?reportNo="+$(this).children().eq(0).text()+"&badCallNo="+$(this).children().eq(3).text()+"&reportRole="+$(this).children().eq(5).text()
+			}
 	})
 	
 })
@@ -131,7 +131,7 @@ $(function () {
 						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
 						<h1 class="pb-2" style="width: 140px; display: inline-block;">
-							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;신고내역
+							<i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle" style="vertical-align:bottom !important; background-color: #d84558 !important; line-height: 0px!important;height: 30px !important;font-size: 30px !important; all:initial; display: inline-block;"></i>&nbsp;&nbsp;신고내역
 						</h1>
 
 					</div>
@@ -196,7 +196,7 @@ $(function () {
 								<tbody>
 									<c:forEach var="reportlist" items="${reportlist }" begin="0"
 										step="1" varStatus="status">
-										<tr class="list${reportlist.reportNo }">
+										<tr class="list ${reportlist.reportNo }">
 											<td>${reportlist.reportNo }</td>
 											
 											<td>${reportlist.reportCode == 1 ? '<h5 class="mb-0"><span class="badge bg-highlight color-white" style="background-color: #BB4758 !important">처리전</span></h5>' : reportlist.reportCode == 2 ? '<h5 class="mb-0"><span class="badge bg-highlight color-white" style="background-color: #A7CA65 !important">처리</span></h5>' : reportlist.reportCode == 3 ? '<h5 class="mb-0"><span class="badge bg-highlight color-white">처리완료</span></h5>' : ''}</td>
