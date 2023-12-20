@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
 <meta charset="UTF-8">
-<title>selectOptions</title>
+<title>eTa</title>
 <link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
 <link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
@@ -70,6 +70,38 @@
 </head>
 <body class="theme-light">
 <jsp:include page="/home/top.jsp" />
+<c:choose>
+    <c:when test="${empty user.role}">
+        <form name="detailform">
+        <div id="page">
+        <div class="page-content header-clear-medium">
+        <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px ;">
+         <div class="alert border-red-dark alert-dismissible color-red-dark rounded-s fade show" >
+           <i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle"></i>&nbsp;<strong>로그인해주세요.</strong>
+         </div>
+         </div>
+         </div>
+         </div>
+         </div>
+        </form>
+    </c:when>
+   <c:when test="${!empty user.role && user.role eq 'driver'}">
+                 <form name="detailform">
+        <div id="page">
+        <div class="page-content header-clear-medium">
+        <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px ;">
+         <div class="alert border-red-dark alert-dismissible color-red-dark rounded-s fade show" >
+           <i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle"></i>&nbsp;<strong>권한이 없습니다.</strong>
+         </div>
+         </div>
+         </div>
+         </div>
+         </div>
+        </form>
+    </c:when>
+    <c:otherwise>
 <div id="page">
 <div class="page-content header-clear-medium">
 <div class="card card-style">
@@ -134,6 +166,8 @@
 </div>
 </div>
 </div>
+</c:otherwise>
+</c:choose>
 </body>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -320,14 +354,14 @@ async function getRoute(type, map) {
 
     // 요청 헤더를 추가합니다.
     const headers = {
-        Authorization: 'KakaoAK 16e815ac6b904a963cd94cdb83b0b87d',
-        'Content-Type': 'application/json'
+        'Authorization' : 'KakaoAK 8f0ca1a839a76df15892c48aa41d71dd', 
+        'Content-Type': 'application/json' 
     };
-
+    console.log('headers : '+headers);
     let requestUrl;
     // 요청 URL을 구성합니다.
     if(type == 'recommend'){   	
-    	requestUrl = url+'?origin='+origin+'&destination='+destination+'&priority=RECOMMEND&car_fuel=GASOLINE&car_hipass=false&alternatives=false&road_details=false';
+    	requestUrl = url+'?origin='+origin+'&destination='+destination+'&priority=RECOMMEND';
     } else if(type == 'time'){
     	requestUrl = url+'?origin='+origin+'&destination='+destination+'&priority=TIME&car_fuel=GASOLINE&car_hipass=false&alternatives=false&road_details=false';
     } else if(type == 'distance'){
@@ -343,6 +377,10 @@ async function getRoute(type, map) {
         });
 
         if (!response.ok) {
+        	var moneyAlert = document.getElementById('moneyAlert');    
+        	moneyAlert.innerHTML = '경로를 불러올 수 없습니다.';
+        	var callButton = document.getElementById('callButton');
+        	callButton.disabled = true;
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 

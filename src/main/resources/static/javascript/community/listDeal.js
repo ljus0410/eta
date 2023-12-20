@@ -38,19 +38,19 @@ function appendDeal(callNo, message) {
 }
 
 $(function (){
-    $("#offerButton").on("click", function (){
+
+    $(".offerButton").on("click", function (){
         // 현재 클릭한 버튼의 부모 행(tr)을 찾아서
         let row = $(this).closest('div.card');
-
         // 부모 행에서 배차 번호와 제시 금액을 가져오기
         let callNo = row.find('.callNo').text().trim();
         let passengerOffer = row.find('.passengerOffer').text().trim();
 
         let dealCode = $("#dealCode").val();
 
-        if (!dealCode) {
+        if (dealCode=="true") {
             $('#alreadyDealAlert').addClass('fade show');
-        } else if (dealCode){
+        } else {
             $('#offerAlert').addClass('fade show');
             $("#reqButton").off("click").on("click", function () {
                 $("form")[0].reset();

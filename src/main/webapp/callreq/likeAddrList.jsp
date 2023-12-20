@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-<title>like Address</title>
+<title>eTa</title>
 <link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
 <link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
@@ -49,6 +49,38 @@
 </head>
 <body class="theme-light">
 <jsp:include page="/home/top.jsp" />
+<c:choose>
+    <c:when test="${empty user.role}">
+        <form name="detailform">
+        <div id="page">
+        <div class="page-content header-clear-medium">
+        <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px ;">
+         <div class="alert border-red-dark alert-dismissible color-red-dark rounded-s fade show" >
+           <i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle"></i>&nbsp;<strong>로그인해주세요.</strong>
+         </div>
+         </div>
+         </div>
+         </div>
+         </div>
+        </form>
+    </c:when>
+   <c:when test="${!empty user.role && user.role eq 'driver'}">
+                 <form name="detailform">
+        <div id="page">
+        <div class="page-content header-clear-medium">
+        <div class="card card-style" style="margin-bottom: 15px ;">
+          <div class="content" style="margin-bottom: 9px ;">
+         <div class="alert border-red-dark alert-dismissible color-red-dark rounded-s fade show" >
+           <i class="has-bg rounded-s bi bg-red-dark bi-exclamation-circle"></i>&nbsp;<strong>권한이 없습니다.</strong>
+         </div>
+         </div>
+         </div>
+         </div>
+         </div>
+        </form>
+    </c:when>
+    <c:otherwise>
 <div id="page">
 <div class="page-content header-clear-medium">
        <div class="card card-style" style="margin-bottom: 15px ;">
@@ -195,6 +227,8 @@
     
     </div>
     </div>   
+    </c:otherwise>
+    </c:choose>
 </body>
 <script>
 function messageAlert(message) {

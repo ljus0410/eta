@@ -65,11 +65,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void deleteUser(String eamil) throws Exception {
-		userDao.deleteUser(eamil);
-	}
-
-	@Override
 	public boolean dupEmail(String eamil) throws Exception {
 		boolean result = true;
 		User user = userDao.getEmail(eamil);
@@ -145,4 +140,13 @@ public class UserServiceImpl implements UserService {
 
 		return new Point(randomupdown, randomleftright);
 	}
+
+	@Override
+	public int deleteUser(int userNo) throws Exception {
+		System.out.println(userNo);
+		System.out.println("여기야 여기");
+		return userDao.deleteUser(userNo);
+
+	}
+
 }
