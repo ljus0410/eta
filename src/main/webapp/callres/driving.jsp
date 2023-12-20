@@ -7,20 +7,32 @@
 <title>Insert title here</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-<link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="/css/bootstrap-icons.css">
-<link rel="stylesheet" type="text/css" href="/css/style.css">
+<meta name="apple-mobile-web-app-status-bar-style"
+	content="black-translucent">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+<link rel="stylesheet" type="text/css"
+	href="/templates/styles/bootstrap.css">
+<link rel="stylesheet" type="text/css"
+	href="/templates/fonts/bootstrap-icons.css">
+<link rel="stylesheet" type="text/css"
+	href="/templates/styles/style.css">
 <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap"
+	rel="stylesheet">
 <link rel="manifest" href="_manifest.json">
 <meta id="theme-check" name="theme-color" content="#FFFFFF">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62&libraries=services"></script>
-<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+	src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62&libraries=services"></script>
+<script type="text/javascript"
+	src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 <script>
     	
@@ -238,8 +250,8 @@
                 '<i class="icon icon-s bg-green-light rounded-l bi bi-check font-28 me-2"></i>' +
                 '</div>' +
                 '<div class="align-self-center ps-1">' +
-                '<strong class="font-13 mb-n2">Logged In</strong>' +
-                '<span class="font-10 mt-n1 opacity-70">Welcome back, John!</span>' +
+                '<strong class="font-13 mb-n2">승객이 탔습니다!</strong>' +
+                '<span class="font-10 mt-n1 opacity-70">어서오세요!</span>' +
                 '</div>' +
                 '<div class="align-self-center ms-auto">' +
                 '<button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>' +
@@ -253,10 +265,23 @@
     </script>
 </head>
 <body>
-	<div class="col-md-6">
-		<div id="map" style="width: 100%; height: 700px;"></div>
+	<div class="page-content header-clear-medium">
+
+		<div class="card card-style">
+			<div class="content">
+				<div class="col-md-6">
+					<div id="map" style="width: 100%; height: 700px;"></div>
+				</div>
+
+
+				<div class="row">
+				    <div class="col-6">
+				        <a href="#" class="btn bg-blue-dark shadow-bg-m text-start" onclick="updateLocationData()">운행 종료</a>
+				    </div>
+				</div>
+			</div>
+		</div>
 	</div>
-	<button onclick="updateLocationData()" class="btn btn-xxl gradient-highlight">운행종료</button>
 
 	<script
 		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -273,7 +298,7 @@
 
         var map = new kakao.maps.Map(mapContainer, mapOption);
     </script>
-    <script src="/templates/scripts/bootstrap.min.js"></script>
-    <script src="/templates/scripts/custom.js"></script>
+	<script src="/templates/scripts/bootstrap.min.js"></script>
+	<script src="/templates/scripts/custom.js"></script>
 </body>
 </html>

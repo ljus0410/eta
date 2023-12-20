@@ -46,7 +46,7 @@ $(function () {
 		setTimeout(function() {
 			self.location ="/notice/deleteNotice?noticeNo=${notice.noticeNo}";
             
-        }, 1000); 
+        }, 500); 
 			
 		
 	})
