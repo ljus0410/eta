@@ -500,27 +500,6 @@ $(function adUser() {
   });
 });
 
-$(document).ready(function() {
-  $("#blockButton").on("click", function() {
-    // 여기서 user.userNo 가져오기
-    var userNo = ${ user.userNo }; // 예시로 사용, 실제로는 적절한 방식으로 가져와야 함
-    console.log("No : " + userNo);
-    // AJAX 요청 보내기
-    $.ajax({
-      type: "GET",
-      url: "../feedback/json/addBlock/" + userNo,
-      success: function(response) {
-        console.log("response" + response);
-
-      },
-      error: function(error) {
-        console.error("에러 발생: ", error);
-      }
-    });
-  });
-});
-
-
 
 function updateUser() {
   var newName = $("#name2").val();
