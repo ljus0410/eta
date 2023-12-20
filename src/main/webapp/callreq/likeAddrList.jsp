@@ -223,6 +223,7 @@
       </div>
       <div id="likeCustomList">
       ${likeList[2].likeNo} <span id="likeCustomName">${likeList[2].likeName}</span> <span id="likeCustomAddr">${likeList[2].likeAddr}</span>     
+      <span id="likeCustomLat">${likeList[2].likeX}</span><span id="likeCustomLng">${likeList[2].likeY}</span>
       </div>
     
     </div>
@@ -255,8 +256,8 @@ function messageAlert(message) {
       });
       $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
  }
-function confirmAlert(message) {
-    var toastContainer = document.createElement('div');confirmAlert
+function confirmAlert(message, type) {
+    var toastContainer = document.createElement('div');
       toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
           '<div class="toast-body px-3 py-3">' +
           '<div class="d-flex">' +
@@ -285,7 +286,16 @@ function confirmAlert(message) {
           document.getElementById('notification-bar-5').remove();
       });
       document.getElementById('ok').addEventListener('click', function () {
-    	    deleteHomeAddr();
+    	  
+    	  if(type == 'home'){
+    		  deleteHomeAddr();
+    	  } else if(type == 'company'){
+    		  deleteCompanyAddr();
+    	  }  else if(type == 'custom'){
+    		  deleteCustomAddr();
+    	  }
+    	  
+    	    
         
       });
       $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
@@ -299,7 +309,7 @@ function deleteHomeAddrRequest(){
 		  
 	  }else {
 		  var message ='삭제하시겠습니까?';
-		  confirmAlert(message);
+		  confirmAlert(message, 'home');
 		  
 	  }
 	}
@@ -313,7 +323,7 @@ function deleteCompanyAddrRequest(){
 	   } else {
     
 		   var message ='삭제하시겠습니까?';
-		      confirmAlert(message);
+		      confirmAlert(message, 'company');
   }
 }
   
@@ -326,7 +336,7 @@ function deleteCustomAddrRequest(){
    } else {
     
 	   var message ='삭제하시겠습니까?';
-       confirmAlert(message); 
+       confirmAlert(message, 'custom'); 
   }
 }
 	
@@ -346,6 +356,12 @@ function updateCustomAddr() {
      var customAddrInput = document.getElementById('customAddrKeyword');
      var customAddr = customAddrInput.value;
      
+     var customAddrKeywordLatInput = document.getElementById('customAddrKeywordLat');
+     var parsedValueLat = parseFloat(customAddrKeywordLatInput.value);
+     
+     var customAddrKeywordLngInput = document.getElementById('customAddrKeywordLng');
+     var parsedValueLng = parseFloat(customAddrKeywordLngInput.value);
+     
      if(customName == '집'|| customName == '회사'){
     	 var message = '집, 회사 외의 다른 별칭을 입력해주세요';
     	 messageAlert(message);
@@ -356,11 +372,18 @@ function updateCustomAddr() {
     	   var message = '주소를 입력해주세요';
            messageAlert(message);
        } else if(customName != '' && customAddr != ''){
-    	   $(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/updateLikeAddr?userNo=${user.userNo }").submit();
-       }
-	
-	  
-   
+    	  // alert(customName); alert(customAddr); alert(parsedValueLng); alert(parsedValueLat);
+    	    $(".customAddrSearch form")
+            .attr("method", "POST")
+            .attr("action", "/callreq/updateLikeAddr?userNo=${user.userNo}")
+            .append("<input type='hidden' name='likeX' value='" + parsedValueLng + "'>")
+            .append("<input type='hidden' name='likeY' value='" + parsedValueLat + "'>")
+            .submit();
+    	   //$(".customAddrSearch form").attr("method", "POST").attr("action", "/callreq/updateLikeAddr?userNo=${user.userNo }").submit();
+       }else {
+    	    // parsedValueLat 또는 parsedValueLng가 유효한 숫자가 아닌 경우
+    	    alert("값이 올바르지 않습니다.");
+    	}
 }
 
 function deleteHomeAddr() {
@@ -743,6 +766,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var likeCustomAddrSpan = document.getElementById('likeCustomAddr');
     var likeCustomNameSpan = document.getElementById('likeCustomName');
     
+    var likeCustomLngSpan = document.getElementById('likeCustomLng');
+    var likeCustomLatSpan = document.getElementById('likeCustomLat');
+    
     var homeAddrKeywordLngSpan= document.getElementById('homeAddrKeywordLng');
     var homeAddrKeywordLatSpan = document.getElementById('homeAddrKeywordLat');
     var companyAddrKeywordLngSpan = document.getElementById('companyAddrKeywordLng');
@@ -751,6 +777,12 @@ document.addEventListener('DOMContentLoaded', function() {
     var customAddrKeywordLatSpan = document.getElementById('customAddrKeywordLat');
 
     // db에 저장된 즐겨찾기 가져오기
+    var customAddrLng = likeCustomLngSpan.textContent.trim();
+    console.log('customAddrLng:', customAddrLng);
+    
+    var customAddrLat = likeCustomLatSpan.textContent.trim();
+    console.log('customAddrLat:', customAddrLat);
+    
     var likeHomeAddr = likeHomeAddrSpan.textContent.trim();
     console.log('likeHomeAddr:', likeHomeAddr);
 
@@ -774,15 +806,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     var companyAddrLat = companyAddrKeywordLatSpan.textContent.trim();
     console.log('companyAddrLat:', companyAddrLat);
-    
-    var customAddrLng = customAddrKeywordLngSpan.textContent.trim();
-    console.log('customAddrLng:', customAddrLng);
-    
-    var customAddrLat = customAddrKeywordLatSpan.textContent.trim();
-    console.log('customAddrLat:', customAddrLat);
 
-
-    //데이터가 있을 때만 처리
+    //데이터가 있을 때만 처리    
+    if (customAddrKeywordLngSpan && customAddrLng != null) {
+    	customAddrKeywordLngSpan.value = customAddrLng;
+            }
+    if (customAddrKeywordLatSpan && customAddrLat != null) {
+    	customAddrKeywordLatSpan.value = customAddrLat;
+              }
+    
     if (homeKeywordInput && likeHomeAddr != null) {
     	 homeKeywordInput.value = likeHomeAddr;
     	 registerInputEvents(homeAddrKeyword, likeHomeAddr);
@@ -815,12 +847,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (companyAddrKeywordLatSpan && companyAddrLat != null) {
     	companyAddrKeywordLatSpan.value = companyAddrLat;
           }
-    if (customAddrKeywordLngSpan && customAddrLng != null) {
-    	customAddrKeywordLngSpan.value = customAddrLng;
-            }
-    if (customAddrKeywordLatSpan && customAddrLat != null) {
-    	customAddrKeywordLatSpan.value = customAddrLat;
-              }
+
 
 });
 
