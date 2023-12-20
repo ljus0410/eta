@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <c:if test="${user.role eq null}">
@@ -139,6 +141,10 @@
   <span class="menu-divider">MENU</span>
   <div class="menu-list">
     <div class="card card-style rounded-m p-3 py-2 mb-0">
+    <a href="/notice/listNotice" id="notice"><i class="gradient-red shadow-bg shadow-bg-xs bi bi-info-square-fill"></i><span>공지사항</span><i class="bi bi-chevron-right"></i></a>
+    <a href="/feedback/listReport" id="report"><i class="gradient-orange shadow-bg shadow-bg-xs bi bi-list-check"></i><span>신고내역</span><i class="bi bi-chevron-right"></i></a>
+    <a href="/pay/cashDriverList?month=all" id="notice"><i class="gradient-red shadow-bg shadow-bg-xs bi bi-info-square-fill"></i><span>정산승인</span><i class="bi bi-chevron-right"></i></a>
+    <a href="/user/listUser" id="report"><i class="gradient-orange shadow-bg shadow-bg-xs bi bi-list-check"></i><span>회원리스트</span><i class="bi bi-chevron-right"></i></a>
     </div>
   </div>
 
