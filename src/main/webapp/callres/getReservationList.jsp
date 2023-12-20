@@ -46,7 +46,7 @@
         <div class="card card-style">
 					<div class="content">
 						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
-
+<h6 class="font-700 mb-n1 color-highlight">Reservation List</h6>
 						<h1 class="pb-2">
 							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;예약
 						</h1>
