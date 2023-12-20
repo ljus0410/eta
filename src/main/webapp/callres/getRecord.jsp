@@ -177,7 +177,7 @@
 			<div class="card card-style">
 				<div class="content">
 				
-					<h6 class="font-700 mb-n1 color-highlight">Gorgeous Styles</h6>
+					<h6 class="font-700 mb-n1 color-highlight">Record List</h6>
 					<h1 class="pb-2">
 						<c:choose>
 							<c:when test="${sessionScope.user.role == 'passenger'}">

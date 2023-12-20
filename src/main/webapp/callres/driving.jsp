@@ -270,7 +270,7 @@
 		<div class="card card-style">
 			<div class="content">
 				<div class="col-md-6">
-					<div id="map" style="width: 100%; height: 700px;"></div>
+					<div id="map" style="width: 100%; height: 670px;"></div>
 				</div>
 
 
