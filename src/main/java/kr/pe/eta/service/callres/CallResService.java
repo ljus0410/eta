@@ -13,7 +13,7 @@ public interface CallResService {
 
 	public Call getRecordDriver(int callNo) throws Exception;
 
-	public Map<String, Object> getRecordList(Search search, int userNo) throws Exception;
+	public Map<String, Object> getRecordList(Search search, int userNo, String month) throws Exception;
 
 	public Map<String, Object> getReservationList(Search search, int userNo) throws Exception;
 

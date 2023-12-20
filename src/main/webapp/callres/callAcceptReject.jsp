@@ -56,6 +56,8 @@
 <body>
 	<div id='page'>
 		<jsp:include page="/home/top.jsp" />
+		 <c:choose>
+            <c:when test="${not empty call}">
 		<div class="page-content header-clear-medium">
 			<div class="card card-style">
 				<div class="content">
@@ -76,9 +78,13 @@
 				</div>
 			</div>
 		</div>
-	</div>
-
-
-
+	</c:when>
+            <c:otherwise>
+                <div style="text-align: center; color: gray; margin-top: 20%;">
+                    <h2 style="opacity: 0.5;">요청 배차가 없습니다</h2>
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </div>
 </body>
 </html>

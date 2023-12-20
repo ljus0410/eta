@@ -7,16 +7,34 @@
     <meta charset="UTF-8">
     <title>합승 리스트 조회</title>
 
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <!-- templates 적용 -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+    <link rel="stylesheet" type="text/css" href="../../templates/styles/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../templates/fonts/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="../../templates/styles/style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="../../_manifest.json">
+    <meta id="theme-check" name="theme-color" content="#FFFFFF">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../templates/icons/icon-192x192.png">
+
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
     <script>
         $(function (){
+
             $.ajax({
                 url: "/community/json/getShareCallNo",
                 type: "GET",
                 dataType: "json",
                 success: function (response) {
                     let receiveInt = parseInt(response);
-                    $("#"+receiveInt+" #reqbt").removeClass("btn-xxs btn border-blue-dark color-blue-dark")
+                    $("#"+receiveInt+" .shareOffer").removeClass("btn-xxs btn border-blue-dark color-blue-dark")
                         .addClass("btn btn-xxs border-red-dark color-red-dark")
                         .attr("onclick","deleteShare()").text("삭제");
                 }
@@ -59,21 +77,34 @@
         }
 
         $(function () {
-            $("#reqbt").on("click", function () {
+            $(".shareOffer").on("click", function () {
                 var row = $(this).closest('div.card');
 
                 // 부모 행에서 배차 번호와 제시 금액을 가져오기
                 var callNo = row.find('.callNo').text().trim();
-                alert(callNo);
-                $('#shareReq').addClass('fade show');
-                $(".offerbt").off("click").on("click", function () {
-                    $("form")[0].reset();
-                    let passengerCount = parseFloat($("#passengerCount").val());
-                    sendDataToServer(passengerCount, callNo, () => {
-                        // AJAX 요청이 완료된 후에 페이지 reload
-                        self.location ="/community/getShareList"
-                    });
-                })
+                let totalCount = $("#totalShareCount").val();
+                let maxCount = $("#maxCount").val();
+                let shareCode = $("#shareCode").val();
+
+
+                if (shareCode=="true") {
+                    $("#alreadyShareAlert").addClass("fade show");
+                } else {
+                    $('#shareReq').addClass('fade show');
+                    $(".offerbt").off("click").on("click", function () {
+                        let passengerCount = parseInt($("#passengerCount").val());
+                        if ((passengerCount + totalCount) > maxCount) {
+                            $("form")[0].reset();
+                            $("#shareCountOver").addClass("fade show");
+                        } else {
+                            sendDataToServer(passengerCount, callNo, () => {
+                                // AJAX 요청이 완료된 후에 페이지 reload
+                                self.location ="/community/getShareList"
+                            });
+                        }
+                    })
+                }
+
             })
         })
 
@@ -112,10 +143,42 @@
 
 <div id="page">
 
-    <jsp:include page="../community/top.jsp" />
+    <div id="preloader">
+        <div class="spinner-border color-highlight" role="status"></div>
+    </div>
+
+    <div class="header-bar header-fixed header-app header-center header-bar-detached">
+        <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-main" class="bi bi-list" style="font-size: 30px;"></a>
+        <a href="/home.jsp" class="header-title color-theme font-13">eTa</a>
+
+        <c:choose>
+            <c:when test="${user.role eq null}">
+                <!-- 로그인이 안 된 경우 -->
+                <a id="loginButton" class="btn btn-outline-light me-2" >Login</a>
+            </c:when>
+            <c:otherwise>
+                <!-- 로그인 된 경우 -->
+                <a id="logOutButton" class="btn btn-outline-light me-2">Logout</a>
+            </c:otherwise>
+        </c:choose>
+    </div>
+
+    <div id="footer-bar" class="footer-bar footer-bar-detached">
+        <a data-back-button href="#"><i class="bi bi-caret-left-fill font-16 color-theme ps-2"></i><span>Back</span></a>
+        <a href="/community/getShareList" class="active-nav"><i class="bi bi-card-list font-16"></i><span>List</span></a>
+        <a href="/home.jsp"><i class="bi bi-house-fill font-16"></i><span>Home</span></a>
+        <a href="#" id="chat"><i class="bi bi-chat font-16"></i><span>Chat</span></a>
+        <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-main"><i class="bi bi-list"></i><span>Menu</span></a>
+    </div>
+
+    <div id="menu-main" data-menu-active="nav-comps" data-menu-load="../home/menu.jsp" style="width:280px;"
+         class="offcanvas offcanvas-start offcanvas-detached rounded-m" aria-modal="true" role="dialog">
+    </div>
 
     <div class="page-content header-clear-medium">
 
+        <input type="hidden" id="dealCode" value="${user.shareCode}">
+        <input type="hidden" id="userNo" value="${user.userNo}">
         <div class="card card-style">
             <div class="content">
                 <h2 class="pb-2" style=" margin-top: 10px;">합승 리스트 조회</h2>
@@ -133,6 +196,8 @@
                         </div>
                         <div class="col-9">
                             <c:set var="share" value="${shareList[status.index]}"/>
+                            <input type="hidden" id="totalShareCount" value="${share.firstShareCount}">
+                            <input type="hidden" id="maxCount" value="${share.maxShareCount}">
                             출발 날짜 : ${share.shareDate} <br/>
                             참여 인원 : ${share.firstShareCount} / ${share.maxShareCount}
                         </div>
@@ -143,7 +208,7 @@
                                 </button>
                             </c:if>
                             <c:if test="${user.userNo!=share.firstSharePassengerNo}">
-                                <button type="button" class="btn-xxs btn border-blue-dark color-blue-dark" id="reqbt">
+                                <button type="button" class="btn-xxs btn border-blue-dark color-blue-dark shareOffer" id="${call.callNo}">
                                     참여
                                 </button>
                             </c:if>
@@ -188,7 +253,7 @@
     <!-- iOS Toast Bar 끝-->
 
     <!-- iOS Toast Bar-->
-    <div id="notification-bar-6" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
+    <div id="deletShareReq" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
         <div class="toast-body px-3 py-3">
             <div class="d-flex">
                 <div class="align-self-center">
@@ -205,7 +270,7 @@
                     <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">취소</a>
                 </div>
                 <div class="col-6">
-                    <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border bg-red-dark color-red-dark delbt" aria-label="Close">확인</a>
+                    <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border bg-red-dark color-red-dark delbt" aria-label="Close" id="resultDelete">확인</a>
                 </div>
             </div>
         </div>
@@ -213,7 +278,7 @@
     <!-- iOS Toast Bar 끝-->
 
     <!--Warning Toast Bar-->
-    <div id="toast-top-2" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+    <div id="shareCountOver" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
 
         <div class="align-self-center">
             <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
@@ -231,7 +296,7 @@
     <!--Warning Toast Bar 끝 -->
 
     <!--Warning Toast Bar-->
-    <div id="toast-top-3" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+    <div id="alreadyShareAlert" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
 
         <div class="align-self-center">
             <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
@@ -304,5 +369,9 @@
 
 </div> <!-- page -->
 
+<!-- templates 적용 -->
+<script src="../../templates/scripts/bootstrap.min.js"></script>
+<script src="../../templates/scripts/custom.js"></script>
+<!-- templates 적용 끝 -->
 </body>
 </html>

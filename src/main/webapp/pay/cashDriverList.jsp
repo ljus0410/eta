@@ -147,7 +147,7 @@
 									             <tr class="cashItem" data-star="${cashDriverList.star}">
 						                      <td><c:choose>
                                     <c:when test="${cashDriverList.star ne 1}">
-                                      <input type="checkbox" class="optionCheckbox" name="option" data-userNo="${cashDriverList.userNo}" data-callDate="${cashDriverList.callDate}" data-realPay="${cashDriverList.realPay}">       
+                                      <input type="checkbox" id="driverCheck" class="optionCheckbox" name="option" data-userNo="${cashDriverList.userNo}" data-callDate="${cashDriverList.callDate}" data-realPay="${cashDriverList.realPay}">       
                                     </c:when>
                                   </c:choose>${cashDriverList.userNo}</td>
 						                      <td>${cashDriverList.callDate}</td>
@@ -286,7 +286,7 @@ $(document).ready(function() {
 
 function CashRequest(){ 
     
-    var checkboxes = document.querySelectorAll('.optionCheckbox');
+    var checkboxes = document.querySelectorAll('#driverCheck');
     var checkedCount = 0;
       checkboxes.forEach(function (checkbox) {
           if (checkbox.checked) {
@@ -304,7 +304,7 @@ function CashRequest(){
   }
   
 function checkAll(source) {
-    var checkboxes = document.querySelectorAll('.optionCheckbox');
+    var checkboxes = document.querySelectorAll('#driverCheck');
     for (var checkbox of checkboxes) {
         checkbox.checked = source.checked;
         
@@ -326,7 +326,7 @@ function calculateTotalRealPay() {
 */
 function addCash() {
     var selectedData = [];
-    document.querySelectorAll('.optionCheckbox').forEach(function (checkbox) {
+    document.querySelectorAll('#driverCheck').forEach(function (checkbox) {
         if (checkbox.checked) {
             var userNo = checkbox.getAttribute('data-userNo');
             var callDate = checkbox.getAttribute('data-callDate');
