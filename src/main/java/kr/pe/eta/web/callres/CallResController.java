@@ -70,7 +70,7 @@ public class CallResController {
 		List<ShareReq> shares = callResService.getSharesByCallNop(callNo);
 		System.out.println("shares:" + shares);
 		model.addAttribute("call", call);
-		model.addAttribute("user", user);
+		model.addAttribute("users", user);
 		model.addAttribute("share", shares);
 
 		if (!"예약중".equals(call.getCallStateCode())) {
@@ -96,7 +96,7 @@ public class CallResController {
 
 		// Model 과 View 연결
 		model.addAttribute("call", call);
-		model.addAttribute("user", user);
+		model.addAttribute("users", user);
 		model.addAttribute("share", shares);
 		model.addAttribute("passengerNo", passengerNo);
 		model.addAttribute("blacklist", blacklist);
@@ -309,11 +309,13 @@ public class CallResController {
 	}
 
 	@GetMapping(value = "getRecordList")
-	public String getRecordList(@ModelAttribute Search search, Model model, HttpSession session) throws Exception {
+	public String getRecordList(@ModelAttribute Search search, Model model, HttpSession session,
+			@RequestParam("month") String month) throws Exception {
 		System.out.println("crContRL");
 		int userNo = ((User) session.getAttribute("user")).getUserNo();
 		System.out.println("userNo : " + userNo);
 		User users = callResService.getUserByUserNo(userNo);
+		System.out.println(month);
 
 		if (search.getCurrentPage() == 0) {
 			search.setCurrentPage(1);
@@ -323,7 +325,7 @@ public class CallResController {
 
 		System.out.println(search);
 
-		Map<String, Object> map = callResService.getRecordList(search, userNo);
+		Map<String, Object> map = callResService.getRecordList(search, userNo, month);
 		System.out.println("search::" + search);
 		System.out.println("MAP:: " + map);
 		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
@@ -334,6 +336,7 @@ public class CallResController {
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
 		model.addAttribute("users", users);
+		model.addAttribute("month", month);
 
 		return "forward:/callres/getRecordList.jsp";
 	}

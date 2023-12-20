@@ -197,8 +197,8 @@ public class UserController {
 		System.out.println("money" + user.getMyMoney());
 		System.out.println("role: " + user.getRole());
 		userService.addUser(user);
-		session.setAttribute("user", user);
 		User newuser = userService.getUser(user.getEmail());
+		session.setAttribute("user", newuser);
 		if (user.getRole().equals("passenger")) {
 
 			callReqService.addLikeList(newuser.getUserNo());

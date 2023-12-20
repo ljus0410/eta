@@ -28,6 +28,15 @@
         .record-container p {
             margin-right: 20px;
         }
+        
+        .content p {
+			margin-top: 3px; /* 상단 간격을 줄임 */
+			margin-bottom: 3px; /* 하단 간격을 줄임 */
+		}
+		
+		.w-100 {
+			margin-bottom: 15px; /* 각 결과 항목 사이의 거리를 조정 */
+		}
     </style>
 </head>
 <body class="theme-light">
@@ -37,29 +46,42 @@
         <div class="card card-style">
 					<div class="content">
 						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
-
+<h6 class="font-700 mb-n1 color-highlight">Reservation List</h6>
 						<h1 class="pb-2">
 							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;예약
 						</h1>
 
 					</div>
 				</div>
-            <c:forEach var="record" items="${list}" varStatus="status">
- 
-                <div class="w-100" data-callno="${record.callNo}">
-                    <div class="card card-style mb-0">
-                        <div class="content">
-                            <h4 class="font-20 font-800">날짜/시간: ${record.callNo}</h4>
-                            <p class="mt-0">호출: ${record.callCode}</p>
-                            <p class="mt-0">출발: ${record.startKeyword}</p>
-                            <p class="mt-0">도착: ${record.endKeyword}</p>
-                            <p class="mt-0">금액: ${record.realPay}</p>
-                            <p class="mt-0">금액: ${record.callNo}</p>
-                            <p class="mt-0">금액: ${record.callDate}</p>
-                        </div>
-                    </div>
-                </div>
-            </c:forEach>
+            <c:choose>
+				<c:when test="${not empty list}">
+					<c:forEach var="record" items="${list}" varStatus="status">
+						<div class="w-100" data-callno="${record.callNo}">
+							<div class="card card-style mb-0">
+								<div class="content">
+									<div
+										style="display: flex; align-items: center; margin-bottom: 10px;">
+										<img src="/images/taxi.png"
+											style="height: 1.5em; margin-right: 10px;">
+										<h4 class="font-20 font-800" style="margin-bottom: 0;">택시</h4>
+									</div>
+									<div style="margin-left: 2.5em;">
+										<h4 class="font-18 font-600">예약 시간 : ${record.callDate}</h4>
+                                        <p>출발: ${record.startKeyword}</p>
+                                        <p>도착: ${record.endKeyword}</p>
+                                        <p>금액: ${record.realPay}</p>
+                                        <p>배차 번호 : ${record.callNo}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+					<div class="text-center" style="color: grey; margin-top: 50px;">기록이
+						존재하지 않습니다</div>
+				</c:otherwise>
+			</c:choose>
         </div>
     </div>
     <script>

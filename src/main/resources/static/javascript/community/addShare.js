@@ -15,7 +15,6 @@ $(function (){
         if (userInputHours < currentHours || (userInputHours === currentHours && userInputMinutes <= currentMinutes)) {
 
             currentTime.setDate(currentTime.getDate() + 1);
-
             userInputTime = currentTime.toISOString().split("T")[0] + " " + userInputTime+":00";
             $("#shareDate").val(userInputTime);
         } else {

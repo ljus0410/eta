@@ -24,7 +24,7 @@
 		<result property="reportCode"		column="REPORT_CODE"		jdbcType="NUMERIC"/>
 		<result property="reportDetail"		column="REPORT_DETAIL"		jdbcType="VARCHAR"/>
 		<result property="reportDate"		column="REPORT_DATE"		jdbcType="DATE"/>
-		<result property="reportRole"		column="ROLE"				jdbcType="VARCHAR"/>
+		<result property="reportRole"		column="REPORT_ROLE"				jdbcType="VARCHAR"/>
 		<result property="regDate"			column="REG_DATE"			jdbcType="DATE"/>
 		<result property="badUserNo" 		column="USER_NO"			jdbcType="NUMERIC"/>
 	</resultMap>
@@ -93,7 +93,7 @@
 	<insert id="addReport" parameterType="report">
 		INSERT
 		INTO report 
-		(report_no, report_user_no,bad_call_no,report_category,report_code,report_detail,role,reg_date)
+		(report_no, report_user_no,bad_call_no,report_category,report_code,report_detail,REPORT_ROLE,reg_date)
 		VALUES (
 		seq_report_report_no.nextval,
 		#{reportUserNo}, 
@@ -115,7 +115,7 @@
 		r.report_code as report_code, 
 		r.report_detail as report_detail,
 		TO_CHAR(r.reg_date, 'YY/MM/DD') as reg_date,
-		r.role as role,
+		r.REPORT_ROLE as REPORT_ROLE,
 		<if test="reportRole == 'passenger'">
         m.driver_no as USER_NO,
         </if>
@@ -274,7 +274,7 @@
 	  	FROM	(	SELECT *
 					FROM REPORT
 					where report_user_no = #{searchKeyword}
-					ORDER BY REG_DATE desc) inner_table
+					ORDER BY REPORT_NO desc) inner_table
 	 </select>
 	 
 	 <select  id="getReportTotalCount"  parameterType="search"	resultType="int">
@@ -292,7 +292,7 @@
 			 				AND REPORT_USER_NO like #{searchKeyword}||'%'
 						</if>
 					</where>
-					ORDER BY REG_DATE desc) inner_table
+					ORDER BY REPORT_NO desc) inner_table
 	 </select>
 	 
 	 <select id="getPassNoByCallNo" parameterType="int" resultType="int">
@@ -317,7 +317,7 @@
 		r.report_code as report_code, 
 		r.report_detail as report_detail,
 		TO_CHAR(r.reg_date, 'YY/MM/DD') as reg_date,
-		r.role as role,
+		r.REPORT_ROLE as REPORT_ROLE,
         s.user_no as USER_NO,
 		r.reg_date as reg_date
 		from report r,  shares s

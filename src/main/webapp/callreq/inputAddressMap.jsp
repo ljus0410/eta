@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initMap(lat, lng);
 
     // 버튼 생성
-    var buttonContainer = document.querySelector('.card.card-style');
+    var buttonContainer = document.querySelector('#mapContent');
 
     if (type === 'start') {
         var startButton = document.createElement('button');
@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <c:otherwise>
 <div id="page">
 <div class="page-content header-clear-medium">
-	    <div class="card card-style">
+	    <div class="card card-style" id="mapContent">
 		    <div id="map" style="width:100%;height:350px;"></div> 
 		    <div id="clickLatlng"></div>
 		    <div id="address"></div>

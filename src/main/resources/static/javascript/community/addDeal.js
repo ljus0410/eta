@@ -33,5 +33,9 @@ $(function (){
             $("#myMoney").val(receiveInt)
         }
     })
+
+    function payRequest(){
+        self.location="/pay/TpayList?userNo="+$("#userNo")+"&month=all";
+    }
     
 })

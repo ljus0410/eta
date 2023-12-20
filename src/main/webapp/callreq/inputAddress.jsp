@@ -719,12 +719,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 function handleButtonClick(Addr, Name, X, Y) {
     
-    /*alert(likeAddr);
-    alert(likeName);
-    alert(likeX);
-    alert(likeY);*/ 
+    alert(Addr);
+    alert(Name);
+    alert(X);
+    alert(Y);
     
-    var endAddrKeywordInput = document.getElementById('endAddrKeyword');
+   var endAddrKeywordInput = document.getElementById('endAddrKeyword');
         endAddrKeywordInput.value=Addr;
         registerInputEvents(endAddrKeyword, Addr);
     var endxInput = document.getElementById('endx');
