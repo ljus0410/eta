@@ -54,13 +54,13 @@ public class CallResRestController {
 	}
 
 	@RequestMapping(value = "listRecord/{currentpage}")
-	public List<Notice> listRecord(@RequestBody Search search, HttpSession session) throws Exception {
+	public List<Notice> listRecord(@RequestBody Search search, HttpSession session, String month) throws Exception {
 		System.out.println("/callRes/json/listRecord : GET/POST");
 		int userNo = ((User) session.getAttribute("user")).getUserNo();
 
 		search.setPageSize(pageSize);
 
-		Map<String, Object> map = callResService.getRecordList(search, userNo);
+		Map<String, Object> map = callResService.getRecordList(search, userNo, month);
 		List<Notice> calllist = (List<Notice>) map.get("list");
 
 		return calllist;

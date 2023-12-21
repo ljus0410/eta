@@ -34,14 +34,25 @@
     text-align: center;
     font-weight: bold;
   }
-  .routeFont{
-    color: #585858;
-    font-size : 15px;
+  .routeOptStyle{
+    color: #E6E6E6;
+    font-size : 20px;
     padding-right:20px;
+    padding-left:15px;
+  }
+  .routeOptStyle.checked{
+    color: #6E6E6E;
+    font-size : 20px;
+    padding-right:20px;
+    padding-left:15px;
   }
   .carOptStyle{
-    color: #585858;
-    padding-right:15px;
+    color: #E6E6E6;
+    padding-right:20px;
+  }
+  .carOptStyle.checked {
+    color: #6E6E6E;
+    font-weight: bold;
   }
   #carOptContent{
     padding-top:10px;
@@ -126,25 +137,25 @@
 <span class="badge bg-primary-subtle border border-primary-subtle text-primary-emphasis rounded-pill" id="distance"></span> 
 <span class="badge bg-secondary-subtle border border-secondary-subtle text-secondary-emphasis rounded-pill" id="duration"></span>
 <span class="badge bg-danger-subtle border border-danger-subtle text-danger-emphasis rounded-pill" id="fare"></span>
-<br>
-<input type="radio"  value="RECOMMEND" class="form-check-input" name="routeOpt" onclick="getRoute('recommend')" checked> <span class="routeFont">추천경로</span>
-<input type="radio" value="TIME" class="form-check-input" name="routeOpt" onclick="getRoute('time')"> <span class="routeFont">최단시간</span>
-<input type="radio" value="DISTANCE" class="form-check-input" name="routeOpt" onclick="getRoute('distance')"> <span class="routeFont">최단경로</span> <br><br>
-<span class="carOptStyle"><input type="radio"  value="4" class="form-check-input" name="carOpt" onclick="updatePrepay()" checked> <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-car-front-fill" viewBox="0 0 16 16">
+<br><br>
+<span id="recommendRoute" class="routeOptStyle"><input type="radio"  style="display: none;" value="RECOMMEND" class="form-check-input" name="routeOpt" onclick="getRoute('recommend')" checked> <span class="routeFont">추천경로</span></span>
+<span id="timeRoute" class="routeOptStyle"><input type="radio" style="display: none;" value="TIME" class="form-check-input" name="routeOpt" onclick="getRoute('time')"> <span class="routeFont">최단시간</span></span>
+<span id="distanceRoute" class="routeOptStyle"><input type="radio" style="display: none;" value="DISTANCE" class="form-check-input" name="routeOpt" onclick="getRoute('distance')"> <span class="routeFont">최단경로</span></span> <br><br>
+<span id="smallCar" class="carOptStyle"><input type="radio" style="display: none;" value="4" class="form-check-input" name="carOpt" onclick="updatePrepay()" checked> <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-car-front-fill" viewBox="0 0 16 16">
   <path d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679c.033.161.049.325.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.807.807 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2m10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17 1.247 0 3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z"/>
 </svg></span>
-<input type="radio"  value="5" class="form-check-input" name="carOpt" onclick="updatePrepay()" > 
-<span class="carOptStyle"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-truck-front-fill" viewBox="0 0 16 16">
+<span id="middleCar" class="carOptStyle"><input type="radio" style="display: none;" value="5" class="form-check-input" name="carOpt" onclick="updatePrepay()" > 
+<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-truck-front-fill" viewBox="0 0 16 16">
   <path d="M3.5 0A2.5 2.5 0 0 0 1 2.5v9c0 .818.393 1.544 1 2v2a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5V14h6v1.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-2c.607-.456 1-1.182 1-2v-9A2.5 2.5 0 0 0 12.5 0zM3 3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3.9c0 .625-.562 1.092-1.17.994C10.925 7.747 9.208 7.5 8 7.5c-1.208 0-2.925.247-3.83.394A1.008 1.008 0 0 1 3 6.9zm1 9a1 1 0 1 1 0-2 1 1 0 0 1 0 2m8 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2m-5-2h2a1 1 0 1 1 0 2H7a1 1 0 1 1 0-2"/>
 </svg></span>
-<span class="carOptStyle"><input type="radio"  value="7" class="form-check-input" name="carOpt" onclick="updatePrepay()" ><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-bus-front-fill" viewBox="0 0 16 16">
+<span id="largeCar" class="carOptStyle"><input type="radio"  style="display: none;" value="7" class="form-check-input" name="carOpt" onclick="updatePrepay()" ><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-bus-front-fill" viewBox="0 0 16 16">
   <path d="M16 7a1 1 0 0 1-1 1v3.5c0 .818-.393 1.544-1 2v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V14H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2a2.496 2.496 0 0 1-1-2V8a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1V2.64C1 1.452 1.845.408 3.064.268A43.608 43.608 0 0 1 8 0c2.1 0 3.792.136 4.936.268C14.155.408 15 1.452 15 2.64V4a1 1 0 0 1 1 1zM3.552 3.22A43.306 43.306 0 0 1 8 3c1.837 0 3.353.107 4.448.22a.5.5 0 0 0 .104-.994A44.304 44.304 0 0 0 8 2c-1.876 0-3.426.109-4.552.226a.5.5 0 1 0 .104.994ZM8 4c-1.876 0-3.426.109-4.552.226A.5.5 0 0 0 3 4.723v3.554a.5.5 0 0 0 .448.497C4.574 8.891 6.124 9 8 9c1.876 0 3.426-.109 4.552-.226A.5.5 0 0 0 13 8.277V4.723a.5.5 0 0 0-.448-.497A44.304 44.304 0 0 0 8 4m-3 7a1 1 0 1 0-2 0 1 1 0 0 0 2 0m8 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m-7 0a1 1 0 0 0 1 1h2a1 1 0 1 0 0-2H7a1 1 0 0 0-1 1"/>
 </svg></span>
-<span class="carOptStyle"><input type="radio"  value="0" class="form-check-input" name="carOpt" onclick="updatePrepay()" ><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-wheelchair" viewBox="0 0 16 16">
+<span id="disabledCar" class="carOptStyle"><input type="radio" style="display: none;" value="0" class="form-check-input" name="carOpt" onclick="updatePrepay()" ><svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-person-wheelchair" viewBox="0 0 16 16">
   <path d="M12 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m-.663 2.146a1.5 1.5 0 0 0-.47-2.115l-2.5-1.508a1.5 1.5 0 0 0-1.676.086l-2.329 1.75a.866.866 0 0 0 1.051 1.375L7.361 3.37l.922.71-2.038 2.445A4.732 4.732 0 0 0 2.628 7.67l1.064 1.065a3.25 3.25 0 0 1 4.574 4.574l1.064 1.063a4.732 4.732 0 0 0 1.09-3.998l1.043-.292-.187 2.991a.872.872 0 1 0 1.741.098l.206-4.121A1 1 0 0 0 12.224 8h-2.79l1.903-2.854ZM3.023 9.48a3.25 3.25 0 0 0 4.496 4.496l1.077 1.077a4.75 4.75 0 0 1-6.65-6.65l1.077 1.078Z"/>
 </svg> </span>
-<input class="form-check-input" type="checkbox" value="" id="pet_btn" onchange="updatePrepay()">
-<img src="../images/pet.png" width="35" height="35">
+<span id="petButton"><input class="form-check-input" style="display: none;" type="checkbox" value="" id="pet_btn" onchange="updatePrepay()">
+<img src="../images/pet_before.png" width="35" height="35" id="petImage"></span>
 <div id="carOptContent"></div>
 <div id="petOptContent"></div>
 <c:choose>
@@ -161,6 +172,7 @@
  <span class="badge bg-success-subtle border border-success-subtle text-success-emphasis rounded-pill" id="showPrepay"></span><br>
  <input type="hidden"  name="realPay" id="prepay" value="" readonly>
 <button type="button" id="callButton" class="btn btn-full bg-blue-dark rounded-xs text-uppercase font-700 w-100 btn-s mt-4" onclick="addCall()" >호출하기</button>
+<input type="hidden" id="hasNoDataException" value="${hasNoDataException}">
 </div>
 </form>
 </div>
@@ -170,7 +182,135 @@
 </c:choose>
 </body>
 <script>
+var recommendRouteSpan = document.getElementById('recommendRoute');
+var timeRouteSpan = document.getElementById('timeRoute');
+var distanceRouteSpan = document.getElementById('distanceRoute');
+
+var smallCarSpan = document.getElementById('smallCar');
+var middleCarSpan = document.getElementById('middleCar');
+var largeCarSpan = document.getElementById('largeCar');
+var disabledCarSpan = document.getElementById('disabledCar');
+
+var petButtonSpan = document.getElementById('petButton');
+var petImage = document.getElementById('petImage');
+
+function handleRouteClick(type) {
+	
+    var clickedSpan;
+    var otherSpans = [recommendRouteSpan, timeRouteSpan, distanceRouteSpan];
+
+    if (type == 'recommend') {
+        clickedSpan = recommendRouteSpan;
+      } else if (type == 'time') {
+        clickedSpan = timeRouteSpan;
+      } else if (type == 'distance') {
+        clickedSpan = distanceRouteSpan;
+      }
+    
+    // 다른 모든 span에서 checked 클래스 제거
+    otherSpans.forEach(function (span) {
+      span.classList.remove('checked');
+    });
+    
+ // 클릭한 span에 checked 클래스 추가
+    clickedSpan.classList.add('checked');
+ 
+    var radioBtn = clickedSpan.querySelector('input[type="radio"]');
+    radioBtn.checked = true;
+    var radioValue = radioBtn.value;
+    console.log('선택된 route:', radioValue);
+    
+    if(radioValue == 'RECOMMEND'){
+    	getRoute('recommend');
+    } else if(radioValue == 'TIME'){
+    	getRoute('time');
+    }else if(radioValue == 'DISTANCE'){
+    	getRoute('distance');
+    }
+
+}
+function handleCarClick(type) {
+    var clickedSpan;
+    var otherSpans = [smallCarSpan, middleCarSpan, largeCarSpan, disabledCarSpan];
+
+    if (type == 'small') {
+        clickedSpan = smallCarSpan;
+      } else if (type == 'middle') {
+        clickedSpan = middleCarSpan;
+      } else if (type == 'large') {
+        clickedSpan = largeCarSpan;
+      } else if (type == 'disabled') {
+        clickedSpan = disabledCarSpan;
+      }
+    
+    // 다른 모든 span에서 checked 클래스 제거
+    otherSpans.forEach(function (span) {
+      span.classList.remove('checked');
+    });
+    
+ // 클릭한 span에 checked 클래스 추가
+    clickedSpan.classList.add('checked');
+ 
+    var radioBtn = clickedSpan.querySelector('input[type="radio"]');
+    radioBtn.checked = true;
+    var radioValue = radioBtn.value;
+    console.log('선택된 car:', radioValue);
+    updatePrepay();
+
+	}
+function handlePetClick() {
+
+	 var checkBtn = petButtonSpan.querySelector('input[type="checkbox"]');
+
+	  if (checkBtn.checked) {
+	    checkBtn.checked = false;
+	    petImage.src = "../images/pet_before.png";
+	    console.log('체크 해제됨');
+	  } else {
+	    checkBtn.checked = true;
+	    petImage.src = "../images/pet_after.png";
+	    console.log('체크됨');
+	  }
+	  updatePrepay();
+      
+  }
+recommendRouteSpan.addEventListener('click', function () {
+  handleRouteClick('recommend');
+});
+timeRouteSpan.addEventListener('click', function () {
+  handleRouteClick('time');
+});
+distanceRouteSpan.addEventListener('click', function () {
+  handleRouteClick('distance');
+});
+smallCarSpan.addEventListener('click', function () {
+	  handleCarClick('small');
+	});
+middleCarSpan.addEventListener('click', function () {
+    handleCarClick('middle');
+  });
+largeCarSpan.addEventListener('click', function () {
+    handleCarClick('large');
+  });
+disabledCarSpan.addEventListener('click', function () {
+    handleCarClick('disabled');
+  });
+petButtonSpan.addEventListener('click', function () {
+    handlePetClick();
+  });
+
+
 document.addEventListener('DOMContentLoaded', function() {
+	  var hasNoDataException = document.getElementById('hasNoDataException').value;
+	//alert(hasNoDataException);
+	if (hasNoDataException == 'true'){
+		var message1 = '현재 배차 가능한 driver가 없습니다.';
+	  var message2 = '잠시 후 다시 시도해주세요.';
+		messageAlert(message1, message2);
+	}
+            
+
+
 	var myMoneyFormatSpan = document.getElementById('TmoneyFormat');
 	var myMoneyFormat= ${myMoney};
 	var formattedMoney = parseFloat(myMoneyFormat).toLocaleString(); // myMoneyFormat를 숫자로 변환 후 형식화
@@ -235,9 +375,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var map = new kakao.maps.Map(container, options);
         
+        handleRouteClick('recommend');
+        handleCarClick('small');
         getRoute('recommend', map);
 });
-	
+function messageAlert(message1, message2) {
+	   var toastContainer = document.createElement('div');
+	     toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+	         '<div class="toast-body px-3 py-3">' +
+	         '<div class="d-flex">' +
+	         '<div class="align-self-center">' +
+	         '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+	         '</div>' +
+	         '<div class="align-self-center">' +
+	         '<h5 class="font-16 ps-2 ms-1 mb-0">'+message1+'</h5>' +
+	         '<h5 class="font-16 ps-2 ms-1 mb-0">'+message2+'</h5>' +
+	         '</div>' +
+	         '</div><br>' +
+	         '<a href="#" data-bs-dismiss="toast" id="confirmBtn" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
+	         '</div>' +
+	         '</div>';
+
+	     document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+	     
+	     document.getElementById('confirmBtn').addEventListener('click', function () {
+	         // Remove the toast element from the DOM
+	         document.getElementById('notification-bar-5').remove();
+	     });
+	     $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+	}
 const drawPolylineAndMoveMarker = (data, map) => {
 
     const linePath = [];
@@ -346,7 +512,7 @@ async function getRoute(type, map) {
     const startLng = parseFloat(sessionStorage.getItem('startLng'));
     const endLat = parseFloat(sessionStorage.getItem('endLat'));
     const endLng = parseFloat(sessionStorage.getItem('endLng'));
-alert(startLat);alert(startLng);alert(endLat);alert(endLng);
+//alert(startLat);alert(startLng);alert(endLat);alert(endLng);
     // 호출방식의 URL을 입력합니다.
     const url = 'https://apis-navi.kakaomobility.com/v1/directions';
     

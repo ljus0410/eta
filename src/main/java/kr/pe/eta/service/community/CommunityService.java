@@ -28,7 +28,7 @@ public interface CommunityService {
 
 	public Map<String, Object> getDealList() throws Exception;
 
-	public int getDealNo(int userNo, String callCode) throws Exception;
+	public Integer getDealNo(int userNo, String callCode) throws Exception;
 
 	public void deleteDealReqDriver(int userNo) throws Exception;
 
@@ -48,5 +48,9 @@ public interface CommunityService {
 
 	public int getShareCount(int callNo) throws Exception;
 
-	public int getShareCallNo(int userNo) throws Exception;
+	public ShareReq getShareCallNo(int userNo) throws Exception;
+
+	public void deleteShareOther(int userNo) throws Exception;
+
+	public List<ShareReq> getSharePassengerList(int callNo) throws Exception;
 }

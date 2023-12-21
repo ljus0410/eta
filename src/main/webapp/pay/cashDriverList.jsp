@@ -20,6 +20,29 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/templates/app/icons/icon-192x192.png">
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+
+<script>
+function checkedMoney(){
+    
+    var checkboxes = document.querySelectorAll('#driverCheck');
+    
+    var totalRealPay = 0;
+      checkboxes.forEach((checkbox) => {
+          if (checkbox.checked) {
+            var realPay = parseInt(checkbox.getAttribute('data-realPay')) || 0;
+       //     alert("realPay: "+realPay);
+              totalRealPay += realPay;
+          }
+      });
+
+      var formattedCheckedMoney = parseFloat(totalRealPay).toLocaleString(); // 숫자로 변환 후 형식화
+      $('#totalRealPay').text(formattedCheckedMoney);
+
+  }
+
+</script>
+
 <style type="text/css">
   td{
     height: 100px;
@@ -31,6 +54,63 @@
 </style>
 </head>
 <body class="theme-light">
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	const ctx = document.getElementById('myChart');
+	const myChart = new Chart(ctx, {
+	    type: 'bar',
+	    data: {
+	        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+	        datasets: [{
+	            label: '# of Votes',
+	            data: [12, 19, 3, 5, 2, 3],
+	            backgroundColor: [
+	                'rgba(255, 99, 132, 0.2)',
+	                'rgba(54, 162, 235, 0.2)',
+	                'rgba(255, 206, 86, 0.2)',
+	                'rgba(75, 192, 192, 0.2)',
+	                'rgba(153, 102, 255, 0.2)',
+	                'rgba(255, 159, 64, 0.2)'
+	            ],
+	            borderColor: [
+	                'rgba(255, 99, 132, 1)',
+	                'rgba(54, 162, 235, 1)',
+	                'rgba(255, 206, 86, 1)',
+	                'rgba(75, 192, 192, 1)',
+	                'rgba(153, 102, 255, 1)',
+	                'rgba(255, 159, 64, 1)'
+	            ],
+	            borderWidth: 1
+	        }]
+	    },
+	    options: {
+	        scales: {
+	            y: {
+	                beginAtZero: true
+	            }
+	        }
+	    }
+	});
+	});
+
+document.addEventListener("DOMContentLoaded", function () {
+	 var chartContainer = document.getElementById('chartContainer');
+	   chartContainer.style.display = 'none';
+	    var toggleChartBtn = document.getElementById('toggleChartBtn');
+
+	    toggleChartBtn.addEventListener('click', function() {
+	        // 토글
+	        if (chartContainer.style.display === 'none') {
+	            chartContainer.style.display = 'block';
+	        } else {
+	            chartContainer.style.display = 'none';
+	        }
+	    });
+
+});
+
+
+</script>
 <jsp:include page="/home/top.jsp" />
 <c:choose>
     <c:when test="${empty user.role}">
@@ -72,9 +152,18 @@
             <!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
             <h1 class="pb-2">
-              <i class="has-bg rounded-s bi bg-mint-dark bi-currency-dollar"></i>&nbsp;&nbsp;정산 승인 대상 리스트
+              <i class="has-bg rounded-s bi bg-mint-dark bi-currency-dollar" style="vertical-align:bottom !important; line-height: 0px!important;height: 30px !important;font-size: 30px !important; all:initial; display: inline-block;"></i>&nbsp;&nbsp;정산 승인 대상 리스트
             </h1>
 
+          </div>
+        </div>
+        
+        <div class="card card-style" style="margin-bottom: 15px ; align-items: center;">
+          <a id="toggleChartBtn" class="btn btn-xxs border-blue-dark color-blue-dark"
+                style="width:98%">
+           차트보기</a>
+          <div class="content" style="margin-bottom: 9px ;" id="chartContainer">
+            <canvas id="myChart" width="400" height="400"></canvas>
           </div>
         </div>
         
@@ -128,7 +217,9 @@
                           </c:otherwise>
                         </c:choose> 
                         
-                        <span id="monthTotal"></span></div>   
+                        <span id="monthTotal"></span><br>
+                        선택한 금액 총 <span id="totalRealPay"></span> 원
+                        </div>   
                       </c:when>
                     </c:choose>
               <table class="table color-theme mb-2" id="muhanlist">
@@ -147,7 +238,7 @@
 									             <tr class="cashItem" data-star="${cashDriverList.star}">
 						                      <td><c:choose>
                                     <c:when test="${cashDriverList.star ne 1}">
-                                      <input type="checkbox" id="driverCheck" class="optionCheckbox" name="option" data-userNo="${cashDriverList.userNo}" data-callDate="${cashDriverList.callDate}" data-realPay="${cashDriverList.realPay}">       
+                                      <input onchange="checkedMoney()" type="checkbox" id="driverCheck" class="optionCheckbox" name="option" data-userNo="${cashDriverList.userNo}" data-callDate="${cashDriverList.callDate}" data-realPay="${cashDriverList.realPay}">       
                                     </c:when>
                                   </c:choose>${cashDriverList.userNo}</td>
 						                      <td>${cashDriverList.callDate}</td>
@@ -178,19 +269,24 @@
   </c:choose>
 </body>
 <script>
-
+  
 document.addEventListener('DOMContentLoaded', function() {
 
 	  var monthTotalFormatSpan = document.getElementById('monthTotal');
 	  var monthTotalFormat= ${monthTotal};
 	  var formattedMoney = parseFloat(monthTotalFormat).toLocaleString(); // myMoneyFormat를 숫자로 변환 후 형식화
 	  monthTotalFormatSpan.textContent = '총 '+formattedMoney + ' 원';
+	  
+	  $('#totalRealPay').text(0);
 	    
 	    document.querySelectorAll('.driverCashListMoney').forEach(function(spanElement) {
 	        var myCashListMoneyFormat = spanElement.textContent; // TpayList의 각 요소의 money 속성 가져오기
 	          var formattedMyCashList = parseFloat(myCashListMoneyFormat).toLocaleString(); // 숫자로 변환 후 형식화
 	          spanElement.textContent = formattedMyCashList + ' 원'; 
-	    }); 
+	    });
+	    
+	    
+
 	  });
 
 function confirmAlert(message) {
@@ -253,7 +349,6 @@ function messageAlert(message) {
       $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
  }
 $(document).ready(function() {
-	
 
 	$(function() {
 	    
@@ -261,10 +356,6 @@ $(document).ready(function() {
 	      var month = $("#month").val();
 	      self.location = "/pay/cashDriverList?month="+month;
 	   });
-	    
-	 /*   $(".optionCheckbox").on("change", function() {
-	        //calculateTotalRealPay();
-	    });*/
 	    
 	    $("#cashState").on("change", function () {
 	        var selectedValue = this.value;
@@ -305,25 +396,23 @@ function CashRequest(){
   
 function checkAll(source) {
     var checkboxes = document.querySelectorAll('#driverCheck');
+    
+    var totalRealPay = 0;
+    
     for (var checkbox of checkboxes) {
         checkbox.checked = source.checked;
-        
-        console.log(checkbox.value);
     }
-}
-/*
-function calculateTotalRealPay() {
-    var checkboxes = document.querySelectorAll('.optionCheckbox:checked');
-    var totalAmount = 0;
-
-    checkboxes.forEach(function (checkbox) {
-        var form = checkbox.closest('form'); // 현재 체크박스에 가장 가까운 form 찾기
-        totalAmount += parseFloat(form.querySelector('input[name="cashTotal"]').value);
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            var realPay = parseInt(checkbox.getAttribute('data-realPay')) || 0;
+            totalRealPay += realPay;
+        }
     });
 
-    document.getElementById('totalRealPay').innerText = "선택한 월의 총 정산 금액: " + totalAmount.toFixed(2);
-}
-*/
+            var formattedCheckedMoney = parseFloat(totalRealPay).toLocaleString(); // 숫자로 변환 후 형식화
+            $('#totalRealPay').text(formattedCheckedMoney);
+    }
+
 function addCash() {
     var selectedData = [];
     document.querySelectorAll('#driverCheck').forEach(function (checkbox) {

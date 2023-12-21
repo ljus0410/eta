@@ -34,11 +34,11 @@
                         </span>
                     </div>
                     <div class="align-self-center">
-                        <h5 class="font-16 ps-2 ms-1 mb-0 color-white">Call to Action</h5>
+                        <h5 class="font-16 ps-2 ms-1 mb-0 color-white">운행 종료 되었습니다</h5>
                     </div>
                 </div>
                 <p id="notificationMessage" class="font-12 pt-2 mb-3 color-white opacity-70">
-                    Please click a button to dismiss the notification. These are user action based.
+                     별점 화면으로 이동합니다
                 </p>
                 <div class="row">
                     <div class="col-6">
@@ -73,11 +73,14 @@
         var modal = document.getElementById('notification-bar-6');
         var confirmBtn = document.getElementById('confirmButton');
         
+        var queryParams = new URLSearchParams(window.location.search);
+        var callNo = queryParams.get('callNo');
+        
 
         stompClient2.connect({}, function(frame) {
         	console.log('Connected: ' + frame);
             confirmBtn.onclick = function() {
-                window.location.href = '/feedback/addStar';
+                window.location.href = '/feedback/addStar/'+callNo;
             }
             stompClient2.subscribe('/topic/notifications/' + passengerNo, function(notification) {
             	var messageElement = document.getElementById('notificationMessage');
