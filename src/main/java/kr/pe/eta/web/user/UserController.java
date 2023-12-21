@@ -233,16 +233,20 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "getadmin", method = RequestMethod.GET)
-	public ModelAndView updateUserView(@RequestParam("userNo") int userNo, HttpSession session) throws Exception {
+	public ModelAndView updateUserView(@RequestParam("userNo") int userNo,
+			@RequestParam(name = "reportNo", required = false) Integer reportNo, HttpSession session) throws Exception {
 		System.out.println("/user/updateUser : GET");
 		ModelAndView model = new ModelAndView();
 		int result = feedback.getBlockCount(userNo);
 		System.out.println("user info :" + userNo);
 		User info = userService.getUsers(userNo);
 		System.out.println("result : " + result);
-
+		if (reportNo != null) {
+			model.addObject("reportNo", reportNo);
+		}
 		model.addObject("users", info);
 		model.addObject("block", result);
+
 		model.setViewName("forward:/user/getadmin.jsp");
 		return model;
 	}
@@ -261,24 +265,27 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "updatePwd", method = RequestMethod.GET)
-	public ModelAndView updatePwdView() throws Exception {
+	public ModelAndView updatePwdView(@ModelAttribute("user") User user, HttpSession session) throws Exception {
 		System.out.println("/user/updatePwd : GET");
 		ModelAndView model = new ModelAndView();
+		userService.updatePwd(user);
+		session.setAttribute("user", user);
 
-		model.setViewName("redirect:/user/updatepwd.jsp");
+		model.setViewName("forward:/home.jsp");
 
 		return model;
 
 	}
 
 	@RequestMapping(value = "updatePwd", method = RequestMethod.POST)
-	public ModelAndView updatePwd(@ModelAttribute("user") User user) throws Exception {
+	public ModelAndView updatePwd(@ModelAttribute("user") User user, HttpSession session) throws Exception {
 		System.out.println("/user/updatePwd : POST");
 		ModelAndView model = new ModelAndView();
 
 		userService.updatePwd(user);
+		session.setAttribute("user", user);
 
-		model.setViewName("forward:/user/home.jsp");
+		model.setViewName("forward:/home.jsp");
 		return model;
 
 	}

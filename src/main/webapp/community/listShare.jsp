@@ -33,10 +33,14 @@
                 type: "GET",
                 dataType: "json",
                 success: function (response) {
-                    let receiveInt = parseInt(response);
-                    $("#"+receiveInt+" .shareOffer").removeClass("btn-xxs btn border-blue-dark color-blue-dark")
-                        .addClass("btn btn-xxs border-red-dark color-red-dark")
-                        .attr("onclick","deleteShare()").text("삭제");
+                    if (response != null){
+                        if (response.maxShareCount==0) {
+                            let receiveInt = parseInt(response.callNo);
+                            $("#"+receiveInt+" .shareOffer").removeClass("btn-xxs btn border-blue-dark color-blue-dark shareOffer")
+                                .addClass("btn btn-xxs border-red-dark color-red-dark")
+                                .attr("onclick","deleteShareOther()").text("삭제");
+                        }
+                    }
                 }
             })
 
@@ -73,18 +77,45 @@
         })
 
         function deleteShare() {
+            $("#deleteShare").addClass("fade show");
+
+        }
+
+        function deleteShareReq() {
             self.location ="/community/deleteShareReq"
+        }
+
+        function deleteShareOther(){
+            $('#shareReq').removeClass('fade show');
+            $("#deleteShareReq").addClass('fade show');
+            $("#resultDelete").on("click", function() {
+                $.ajax({
+                    url: "/community/json/deleteShareReqOther",
+                    type: "GET",
+                    dataType: "json",
+                    success: function (response){
+                        console.log(response); // 콘솔에 출력
+
+                        location.reload();
+                    }
+                })
+            })
+
         }
 
         $(function () {
             $(".shareOffer").on("click", function () {
+
+                let shareCode = $("#shareCode").val();
+
+                alert(shareCode)
                 var row = $(this).closest('div.card');
 
                 // 부모 행에서 배차 번호와 제시 금액을 가져오기
                 var callNo = row.find('.callNo').text().trim();
-                let totalCount = $("#totalShareCount").val();
-                let maxCount = $("#maxCount").val();
-                let shareCode = $("#shareCode").val();
+                let totalCount = parseInt(row.find(".totalShareCount").val());
+                let maxCount =parseInt(row.find(".maxCount").val());
+
 
 
                 if (shareCode=="true") {
@@ -177,7 +208,7 @@
 
     <div class="page-content header-clear-medium">
 
-        <input type="hidden" id="dealCode" value="${user.shareCode}">
+        <input type="hidden" id="shareCode" value="${user.shareCode}">
         <input type="hidden" id="userNo" value="${user.userNo}">
         <div class="card card-style">
             <div class="content">
@@ -196,8 +227,8 @@
                         </div>
                         <div class="col-9">
                             <c:set var="share" value="${shareList[status.index]}"/>
-                            <input type="hidden" id="totalShareCount" value="${share.firstShareCount}">
-                            <input type="hidden" id="maxCount" value="${share.maxShareCount}">
+                            <input type="hidden" class="totalShareCount" value="${share.firstShareCount}">
+                            <input type="hidden" class="maxCount" value="${share.maxShareCount}">
                             출발 날짜 : ${share.shareDate} <br/>
                             참여 인원 : ${share.firstShareCount} / ${share.maxShareCount}
                         </div>
@@ -253,7 +284,7 @@
     <!-- iOS Toast Bar 끝-->
 
     <!-- iOS Toast Bar-->
-    <div id="deletShareReq" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
+    <div id="deleteShareReq" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
         <div class="toast-body px-3 py-3">
             <div class="d-flex">
                 <div class="align-self-center">
@@ -270,7 +301,32 @@
                     <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">취소</a>
                 </div>
                 <div class="col-6">
-                    <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border bg-red-dark color-red-dark delbt" aria-label="Close" id="resultDelete">확인</a>
+                    <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border bg-red-dark color-red-dark" aria-label="Close" id="resultDelete">확인</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- iOS Toast Bar 끝-->
+
+    <!-- iOS Toast Bar-->
+    <div id="deleteShare" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
+        <div class="toast-body px-3 py-3">
+            <div class="d-flex">
+                <div class="align-self-center">
+                    <span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>
+                </div>
+                <div class="align-self-center">
+                    <h5 class="font-16 ps-2 ms-1 mb-0">합승 글을 삭제하시겠습니까?</h5>
+                </div>
+            </div>
+            <p class="font-12 pt-2 mb-3">
+            </p>
+            <div class="row">
+                <div class="col-6">
+                    <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">취소</a>
+                </div>
+                <div class="col-6">
+                    <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border bg-red-dark color-red-dark" aria-label="Close" onclick="deleteShareReq()">확인</a>
                 </div>
             </div>
         </div>

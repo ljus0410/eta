@@ -258,12 +258,28 @@
         WHERE call_no=#{callNo}
     </select>
 
-    <select id="getShareCallNo" parameterType="int">
-        SELECT shares.call_no
+     <select id="getShareCallNo" parameterType="int" resultMap="sharereqSelectMap">
+        SELECT shares.call_no, shares.share_count, shares.start_share_count, shares.max_share_count
         FROM shares, call, users
         WHERE shares.call_no = call.call_no
         AND shares.user_no = users.user_no
         AND users.user_no=#{userNo}
+        AND call.call_state_code='운행전'
+    </select>
+
+    <delete id="deleteShareOther" parameterType="int">
+        DELETE
+        FROM shares
+        WHERE user_no=#{userNo}
+    </delete>
+
+    <select id="getSharePassengerList" parameterType="int" resultMap="sharereqSelectMap">
+        SELECT shares.user_no
+        FROM call, shares, users
+        WHERE shares.call_no=call.call_no
+          AND call.call_no=#{value}
+          AND call.call_state_code='운행전'
+          AND users.user_no=shares.user_no
     </select>
 
 </mapper>
