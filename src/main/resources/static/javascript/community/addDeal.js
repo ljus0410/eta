@@ -140,7 +140,6 @@ function addCharge(Tpay, userNo){
             if (response.success) {
                 messageAlert(response.message);
 
-                location.reload();
             } else {
                 messageAlert(response.message);
             }
