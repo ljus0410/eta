@@ -246,7 +246,7 @@ public class CommunityController {
 		call.setUserNo(userNo);
 		callReqService.addCall(call);
 
-		return "/community/addDeal.jsp";
+		return "redirect:/community/addDeal.jsp";
 	}
 
 	@RequestMapping(value = "addDealReq", method = RequestMethod.POST)
