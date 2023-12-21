@@ -462,6 +462,7 @@ public class CommunityController {
 
 		model.addAttribute("call", call);
 		model.addAttribute("shareReq", shareReq);
+		model.addAttribute("callNo", callNo);
 
 		return "/community/chat.jsp";
 	}
