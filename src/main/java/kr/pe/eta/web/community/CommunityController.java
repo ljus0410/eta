@@ -440,7 +440,6 @@ public class CommunityController {
 			communityService.updateShareCode(passengerNo);
 		}
 		communityService.deleteShareReq(callNo);
-		communityService.updateShareCode(userNo);
 		callReqService.deleteCall(callNo);
 		User user = userService.getUser(((User) session.getAttribute("user")).getEmail());
 		session.setAttribute("user", user);
