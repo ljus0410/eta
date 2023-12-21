@@ -131,7 +131,7 @@ $(function () {
 	}) 
 	$(document).on("click","tr", function () {
 		
-		self.location="/callres/getRecord?calleNo="+$(this).children().eq(0).text()
+		self.location="/callres/getRecord?callNo="+$(this).children().eq(0).text()
 	})
 	
 

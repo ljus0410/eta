@@ -84,7 +84,7 @@
                     </div>
                 </div>
                 <p id="notificationMessage" class="font-12 pt-2 mb-3 color-white opacity-70">
-                    배차 요청이 수락되셨습니다. 택시 기사의 위치를 보시겠습니까?
+                    배차 요청이 수락되셨습니다. 택시 기사의 위치 또는 정보를 보시겠습니까?
                 </p>
                 <div class="row">
                     <div class="col-6">
@@ -135,7 +135,12 @@ stompClient.connect({}, function(frame) {
    console.log('Connected: ' + frame);
     confirmBtn.onclick = function() {
     	var callNo = document.getElementById('callNo').value;
-        window.location.href = '/callres/drivingP.jsp?callNo=' + callNo;
+    	var callCode = '${call.callCode}';
+    	if (callCode === 'R') {
+            window.location.href = '/callres/getReservationList';
+        } else {
+            window.location.href = '/callres/drivingP.jsp?callNo=' + callNo;
+        }
     }
     stompClient.subscribe('/topic/startnotifications/' + passengerNo, function(notification) {
        var messageElement = document.getElementById('notificationMessage');
