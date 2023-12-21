@@ -215,14 +215,17 @@ public class UserController {
 			@RequestParam(name = "userNo", required = false) Integer userNo, HttpSession session) throws Exception {
 		System.out.println("/user/getUser : GET");
 		ModelAndView model = new ModelAndView();
+
 		User user = null;
 
 		if (email == null) {
+			System.out.println("이메일없음");
 			user = userService.getUsers(userNo);
-			System.out.println("돈돈돈 : " + user.getMyMoney());
+			System.out.println("meail : " + user.getMyMoney());
 		} else {
+			System.out.println("넘버 없음");
 			user = userService.getUser(email);
-			System.out.println("돈돈돈 : " + user.getMyMoney());
+			System.out.println("userNo : " + user.getMyMoney());
 		}
 
 		System.out.println("userInfo = " + user);
@@ -282,7 +285,7 @@ public class UserController {
 		System.out.println("user :" + user);
 		userService.updatePwd(user);
 
-		model.setViewName("forward:/home.jsp");
+		model.setViewName("redirect:/");
 		return model;
 
 	}
