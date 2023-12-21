@@ -61,9 +61,7 @@
           <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
         </div>
         
-        <div class="align-self-center">
-          <strong class="font-12 mb-n2">금액이 잘못 입력되었습니다.</strong>
-          <span class="font-10 mt-n1 opacity-70">선결제 금액을 확인해주세요</span>
+        <div class="align-self-center" id="messageAlert">
         </div>
         
         <div class="align-self-center ms-auto">
@@ -98,6 +96,28 @@
         </div>
       </div>
     <!-- dealTpayError 끝-->
+
+    <div id="chargeAlert" class="notification-bar glass-effect detached rounded-s shadow-l" data-bs-delay="15000">
+      <div class="toast-body px-3 py-3">
+        <div class="d-flex">
+          <div class="align-self-center">
+            <span class="icon icon-xxs rounded-xs bg-fade-green scale-box"><i class="bi bi-exclamation-triangle color-green-dark font-16"></i></span>
+            </div>
+          <div class="align-self-center">
+            <h5 class="font-16 ps-2 ms-1 mb-0"><span id="alertMessage"></span></h5>
+            </div>
+          </div><br>
+        <input type="text" class="form-control rounded-xs" id="moneyInput"><br>
+        <div class="row">
+          <div class="col-6">
+            <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-green color-green-dark" aria-label="Close">취소</a>
+            </div>
+          <div class="col-6">
+            <a href="#" data-bs-dismiss="toast" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-green color-green-dark" aria-label="Close" id="payOk">확인</a>
+            </div>
+          </div>
+        </div>
+      </div>
     
   </div><!-- page -->
   

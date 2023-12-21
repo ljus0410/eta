@@ -35,9 +35,10 @@ $(function (){
         } else if (startShareCount > maxShareCount){
             $('#maxError').addClass('fade show');
             return;
+        } else if ($("#shareTime").val() == "") {
+            $('#timeError').addClass('fade show');
         } else if (firstShareCount <= startShareCount && firstShareCount < maxShareCount && startShareCount <= maxShareCount) {
             $("form").attr("method" , "POST").attr("action" , "/community/addShareReq").submit();
-
         }
     })
 

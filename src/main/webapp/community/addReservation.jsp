@@ -39,13 +39,13 @@
 
           <div class="form-custom form-label form-icon mb-3">
             <i class="bi bi-calendar font-12"></i>
-            <input type="date" class="form-control rounded-xs" id="resDate"  name="resDate"/>
+            <input type="date" class="form-control rounded-xs" id="resDate"  name="resDate" required/>
             <label for="resDate" class="form-label-always-active color-theme">예약 날짜</label>
           </div>
 
           <div class="form-custom form-label form-icon mb-3">
             <i class="bi bi-clock font-12"></i>
-            <input type="time" class="form-control rounded-xs" id="resTime"  name="resTime"/>
+            <input type="time" class="form-control rounded-xs" id="resTime"  name="resTime" required/>
             <label for="resTime" class="form-label-always-active color-theme">예약 시간</label>
           </div>
 
