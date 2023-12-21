@@ -58,32 +58,6 @@
     </div>
     </form>
 
-    <div class="offcanvas offcanvas-bottom rounded-m offcanvas-detached bg-theme" id="menu-upload">
-        <div class="content">
-            <div class="d-flex pb-2">
-                <div class="align-self-center">
-                    <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Just tap and</h5>
-                    <h1 class="font-700">Add to Chat</h1>
-                </div>
-                <div class="align-self-center ms-auto">
-                    <a href="#" data-bs-dismiss="offcanvas" class="icon icon-m"><i class="bi bi-x-circle-fill color-red-dark font-18 me-n4"></i></a>
-                </div>
-            </div>
-            <div class="list-group list-custom list-group-m rounded-xs list-group-flush bg-theme">
-                <a href="#" class="list-group-item">
-                    <i class="bi bi-file-arrow-up-fill color-theme opacity-30 font-16"></i>
-                    <div class="font-500 ps-2">File</div>
-                    <i class="bi bi-chevron-right pe-1"></i>
-                </a>
-                <a href="#" class="list-group-item">
-                    <i class="bi bi-geo-alt-fill color-theme opacity-30 font-16"></i>
-                    <div class="font-500 ps-2">Location</div>
-                    <i class="bi bi-chevron-right pe-1"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
     <div class="page-content header-clear-medium">
 
         <%--<div class="card card-style">
