@@ -83,6 +83,8 @@
                     </c:if>
                 </ul>
             </div>
+            <c:if test="${user.role == 'driver'}">
+            
             <div class="row">
             <div class="col-6 mb-4 pb-1 mx-auto my-3"> <!-- Changed col-4 to col-6 -->
 			    <a href="#" class="btn-full btn border-blue-dark color-blue-dark" onclick="startDriving()" style="padding: 8px 12px; font-size: 0.9em;">
@@ -90,11 +92,8 @@
 			    </a>
 			</div>
 
-
-
-
-
 			</div>
+			</c:if>
 
         </div>
         
