@@ -265,24 +265,27 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "updatePwd", method = RequestMethod.GET)
-	public ModelAndView updatePwdView() throws Exception {
+	public ModelAndView updatePwdView(@ModelAttribute("user") User user, HttpSession session) throws Exception {
 		System.out.println("/user/updatePwd : GET");
 		ModelAndView model = new ModelAndView();
+		userService.updatePwd(user);
+		session.setAttribute("user", user);
 
-		model.setViewName("redirect:/user/updatepwd.jsp");
+		model.setViewName("forward:/home.jsp");
 
 		return model;
 
 	}
 
 	@RequestMapping(value = "updatePwd", method = RequestMethod.POST)
-	public ModelAndView updatePwd(@ModelAttribute("user") User user) throws Exception {
+	public ModelAndView updatePwd(@ModelAttribute("user") User user, HttpSession session) throws Exception {
 		System.out.println("/user/updatePwd : POST");
 		ModelAndView model = new ModelAndView();
 
 		userService.updatePwd(user);
+		session.setAttribute("user", user);
 
-		model.setViewName("forward:/user/home.jsp");
+		model.setViewName("forward:/home.jsp");
 		return model;
 
 	}
