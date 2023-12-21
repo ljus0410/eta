@@ -37,6 +37,18 @@ $(function (){
             $("#myMoney").val(receiveInt)
         }
     })
+    
+    $.ajax({
+      url:"/community/json/getDeal",
+      type: "GET",
+      dataType: "json",
+      success: function (response){
+          let callNo = response.callNo;
+          $("#callNo").val(callNo);
+          let money = response.realPay;
+          $("#money").val(money)
+      }
+    })
 
 })
 
@@ -139,7 +151,7 @@ function addCharge(Tpay, userNo){
             console.log("addCharge() 성공");
             if (response.success) {
                 messageAlert(response.message);
-
+                location.reload();
             } else {
                 messageAlert(response.message);
             }

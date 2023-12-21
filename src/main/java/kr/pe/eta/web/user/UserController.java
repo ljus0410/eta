@@ -228,7 +228,7 @@ public class UserController {
 		System.out.println("userInfo = " + user);
 		model.setViewName("forward:/user/getUser.jsp");
 		model.addObject("user", user);
-		model.addObject("money", user.getMyMoney());
+
 		return model;
 	}
 
@@ -265,13 +265,11 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "updatePwd", method = RequestMethod.GET)
-	public ModelAndView updatePwdView(@ModelAttribute("user") User user, HttpSession session) throws Exception {
+	public ModelAndView updatePwdView() throws Exception {
 		System.out.println("/user/updatePwd : GET");
 		ModelAndView model = new ModelAndView();
-		userService.updatePwd(user);
-		session.setAttribute("user", user);
 
-		model.setViewName("forward:/home.jsp");
+		model.setViewName("forward:/user/updatepwd.jsp");
 
 		return model;
 
@@ -279,11 +277,10 @@ public class UserController {
 
 	@RequestMapping(value = "updatePwd", method = RequestMethod.POST)
 	public ModelAndView updatePwd(@ModelAttribute("user") User user, HttpSession session) throws Exception {
-		System.out.println("/user/updatePwd : POST");
+		System.out.println("/user/updatePwd : POST 아니 업데이트 pwd");
 		ModelAndView model = new ModelAndView();
-
+		System.out.println("user :" + user);
 		userService.updatePwd(user);
-		session.setAttribute("user", user);
 
 		model.setViewName("forward:/home.jsp");
 		return model;

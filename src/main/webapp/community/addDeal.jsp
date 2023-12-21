@@ -23,7 +23,7 @@
       <div class="card card-style">
         <div class="content">
           <form class="demo-animation needs-validation m-0" style="margin-top: 5px;" novalidate>
-            <input type="hidden" class="form-control" id="callNo" name="callNo" value="${callNo}">
+            <input type="hidden" class="form-control" id="callNo" name="callNo">
             <input type="hidden" id="userNo" value="${user.userNo }">
             <input type="hidden" id="email" value="${user.email }">
             <input type="hidden" id="name" value="${user.name }">
@@ -31,7 +31,7 @@
   
             <div class="form-custom form-label form-icon mb-3">
               <i class="bi bi-credit-card font-12"></i>
-              <input type="text" class="form-control rounded-xs" id="money"  name="money" value="${money}" readonly/>
+              <input type="text" class="form-control rounded-xs" id="money"  name="money" readonly/>
               <label for="money" class="form-label-always-active color-theme">선결제 금액</label>
             </div>
             
