@@ -245,10 +245,6 @@ public class CommunityController {
 		int userNo = ((User) session.getAttribute("user")).getUserNo();
 		call.setUserNo(userNo);
 		callReqService.addCall(call);
-		int callNo = communityService.getCallNo(userNo, call.getCallCode());
-		int money = call.getRealPay();
-		model.addAttribute("callNo", callNo);
-		model.addAttribute("money", money);
 
 		return "/community/addDeal.jsp";
 	}
