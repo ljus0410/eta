@@ -150,6 +150,22 @@
     </div>
 
   </div>
+
+  <div id="timeOver" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+
+    <div class="align-self-center">
+      <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+    </div>
+
+    <div class="align-self-center">
+      <span class="font-11 mt-n1 opacity-70">시간이 지난 배차입니다.</span>
+    </div>
+
+    <div class="align-self-center ms-auto">
+      <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+    </div>
+
+  </div>
   <!--Warning Toast Bar 끝 -->
   <div id="here">
 

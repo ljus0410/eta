@@ -233,16 +233,20 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "getadmin", method = RequestMethod.GET)
-	public ModelAndView updateUserView(@RequestParam("userNo") int userNo, HttpSession session) throws Exception {
+	public ModelAndView updateUserView(@RequestParam("userNo") int userNo,
+			@RequestParam(name = "reportNo", required = false) Integer reportNo, HttpSession session) throws Exception {
 		System.out.println("/user/updateUser : GET");
 		ModelAndView model = new ModelAndView();
 		int result = feedback.getBlockCount(userNo);
 		System.out.println("user info :" + userNo);
 		User info = userService.getUsers(userNo);
 		System.out.println("result : " + result);
-
+		if (reportNo != null) {
+			model.addObject("reportNo", reportNo);
+		}
 		model.addObject("users", info);
 		model.addObject("block", result);
+
 		model.setViewName("forward:/user/getadmin.jsp");
 		return model;
 	}

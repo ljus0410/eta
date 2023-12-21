@@ -24,7 +24,7 @@
 		<result property="reportCode"		column="REPORT_CODE"		jdbcType="NUMERIC"/>
 		<result property="reportDetail"		column="REPORT_DETAIL"		jdbcType="VARCHAR"/>
 		<result property="reportDate"		column="REPORT_DATE"		jdbcType="DATE"/>
-		<result property="reportRole"		column="REPORT_ROLE"				jdbcType="VARCHAR"/>
+		<result property="reportRole"		column="REPORT_ROLE"		jdbcType="VARCHAR"/>
 		<result property="regDate"			column="REG_DATE"			jdbcType="DATE"/>
 		<result property="badUserNo" 		column="USER_NO"			jdbcType="NUMERIC"/>
 	</resultMap>
@@ -44,9 +44,11 @@
 		<result property="callDate"			column="call_date"			jdbcType="DATE"/>
 	</resultMap>
 	<resultMap id="blockSelectMap" type="block">
-		<result property="userNo"			column="user_no"		jdbcType="NUMERIC"/>
-		<result property="unblockDate"		column="unblock_date"	jdbcType="DATE"/>
-		<result property="blockDate"		column="block_date"		jdbcType="DATE"/>
+		<result property="userNo"			column="user_no"			jdbcType="NUMERIC"/>
+		<result property="unblockDate"		column="unblock_date"		jdbcType="DATE"/>
+		<result property="blockDate"		column="block_date"			jdbcType="DATE"/>
+		<result property="reportNo"			column="Report_NO"			jdbcType="NUMERIC"/>
+		<result property="unblockDateStr"	column="unblock_date_str"	jdbcType="DATE"/>
 	</resultMap>
 
 	<update id="updateStar" parameterType="star">
@@ -198,7 +200,8 @@
 				<if test="blockCount == 3">
 	 				'9999/12/31'
 				</if>,
-				sysdate)
+				sysdate,
+				#{reportNo})
 	</insert>
 	
 	<select id="getBlockCount" parameterType="block">
@@ -334,6 +337,33 @@
 		</set> 
 		where user_no = #{userNo}
 	</update>
+	
+	<select id="getBlock" parameterType="int" resultMap="blockSelectMap">
+		select 
+		user_no,
+		block_date,
+		Report_NO,
+		unblock_date,
+		TO_CHAR(unblock_date, 'YYYY"년 "MM"월 "DD"일"') as unblock_date_str
+		from block
+		where user_no = #{userNo}
+		AND unblock_date &gt; sysdate
+	</select>
+	
+	<select id="getReportByReportNo" parameterType="int" resultMap="reportSelectMap">
+		select 
+		REPORT_NO,
+		REPORT_USER_NO,
+		BAD_CALL_NO,
+		REPORT_CATEGORY,
+		REPORT_CODE,
+		REPORT_DETAIL,
+		REPORT_DATE,
+		REPORT_ROLE,
+		TO_CHAR(reg_date, 'YYYY"년 "MM"월 "DD"일"') as reg_date
+		from report
+		where report_no = #{reportNo}
+	</select>
 	
 </mapper>
 

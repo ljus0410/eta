@@ -197,7 +197,7 @@ public class CallResController {
 		}
 
 		// 피드백하러 가기
-		return "forward:/callres/home.jsp";
+		return "forward:/feedback/addBlacklist/" + callNo;
 	}
 
 	@GetMapping("callAccept")
@@ -393,13 +393,21 @@ public class CallResController {
 	public String getRequest(Model model, HttpSession session) throws Exception {
 		int userNo = ((User) session.getAttribute("user")).getUserNo();
 		String driverNo = String.valueOf(userNo);
+
 		AddCallEntity callRequest = redisService.getCallById(driverNo);
-		int callNo = callRequest.getCallNo();
-		int passengerNo = callResService.getMatchByCallnod(callNo);
-		Call call = callResService.getCallByNo(callNo);
-		model.addAttribute("call", call);
-		model.addAttribute("passengerNo", passengerNo);
-		System.out.println(call);
+		if (callRequest != null) {
+			int callNo = callRequest.getCallNo();
+			int passengerNo = callResService.getMatchByCallnod(callNo);
+			Call call = callResService.getCallByNo(callNo);
+
+			model.addAttribute("call", call);
+			model.addAttribute("passengerNo", passengerNo);
+		} else {
+			// callRequest가 null일 경우, 모델에 null을 설정
+			model.addAttribute("call", null);
+			model.addAttribute("passengerNo", 0); // 혹은 적절한 기본값 설정
+		}
+
 		return "forward:/callres/callAcceptReject.jsp";
 	}
 
