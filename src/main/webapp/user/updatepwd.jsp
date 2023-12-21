@@ -12,7 +12,7 @@
 function updatePwd(){
 	 $("form").attr("method", "POST").attr("action", "/user/updatePwd").submit();
 
-});
+}
 	
 	
 
@@ -45,7 +45,7 @@ function updatePwd(){
           <label for="c1" class="color-theme">새로운 비밀번호</label>
           <span>새 비밀반호</span>
         </div>
-        <a href="#" onclick="updatePwd()"class='btn rounded-sm btn-m gradient-blue text-uppercase font-700 mt-4 mb-3 btn-full shadow-bg shadow-bg-s'>Create Account</a>
+        <a href="#" onclick="updatePwd()"class='btn rounded-sm btn-m gradient-blue text-uppercase font-700 mt-4 mb-3 btn-full shadow-bg shadow-bg-s'>수정</a>
         <div class="d-flex">
         </div>
       </div>
