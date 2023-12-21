@@ -127,6 +127,7 @@ public class CallReqController {
 
 			model.addAttribute("myMoney", myMoney);
 			model.addAttribute("callCode", callCode);
+			model.addAttribute("hasNoDataException", true);
 
 			return "forward:/callreq/selectOptions.jsp";
 

@@ -86,7 +86,7 @@
        <div class="card card-style" style="margin-bottom: 15px ;">
           <div class="content" style="margin-bottom: 9px;">
             <h1 class="pb-2">
-              <i class="has-bg rounded-s bi bg-green-dark bi-heart"></i>&nbsp;&nbsp;즐겨찾기
+              <i class="has-bg rounded-s bi bg-green-dark bi-heart" style="vertical-align:bottom !important; line-height: 0px!important;height: 30px !important;font-size: 30px !important; all:initial; display: inline-block;"></i>&nbsp;&nbsp;즐겨찾기
             </h1>
 
           </div>
