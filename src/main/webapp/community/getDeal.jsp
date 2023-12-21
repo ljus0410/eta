@@ -143,7 +143,7 @@
       };
 
       stompClient.send("/deal/"+driverNo, {}, JSON.stringify(message));
-      self.location='/callres/drivingP.jsp';
+      self.location='/callres/drivingP.jsp?callNo='+callNo;
     }
 
     function deleteReq() {
