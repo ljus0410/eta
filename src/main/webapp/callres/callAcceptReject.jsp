@@ -19,7 +19,8 @@
         // 수락 버튼 이벤트 리스너
         acceptButton.addEventListener('click', function() {
             var callNo = ${call.callNo}; // JSTL 변수를 JavaScript 변수로 변환
-
+            var callCode = '${call.callCode}';
+			console.log(callCode);
             // 첫 번째 AJAX 요청 (삭제)
             var xhrDelete = new XMLHttpRequest();
             xhrDelete.open('POST', '/callres/json/deleteRequest/' + callNo, true);
@@ -30,7 +31,12 @@
 
                     stompClient.connect({}, function(frame) {
                         // 연결 성공 시 콜백
-                        stompClient.send("/sendStartNotification/" + passengerNo, {}, '운행시작');
+                        if(callCode === 'R'){
+                        	stompClient.send("/sendStartNotification/" + passengerNo, {}, '예약 완료');
+                        }
+                        else{
+                        	stompClient.send("/sendStartNotification/" + passengerNo, {}, '운행시작');
+                        }
                     }, function(error) {
                         // 연결 실패 시 콜백
                         console.error('Stomp connection error: ' + error);

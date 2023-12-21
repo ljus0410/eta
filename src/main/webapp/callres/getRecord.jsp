@@ -261,10 +261,10 @@
 						<div class="section-title">관리자 정보</div>
 						<ul class="mb-0 ps-3">
 							<li class="info-item"><span class="info-label">Passenger
-									정보:</span> <span class="info-value">${users.userNo},
+									정보:</span> <span class="info-value">${passengerNo},
 									${call.callNo}</span></li>
 							<li class="info-item"><span class="info-label">택시 정보:</span>
-								<span class="info-value">${users.phone}, ${call.callNo},
+								<span class="info-value">${users.userNo},${users.phone},
 									${users.carNum}, ${call.star}</span></li>
 						</ul>
 					</c:if>

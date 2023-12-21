@@ -22,9 +22,41 @@ stompClient.connect({}, function (frame) {
         }
     });
 });
-$(document).ready(function () {
-    $(".page-content").scrollTop($(".page-content")[0].scrollHeight);
+
+document.getElementById('content').addEventListener('keydown', function (e) {
+    // Check if the pressed key is Enter (key code 13)
+    if (e.keyCode === 13) {
+        // Prevent the default behavior (form submission)
+        e.preventDefault();
+        // Call your custom function or do nothing
+        // You can choose to call sendMessage() or do something else
+        // For now, let's just log a message
+        console.log("Enter key pressed, but not calling sendMessage()");
+    }
 });
+
+$(document).ready(function() {
+        // id가 "logoutLink"인 요소에 클릭 이벤트를 추가
+        $("#logOutButton").on("click", function() {
+            // 쿠키에서 토큰 값을 가져옴
+            var naverAccessToken = getCookie("naverAccessToken");
+            console.log("Naver Access Token:", naverAccessToken);
+            // 로그아웃 URL 구성 (토큰 값이 있다면 추가)
+            var logoutUrl = "/user/kakao-logOut" + (naverAccessToken ? "?token=" + encodeURIComponent(naverAccessToken) : "");
+
+            // 페이지 이동
+            window.location.href = logoutUrl;
+        });
+
+        // 쿠키에서 특정 이름의 값을 가져오는 함수
+        function getCookie(name) {
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length == 2) return parts.pop().split(";").shift();
+        }
+
+    });
+    
 function sendMessage() {
     const sender = document.getElementById('sender').value;
     const content = document.getElementById('content').value;
@@ -52,14 +84,14 @@ function sendMessage() {
 function insertMessage(message) {
     $("#messages").append(message);
     $("#content").val("");
-    $(".page-content").scrollTop($(".page-content")[0].scrollHeight);
+    $(".message:last").scrollTop($("#messages")[0].scrollHeight);
 }
 
 function appendMessage(message,sender,time) {
 
 
     if(sender==$("#sender").val()){
-        var htmlContent = '<div class="d-flex mb-3 pb-1" style="justify-content: end;">' +
+        var htmlContent = '<div class="d-flex mb-3 pb-1 message" style="justify-content: end;">' +
             '<div className="ms-auto" style="display: flex; align-items: flex-end;">' +
             '<div style="padding-right: 10px;">'+
             '<p class="text-end font-700 font-12 mb-0 pt-1">'+time+'</p>'+
@@ -72,7 +104,7 @@ function appendMessage(message,sender,time) {
             '</div>' +
             '</div>';
     } else {
-        var htmlContent = '<div class="mb-3 pb-1"  style="justify-content: start;">' +
+        var htmlContent = '<div class="mb-3 pb-1 message"  style="justify-content: start;">' +
             '<div>'+
             sender +
             '</div>'+
