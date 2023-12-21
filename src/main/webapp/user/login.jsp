@@ -11,15 +11,15 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $("#loginBtn").on("click", function() {
-    	 var id = $("#c3").val();
-    	    var pw = $("#c4").val();
+    	 var id = $("#email").val();
+    	    var pw = $("#pwd").val();
     	   
 
     	    if (id == null || id.length < 1) {
     	        // 얼럿(alert) 대신 모달(offcanvas) 표시
-    	        alert('ID를 입력하지 않으셨습니다.');
+    	        alert('이메일 입력하지 않으셨습니다.');
     	       
-    	        $("#c3").focus();
+    	        $("#email").focus();
     	        return;
     	    }
 
@@ -27,7 +27,7 @@ $(document).ready(function() {
     	        // 얼럿(alert) 대신 모달(offcanvas) 표시
     	         alert('패스워드를 입력하지 않으셨습니다.');
     	       
-    	        $("#42").focus();
+    	        $("#pwd").focus();
     	        return;
     	    }
       var loginSuccess = false;
@@ -43,7 +43,7 @@ $(document).ready(function() {
   });
 
   function showLoginFailedToast() {
-    var toast = $('#snack-3');
+    var toast = $('#failLogin');
     var bsToast = new bootstrap.Toast(toast);
     bsToast.show();
   }
@@ -65,11 +65,11 @@ $(document).ready(function() {
         <p class="text-center font-13 mt-n2 mb-3">Enter your Credentials</p>
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-person-circle font-14"></i>
-          <input type="text" class="form-control rounded-xs" id="c3" name="email" placeholder="email"/>
+          <input type="text" class="form-control rounded-xs" id="email" name="email" placeholder="email"/>
         </div>
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-lock-fill font-14"></i>
-          <input type="password" class="form-control rounded-xs" id="c4" name="pwd" placeholder="Password"/>
+          <input type="password" class="form-control rounded-xs" id="pwd" name="pwd" placeholder="Password"/>
         </div>
         <a id="loginBtn" href="#" class='btn rounded-sm btn-m gradient-green text-uppercase font-700 mt-4 mb-3 btn-full shadow-bg shadow-bg-s'>Sign In</a>
         <div class="d-flex">
@@ -83,7 +83,7 @@ $(document).ready(function() {
       </div>
     </div>
   </div>
-  <div id="snack-3" class="snackbar bg-red-dark shadow-bg shadow-bg-m rounded-s shadow-l" data-bs-delay="4000">
+  <div id="failLogin" class="snackbar bg-red-dark shadow-bg shadow-bg-m rounded-s shadow-l" data-bs-delay="4000">
     <div class="d-flex">
       <div class="align-self-center">
         <p class="mb-0 color-white font-600 line-height-s pe-2">Login Failed.</p>

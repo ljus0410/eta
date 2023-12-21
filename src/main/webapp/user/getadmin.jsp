@@ -126,11 +126,12 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
           alert("비활성화");
           // 여기서 usersNo 가져오기
           var usersNo = $("#usersNo").val();
+          let reportNo = ${reportNo }
           console.log("No : " + usersNo);
           // AJAX 요청 보내기
           $.ajax({
               type: "GET",
-              url: "/feedback/json/addBlock/" + usersNo,
+              url: "/feedback/json/addBlock/" + usersNo+"/"+reportNo,
               success: function(response) {
                 alert("비활성화 적용 :"+response+"회")
                 
@@ -305,11 +306,13 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
 </diV>
  </c:if>
  <input type="hidden" id="usersNo" value="${users.userNo}">
- <c:if test="${block >= 4}">
- <a href="#" id="blocks" style ="opacity: 0.5;" class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4">비활성화</a> 
- </c:if>
- <c:if test="${block < 4}">
- <a class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4" id="block">비활성화</a>
+ <c:if test="${!empty reportNo }">
+	 <c:if test="${block >= 4}">
+	 <a href="#" id="blocks" style ="opacity: 0.5;" class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4">비활성화</a> 
+	 </c:if>
+	 <c:if test="${block < 4}">
+	 <a class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4" id="block">비활성화</a>
+	</c:if>
 </c:if>
  </div>
  </div>
