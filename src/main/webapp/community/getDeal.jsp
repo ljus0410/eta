@@ -37,11 +37,12 @@
           <ul class="mb-0 ps-3">
             <input type="hidden" id="callNo" value="${call.callNo}">
             <input type="hidden" id="userNo" value="${user.userNo}">
+            <input type="hidden" id="limitTime" value="${dealReq.limitTime}">
             <li><strong>출발</strong> : ${call.startAddr}</li>
             <li><strong>도착</strong> : ${call.endAddr}</li>
             <li><strong>경로 옵션</strong> : ${call.routeOpt}</li>
             <li><strong>제시 금액</strong> : ${dealReq.passengerOffer}</li>
-            <li><strong>종료 시간</strong> : ${call.callDate}</li>
+            <li><strong>종료 시간</strong> : ${dealReq.limitTime}</li>
           </ul>
         </div>
       </div><!-- card card-style 끝 -->
@@ -91,6 +92,22 @@
     </div>
   </div>
   <!-- iOS Toast Bar 끝-->
+
+    <div id="timeOver" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+
+      <div class="align-self-center">
+        <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+      </div>
+
+      <div class="align-self-center">
+        <span class="font-11 mt-n1 opacity-70">시간이 지났습니다.</span>
+      </div>
+
+      <div class="align-self-center ms-auto">
+        <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+      </div>
+
+    </div>
   
   </div><!-- page 끝 -->
 
@@ -124,8 +141,19 @@
       });
 
       $( "#match" ).on("click" , function() {
-        let driverNo = $("input[name='driverNo']:checked").val();
-        sendDeal(driverNo);
+        let currentDate = new Date();
+        let limitDate =  new Date($("#limitTime").val());
+
+        if (currentDate > limitDate) {
+          $('#timeOver').addClass('fade show');
+          setTimeout(() => {
+            deleteReq();
+          }, 3 * 1000);
+        } else {
+          let driverNo = $("input[name='driverNo']:checked").val();
+          sendDeal(driverNo);
+        }
+
       });
 
     });

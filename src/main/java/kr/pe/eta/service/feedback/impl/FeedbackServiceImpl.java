@@ -186,4 +186,14 @@ public class FeedbackServiceImpl implements FeedbackService {
 		return feedbackDao.getBlockCount(block);
 	}
 
+	public Block getBlock(int userNo) throws Exception {
+		Block block = feedbackDao.getBlock(userNo);
+		block.setBlockCount(feedbackDao.getBlockCount(block));
+		return block;
+	}
+
+	public Report getReportByReportNo(int reportNo) throws Exception {
+		return feedbackDao.getReportByReportNo(reportNo);
+	}
+
 }

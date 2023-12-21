@@ -63,4 +63,8 @@ public interface FeedbackService {
 	public Map<String, Object> getShareReport(Report report) throws Exception;
 
 	public int getBlockCount(int userNo) throws Exception;
+
+	public Block getBlock(int userNo) throws Exception;
+
+	public Report getReportByReportNo(int reportNo) throws Exception;
 }

@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <title>Insert title here</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    
+    <script src="../javascript/user/user.js"></script>
     <style>
 
         /* 추가한 스타일 */
@@ -48,10 +48,20 @@
     text-transform: uppercase;
 
 }
- 
+ .custom-border4 {
+    width: 40vw; 
+    height: 120px;
+    padding: 0px 15px 0px 40px;
+    border: 1px solid #f0f0f0 !important; 
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+
+}
 .custom-border3 {
     width: 40vw; 
-    height: 80px;
+    height: 90px;
     padding: 0px 15px 0px 40px;
     border: 1px solid #f0f0f0 !important; 
     display: flex;
@@ -116,289 +126,12 @@
     </style>
     
     <script>  
- 
-    
-    var messege;
-    
-            // Ajax 요청 함수
-            function phone() {
-                // Get the phone number from the input field
-                var phone = $('#phone').val();
-
-                // Perform AJAX request using jQuery
-                $.ajax({
-                    url: '/user/json/send-one', // Specify your server endpoint
-                    method: 'GET',
-                    data: {
-                        phone: phone
-                    },
-                    success: function (response) {
-                        // Handle the success response
-                        console.log(response.num);
-                        messege = response.num
-                        // You can update the UI here based on the response if needed
-                    },
-                    error: function (error) {
-                        // Handle the error
-                        console.error(error);
-                    }
-                });
-            }
-
-        function handleBankClick(imgElement) {
-            var bankCode = imgElement.getAttribute('data-bank-code');
-            var bankName = imgElement.getAttribute("data-bank-name");
-            
-            console.log('Bank Code: ' + bankCode);
-            console.log('Bank Name: ' + bankName);
-            document.getElementById('bankCodeInput').value = bankCode;
-            
-            document.getElementById("bank").value = bankName;
-            
-
-            // bankname 함수 호출
-            
-
-            // 여기서 필요한 로직 수행
-        }
-        
-        function bankname(bankCode) {
-            console.log("bankCode: " + bankCode);
-            // Get the phone number from the input field
-           
-            var bank_num  = $('#bank_num').val();
-            var bankCode = document.getElementById('bankCodeInput').value;
-            var name = $('#accountname').val();
-            console.log("번호 :"+bank_num);
-            console.log("코드 :"+bankCode);
-            console.log("이름 :"+name);
-            // Perform AJAX request using jQuery
-            $.ajax({
-                url: '/user/json/bankName', // Specify your server endpoint
-                method: 'GET',
-                data: {
-                  bank_code: bankCode,
-                  bank_num: bank_num
-                },
-                success: function (response) {
-                    // Handle the success response
-                    console.log(response);
-                    if (name === response) {
-                      alert( "일치");
-                    } else {
-                      alert( "불일치");
-                    }
-                    // You can update the UI here based on the response if needed
-                },
-                error: function (error) {
-                    // Handle the error
-                    console.error(error);
-                }
-            });
-        }
-        $(document).ready(function() {
-            // 텍스트 입력란에 입력이 발생할 때마다 dupEmail 함수 호출
-            $('#emailel').on('keyup', function() {
-                 console.log('이메일 입력이 종료되었습니다.');
-                 dupEmail();
-            })
-        function dupEmail() {
-         
-            // Get the phone number from the input field
-           
-            var email = $('#emailel').val();
-            console.log("이메일 :"+email);
-           
-            // Perform AJAX request using jQuery
-            $.ajax({
-                url: '/user/json/dupEmail', // Specify your server endpoint
-                method: 'GET',
-                data: {
-                  email: email
-                },
-                success: function (response) {
-                    // Handle the success response
-                    console.log("response" + response);
-                    var resultText = $('#resultText'); // resultText 변수 추가
-
-                    if (response === "1") {
-                        resultText.text("사용가능한 이메일입니다.").css('color', 'blue');
-                    } else {
-                        resultText.text("이미 사용중인 이메일입니다.").css('color', 'red');
-                    }
-                },
-                error: function (error) {
-                    // Handle the error
-                    console.error(error);
-                }
-            });
-        }
-        });
-        
-        $(document).ready(function() {
-            // 텍스트 입력란에 입력이 발생할 때마다 dupEmail 함수 호출
-            $('#nickName').on('keyup', function() {
-                 console.log('닉네임 입력이 종료되었습니다.');
-                 dupNick();
-            })
-        function dupNick() {
-            
-            // Get the phone number from the input field
-           
-            var nick = $('#nickName').val();
-            console.log("닉네임 :"+nick);
-           
-            // Perform AJAX request using jQuery
-            $.ajax({
-                url: '/user/json/dupNickName', // Specify your server endpoint
-                method: 'GET',
-                data: {
-                  nick: nick
-                },
-                success: function (response) {
-                    // Handle the success response
-                    console.log("response" + response);
-                    var resultText = $('#resultText2'); // resultText 변수 추가
-
-                    if (response === "1") {
-                        resultText.text("사용가능한 닉네임니다.").css('color', 'blue');
-                    } else {
-                        resultText.text("이미 사용중인 닉네임입니다.").css('color', 'red');
-                    }
-                },
-                error: function (error) {
-                    // Handle the error
-                    console.error(error);
-                }
-            });
-        }
-        });
-        
-        
-       //      document.getElementById("gender").value = "0";
-        //여자 남자
        
-      document.addEventListener("DOMContentLoaded", function() {
-    // 초기값을 여 (1)로 설정
-    toggleGenderLabel(document.getElementById("genderch"));
-      });
-        
-    function toggleGenderLabel(checkbox) {
-        var label = document.getElementById("genderLabel");
-        var gender = document.getElementById("genderch");
-
-        if (checkbox.checked) {
-            label.innerText = "남";
-            gender.value = "0";
-            console.log("Gender Value: " + gender.value);
-            document.getElementById("gender").value = "0";
-        } else {
-            label.innerText = "여";
-            gender.value = "1";
-            console.log("Gender Value: " + gender.value);
-            document.getElementById("gender").value = "1";
-        }
-    }
-
-
-
-
-
-        
-        //은행값가저오기              
-        function openModal() {
-            // Bootstrap JavaScript 함수 호출
-           var bankOffcanvas = new bootstrap.Offcanvas(document.getElementById('bank_list'));
-             
-             // Check if the offcanvas is currently shown
-             if (bankOffcanvas._isShown) {
-                 // If shown, hide the offcanvas (close the modal)
-                 bankOffcanvas.hide();
-             } else {
-                 // If not shown, show the offcanvas (open the modal)
-                 bankOffcanvas.show();
-             }
-         }
-        
-        //비밀번호 일치여부       
-    $(document).ready(function() {
-    // 텍스트 입력란에 입력이 발생할 때마다 dupEmail 함수 호출
-    $('#confirmPassword').on('keyup', function() {
-        console.log('비밀번호 입력이 종료되었습니다.');
-        
-        // 페이지 로드 시에 매번 비밀번호를 다시 가져오도록 변경
-        var password = $('#password').val();
-        console.log("비밀번호" + password);
-        
-        // 확인 비밀번호 입력란의 값
-        var confirmPassword = $(this).val();
-        console.log("비밀번호확인" + confirmPassword);
-        
-        // 비밀번호와 확인 비밀번호 비교
-        if (password = confirmPassword) {
-            $("#checkPasswordMatch").text("비밀번호가 일치합니다.").css("color", "blue");
-        } else {
-            $("#checkPasswordMatch").text("비밀번호가 일치하지 않습니다.").css("color", "red");
-        }
-    });
-});
-
-        
-        
-        //인증번호
-         function addInput() {
-              console.log("num: " + messege);
-              var userInput = document.getElementById('certify').value;
-              userInput = parseInt(userInput);
-              var resultText = $('#message');
-
-              if (messege == userInput) {
-                  console.log("입력값: " + userInput);
-                  resultText.text("일치합니다").css('color', 'blue');
-                  
-                  // 부트스트랩 JavaScript API를 사용하여 모달 닫기
-                  $('#menu-forgot').offcanvas('hide');
-                  $('#menu-forgot').on('hidden.bs.offcanvas', function () {
-                      // 입력 필드 비활성화
-                      $('#phone').prop('disabled', true);
-                  });
-              } else {
-                  console.log("틀린 입력값: " + userInput);
-                  resultText.text("불일치합니다.").css('color', 'red');
-              }
-          }
-
-
-
-         function updateAnimalOptValue() {
-             var checkbox = document.getElementById("animalOpt");
-             var valueInput = document.getElementById("animalOptValue"); // 추가: 값을 전달할 hidden input
-
-             if (checkbox.checked) {              
-                 // 체크되었을 때
-                 valueInput.value = "1";
-                 console.log("동물옵션"+valueInput.value);
-             } else {
-                 // 체크되지 않았을 때
-                 valueInput.value = "0"; // 또는 다른 기본값으로 설정
-                 console.log("동물옵션"+valueInput.value);
-             }
-         }
-            
-         $( function() {
-             $("#addUser").on("click" , function() {
-               var role = ${role}
-               console.log("role: ${role}"+role);
-               $("form").attr("method", "POST").attr("action", "/user/addUser").submit();
-             });
-           });
-      
-                      
-
+         
     </script>
                       
 
-    </script>
+
 </head>
 <body class="theme-light">
 <jsp:include page="../home/top.jsp" />
@@ -439,6 +172,7 @@
            placeholder="이메일"/>
           <label for="emailel" class="color-theme">Email</label>
           </c:if>        
+          
           <span id="resultText" style="margin-left: 10px;"></span>
         </div>
         
@@ -449,9 +183,9 @@
         
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-unlock font-12"></i>
-          <input type="password" class="form-control rounded-xs" id="password" name="pwd" placeholder="비밀번호"/>
+          <input type="password" class="form-control rounded-xs" id="password" name="pwd" placeholder="특수문자 포함 8자이상"/>
           <label for="password" class="color-theme">Password</label>
-          <span>(required)</span>
+         <span id="passwordMessage" style="margin-left: 10px;"></span>
         </div>
         
         <div class="form-custom form-label form-icon mb-3">
@@ -473,25 +207,28 @@
         
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-calendar-date font-12"></i>
-          <input type="text" class="form-control rounded-xs" id="birth" name="birth" placeholder="생년월일( ex 19000821)"/>
+          <input type="text" class="form-control rounded-xs" id="birthdate" name="birth" placeholder="생년월일( ex 19000821)"/>
           <label for="c2" class="color-theme">Birth</label>
-          <span>(required)</span>
+          <span id="birthdatemessa" style="margin-left: 10px;"></span>
         </div>
         
 
                
         
-        <div class="custom-border3 form-control rounded-xs" style="align-items: center;">
+<div class="custom-border3 form-control rounded-xs" style="align-items: center;">
     <div style="display: flex;">
         <i style="font-size: 13px;" class="bi bi-currency-dollar font-12"></i>
         <span style="font-size: 13px; flex-direction: column; margin-bottom: 8px; margin-left:14px; color: gray;">전화번호</span>
     </div>
-    <div style="justify-content: center; display: flex; align-items: center;">
+    <div style="justify-content: flex-start; display: flex; align-items: center; margin-left: 10px;">
         <div id="inputContainer">
-            <input class="rounded-xs" name="phone" style="color: gray; margin-left: 10px; border: 1px solid #ced4da !important;" type="text" id="phone" placeholder="01066726545"/>
-            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#menu-forgot" style="width: 60px; height: 30px; line-height: 7px; white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
+            <input class="rounded-xs" name="phone" style="color: gray; margin-left: 10px; border: 3px solid #ced4da !important; font-size: 14px;" type="text" id="phone" value="" placeholder="01066726545"/>
+            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#phoneNum" style="text-align: center; width: 60px; margin-left: 5px; height: 30px; line-height: 7px; white-space: nowrap; font-size: 10px; vertical-align: middle;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
+
         </div>
     </div>
+    <span id="checkNum" style="justify-content: flex-start; display: flex; margin-left: 20px; font-size: 14px;"></span>
+    
 </div>
            
   
@@ -538,7 +275,7 @@
 </svg></span>
 
 <span class="carOptStyle" style="margin-right: 9px; cursor: pointer;">
-   <input class="form-check-input custom-checkbox" type="checkbox" value="0" name="carOpt" id="carOpt">
+   <input type="radio"  value="0" class="form-check-input" name="carOpt"  checked>
    <label for="carOpt"></label><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-wheelchair" viewBox="0 0 16 16">
   <path d="M12 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m-.663 2.146a1.5 1.5 0 0 0-.47-2.115l-2.5-1.508a1.5 1.5 0 0 0-1.676.086l-2.329 1.75a.866.866 0 0 0 1.051 1.375L7.361 3.37l.922.71-2.038 2.445A4.732 4.732 0 0 0 2.628 7.67l1.064 1.065a3.25 3.25 0 0 1 4.574 4.574l1.064 1.063a4.732 4.732 0 0 0 1.09-3.998l1.043-.292-.187 2.991a.872.872 0 1 0 1.741.098l.206-4.121A1 1 0 0 0 12.224 8h-2.79l1.903-2.854ZM3.023 9.48a3.25 3.25 0 0 0 4.496 4.496l1.077 1.077a4.75 4.75 0 0 1-6.65-6.65l1.077 1.078Z"/>
 </svg></span>
@@ -577,7 +314,7 @@
         
         
         
-        <div class="custom-border2 form-control rounded-xs" style=" align-items: center;">
+        <div class="custom-border4 form-control rounded-xs" style=" align-items: center;">
      <div style="display: flex;  ">
     <i style="font-size: 13px;"class="bi bi-currency-dollar font-12"></i>
     <span style="font-size: 13px;flex-direction: column;  margin-bottom: 8px; margin-left:14px; color: gray;">정산수단</span>
@@ -588,13 +325,13 @@
       <input type="hidden" id="bankCodeInput" />
 
 <i style="margin-left:10px; font-size: 18px;"class="bi bi-credit-card-fill font-12"></i>
-      <a onclick="openModal()" style="font-size: 13px;   margin-left:5px; color:gray;">은행명</a>
+      <a onclick="openModal()" style="font-size: 13px;   margin-left:5px; color:gray;">은행</a>
         <input type="hidden" id="bank" name="bank" value="">
-       <input class="rounded-xs" name="account" style="color:gray; margin-left:10px; border: 1px solid #ced4da !important;"type="text" id="bank_num" placeholder="계좌번호('-'제외)"/>
-       <input class="rounded-xs" name="accountname" style="color:gray; margin-left:10px; border: 1px solid #ced4da !important;"type="text" id="accountname" placeholder="예금주"/>
-        <a onclick="bankname()"  style="width: 60px; height: 30px; line-height: 7px; white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>확인</a>
-
+       <input class="rounded-xs" name="account" style="color:gray; margin-left:15px; border: 3px solid #ced4da !important;"type="text" id="bank_num" placeholder="계좌번호('-'제외)"/>
+       <input class="rounded-xs" name="accountname" style="color:gray; margin-left:15px; margin-top: 5px; border: 1px solid #ced4da !important;"type="text" id="accountname" placeholder="예금주"/>
+        <a onclick="bankname()"  style="font-size: 10px; width: 60px; height: 30px; line-height: 7px;margin-top: 5px; white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>확인</a>
   </div>
+<span id="asdasdasd" style="justify-content: flex-start; display: flex; margin-left: 20px; font-size: 10px;"></span>
 </diV>
  </c:if>
       
@@ -718,7 +455,7 @@
 
 
 
-<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-forgot">
+<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="phoneNum">
     <div class="content">
       <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
       <h1 class="font-24 font-800 mb-3">인증번호</h1>
@@ -768,7 +505,18 @@
 
    </div>
     
-
+<div id="addUserTa" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+    <div class="align-self-center">
+      <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+    </div>
+    <div class="align-self-center">
+      <strong id ="messgeInfo" class="font-13 mb-n2"></strong>
+      <span class="font-10 mt-n1 opacity-70">Sign-up Failed. Try again.</span>
+    </div>
+    <div class="align-self-center ms-auto">
+      <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
 
 
 </body>

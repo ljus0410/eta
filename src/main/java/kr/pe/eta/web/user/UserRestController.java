@@ -22,6 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpSession;
 import kr.pe.eta.common.Search;
+import kr.pe.eta.domain.Block;
+import kr.pe.eta.domain.Report;
 import kr.pe.eta.domain.User;
 import kr.pe.eta.redis.RedisService;
 import kr.pe.eta.service.callreq.CallReqService;
@@ -76,7 +78,7 @@ public class UserRestController {
 	@GetMapping("/send-one")
 	public Map<String, Object> sendOne(@RequestParam("phone") String phone) {
 		System.out.println("메시지 전송");
-
+		System.out.println("num :" + phone);
 		Random rand = new Random();
 		String numStr = "";
 		for (int i = 0; i < 4; i++) {
@@ -209,7 +211,7 @@ public class UserRestController {
 		String success = null;
 		String fail = null;
 		String ment = null;
-
+		Map<String, Object> map = new HashMap<String, Object>();
 		// 블락테이블 여부를 확인할 수 있는거 해서 있으면 메세지 띄우고
 		// 없으면 그냥 로그인 되는걸로 블락여부 로긍여부 만
 		if (db.isBlockCode()) {
@@ -225,7 +227,13 @@ public class UserRestController {
 				}
 			} else {
 				System.out.println("실패");
-				ment = "비활성화 상태입니다.";
+				Block block = feedback.getBlock(db.getUserNo());
+				Report report = feedback.getReportByReportNo(block.getReportNo());
+				System.out.println(block);
+				System.out.println(report);
+				map.put("block", block);
+				map.put("report", report);
+				ment = "비활성화 계정";
 			}
 		} else {
 			if (user.getEmail().equals(db.getEmail()) && user.getPwd().equals(db.getPwd())) {
@@ -236,7 +244,7 @@ public class UserRestController {
 				fail = "로그인 실패";
 			}
 		}
-		Map<String, Object> map = new HashMap<String, Object>();
+
 		map.put("success", success);
 		map.put("fail", fail);
 		map.put("ment", ment);

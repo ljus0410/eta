@@ -172,6 +172,7 @@ $(function () {
 
 
 					<c:if test="${user.role == 'driver'}">
+						<h6 class="font-700 mb-n1 color-highlight">Driver Record List</h6>
 						<h1 class="pb-2">
 							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;운행기록
 						</h1>
@@ -179,11 +180,32 @@ $(function () {
 					</c:if>
 
 					<c:if test="${user.role == 'passenger'}">
+					<h6 class="font-700 mb-n1 color-highlight">Passenger Record List</h6>
 						<h1 class="pb-2">
 							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;이용기록
 						</h1>
 
 					</c:if>
+					
+					<div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
+                  <select id="month" class="form-select"  style="padding-top: 3px; padding-bottom: 3px; width: 30%; display: inline-block">
+										  <option value="all">전체</option>
+										  <option value="01">1월</option>
+										  <option value="02">2월</option>
+										  <option value="03">3월</option>
+										  <option value="04">4월</option>
+										  <option value="05">5월</option>
+										  <option value="06">6월</option>
+										  <option value="07">7월</option>
+										  <option value="08">8월</option>
+										  <option value="09">9월</option>
+										  <option value="10">10월</option>
+										  <option value="11">11월</option>
+										  <option value="12">12월</option>
+										</select>
+              <a class="btn btn-xxs border-blue-dark color-blue-dark" id="searchButton"
+                style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-left: 5px; ">검색</a>
+            </div>
 
 				</div>
 			</div>
@@ -245,6 +267,19 @@ $(function () {
 
 							});
 		});
+		
+		
+		
+		
+		
+		$(document).ready(function() {
+		    $("#searchButton").on("click", function() {
+		        var month = $("#month").val();
+		        self.location = "/callres/getRecordList?month=" + month;
+		    });
+		});
+
+		
 	</script>
 
 	<script src="/templates/scripts/bootstrap.min.js"></script>

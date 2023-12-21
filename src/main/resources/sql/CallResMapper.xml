@@ -371,10 +371,10 @@
 		AND c.call_state_code =
 		'운행후'
 
-		<if test="search.searchCondition != null">
+		<if test="month != 'all'">
 
 			AND EXTRACT(MONTH FROM c.call_date) =
-			#{search.searchCondition}
+			#{month}
 
 		</if>
 

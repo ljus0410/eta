@@ -34,11 +34,11 @@
                         </span>
                     </div>
                     <div class="align-self-center">
-                        <h5 class="font-16 ps-2 ms-1 mb-0 color-white">Call to Action</h5>
+                        <h5 class="font-16 ps-2 ms-1 mb-0 color-white">운행 종료 되었습니다</h5>
                     </div>
                 </div>
                 <p id="notificationMessage" class="font-12 pt-2 mb-3 color-white opacity-70">
-                    Please click a button to dismiss the notification. These are user action based.
+                     별점 화면으로 이동합니다
                 </p>
                 <div class="row">
                     <div class="col-6">
