@@ -129,22 +129,24 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
 <script type="text/javascript">
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    const userCarOpt = ${user.carOpt};
-    
-    // 초기 아이콘에 스타일 적용
-    if (userCarOpt == 4) {
-        document.getElementById('busIcon').classList.add('selectedIcon');
-    } else if (userCarOpt === 6) {
-        document.getElementById('busIcon2').classList.add('selectedIcon');
-    } else if (userCarOpt === 8) {
-        document.getElementById('busIcon3').classList.add('selectedIcon');
-    } else if (userCarOpt === 0) {
-        document.getElementById('busIcon4').classList.add('selectedIcon');
-    }
-    
-    document.getElementById('carOptValue').value =userCarOpt;
-});
+if ('driver' === '${user.role}') {
+    document.addEventListener('DOMContentLoaded', function() {
+        const userCarOpt = `${user.carOpt}`;
+        
+        // 초기 아이콘에 스타일 적용
+        if (userCarOpt === '4') {
+            document.getElementById('busIcon').classList.add('selectedIcon');
+        } else if (userCarOpt === '6') {
+            document.getElementById('busIcon2').classList.add('selectedIcon');
+        } else if (userCarOpt === '8') {
+            document.getElementById('busIcon3').classList.add('selectedIcon');
+        } else if (userCarOpt === '0') {
+            document.getElementById('busIcon4').classList.add('selectedIcon');
+        }
+        
+        document.getElementById('carOptValue').value = userCarOpt;
+    });
+}
 
 
 
@@ -432,8 +434,11 @@ function updateUser() {
       }
     }
     
-
-   
+    const rawDate = new Date(`${user.regDate}`);
+    const year = rawDate.getFullYear();
+    const month = (rawDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = rawDate.getDate().toString().padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
 
    
 
@@ -443,7 +448,7 @@ function updateUser() {
 <body>
 <jsp:include page="../home/top.jsp" />
 <form>
-
+<div id="page">
 <div class="page-content header-clear-medium" >
         
         
@@ -455,10 +460,10 @@ function updateUser() {
        <div style="text-align: right;">
 
    <c:if test="${user.role ne 'driver'}">
-      <p class="font-12 color-highlight" style="margin-bottom: 0;text-align: left;">잔액: ${money}원</p>
+      <p class="font-12 color-highlight" style="margin-bottom: 0;text-align: left;">잔액: ${user.myMoney}원</p>
    </c:if>
 
-   <p class="font-12 color-highlight" style="margin-bottom: 0;">가입일자: ${user.regDate}</p>
+   <p class="font-12 color-highlight" style="margin-bottom: 0;">가입일자: ${user.regDate.substring(0, 10)}</p>
             
 </div>
 
@@ -629,7 +634,7 @@ function updateUser() {
  </div>
  </div>
  </div>
- 
+ </div>
  
    
  

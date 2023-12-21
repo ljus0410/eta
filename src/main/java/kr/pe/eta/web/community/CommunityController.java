@@ -157,6 +157,11 @@ public class CommunityController {
 					} else {
 						System.out.println("blackList 가 아닌 driver : " + callDriverNoList.get(i));
 						driverNoResult.add(callDriverNoList.get(i));
+						String driverNo = String.valueOf(callDriverNoList.get(i));
+						AddCallEntity addCallEntity = new AddCallEntity();
+						addCallEntity.setId(driverNo);
+						addCallEntity.setCallNo(callNo);
+						redisService.addCall(addCallEntity);
 					}
 				}
 			}
@@ -457,6 +462,7 @@ public class CommunityController {
 
 		model.addAttribute("call", call);
 		model.addAttribute("shareReq", shareReq);
+		model.addAttribute("callNo", callNo);
 
 		return "/community/chat.jsp";
 	}

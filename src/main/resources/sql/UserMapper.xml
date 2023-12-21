@@ -124,13 +124,14 @@
 </delete>
 
 
-  <update id = "updatePwd" parameterType="user">
-    UPDATE users
-    <set>
-      pwd = #{pwd}
-    </set>
-    WHERE email = #{email}
-  </update>
+ <update id="updatePwd" parameterType="user">
+  UPDATE users
+  <set>
+    pwd = #{pwd, jdbcType=VARCHAR},  <!-- 비밀번호를 안전하게 저장하려면 VARCHAR 타입으로 설정 -->
+  </set>
+  WHERE email = #{email, jdbcType=VARCHAR}
+</update>
+
   
       <select id="getNickName" parameterType="string"  resultMap="userSelectMap">
         SELECT nick_name
