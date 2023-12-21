@@ -84,15 +84,22 @@
                 </ul>
             </div>
             <c:if test="${user.role == 'driver'}">
-            
-            <div class="row">
-            <div class="col-6 mb-4 pb-1 mx-auto my-3"> <!-- Changed col-4 to col-6 -->
-			    <a href="#" class="btn-full btn border-blue-dark color-blue-dark" onclick="startDriving()" style="padding: 8px 12px; font-size: 0.9em;">
-			        <i class="bi bi-gear-fill pe-3 ms-n1"></i>운행 시작
-			    </a>
-			</div>
-
-			</div>
+			    <div class="row">
+			        <div class="col-6 mb-4 pb-1 mx-auto my-3">
+			            <a href="#" class="btn-full btn border-blue-dark color-blue-dark" onclick="startDriving()" style="padding: 8px 12px; font-size: 0.9em;">
+			                <i class="bi bi-gear-fill pe-3 ms-n1"></i>운행 시작
+			            </a>
+			        </div>
+			    </div>
+			</c:if>
+			<c:if test="${user.role == 'passenger'}">
+			    <div class="row">
+			        <div class="col-6 mb-4 pb-1 mx-auto my-3">
+			            <a href="#" class="btn-full btn border-blue-dark color-blue-dark" onclick="checkDriver()" style="padding: 8px 12px; font-size: 0.9em;">
+			                <i class="bi bi-gear-fill pe-3 ms-n1"></i>택시 기사 위치
+			            </a>
+			        </div>
+			    </div>
 			</c:if>
 
         </div>
@@ -103,6 +110,11 @@
     function startDriving() {
         var callNo = ${call.callNo};
         window.location.href = '/callres/startReservationDriving?callNo=' + callNo;
+    }
+    
+    function checkDriver() {
+        var callNo = ${call.callNo};
+        window.location.href = '/callres/drivingP.jsp?callNo=' + callNo;
     }
 </script>
 

@@ -10,9 +10,9 @@
 <script type="text/javascript">
 
 function updatePwd(){
-	 $("form").attr("method", "POST").attr("action", "/user/updatePwd").submit();
+	 $("#updatePwdP").attr("method", "POST").attr("action", "/user/updatePwd").submit();
 
-});
+}
 	
 	
 
@@ -23,8 +23,11 @@ function updatePwd(){
 
 </head>
 <body>
+
+
+<form id="updatePwdP">
+<div id="page">
 <jsp:include page="../home/top.jsp" />
-<form>
 <div class="page-content header-clear-medium" >
         <div class="card card-style" style="margin-bottom: 15px;">
           <div class="content"style="margin-bottom: 9px; ">
@@ -41,18 +44,19 @@ function updatePwd(){
       <div class="content">
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-person-circle font-14"></i>
-          <input type="text" class="form-control rounded-xs" id="c1" name="pwd" placeholder="새로운 비밀번호"/>
-          <label for="c1" class="color-theme">새로운 비밀번호</label>
+           <input type="hidden" name="userNo" value="${user.userNo}">
+          <input type="text" class="form-control rounded-xs" id="newPass" name="pwd" value="" placeholder="새로운 비밀번호"/>
+          <label for="newPass" class="color-theme">새로운 비밀번호</label>
           <span>새 비밀반호</span>
         </div>
-        <a href="#" onclick="updatePwd()"class='btn rounded-sm btn-m gradient-blue text-uppercase font-700 mt-4 mb-3 btn-full shadow-bg shadow-bg-s'>Create Account</a>
+        <a href="#" onclick="updatePwd()"class='btn rounded-sm btn-m gradient-blue text-uppercase font-700 mt-4 mb-3 btn-full shadow-bg shadow-bg-s'>수정</a>
         <div class="d-flex">
         </div>
       </div>
     </div>
       </div>
 <input type="hidden" name="email" value="${user.email}">
-
+</div>
 </form>
 </body>
 </html>

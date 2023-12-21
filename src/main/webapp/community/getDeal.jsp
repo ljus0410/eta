@@ -108,6 +108,22 @@
       </div>
 
     </div>
+
+    <div id="noSelectDriver" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+
+      <div class="align-self-center">
+        <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+      </div>
+
+      <div class="align-self-center">
+        <span class="font-11 mt-n1 opacity-70">선택한 driver가 없습니다.</span>
+      </div>
+
+      <div class="align-self-center ms-auto">
+        <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+      </div>
+
+    </div>
   
   </div><!-- page 끝 -->
 
@@ -127,7 +143,7 @@
       };
 
       stompClient.send("/deal/"+driverNo, {}, JSON.stringify(message));
-      self.location='/callres/drivingP.jsp';
+      self.location='/callres/drivingP.jsp?callNo='+callNo;
     }
 
     function deleteReq() {
@@ -141,18 +157,24 @@
       });
 
       $( "#match" ).on("click" , function() {
-        let currentDate = new Date();
-        let limitDate =  new Date($("#limitTime").val());
 
-        if (currentDate > limitDate) {
-          $('#timeOver').addClass('fade show');
-          setTimeout(() => {
-            deleteReq();
-          }, 3 * 1000);
+        if($("input[name='driverNo']:checked").length > 0) {
+          let currentDate = new Date();
+          let limitDate =  new Date($("#limitTime").val());
+
+          if (currentDate > limitDate) {
+            $('#timeOver').addClass('fade show');
+            setTimeout(() => {
+              deleteReq();
+            }, 3 * 1000);
+          } else {
+            let driverNo = $("input[name='driverNo']:checked").val();
+            sendDeal(driverNo);
+          }
         } else {
-          let driverNo = $("input[name='driverNo']:checked").val();
-          sendDeal(driverNo);
+          $("#noSelectDriver").addClass("fade show")
         }
+
 
       });
 

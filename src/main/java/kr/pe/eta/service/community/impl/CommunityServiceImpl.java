@@ -102,13 +102,13 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 
 	@Override
-	public int getDealNo(int userNo, String callCode) throws Exception {
+	public Integer getDealNo(int userNo, String callCode) throws Exception {
 
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userNo", userNo);
 		param.put("callCode", callCode);
 
-		int callNo = communityDao.getDealNo(param);
+		Integer callNo = communityDao.getDealNo(param);
 		return callNo;
 	}
 
@@ -167,7 +167,16 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 
 	@Override
-	public int getShareCallNo(int userNo) throws Exception {
+	public ShareReq getShareCallNo(int userNo) throws Exception {
 		return communityDao.getShareCallNo(userNo);
+	}
+
+	public void deleteShareOther(int userNo) throws Exception {
+		communityDao.deleteShareOther(userNo);
+	}
+
+	public List<ShareReq> getSharePassengerList(int callNo) throws Exception {
+
+		return communityDao.getSharePassengerList(callNo);
 	}
 }

@@ -58,9 +58,9 @@
    <insert  id="addLikeList"    parameterType="int" >
      <![CDATA[
      BEGIN             
-      INSERT INTO likes (like_no, user_no, like_name, like_addr, like_x, like_y) VALUES (1000, #{userNo:NUMERIC}, '집', null, null, null);
-      INSERT INTO likes (like_no, user_no, like_name, like_addr, like_x, like_y) VALUES (1001, #{userNo:NUMERIC}, '회사', null, null, null);
-      INSERT INTO likes (like_no, user_no, like_name, like_addr, like_x, like_y) VALUES (1002, #{userNo:NUMERIC}, null, null, null, null);      
+      INSERT INTO likes (pri_like_no, like_no, user_no, like_name, like_addr, like_x, like_y) VALUES (seq_likes_pri_likes_no.NEXTVAL, 1000, #{userNo:NUMERIC}, '집', null, null, null);
+      INSERT INTO likes (pri_like_no, like_no, user_no, like_name, like_addr, like_x, like_y) VALUES (seq_likes_pri_likes_no.NEXTVAL, 1001, #{userNo:NUMERIC}, '회사', null, null, null);
+      INSERT INTO likes (pri_like_no, like_no, user_no, like_name, like_addr, like_x, like_y) VALUES (seq_likes_pri_likes_no.NEXTVAL, 1002, #{userNo:NUMERIC}, null, null, null, null);      
      END;
     ]]>
    </insert>

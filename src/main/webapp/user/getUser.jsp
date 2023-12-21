@@ -8,7 +8,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
- <script src="../javascript/user/user.js"></script>
 
 <style>
 
@@ -116,12 +115,330 @@ text-align: center; /* 이미지를 중앙에 정렬하기 위해 추가 */
 .image-container img {
 margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
 }
+.selectedIcon path {
+    fill: currentColor;
+  }
+
+.carOptStyle.selectedIcon {
+    fill: currentColor;
+}
+
+   
 </style>
 
 <script type="text/javascript">
 
 
+if ('driver' === '${user.role}') {
+    document.addEventListener('DOMContentLoaded', function() {
+        const userCarOpt = `${user.carOpt}`;
+        
+        // 초기 아이콘에 스타일 적용
+        if (userCarOpt === '4') {
+            document.getElementById('busIcon').classList.add('selectedIcon');
+        } else if (userCarOpt === '6') {
+            document.getElementById('busIcon2').classList.add('selectedIcon');
+        } else if (userCarOpt === '8') {
+            document.getElementById('busIcon3').classList.add('selectedIcon');
+        } else if (userCarOpt === '0') {
+            document.getElementById('busIcon4').classList.add('selectedIcon');
+        }
+        
+        document.getElementById('carOptValue').value = userCarOpt;
+    });
+}
 
+
+
+
+function handleIconClick(value, element) {
+    // 선택된 아이콘의 값을 활용하거나, 원하는 동작 수행
+    console.log('선택된 값:', value);
+    var carOptValueElement = document.getElementById('carOptValue');
+    if (carOptValueElement) {
+        carOptValueElement.remove();
+    }
+    // 다른 모든 아이콘에서 선택 효과를 제거
+    var icons = document.querySelectorAll('.carOptStyle');
+    icons.forEach(icon => {
+        icon.classList.remove('selectedIcon');
+    });
+
+    // Add 'selected' class to the clicked icon
+    element.classList.add('selectedIcon');
+    var radioBtn = document.querySelector('input[name="carOpt"][value="' + value + '"]');
+    console.log('현재 선택된 라디오 버튼의 값:', radioBtn ? radioBtn.value : '없음');
+    if (radioBtn) {
+        radioBtn.checked = true;
+    }
+}
+
+  
+
+
+function updateUser() {
+  var newName = $("#name2").val();
+  var phone2 = $("#phone2").val();
+  var account2 = $("#account2").val();
+  var bank2 = $("#bank2").val();
+  var carNum2 = $("#carNum2").val();
+  var bank_num = $("#bank_num").val();
+  var gender2 = $("#gender2").val();
+ 
+
+  // 이름
+  if (newName !== null && newName !== "") {
+    $("#name").val(newName);
+  }
+
+  // 전화번호
+  if (phone2 !== null && phone2 !== "") {
+    $("#phone").val(phone2);
+  }
+
+  // 계좌
+  if (account2 !== null && account2 !== "") {
+    $("#account").val(account2);
+  }
+
+  // 은행
+  if (bank2 !== null && bank2 !== "") {
+    $("#bank").val(bank2);
+  }
+
+  // 차량 번호
+  if (carNum2 !== null && carNum2 !== "") {
+    $("#carNum").val(carNum2);
+  }
+
+  if (bank_num !== null && bank_num !== "") {
+      $("#account").val(bank_num);
+    }
+  if (gender2 =='남') {
+	     console.log("gender");
+        $("#gender").val('0');
+      }
+  if (gender2 =='여') {
+      console.log("gender");
+       $("#gender").val('1');
+     }
+ 
+    // form 제출
+    $("form").attr("method", "POST").attr("action", "/user/updateUser").submit();
+
+  }
+
+
+
+  var messege;
+
+  // Ajax 요청 함수
+  function phone() {
+    // Get the phone number from the input field
+    var phone = $('#phone2').val();
+
+    // Perform AJAX request using jQuery
+    $.ajax({
+      url: '/user/json/send-one', // Specify your server endpoint
+      method: 'GET',
+      data: {
+        phone: phone
+      },
+      success: function(response) {
+        // Handle the success response
+        console.log(response.num);
+        messege = response.num
+        // You can update the UI here based on the response if needed
+      },
+      error: function(error) {
+        // Handle the error
+        console.error(error);
+      }
+    });
+  }
+
+  function handleBankClick(imgElement) {
+    var bankCode = imgElement.getAttribute('data-bank-code');
+    var bankName = imgElement.getAttribute("data-bank-name");
+
+    console.log('Bank Code: ' + bankCode);
+    console.log('Bank Name: ' + bankName);
+    document.getElementById('bankCodeInput').value = bankCode;
+
+    document.getElementById("bank").value = bankName;
+
+
+    // bankname 함수 호출
+
+
+    // 여기서 필요한 로직 수행
+  }
+
+  function bankname(bankCode) {
+    console.log("bankCode: " + bankCode);
+    // Get the phone number from the input field
+
+    var bank_num = $('#bank_num').val();
+    var bankCode = document.getElementById('bankCodeInput').value;
+    var name = $('#accountname').val();
+    console.log("번호 :" + bank_num);
+    console.log("코드 :" + bankCode);
+    console.log("이름 :" + name);
+    // Perform AJAX request using jQuery
+    $.ajax({
+      url: '/user/json/bankName', // Specify your server endpoint
+      method: 'GET',
+      data: {
+        bank_code: bankCode,
+        bank_num: bank_num
+      },
+      success: function(response) {
+        // Handle the success response
+        console.log(response);
+        if (name === response) {
+          alert("일치");
+        } else {
+          alert("불일치");
+        }
+        // You can update the UI here based on the response if needed
+      },
+      error: function(error) {
+        // Handle the error
+        console.error(error);
+      }
+    });
+  }
+
+
+  $(document).ready(function() {
+    // 텍스트 입력란에 입력이 발생할 때마다 dupEmail 함수 호출
+    $('#nickName').on('keyup', function() {
+      console.log('닉네임 입력이 종료되었습니다.');
+      dupNick();
+    })
+    function dupNick() {
+
+      // Get the phone number from the input field
+
+      var nick = $('#nickName').val();
+      console.log("닉네임 :" + nick);
+
+      // Perform AJAX request using jQuery
+      $.ajax({
+        url: '/user/json/dupNickName', // Specify your server endpoint
+        method: 'GET',
+        data: {
+          nick: nick
+        },
+        success: function(response) {
+          // Handle the success response
+          console.log("response" + response);
+          var resultText = $('#resultText2'); // resultText 변수 추가
+
+          if (response === "1") {
+            resultText.text("사용가능한 닉네임니다.").css('color', 'blue');
+          } else {
+            resultText.text("이미 사용중인 닉네임입니다.").css('color', 'red');
+          }
+        },
+        error: function(error) {
+          // Handle the error
+          console.error(error);
+        }
+      });
+    }
+  });
+
+  //은행값가저오기              
+  function openModal() {
+    // Bootstrap JavaScript 함수 호출
+    var bankOffcanvas = new bootstrap.Offcanvas(document.getElementById('bank_list'));
+
+    // Check if the offcanvas is currently shown
+    if (bankOffcanvas._isShown) {
+      // If shown, hide the offcanvas (close the modal)
+      bankOffcanvas.hide();
+    } else {
+      // If not shown, show the offcanvas (open the modal)
+      bankOffcanvas.show();
+    }
+  }
+
+
+
+
+
+  //인증번호
+  function addInput() {
+    console.log("num: " + messege);
+    var userInput = document.getElementById('certify').value;
+    userInput = parseInt(userInput);
+    var resultText = $('#message');
+
+    if (messege == userInput) {
+      console.log("입력값: " + userInput);
+      resultText.text("일치합니다").css('color', 'blue');
+
+      // 부트스트랩 JavaScript API를 사용하여 모달 닫기
+      $('#menu-forgot').offcanvas('hide');
+      $('#menu-forgot').on('hidden.bs.offcanvas', function() {
+        // 입력 필드 비활성화
+        $('#phone2').prop('disabled', true);
+      });
+    } else {
+      console.log("틀린 입력값: " + userInput);
+      resultText.text("불일치합니다.").css('color', 'red');
+    }
+  }
+
+  
+  
+  
+  
+  document.addEventListener('DOMContentLoaded', function() {
+      const petOptValue = ${user.petOpt}; // 이 값은 실제로 받아온 값으로 대체되어야 합니다.
+      console.log("asdads"+petOptValue);
+      // petOpt가 1인 경우 체크박스를 체크 상태로 설정
+      if (petOptValue === true) {
+          document.getElementById('animalOpt').checked = true;
+          document.getElementById('animalOptValue').value = 1;
+      }
+  });
+
+  function toggleCheckbox() {
+    console.log("toggleCheckbox 함수 호출됨!");
+        updateAnimalOptValue(); // 체크박스 상태 업데이트
+      }
+
+
+
+    function updateAnimalOptValue() {
+       var animalOptCheckbox = document.getElementById('animalOpt');
+         var img = document.querySelector('img');
+         
+         animalOptCheckbox.checked = !animalOptCheckbox.checked;
+         
+         console.log("Current animalOptCheckbox checked:", animalOptCheckbox.checked);
+         
+      var checkbox = document.getElementById("animalOpt");
+      var valueInput = document.getElementById("animalOptValue"); // 추가: 값을 전달할 hidden input
+
+      if (checkbox.checked) {
+        // 체크되었을 때
+        valueInput.value = "1";
+        console.log("동물옵션" + valueInput.value);
+      } else {
+        // 체크되지 않았을 때
+        valueInput.value = "0"; // 또는 다른 기본값으로 설정
+        console.log("동물옵션" + valueInput.value);
+      }
+    }
+    
+    const rawDate = new Date(`${user.regDate}`);
+    const year = rawDate.getFullYear();
+    const month = (rawDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = rawDate.getDate().toString().padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
 
    
 
@@ -131,7 +448,7 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
 <body>
 <jsp:include page="../home/top.jsp" />
 <form>
-
+<div id="page">
 <div class="page-content header-clear-medium" >
         
         
@@ -143,10 +460,10 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
        <div style="text-align: right;">
 
    <c:if test="${user.role ne 'driver'}">
-      <p class="font-12 color-highlight" style="margin-bottom: 0;text-align: left;">잔액: ${money}원</p>
+      <p class="font-12 color-highlight" style="margin-bottom: 0;text-align: left;">잔액: ${user.myMoney}원</p>
    </c:if>
 
-   <p class="font-12 color-highlight" style="margin-bottom: 0;">가입일자: ${user.regDate}</p>
+   <p class="font-12 color-highlight" style="margin-bottom: 0;">가입일자: ${user.regDate.substring(0, 10)}</p>
             
 </div>
 
@@ -193,12 +510,13 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
         </div>
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-person-circle font-14"></i>
-          <input type="text" class="form-control rounded-xs" id="birth" value="${user.birth}" readonly/>
+          <input type="text" class="form-control rounded-xs" name ="birth"id="birth" value="${user.birth}" readonly/>
           <span>생년월일</span>
         </div>
         <div class="form-custom form-label form-icon mb-3">
         <i class="bi bi-person-check-fill font-14"></i>
-        <input type="text" class="form-control rounded-xs" id="gernder" value="${user.gender eq 0 ? '남' : '여'}" readonly />      
+        <input type="text" class="form-control rounded-xs" name ="gender2"id="gender2" value="${user.gender eq 0 ? '남' : '여'}" readonly />      
+         <input type="hidden" id="gender" name="gender" value="">   
         <span>성별</span>
         </div>
   
@@ -211,40 +529,53 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
         </c:when>
     </c:choose>
         
- <c:if test="${user.role eq 'driver'}">
+  <c:if test="${param.role eq 'driver' or user.role eq 'driver'}">
     <div class="custom-border1 form-control rounded-xs" style=" align-items: center;">
      <div style="display: flex;  ">
     <i style="font-size: 13px;"class="bi bi-123 font-12"></i>
     <span style="font-size: 13px;flex-direction: column;  margin-bottom: 8px; margin-left:14px; color: gray;">차량옵션</span>
    </div>
    
-   <div style="text-align: center;">
+<div style="text-align: center;margin-left:3px;">
    
-        <span class="carOptStyle"><input  type="radio"  value="4" ${user.gender == '4' ? 'checked' : ''}  class="form-check-input" name="carOpt"  checked> <svg style="flex-direction: column;" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-car-front-fill" viewBox="0 0 16 16">
-  <path d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679c.033.161.049.325.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.807.807 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2m10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17 1.247 0 3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z"/>
-</svg> </span>
+   
+   <div style="margin-right:15px;">
+   <input type="hidden" id="carOptValue" name="carOpt">
+        <span id="busIcon" style="margin-left: 8px;" class="carOptStyle" onclick="handleIconClick('4', this)">
+  <input style="display: none;" type="radio" value="4" class="form-check-input" name="carOpt">
+  <svg style="flex-direction: column; " xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="gray" class="bi bi-car-front-fill" viewBox="0 0 16 16">
+    <path d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679c.033.161.049.325.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.807.807 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2m10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17 1.247 0 3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z" />
+  </svg>
+</span>
 
 
-<span class="carOptStyle" style =" margin-right: 9px;"><input type="radio"  value="6" ${user.gender == '6' ? 'checked' : ''} class="form-check-input" name="carOpt" > <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-truck-front-fill" viewBox="0 0 16 16">
-  <path d="M3.5 0A2.5 2.5 0 0 0 1 2.5v9c0 .818.393 1.544 1 2v2a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5V14h6v1.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-2c.607-.456 1-1.182 1-2v-9A2.5 2.5 0 0 0 12.5 0zM3 3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3.9c0 .625-.562 1.092-1.17.994C10.925 7.747 9.208 7.5 8 7.5c-1.208 0-2.925.247-3.83.394A1.008 1.008 0 0 1 3 6.9zm1 9a1 1 0 1 1 0-2 1 1 0 0 1 0 2m8 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2m-5-2h2a1 1 0 1 1 0 2H7a1 1 0 1 1 0-2"/>
+<span id="busIcon2" class="carOptStyle" style="margin-left: 30px; margin-right: 8px;" onclick="handleIconClick('6', this)">
+  <input style="display: none;" type="radio" value="6" class="form-check-input" name="carOpt">
+  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="gray" class="bi bi-bus-front-fill" viewBox="0 0 16 16">
+    <path d="M16 7a1 1 0 0 1-1 1v3.5c0 .818-.393 1.544-1 2v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V14H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2a2.496 2.496 0 0 1-1-2V8a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1V2.64C1 1.452 1.845.408 3.064.268A43.608 43.608 0 0 1 8 0c2.1 0 3.792.136 4.936.268C14.155.408 15 1.452 15 2.64V4a1 1 0 0 1 1 1zM3.552 3.22A43.306 43.306 0 0 1 8 3c1.837 0 3.353.107 4.448.22a.5.5 0 0 0 .104-.994A44.304 44.304 0 0 0 8 2c-1.876 0-3.426.109-4.552.226a.5.5 0 1 0 .104.994ZM8 4c-1.876 0-3.426.109-4.552.226A.5.5 0 0 0 3 4.723v3.554a.5.5 0 0 0 .448.497C4.574 8.891 6.124 9 8 9c1.876 0 3.426-.109 4.552-.226A.5.5 0 0 0 13 8.277V4.723a.5.5 0 0 0-.448-.497A44.304 44.304 0 0 0 8 4m-3 7a1 1 0 1 0-2 0 1 1 0 0 0 2 0m8 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m-7 0a1 1 0 0 0 1 1h2a1 1 0 1 0 0-2H7a1 1 0 0 0-1 1" class="icon-path"></svg>
+</span>
+
+<span id="busIcon3" class="carOptStyle" style="margin-left: 30px; margin-right: 25px;" onclick="handleIconClick('8', this)">
+    <input style="display: none;" type="radio" name="carOpt" value="8" style="margin-right: 9px;" class="form-check-input" name="carOpt" >
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="gray" class="bi bi-bus-front-fill" viewBox="0 0 16 16">
+        <path d="M16 7a1 1 0 0 1-1 1v3.5c0 .818-.393 1.544-1 2v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V14H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2a2.496 2.496 0 0 1-1-2V8a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1V2.64C1 1.452 1.845.408 3.064.268A43.608 43.608 0 0 1 8 0c2.1 0 3.792.136 4.936.268C14.155.408 15 1.452 15 2.64V4a1 1 0 0 1 1 1zM3.552 3.22A43.306 43.306 0 0 1 8 3c1.837 0 3.353.107 4.448.22a.5.5 0 0 0 .104-.994A44.304 44.304 0 0 0 8 2c-1.876 0-3.426.109-4.552.226a.5.5 0 1 0 .104.994ZM8 4c-1.876 0-3.426.109-4.552.226A.5.5 0 0 0 3 4.723v3.554a.5.5 0 0 0 .448.497C4.574 8.891 6.124 9 8 9c1.876 0 3.426-.109 4.552-.226A.5.5 0 0 0 13 8.277V4.723a.5.5 0 0 0-.448-.497A44.304 44.304 0 0 0 8 4m-3 7a1 1 0 1 0-2 0 1 1 0 0 0 2 0m8 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m-7 0a1 1 0 0 0 1 1h2a1 1 0 1 0 0-2H7a1 1 0 0 0-1 1"/>
+    </svg>
+</span>
+
+<span id="busIcon4" class="carOptStyle" style="margin-left: 15px; cursor: pointer;" onclick="handleIconClick('0', this)">
+   <input style="display: none;" type="radio"  value="0" class="form-check-input" name="carOpt" >
+   <label for="carOpt"></label><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="gray" class="bi bi-person-wheelchair" viewBox="0 0 16 16">
+  <path d="M12 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m-.663 2.146a1.5 1.5 0 0 0-.47-2.115l-2.5-1.508a1.5 1.5 0 0 0-1.676.086l-2.329 1.75a.866.866 0 0 0 1.051 1.375L7.361 3.37l.922.71-2.038 2.445A4.732 4.732 0 0 0 2.628 7.67l1.064 1.065a3.25 3.25 0 0 1 4.574 4.574l1.064 1.063a4.732 4.732 0 0 0 1.09-3.998l1.043-.292-.187 2.991a.872.872 0 1 0 1.741.098l.206-4.121A1 1 0 0 0 12.224 8h-2.79l1.903-2.854ZM3.023 9.48a3.25 3.25 0 0 0 4.496 4.496l1.077 1.077a4.75 4.75 0 0 1-6.65-6.65l1.077 1.078Z" />
 </svg></span>
-
-<span class="carOptStyle"style =" margin-right: 9px;"><input type="radio"  name="carOpt" value="8" ${user.gender == '8' ? 'checked' : ''} style =" margin-right: 9px;" class="form-check-input" name="carOpt" ><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-bus-front-fill" viewBox="0 0 16 16">
-  <path d="M16 7a1 1 0 0 1-1 1v3.5c0 .818-.393 1.544-1 2v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V14H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2a2.496 2.496 0 0 1-1-2V8a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1V2.64C1 1.452 1.845.408 3.064.268A43.608 43.608 0 0 1 8 0c2.1 0 3.792.136 4.936.268C14.155.408 15 1.452 15 2.64V4a1 1 0 0 1 1 1zM3.552 3.22A43.306 43.306 0 0 1 8 3c1.837 0 3.353.107 4.448.22a.5.5 0 0 0 .104-.994A44.304 44.304 0 0 0 8 2c-1.876 0-3.426.109-4.552.226a.5.5 0 1 0 .104.994ZM8 4c-1.876 0-3.426.109-4.552.226A.5.5 0 0 0 3 4.723v3.554a.5.5 0 0 0 .448.497C4.574 8.891 6.124 9 8 9c1.876 0 3.426-.109 4.552-.226A.5.5 0 0 0 13 8.277V4.723a.5.5 0 0 0-.448-.497A44.304 44.304 0 0 0 8 4m-3 7a1 1 0 1 0-2 0 1 1 0 0 0 2 0m8 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m-7 0a1 1 0 0 0 1 1h2a1 1 0 1 0 0-2H7a1 1 0 0 0-1 1"/>
-</svg></span>
-
-<span class="carOptStyle" style="margin-right: 9px; cursor: pointer;">
-   <input class="form-check-input custom-checkbox" type="checkbox" value="0" ${user.gender == '0' ? 'checked' : ''} name="carOpt" id="carOpt">
-   <label for="carOpt"></label><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-wheelchair" viewBox="0 0 16 16">
-  <path d="M12 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m-.663 2.146a1.5 1.5 0 0 0-.47-2.115l-2.5-1.508a1.5 1.5 0 0 0-1.676.086l-2.329 1.75a.866.866 0 0 0 1.051 1.375L7.361 3.37l.922.71-2.038 2.445A4.732 4.732 0 0 0 2.628 7.67l1.064 1.065a3.25 3.25 0 0 1 4.574 4.574l1.064 1.063a4.732 4.732 0 0 0 1.09-3.998l1.043-.292-.187 2.991a.872.872 0 1 0 1.741.098l.206-4.121A1 1 0 0 0 12.224 8h-2.79l1.903-2.854ZM3.023 9.48a3.25 3.25 0 0 0 4.496 4.496l1.077 1.077a4.75 4.75 0 0 1-6.65-6.65l1.077 1.078Z"/>
-</svg></span>
-<div style="margin-right: -37px; display: flex;justify-content: center; color: gray; font-size: 14px;">
-<span style =" margin-right: 30px; margin-left: -21px;">4인</span>
-<span style =" margin-right: 45px;">6인</span>
-<span style =" margin-right: 26px; ">8인</span>
+    </div>
+<div style="margin-right: -27px; display: flex;justify-content: center; color: gray; font-size: 14px;">
+<span style =" margin-right: 43px; margin-left: -21px;">4인</span>
+<span style =" margin-right: 48px;">6인</span>
+<span style =" margin-right: 45px; ">8인</span>
 <span>장애인</span>
 </div>
     </div> 
+
     </div> 
     
   
@@ -255,9 +586,9 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
     <span style="font-size: 13px;flex-direction: column;  margin-bottom: 8px; margin-left:14px; color: gray;">동물옵션</span>
    </div>
   <div style="display: flex; align-items: center; margin-left: auto;">
-  <input class="form-check-input custom-checkbox" type="checkbox" value="1" id="petOpt" onclick="updateAnimalOptValue()" ${user.petOpt == '1' ? 'checked' : ''}>
-  <label for="petOpt"></label>
-  <img src="../images/pet.png" width="35" height="35" style="margin-right: 40px;">
+  <input class="form-check-input custom-checkbox" type="checkbox" value="1" id="animalOpt">
+  <label for="animalOpt"></label>
+  <img src="../images/pet.png" width="35" height="35" style="margin-right: 40px;" onclick="toggleCheckbox()">
    <input type="hidden" id="animalOptValue" name="petOpt" value="0">
 </div>
 </div>
@@ -265,7 +596,8 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
 
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-123 font-12"></i>
-          <input type="text" class="form-control rounded-xs" id="carNum" name="carNum" placeholder="차량번호"/>
+          <input type="text" class="form-control rounded-xs" id="carNum2" name="carNum2" value="${user.carNum}"/>
+           <input type="hidden" class="form-control rounded-xs" id="carNum" name="carNum" />
           <label for="c2" class="color-theme">CarNum</label>
           <span>(required)</span>
         </div>
@@ -273,7 +605,7 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
         
         
         
-        <div class="custom-border2 form-control rounded-xs" style=" align-items: center;">
+        <div class="custom-border4 form-control rounded-xs" style=" align-items: center;">
      <div style="display: flex;  ">
     <i style="font-size: 13px;"class="bi bi-currency-dollar font-12"></i>
     <span style="font-size: 13px;flex-direction: column;  margin-bottom: 8px; margin-left:14px; color: gray;">정산수단</span>
@@ -284,14 +616,17 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
       <input type="hidden" id="bankCodeInput" />
 
 <i style="margin-left:10px; font-size: 18px;"class="bi bi-credit-card-fill font-12"></i>
-      <a onclick="openModal()" style="font-size: 13px;   margin-left:5px; color:gray;">은행명</a>
+      <a onclick="openModal()" style="font-size: 13px;   margin-left:5px; color:gray;">은행</a>
         <input type="hidden" id="bank" name="bank" value="">
-       <input class="rounded-xs" name="account" style="color:gray; margin-left:10px; border: 1px solid #ced4da !important;"type="text" id="bank_num" value = "${user.account}" placeholder="계좌번호('-'제외)"/>
-       <input type="hidden" value="" name=account>
-       <input class="rounded-xs" name="accountname" style="color:gray; margin-left:10px; border: 1px solid #ced4da !important;"type="text" id="accountname" placeholder="예금주"/>
-        <a onclick="bankname()"  style="width: 60px; height: 30px; line-height: 7px; white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>확인</a>
-
+        <input type="hidden" id="bank2" name="bank2" value="${user.bank}">
+        <input type="hidden" id="pwd" name="pwd" value="${user.pwd}">
+        <input type="hidden" id="userNo" name="userNo" value="${user.userNo}">
+       <input class="rounded-xs" name="bank_num" style="color:gray; margin-left:15px; border: 3px solid #ced4da !important;"type="text" id="bank_num" value="${user.account }"/>
+       <input type="hidden" id="account" name="account" value="">
+       <input class="rounded-xs" name="accountname" style="color:gray; margin-left:15px; margin-top: 5px; border: 1px solid #ced4da !important;"type="text" id="accountname" placeholder="예금주"/>
+        <a onclick="bankname()"  style="font-size: 10px; width: 60px; height: 30px; line-height: 7px;margin-top: 5px; white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>확인</a>
   </div>
+<span id="asdasdasd" style="justify-content: flex-start; display: flex; margin-left: 20px; font-size: 10px;"></span>
 </diV>
  </c:if>
  
@@ -299,7 +634,7 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
  </div>
  </div>
  </div>
- 
+ </div>
  
    
  

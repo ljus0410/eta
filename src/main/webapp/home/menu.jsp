@@ -51,7 +51,7 @@
   <div class="menu-list">
     <div class="card card-style rounded-m p-3 py-2 mb-0">
       <a href="/callreq/likeAddress?userNo=${user.userNo}" id="likeAddress"><i class="gradient-magenta shadow-bg shadow-bg-xs bi bi-heart-fill"></i><span>즐겨찾기</span><i class="bi bi-chevron-right"></i></a>
-      <a href="/callres/getRecordList" id="getRecordList"><i class="gradient-blue shadow-bg shadow-bg-xs bi bi-card-list"></i><span>이용내역</span><i class="bi bi-chevron-right"></i></a>
+      <a href="/callres/getRecordList?month=all" id="getRecordList"><i class="gradient-blue shadow-bg shadow-bg-xs bi bi-card-list"></i><span>이용내역</span><i class="bi bi-chevron-right"></i></a>
       <a href="/pay/TpayList?userNo=${user.userNo}&month=all" id="TpayList"><i class="gradient-green shadow-bg shadow-bg-xs bi bi-currency-dollar"></i><span>Tpay 이용내역</span><i class="bi bi-chevron-right"></i></a>
       <a href="/feedback/listReport" id="listReport"><i class="gradient-orange shadow-bg shadow-bg-xs bi bi-list-check"></i><span>신고내역</span><i class="bi bi-chevron-right"></i></a>
       </div>
@@ -93,7 +93,7 @@
   <span class="menu-divider mt-4">My Page</span>
   <div class="menu-list">
     <div class="card card-style rounded-m p-3 py-2 mb-0">
-      <a href="/callres/getRecordList" id="callRecord"><i class="gradient-blue shadow-bg shadow-bg-xs bi bi-card-list"></i><span>운행 기록</span><i class="bi bi-chevron-right"></i></a>
+      <a href="/callres/getRecordList?month=all" id="callRecord"><i class="gradient-blue shadow-bg shadow-bg-xs bi bi-card-list"></i><span>운행 기록</span><i class="bi bi-chevron-right"></i></a>
       <a href="/pay/myCashList?userNo=${user.userNo}&month=all" id="cashList"><i class="gradient-green shadow-bg shadow-bg-xs bi bi-currency-dollar"></i><span>정산 내역</span><i class="bi bi-chevron-right"></i></a>
       <a href="/feedback/listReport" id="report"><i class="gradient-orange shadow-bg shadow-bg-xs bi bi-list-check"></i><span>신고내역</span><i class="bi bi-chevron-right"></i></a>
     </div>
@@ -132,19 +132,14 @@
     </div>
   </div>
 
-  <span class="menu-divider mt-4">My Page</span>
-  <div class="menu-list">
-    <div class="card card-style rounded-m p-3 py-2 mb-0">
-    </div>
-  </div>
-
   <span class="menu-divider">MENU</span>
   <div class="menu-list">
     <div class="card card-style rounded-m p-3 py-2 mb-0">
     <a href="/notice/listNotice" id="notice"><i class="gradient-red shadow-bg shadow-bg-xs bi bi-info-square-fill"></i><span>공지사항</span><i class="bi bi-chevron-right"></i></a>
-    <a href="/feedback/listReport" id="report"><i class="gradient-orange shadow-bg shadow-bg-xs bi bi-list-check"></i><span>신고내역</span><i class="bi bi-chevron-right"></i></a>
-    <a href="/pay/cashDriverList?month=all" id="notice"><i class="gradient-red shadow-bg shadow-bg-xs bi bi-info-square-fill"></i><span>정산승인</span><i class="bi bi-chevron-right"></i></a>
-    <a href="/user/listUser" id="report"><i class="gradient-orange shadow-bg shadow-bg-xs bi bi-list-check"></i><span>회원리스트</span><i class="bi bi-chevron-right"></i></a>
+    <a href="/feedback/listReport" id="listReport"><i class="gradient-orange shadow-bg shadow-bg-xs bi bi-list-check"></i><span>신고내역</span><i class="bi bi-chevron-right"></i></a>
+    <a href="/pay/cashDriverList?month=all" id="cashDriverList"><i class="gradient-red shadow-bg shadow-bg-xs bi bi-info-square-fill"></i><span>정산승인</span><i class="bi bi-chevron-right"></i></a>
+    <a href="/user/listUser" id="listUser"><i class="gradient-orange shadow-bg shadow-bg-xs bi bi-list-check"></i><span>회원리스트</span><i class="bi bi-chevron-right"></i></a>
+    <a href="/callres/getCallResList?month=all" id="getCallResList"><i class="gradient-orange shadow-bg shadow-bg-xs bi bi-list-check"></i><span>운행기록</span><i class="bi bi-chevron-right"></i></a>
     </div>
   </div>
 

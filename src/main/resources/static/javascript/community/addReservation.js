@@ -8,7 +8,7 @@ $(function() {
         let confirmDate = new Date(callDate);
         let now = new Date();
 
-        if (confirmDate < now) {
+        if (confirmDate < now || $("#resTime").val() == "") {
             $('#reservationAlert').addClass('fade show');
         } else {
             $("form").attr("method" , "POST").attr("action" , "/community/addReservationReq").submit();

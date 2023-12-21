@@ -127,6 +127,7 @@ public class CallReqController {
 
 			model.addAttribute("myMoney", myMoney);
 			model.addAttribute("callCode", callCode);
+			model.addAttribute("hasNoDataException", true);
 
 			return "forward:/callreq/selectOptions.jsp";
 
@@ -180,6 +181,11 @@ public class CallReqController {
 					} else {
 						System.out.println("blackList 가 아닌 driver : " + callDriverNoList.get(i));
 						driverNoResult.add(callDriverNoList.get(i));
+						String driverNo = String.valueOf(callDriverNoList.get(i));
+						AddCallEntity addCallEntity = new AddCallEntity();
+						addCallEntity.setId(driverNo);
+						addCallEntity.setCallNo(callNo);
+						redisService.addCall(addCallEntity);
 					}
 				}
 			}

@@ -63,6 +63,10 @@
             self.location="/callres/getRequest";
         }
 
+        function loginHome() {
+            $("loginAlert").addClass("fade show");
+        }
+
     </script>
 
 </head>
@@ -77,9 +81,19 @@
 
         <c:choose>
             <c:when test="${empty user.role}">
-                <div class="d-flex justify-content-center" style="padding-top: 150px">
+                <div class="content px-2 text-center mb-0">
+                    <div class="row me-0 ms-0 mb-0">
+                        <div class="col-12 pe-0 ps-0">
+                            <div class="card card-style">
+                                <img src="/templates/images/pictures/etamain.png" class="img-fluid">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
                     <div class="form-custom card-style2 form-label form-icon mb-1">
-                        <input type="text" class="form-control rounded-xs" onclick="loginHome()" placeholder="가자!!"/>
+                        <input type="text" class="form-control rounded-xs" onclick="loginHome()" placeholder="가자!!" readonly/>
                     </div>
                 </div>
             </c:when>
@@ -127,7 +141,7 @@
                         <div class="card card-style me-2">
                             <img src="/templates/images/pictures/21.jpg" class="img-fluid">
                             <div class="content pb-0">
-                                <p>일반</p>
+                                <p class="mb-0">일반</p>
                             </div>
                         </div>
                     </div>
@@ -135,7 +149,7 @@
                         <div class="card card-style me-2">
                             <img src="/templates/images/pictures/21.jpg" class="img-fluid">
                             <div class="content pb-0">
-                                <p>예약</p>
+                                <p class="mb-0">예약</p>
                             </div>
                         </div>
                     </div>
@@ -143,7 +157,7 @@
                         <div class="card card-style ms-2">
                             <img src="/templates/images/pictures/22.jpg" class="img-fluid">
                             <div class="content pb-0">
-                                <p>딜</p>
+                                <p class="mb-0">딜</p>
                             </div>
                         </div>
                     </div>
