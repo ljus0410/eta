@@ -45,26 +45,32 @@ $(function (){
         // 부모 행에서 배차 번호와 제시 금액을 가져오기
         let callNo = row.find('.callNo').text().trim();
         let passengerOffer = row.find('.passengerOffer').text().trim();
+        let currentDate = new Date();
+        let limitDate = new Date(row.find('#limitDate').text());
 
         let dealCode = $("#dealCode").val();
 
-        if (dealCode=="true") {
-            $('#alreadyDealAlert').addClass('fade show');
+        if (currentDate > limitDate) {
+            $('#timeOver').addClass('fade show');
         } else {
-            $('#offerAlert').addClass('fade show');
-            $("#reqButton").off("click").on("click", function () {
-                $("form")[0].reset();
-                let driverOffer = parseFloat($("#driverOffer").val());
+            if (dealCode=="true") {
+                $('#alreadyDealAlert').addClass('fade show');
+            } else {
+                $('#offerAlert').addClass('fade show');
+                $("#reqButton").off("click").on("click", function () {
+                    $("form")[0].reset();
+                    let driverOffer = parseFloat($("#driverOffer").val());
 
-                if (driverOffer > passengerOffer) {
-                    $('#dealOfferError').addClass('fade show');
-                    return;
-                } else if(driverOffer < passengerOffer) {
-                    sendDataToServer(driverOffer, callNo, () => {
-                        self.location = "/community/getDealList";
-                    });
-                }
-            })
+                    if (driverOffer > passengerOffer) {
+                        $('#dealOfferError').addClass('fade show');
+                        return;
+                    } else if(driverOffer < passengerOffer) {
+                        sendDataToServer(driverOffer, callNo, () => {
+                            self.location = "/community/getDealList";
+                        });
+                    }
+                })
+            }
         }
     });
 
