@@ -94,9 +94,9 @@ public class FeedbackRestController {
 
 	}
 
-	@GetMapping(value = "addBlock/{userNo}")
-	public int addBlock(@PathVariable int userNo) throws Exception {
-		Block block = Block.builder().userNo(userNo).build();
+	@GetMapping(value = "addBlock/{userNo}/{reportNo}")
+	public int addBlock(@PathVariable int userNo, @PathVariable int reportNo) throws Exception {
+		Block block = Block.builder().userNo(userNo).reportNo(reportNo).build();
 		return feedbackService.addBlock(block) + 1;
 	}
 
@@ -131,7 +131,6 @@ public class FeedbackRestController {
 		Map<String, Object> map = feedbackService.getReportList(search);
 
 		List<Report> reportList = (List<Report>) map.get("reportlist");
-		System.out.println("////" + reportList);
 		return reportList;
 	}
 

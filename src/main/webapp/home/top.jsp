@@ -129,7 +129,7 @@
         <p class="color-white opacity-60 pt-2">
             Something's not right. You can add extra actions to this sheet or just tap to dismiss.
         </p>
-        <a href="#"  data-bs-dismiss="offcanvas" class="default-link btn btn-full btn-s bg-white color-black">Try again...</a>
+        <a href="#"  data-bs-dismiss="offcanvas" class="default-link btn btn-full btn-s bg-white color-black">확인</a>
     </div>
 </div>
 
@@ -444,7 +444,7 @@
                         showSuccessModal(data.success);
                     } else if (data.fail || data.ment) {
                         // 실패 메시지 처리 (fail 또는 ment 중 하나라도 존재할 경우)
-                        showLoginFailed(data.fail || data.ment);
+                        showLoginFailedBlock(data.ment, data.block.unblockDateStr, data.block.blockCount, data.report.reportCategory, data.report.regDate)
                     }
                 },
                 error: function(xhr, status, error) {
@@ -478,6 +478,22 @@
         var loginWarning = new bootstrap.Offcanvas(document.getElementById('menu-warning'));
         var warningMessage = document.getElementById('menu-warning').querySelector('.opacity-60'); // 경고 메시지가 있는 요소 선택
         warningMessage.textContent = message;
+        loginWarning.show();
+    }
+    
+    function showLoginFailedBlock(ment, unblockDate, blockCount, reportCategory, reportRegDate) {
+        // 모달에 동적으로 메시지 설정 및 표시
+        var loginWarning = new bootstrap.Offcanvas(document.getElementById('menu-warning'));
+        var warningTitle = document.getElementById('menu-warning').querySelector('h1'); // 경고 메시지 타이틀 요소 선택
+        var warningMessage = document.getElementById('menu-warning').querySelector('p');
+        warningTitle.textContent = ment;
+        if(blockCount == '4'){
+        	warningMessage.innerHTML = '<p class="color-white opacity-60 pt-2">귀하는 '+reportRegDate+' 이용한 서비스에서</br>'+reportCategory+'사유로 신고가 접수되어 비활성화 처리되었습니다.</br></br>현재 누적 비활성화 횟수 '+blockCount+'회로</br>영구정지되어 본 서비스 이용이 불가합니다.</p>'
+        }else{
+        	warningMessage.innerHTML = '<p class="color-white opacity-60 pt-2">귀하는 '+reportRegDate+' 이용한 서비스에서</br>'+reportCategory+'사유로 신고가 접수되어 비활성화 처리되었습니다.</br></br>현재 누적 비활성화 횟수 '+blockCount+'회로</br>'+unblockDate+' 이후 본 서비스 이용 가능합니다.</p>'	
+        }
+        
+        
         loginWarning.show();
     }
 
