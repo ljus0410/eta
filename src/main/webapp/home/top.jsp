@@ -42,6 +42,12 @@
         }
     </style>
 
+<script>
+
+
+
+</script>
+
 </head>
 
 <body class="theme-light">
@@ -173,7 +179,7 @@
                 <i class="bi bi bi-currency-dollar font-13"></i>
                 <input type="text" class="form-control rounded-xs readonly" id="c3" value ="${user.myMoney}원" readonly />
                 <label for="c2" class="color-theme">myMoney</label>
-                <span>Tpay</span>
+                <span>Tpay </span>
             </div>
         </c:if>
         <a href="#" class="btn btn-full get-User gradient-blue shadow-bg shadow-bg-s mt-4">더보기</a>
@@ -317,8 +323,8 @@
             });
             //내정보
             $(".get-User").on("click", function() {
-
-                self.location = "/user/getUser?userNo=${user.userNo}"
+            	console.log("userNo: ", ${user.userNo});
+                self.location = "/user/getUser?email=${user.email}"
             });
 
             //Tpay 이용내역

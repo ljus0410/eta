@@ -49,7 +49,7 @@
 }
  .custom-border4 {
     width: 40vw; 
-    height: 120px;
+    height: 150px;
     padding: 0px 15px 0px 40px;
     border: 1px solid #f0f0f0 !important; 
     display: flex;
@@ -238,7 +238,7 @@
           backAccountName = response;
           if (name == backAccountName) {
             moneyName = 1;
-            asdasdasd.text("예금주 일치").css('color', 'white');
+            asdasdasd.text("인증완료").css('color', 'blue');
           } else {
             moneyName = 2;
             asdasdasd.text("예금주 불일치").css('color', 'red');
@@ -246,6 +246,8 @@
 
         },
         error: function(error) {
+        	 var asdasdasd = $('#asdasdasd');
+        	 asdasdasd.text("일치하는 정보가 없습니다").css('color', 'red');
           // Handle the error
           console.error(error);
         }
@@ -304,7 +306,7 @@
 
     $(document).ready(function() {
       // 텍스트 입력란에 입력이 발생할 때마다 dupEmail 함수 호출
-      $('#nickName').on('keyup', function() {
+      $('#nickName').on('change', function() {
         console.log('닉네임 입력이 종료되었습니다.');
         dupNick();
       })
@@ -331,7 +333,7 @@
             nickNum
 
             if (nickNum === "1") {
-              resultText.text("사용가능한 닉네임니다.").css('color', 'white');
+              resultText.text("사용가능한 닉네임니다.").css('color', 'blue');
             } else {
               resultText.text("이미 사용중인 닉네임입니다.").css('color', 'red');
             }
@@ -402,12 +404,31 @@
             message.text("조건 만족").css('color', 'white');
           } else {
             Numer = 2;
-            message.text("조건 불만족").css('color', 'red');
+            message.text("형식을 지켜주세여").css('color', 'red');
           }
         });
       });
     
 
+    
+
+    $(document).ready(function() {
+        $("#confirmPassword").on("change", function() {
+          console.log("비밀번호 입력 ");
+          var password = $(this).val();
+          var passcer = $("#password").val();
+          var message = $("#checkPasswordMatch");
+          console.log("확인"+password+"비번"+passcer);
+          // 비밀번호 길이가 8자 이상이고, 특수문자를 포함하는지 확인
+          if (password === passcer) {
+        	  console.log("확인"+password+"비번"+passcer);
+            message.text("사용가능").css('color', 'blue');
+          } else {
+
+            message.text("형식을 지켜주세여").css('color', 'red');
+          }
+        });
+      });
 
     function toggleCheckbox() {
         updateAnimalOptValue(); // 체크박스 상태 업데이트
@@ -533,7 +554,7 @@
         }
 
         if (emailErr == 2) {
-        	userEnteredValue = "이메일 형식x";
+        	userEnteredValue = "형식을 지켜주세여";
             updateToastText();
             showToast();
 
@@ -565,7 +586,7 @@
           return;
         }
         if (Numer == 2) {
-            userEnteredValue = "비밀번호 형식";
+            userEnteredValue = "형식을 지켜주세여";
             updateToastText();
             showToast();
             return;
@@ -633,6 +654,9 @@
           return;
         }
         if (role === "driver" && (moneyName == 0)) {
+        	userEnteredValue = "예금주 인증을 진행해주세요";
+            updateToastText();
+            showToast();
           console.log("예금주 인증" + moneyName);
 
           return;
@@ -745,8 +769,8 @@
     </div>
     <div style="justify-content: flex-start; display: flex; align-items: center; margin-left: 10px;">
         <div id="inputContainer">
-            <input class="rounded-xs" name="phone" style="color: gray; margin-left: 10px; border: 3px solid #ced4da !important; font-size: 14px;" type="text" id="phone" value="" placeholder="01066726545"/>
-            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#phoneNum" style="text-align: center; width: 60px; margin-left: 5px; height: 30px; line-height: 7px; white-space: nowrap; font-size: 10px; vertical-align: middle;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
+            <input class="rounded-xs" name="phone" style="height:25px; color: gray; margin-left: 10px; border: 1px solid #ced4da !important; font-size: 14px;" type="text" id="phone" value="" placeholder="01066726545"/>
+            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#phoneNum" style="text-align: center; width: 60px; margin-left: 5px; height: 25px; line-height: 7px; white-space: nowrap; font-size: 10px; vertical-align: middle;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
 
         </div>
     </div>
@@ -856,17 +880,16 @@
    </div>
         
  
-  <div style="justify-content: center; isplay: flex; align-items: center;">
+  <div style="margin-top:5px; margin-left:15px; justify-content: center; isplay: flex; align-items: center;">
       <input type="hidden" id="bankCodeInput" />
 
-<i style="margin-left:10px; font-size: 18px;"class="bi bi-credit-card-fill font-12"></i>
-      <a onclick="openModal()" style="font-size: 13px;   margin-left:5px; color:gray;">은행</a>
-        <input type="hidden" id="bank" name="bank" value="">
-       <input class="rounded-xs" name="account" style="color:gray; margin-left:15px; border: 3px solid #ced4da !important;"type="text" id="bank_num" placeholder="계좌번호('-'제외)"/>
-       <input class="rounded-xs" name="accountname" style="color:gray; margin-left:15px; margin-top: 5px; border: 1px solid #ced4da !important;"type="text" id="accountname" placeholder="예금주"/>
-        <a onclick="bankname()"  style="font-size: 10px; width: 60px; height: 30px; line-height: 7px;margin-top: 5px; white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>확인</a>
+        <image src="../images/bank.png" onclick="openModal()" style="margin-bottom:5px; width:25px; height:25px;">
+        <input type="text" id="bank" name="bank" value="" class="rounded-xs" readonly style="height:25px; width:60px; color:gray; border: 1px solid #ced4da !important;" placeholder="은행"/>
+       <input class="rounded-xs" name="account" style="height:25px; color:gray;  border: 1px solid #ced4da !important;"type="text" id="bank_num" placeholder="계좌번호('-'제외)"/>
+       <input class="rounded-xs" name="accountname" style="height:25px; color:gray; margin-left:15px; margin-top: 15px; border: 1px solid #ced4da !important;"type="text" id="accountname" placeholder="예금주"/>
+        <a onclick="bankname()"  style="font-size: 10px; width: 60px; height: 25px; line-height: 7px;white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>확인</a>
   </div>
-<span id="asdasdasd" style="justify-content: flex-start; display: flex; margin-left: 20px; font-size: 10px;"></span>
+<span id="asdasdasd" style="justify-content: flex-start; display: flex; margin-left: 32px; font-size: 12px;"></span>
 </diV>
  </c:if>
       
@@ -938,8 +961,8 @@
     <div class="text-container" style="display: flex; justify-content: space-around; margin-top: 4px;">
         <span style="margin-left:-14px;">우체국</span>
         <span>하나은행</span>
-        <span>카카오</span>
-        <span>K뱅크</span>
+        <span style="margin-right:12px;">카카오</span>
+        <span style="margin-right:15px;'">K뱅크</span>
     </div>
      <div class="image-container" style="justify-content-center;">
         <img src="../images/유안타.png"  data-bs-dismiss="offcanvas" data-bank-name="유안타증권" data-bank-code="209" width="45" height="45" onclick="handleBankClick(this)">
@@ -962,8 +985,8 @@
     <div class="text-container" style="display: flex; justify-content: space-around; margin-top: 4px;">
         <span style="margin-left:-14px;">한국투자</span>
         <span>교보증권</span>
-        <span>키움증권</span>
-        <span>sk증권</span>
+        <span style="margin-right:12px;">키움증권</span>
+        <span style="margin-right:12px;">sk증권</span>
     </div>
       <div class="image-container" style="justify-content-center;">
         <img src="../images/한화.png"  data-bs-dismiss="offcanvas" data-bank-name="한화증권" data-bank-code="269" width="45" height="45" onclick="handleBankClick(this)">
