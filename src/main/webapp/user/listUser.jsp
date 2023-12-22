@@ -165,14 +165,15 @@
           <div class="content mb-0">
             <div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
               <a style=" font-size: 9px; display: inline-block; padding-top: 5px; padding-bottom: 5px; float: left; margin-top: 2px">passenger : ${passenger}명 , driver :${driver}명</a>
+              <div>
               <input type="text" class="form-control rounded-xs"
-                style="width: 40%; display: inline-block" name="searchKeyword" id="searchKeyword"
+                style="width: 35%; display: inline-block" name="searchKeyword" id="searchKeyword"
                 value="${!empty search.searchKeyword ? search.searchKeyword : ''}">
             
                     <a class="btn btn-xxs border-blue-dark color-blue-dark"
                 style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-left: 5px; ">검색</a>
             </div>
-            
+            </div>
 
             <div class="table-responsive">
               <table class="table color-theme mb-2" id="muhanlist">

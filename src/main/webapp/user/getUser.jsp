@@ -50,6 +50,17 @@ margin-bottom: 10px;
 text-transform: uppercase;
 
 }
+.custom-border4 {
+    width: 40vw; 
+    height: 150px;
+    padding: 0px 15px 0px 40px;
+    border: 1px solid #f0f0f0 !important; 
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+
+}
 
 .custom-border3 {
 width: 40vw; 
@@ -62,11 +73,22 @@ margin-bottom: 10px;
 text-transform: uppercase;
 
 }
+
 .custom-checkbox {
 position: absolute;
 opacity: 0;
 }
+ .custom-border4 {
+    width: 40vw; 
+    height: 150px;
+    padding: 0px 15px 0px 40px;
+    border: 1px solid #f0f0f0 !important; 
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    text-transform: uppercase;
 
+}
 .custom-checkbox + label {
 position: relative;
 cursor: pointer;
@@ -128,6 +150,15 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
 
 <script type="text/javascript">
 
+var messege;
+var dupEEmail;
+var nickNum;
+var backAccountName;
+var emailErr;
+var moneyName = 0;
+var Numer;
+var birform;
+var phoneCer = 0;
 
 if ('driver' === '${user.role}') {
     document.addEventListener('DOMContentLoaded', function() {
@@ -180,11 +211,10 @@ function updateUser() {
   var newName = $("#name2").val();
   var phone2 = $("#phone2").val();
   var account2 = $("#account2").val();
-  var bank2 = $("#bank2").val();
   var carNum2 = $("#carNum2").val();
   var bank_num = $("#bank_num").val();
   var gender2 = $("#gender2").val();
- 
+  var role = $('input[name="role"]').val();
 
   // 이름
   if (newName !== null && newName !== "") {
@@ -201,10 +231,7 @@ function updateUser() {
     $("#account").val(account2);
   }
 
-  // 은행
-  if (bank2 !== null && bank2 !== "") {
-    $("#bank").val(bank2);
-  }
+
 
   // 차량 번호
   if (carNum2 !== null && carNum2 !== "") {
@@ -222,7 +249,23 @@ function updateUser() {
       console.log("gender");
        $("#gender").val('1');
      }
- 
+  
+  if (phoneCer == 2) {
+      userEnteredValue = "휴대폰 인증을 진행해세요";
+        updateToastText();
+        showToast();
+
+      return;
+    }
+
+    if (role === "driver" && (moneyName == 2)) {
+    	userEnteredValue = "예금주 인증을 진행해세요";
+        updateToastText();
+        showToast();
+      console.log("예금주 불일치" + moneyName);
+
+      return;
+    }
     // form 제출
     $("form").attr("method", "POST").attr("action", "/user/updateUser").submit();
 
@@ -293,22 +336,28 @@ function updateUser() {
         bank_num: bank_num
       },
       success: function(response) {
-        // Handle the success response
-        console.log(response);
-        if (name === response) {
-          alert("일치");
-        } else {
-          alert("불일치");
-        }
-        // You can update the UI here based on the response if needed
-      },
-      error: function(error) {
-        // Handle the error
-        console.error(error);
-      }
-    });
-  }
+          // Handle the success response
+          console.log(response);
 
+          var asdasdasd = $('#asdasdasd');
+          backAccountName = response;
+          if (name == backAccountName) {
+            moneyName = 1;
+            asdasdasd.text("인증완료").css('color', 'blue');
+          } else {
+            moneyName = 2;
+            asdasdasd.text("예금주 불일치").css('color', 'red');
+          }
+
+        },
+        error: function(error) {
+           var asdasdasd = $('#asdasdasd');
+           asdasdasd.text("일치하는 정보가 없습니다").css('color', 'red');
+          // Handle the error
+          console.error(error);
+        }
+      });
+    }
 
   $(document).ready(function() {
     // 텍스트 입력란에 입력이 발생할 때마다 dupEmail 함수 호출
@@ -364,32 +413,38 @@ function updateUser() {
     }
   }
 
+//인증번호
+  function phoneCer() {
+      console.log("num: " + messege);
+      var userInput = document.getElementById('certify').value;
+      userInput = parseInt(userInput);
+      var resultText = $('#message');
+
+      if (messege == userInput) {
+        phoneCer = 1;
+        console.log("입력값: " + userInput);
+        resultText.text("일치합니다").css('color', 'blue');
+
+        // 부트스트랩 JavaScript API를 사용하여 모달 닫기
+        $('#phoneNum').offcanvas('hide');
+        $('#phoneNum').on('hidden.bs.offcanvas', function() {
 
 
+          // 입력 필드 비활성화
+          $("#checkNum").text("인증완료").css("color", "blue");
 
-
-  //인증번호
-  function addInput() {
-    console.log("num: " + messege);
-    var userInput = document.getElementById('certify').value;
-    userInput = parseInt(userInput);
-    var resultText = $('#message');
-
-    if (messege == userInput) {
-      console.log("입력값: " + userInput);
-      resultText.text("일치합니다").css('color', 'blue');
-
-      // 부트스트랩 JavaScript API를 사용하여 모달 닫기
-      $('#menu-forgot').offcanvas('hide');
-      $('#menu-forgot').on('hidden.bs.offcanvas', function() {
-        // 입력 필드 비활성화
-        $('#phone2').prop('disabled', true);
-      });
-    } else {
-      console.log("틀린 입력값: " + userInput);
-      resultText.text("불일치합니다.").css('color', 'red');
+        });
+      } else {
+        phoneCer = 2;
+        console.log("틀린 입력값: " + userInput);
+        resultText.text("불일치합니다.").css('color', 'red');
+      }
     }
-  }
+
+
+
+
+  
 
   
   
@@ -441,7 +496,26 @@ function updateUser() {
     const formattedDate = `${year}-${month}-${day}`;
 
    
+    
+    function showInputAndButton() {
+    	 console.log("showInputAndButton 함수 호출됨");
+        // 이미지를 클릭하면 숨겨진 입력란과 버튼을 나타나게 함
+        document.getElementById("accountname").style.display = "inline-block";
+        document.getElementById("confirmation").style.display = "inline-block";
+        console.log("showInputAndButton 함수 호출됨");
+    }
+    function showToast() {
+        var toastElement = document.getElementById('addUserTa');
+        var toast = new bootstrap.Toast(toastElement);
+        toast.show();
 
+      }
+    var userEnteredValue
+    function updateToastText() {
+      // 사용자가 입력한 값을 각 요소에 적용
+      document.getElementById('messgeInfo').textContent = userEnteredValue;
+
+    }
  </script>
     
 </head>
@@ -490,9 +564,12 @@ function updateUser() {
         <div id="inputContainer">
             <input class="rounded-xs" value=""  name="phone" style="color: gray; margin-left: 10px; border: 1px solid #ced4da !important;" type="hidden" id="phone" />
             <input class="rounded-xs" value="${user.phone}"  name="phone2" style="color: gray; margin-left: 10px; border: 1px solid #ced4da !important;" type="text" id="phone2" />
-            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#messegeInfo" style="width: 60px; height: 30px; line-height: 7px; white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
+            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#phoneNum" style="width: 60px; height: 30px; line-height: 7px; white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
         </div>
     </div>
+    <span id="checkNum" style="justify-content: flex-start; display: flex; margin-left: 40px; font-size: 11px;"></span>
+    
+    
 </div>
 
         <div class="form-custom form-label form-icon mb-3">
@@ -611,24 +688,34 @@ function updateUser() {
     <span style="font-size: 13px;flex-direction: column;  margin-bottom: 8px; margin-left:14px; color: gray;">정산수단</span>
    </div>
         
- 
-  <div style="justify-content: center; isplay: flex; align-items: center;">
+
+<div style="margin-top:5px; margin-left:15px; justify-content: center; isplay: flex; align-items: center;">
       <input type="hidden" id="bankCodeInput" />
 
-<i style="margin-left:10px; font-size: 18px;"class="bi bi-credit-card-fill font-12"></i>
-      <a onclick="openModal()" style="font-size: 13px;   margin-left:5px; color:gray;">은행</a>
-        <input type="hidden" id="bank" name="bank" value="">
-        <input type="hidden" id="bank2" name="bank2" value="${user.bank}">
+        <image src="../images/bank.png" onclick="openModal(); showInputAndButton()" style="margin-bottom:5px; width:25px; height:25px;">
+        <input type="hidden" id="acocount" name="account" value="${user.pwd}">
         <input type="hidden" id="pwd" name="pwd" value="${user.pwd}">
         <input type="hidden" id="userNo" name="userNo" value="${user.userNo}">
-       <input class="rounded-xs" name="bank_num" style="color:gray; margin-left:15px; border: 3px solid #ced4da !important;"type="text" id="bank_num" value="${user.account }"/>
-       <input type="hidden" id="account" name="account" value="">
-       <input class="rounded-xs" name="accountname" style="color:gray; margin-left:15px; margin-top: 5px; border: 1px solid #ced4da !important;"type="text" id="accountname" placeholder="예금주"/>
-        <a onclick="bankname()"  style="font-size: 10px; width: 60px; height: 30px; line-height: 7px;margin-top: 5px; white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>확인</a>
-  </div>
-<span id="asdasdasd" style="justify-content: flex-start; display: flex; margin-left: 20px; font-size: 10px;"></span>
+        <input type="text" id="bank" name="bank" value="${user.bank}" class="rounded-xs" readonly style="height:25px; width:60px; color:gray; border: 1px solid #ced4da !important;" placeholder="은행"/>
+       <input class="rounded-xs"  name="account2" style="height:25px; color:gray;  border: 1px solid #ced4da !important;"type="text" id="bank_num" value="${user.account }"/>
+            <div>
+       <input class="rounded-xs" name="accountname" style="height:25px; color:gray; margin-left:15px; margin-top: 15px; border: 1px solid #ced4da !important; display:none;" type="text" id="accountname" placeholder="예금주"/>
+      
+<a onclick="bankname()" style="font-size: 10px; width: 60px; height: 25px; line-height: 7px;white-space: nowrap; display:none;" class="btn-s btn bg-fade2-blue color-blue-dark" id="confirmation">확인</a>
+</div>
+</div>
+<span id="asdasdasd" style="justify-content: flex-start; display: flex; margin-left: 32px; font-size: 12px;"></span>
+ 
 </diV>
  </c:if>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  <a href="#" onclick="updateUser()"class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4">수정</a> 
  </div>
@@ -644,7 +731,7 @@ function updateUser() {
         
         
         
-        <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="messegeInfo">
+<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="phoneNum">
     <div class="content">
       <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
       <h1 class="font-24 font-800 mb-3">인증번호</h1>
@@ -654,13 +741,14 @@ function updateUser() {
         <label for="c1" class="color-theme">인증번호</label>
         <span id="message" style="margin-left: 10px;"></span>
       </div>
-      <a href="#"  id ="message" onclick="addInput()" class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4">확 인</a>
+      <a href="#"  id ="message" onclick="phoneCer()" class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4">확 인</a>
       <div class="row">      
       </div>
     </div>
    </div>
+
    
-     <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="bank_list">
+   <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="bank_list">
     <div class="content">
         <div class="pb-2">
             <div class="align-self-center">
@@ -668,9 +756,9 @@ function updateUser() {
                 <div class="container">
                     <div class="image-container" style="justify-content-center;">
                         <img src="../images/신한.png"  data-bs-dismiss="offcanvas" data-bank-name="신한은행" data-bank-code="088" width="45" height="45" onclick="handleBankClick(this)">
-                        <img src="../images/농협.png"  data-bs-dismiss="offcanvas" data-bank-name="농협은행" data-bank-code="011" width="45" height="45" onclick="handleBankClick('this')">
-                        <img src="../images/국민.png"  data-bs-dismiss="offcanvas" data-bank-name="국민은행" data-bank-code="004" width="45" height="45" onclick="handleBankClick('this')">
-                        <img src="../images/기업.png"  data-bs-dismiss="offcanvas" data-bank-name="기업은행" data-bank-code="003" width="45" height="45" onclick="handleBankClick('this')">
+                        <img src="../images/농협.png"  data-bs-dismiss="offcanvas" data-bank-name="농협은행" data-bank-code="011" width="45" height="45" onclick="handleBankClick(this)">
+                        <img src="../images/국민.png"  data-bs-dismiss="offcanvas" data-bank-name="국민은행" data-bank-code="004" width="45" height="45" onclick="handleBankClick(this)">
+                        <img src="../images/기업.png"  data-bs-dismiss="offcanvas" data-bank-name="기업은행" data-bank-code="003" width="45" height="45" onclick="handleBankClick(this)">
                     </div>
     <div class="text-container" style="display: flex; justify-content: space-around; margin-top: 4px;">
         <span style="margin-left:-14px;">신한은행</span>
@@ -679,10 +767,10 @@ function updateUser() {
         <span>기업은행</span>
     </div>
     <div class="image-container" style="justify-content-center;">
-        <img src="../images/제일.png"  data-bs-dismiss="offcanvas" data-bank-name="sc제일은행" data-bank-code="023" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/광주.png"  data-bs-dismiss="offcanvas" data-bank-name="광주은행" data-bank-code="034" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/신협.png"   data-bs-dismiss="offcanvas" data-bank-name="신협은행" data-bank-code="048" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/우리.png"  data-bs-dismiss="offcanvas" data-bank-name="우리은행" data-bank-code="020" width="45" height="45" onclick="handleBankClick('this')">
+        <img src="../images/제일.png"  data-bs-dismiss="offcanvas" data-bank-name="sc제일은행" data-bank-code="023" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/광주.png"  data-bs-dismiss="offcanvas" data-bank-name="광주은행" data-bank-code="034" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/신협.png"   data-bs-dismiss="offcanvas" data-bank-name="신협은행" data-bank-code="048" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/우리.png"  data-bs-dismiss="offcanvas" data-bank-name="우리은행" data-bank-code="020" width="45" height="45" onclick="handleBankClick(this)">
     </div>
     <div class="text-container" style="display: flex; justify-content: space-around; margin-top: 4px;">
         <span style="margin-left:-14px;">sc제일은행</span>
@@ -691,22 +779,22 @@ function updateUser() {
         <span>우리은행</span>
     </div>
         <div class="image-container" style="justify-content-center;">
-        <img src="../images/우체.png"  data-bs-dismiss="offcanvas" data-bank-name="우체국" data-bank-code="071" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/하나.png"  data-bs-dismiss="offcanvas" data-bank-name="하나은행" data-bank-code="081" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/카카오.png" data-bs-dismiss="offcanvas" data-bank-name="카카오" data-bank-code="090" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/케이.png"  data-bs-dismiss="offcanvas" data-bank-name="뱅크" data-bank-code="089" width="45" height="45" onclick="handleBankClick('this')">
+        <img src="../images/우체.png"  data-bs-dismiss="offcanvas" data-bank-name="우체국" data-bank-code="071" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/하나.png"  data-bs-dismiss="offcanvas" data-bank-name="하나은행" data-bank-code="081" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/카카오.png" data-bs-dismiss="offcanvas" data-bank-name="카카오" data-bank-code="090" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/케이.png"  data-bs-dismiss="offcanvas" data-bank-name="뱅크" data-bank-code="089" width="45" height="45" onclick="handleBankClick(this)">
     </div>
     <div class="text-container" style="display: flex; justify-content: space-around; margin-top: 4px;">
         <span style="margin-left:-14px;">우체국</span>
         <span>하나은행</span>
-        <span>카카오</span>
-        <span>K뱅크</span>
+        <span style="margin-right:12px;">카카오</span>
+        <span style="margin-right:15px;'">K뱅크</span>
     </div>
      <div class="image-container" style="justify-content-center;">
-        <img src="../images/유안타.png"  data-bs-dismiss="offcanvas" data-bank-name="유안타증권" data-bank-code="209" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/현대.png"  data-bs-dismiss="offcanvas" data-bank-name="현대증권" data-bank-code="218" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/미래.png"  data-bs-dismiss="offcanvas" data-bank-name="미래에셋증권" data-bank-code="230" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/삼성.png"  data-bs-dismiss="offcanvas" data-bank-name="삼성증권" data-bank-code="240" width="45" height="45" onclick="handleBankClick('this')">
+        <img src="../images/유안타.png"  data-bs-dismiss="offcanvas" data-bank-name="유안타증권" data-bank-code="209" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/현대.png"  data-bs-dismiss="offcanvas" data-bank-name="현대증권" data-bank-code="218" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/미래.png"  data-bs-dismiss="offcanvas" data-bank-name="미래에셋증권" data-bank-code="230" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/삼성.png"  data-bs-dismiss="offcanvas" data-bank-name="삼성증권" data-bank-code="240" width="45" height="45" onclick="handleBankClick(this)">
     </div>
     <div class="text-container" style="display: flex; justify-content: space-around; margin-top: 4px;">
         <span style="margin-left:-14px;">유안타증권</span>
@@ -715,22 +803,22 @@ function updateUser() {
         <span>삼성증권</span>
     </div>
      <div class="image-container" style="justify-content-center;">
-        <img src="../images/한국투자.png"  data-bs-dismiss="offcanvas" data-bank-name="한국투자" data-bank-code="243" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/교보.png"  data-bs-dismiss="offcanvas" data-bank-name="교보증권" data-bank-code="261" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/키움.png"  data-bs-dismiss="offcanvas" data-bank-name="키움증권" data-bank-code="264" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/sk.png"  data-bs-dismiss="offcanvas" data-bank-name="sk증권" data-bank-code="266" width="45" height="45" onclick="handleBankClick('this')">
+        <img src="../images/한국투자.png"  data-bs-dismiss="offcanvas" data-bank-name="한국투자" data-bank-code="243" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/교보.png"  data-bs-dismiss="offcanvas" data-bank-name="교보증권" data-bank-code="261" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/키움.png"  data-bs-dismiss="offcanvas" data-bank-name="키움증권" data-bank-code="264" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/sk.png"  data-bs-dismiss="offcanvas" data-bank-name="sk증권" data-bank-code="266" width="45" height="45" onclick="handleBankClick(this)">
     </div>
     <div class="text-container" style="display: flex; justify-content: space-around; margin-top: 4px;">
         <span style="margin-left:-14px;">한국투자</span>
         <span>교보증권</span>
-        <span>키움증권</span>
-        <span>sk증권</span>
+        <span style="margin-right:12px;">키움증권</span>
+        <span style="margin-right:12px;">sk증권</span>
     </div>
       <div class="image-container" style="justify-content-center;">
-        <img src="../images/한화.png"  data-bs-dismiss="offcanvas" data-bank-name="한화증권" data-bank-code="269" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/대신.png"  data-bs-dismiss="offcanvas" data-bank-name="대신증권" data-bank-code="267" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/유진.png"  data-bs-dismiss="offcanvas" data-bank-name="유진투자증권" data-bank-code="280" width="45" height="45" onclick="handleBankClick('this')">
-        <img src="../images/메리.png"  data-bs-dismiss="offcanvas" data-bank-name="메리츠증권" data-bank-code="287" width="45" height="45" onclick="handleBankClick('this')">
+        <img src="../images/한화.png"  data-bs-dismiss="offcanvas" data-bank-name="한화증권" data-bank-code="269" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/대신.png"  data-bs-dismiss="offcanvas" data-bank-name="대신증권" data-bank-code="267" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/유진.png"  data-bs-dismiss="offcanvas" data-bank-name="유진투자증권" data-bank-code="280" width="45" height="45" onclick="handleBankClick(this)">
+        <img src="../images/메리.png"  data-bs-dismiss="offcanvas" data-bank-name="메리츠증권" data-bank-code="287" width="45" height="45" onclick="handleBankClick(this)">
     </div>
     <div class="text-container" style="display: flex; justify-content: space-around; margin-top: 4px;">
         <span style="margin-left:-14px;">한화증권</span>
@@ -746,6 +834,19 @@ function updateUser() {
       </div>
     </div>
     
-
+ 
+    
+<div id="addUserTa" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+    <div class="align-self-center">
+      <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+    </div>
+    <div class="align-self-center">
+      <strong id ="messgeInfo" class="font-13 mb-n2"></strong>
+      <span class="font-10 mt-n1 opacity-70">Sign-up Failed. Try again.</span>
+    </div>
+    <div class="align-self-center ms-auto">
+      <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
 </body>
 </html>

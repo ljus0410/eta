@@ -60,34 +60,31 @@
 
     <div class="page-content header-clear-medium">
 
-        <%--<div class="card card-style">
-            <div class="content">
-                <div class="accordion accordion-m border-0" id="accordion-group-7">
-                    <div class="accordion-item border border-fade-highlight rounded-bottom rounded-top rounded-m">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion7-3" aria-expanded="false">
-                            <i class="bi bi-check-circle-fill color-green-dark pe-3 font-14"></i>
-                            <span class="font-600 font-13">합승 배차 정보</span>
-                            <i class="bi bi-arrow-down-short font-20"></i>
-                        </button>
-                        <div id="accordion7-3" class="accordion-collapse collapse" data-bs-parent="#accordion-group-7" style="">
-                            <p class="px-3 mb-0 pb-3 pt-1">
-                            <div class="row">
-                                <div class="col-12">
-                                    배차 번호 : ${call.callNo}<br/>
-                                    출발 : ${call.startAddr}<br/>
-                                    도착 : ${call.endAddr}<br/>
-                                </div>
-                                <div class="col-9">
-                                    출발 날짜 : ${share.shareDate} <br/>
-                                    참여 인원 : ${share.firstShareCount} / ${share.maxShareCount}
-                                </div>
-                            </div>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+        <div class="card card-style">
+            <div class="content" style="height:5%">
+              <div class="accordion accordion-m border-0" id="accordion-group-5">
+
+			          <div class="accordion-item">
+			            <button class="accordion-button px-0 ps-1 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion5-3" aria-expanded="false">
+			             <i class="bi bi-check-circle-fill color-green-dark pe-3 font-14"></i>
+			             <span class="font-600 font-13">배차정보</span>
+			              <i class="bi bi-arrow-down-short font-20"></i>
+			            </button>
+			            <div id="accordion5-3" class="accordion-collapse collapse" data-bs-parent="#accordion-group-5" style="">
+			            <p class="mb-0 pb-3">
+                      배차 번호 : ${call.callNo}<input type="hidden" id="callNo" value="${call.callNo}"><br/>
+                      출발 : ${call.startAddr}<br/>
+                      도착 : ${call.endAddr}<br/>
+                  </p>
+                  <button type="button" class="btn-xxs btn border-blue-dark color-blue-dark" onclick="startShare()">
+                      배차
+                  </button>
+			            </div>
+			          </div>
+              </div>
+             
             </div>
-        </div><!-- card card-style 끝 -->--%>
+        </div><!-- card card-style 끝 -->
 
         <div class="content mt-0">
             <div id="chat">

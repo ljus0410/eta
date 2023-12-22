@@ -39,6 +39,7 @@
     	var passengerNo = "${passengerNo}";
     	var driverNo = "${driverNo}";
     	var waypointCoordinates; //경유지 좌표
+    	var callCode = "&{call.callCode}";
     	
         async function loadMapData() {
         	
@@ -179,6 +180,8 @@
 
         var callNo = ${call.callNo};
         console.log("callNO: "+callNo);
+        var callCode = '${call.callCode}';
+        console.log("callCode: "+callCode);
 
         function updateLocationData() {
             if (firstLocation && lastLocation) {
@@ -198,7 +201,12 @@
                     }),
                     success: function(response) {
                         console.log('서버에 데이터 전송 성공:', response);
-                        window.location.href = '/callres/getRealPay?callNo=' + callNo;
+                        if(callCode === 'D'){
+                        	window.location.href = '/feedback/addBlacklist/' + callNo
+                        }
+                        else{
+                        	window.location.href = '/callres/getRealPay?callNo=' + callNo;
+                        }
                     },
                     error: function(error) {
                         console.error('서버에 데이터 전송 실패:', error);

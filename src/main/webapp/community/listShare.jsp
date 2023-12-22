@@ -91,7 +91,7 @@
                         }
                     })
                         .fail(function () {
-                            alert("에러가 발생했습니다");
+                            $("#cancelShare").addClass("fade show")
                         })
                 } else {
                     $('#noShareAlert').addClass('fade show');
@@ -364,6 +364,24 @@
 
         <div class="align-self-center">
             <span class="font-11 mt-n1 opacity-70">입력된 참여 인원수가<br/> 최대 참여 인원수를 초과합니다</span>
+        </div>
+
+        <div class="align-self-center ms-auto">
+            <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+        </div>
+
+    </div>
+    <!--Warning Toast Bar 끝 -->
+    
+    <!--Warning Toast Bar-->
+    <div id="cancelShare" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+
+        <div class="align-self-center">
+            <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+        </div>
+
+        <div class="align-self-center">
+            <span class="font-11 mt-n1 opacity-70">참여한 합승이 취소되었습니다.</span>
         </div>
 
         <div class="align-self-center ms-auto">
