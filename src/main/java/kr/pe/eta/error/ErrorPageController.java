@@ -14,43 +14,43 @@ public class ErrorPageController {
 	@RequestMapping("/error/400")
 	public String errorPage400(HttpServletRequest request, HttpServletResponse response) {
 
-		System.out.println("400 GET");
-		return "/common/400.jsp";
+		System.out.println("/error/400 GET");
+		return "/error/400.jsp";
 	}
 
 	@RequestMapping("/error/401")
 	public String errorPage401(HttpServletRequest request, HttpServletResponse response) {
 
-		System.out.println("401 GET");
-		return "/common/401.jsp";
+		System.out.println("/error/401 GET");
+		return "/error/401.jsp";
 	}
 
 	@RequestMapping("/error/403")
 	public String errorPage403(HttpServletRequest request, HttpServletResponse response) {
 
 		System.out.println("/error/403 GET");
-		return "/common/403.jsp";
+		return "/error/403.jsp";
 	}
 
 	@RequestMapping("/error/404")
 	public String errorPage404(HttpServletRequest request, HttpServletResponse response) {
 
 		System.out.println("/error/404 GET");
-		return "/common/404.jsp";
+		return "/error/404.jsp";
 	}
 
 	@RequestMapping("500")
 	public String errorPage500(HttpServletRequest request, HttpServletResponse response) {
 
 		System.out.println("/error/500 GET");
-		return "/common/500.jsp";
+		return "/error/500.jsp";
 	}
 
 	@RequestMapping("/error/500ex")
 	public String errorPage500ex(HttpServletRequest request, HttpServletResponse response) {
 
-		System.out.println("500ex GET");
-		return "/common/500ex.jsp";
+		System.out.println("/error/500ex GET");
+		return "/error/500ex.jsp";
 	}
 
 }
