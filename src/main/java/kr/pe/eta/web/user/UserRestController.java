@@ -33,9 +33,6 @@ import kr.pe.eta.service.user.IamportApiRequest;
 import kr.pe.eta.service.user.LoginService;
 import kr.pe.eta.service.user.UserService;
 import net.nurigo.sdk.NurigoApp;
-import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 
 @RestController
@@ -88,12 +85,12 @@ public class UserRestController {
 			numStr += ran;
 		}
 
-		Message message = new Message();
-		message.setFrom("01066779045");
-		message.setTo(phone);
-		message.setText("[인증번호 안내] 입력하셔야할 인증번호는[" + numStr + "]입니다");
-
-		SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+//		Message message = new Message();
+//		message.setFrom("01066779045");
+//		message.setTo(phone);
+//		message.setText("[인증번호 안내] 입력하셔야할 인증번호는[" + numStr + "]입니다");
+//
+//		SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
 		// Create a map to hold multiple values
 		Map<String, Object> resultMap = new HashMap<>();

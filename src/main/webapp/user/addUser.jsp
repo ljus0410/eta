@@ -255,7 +255,7 @@
     }
     $(document).ready(function() {
       // 텍스트 입력란에 입력이 발생할 때마다 dupEmail 함수 호출
-      $('#emailel').on('keyup', function() {
+      $('#emailal').on('keyup', function() {
         console.log('이메일 입력이 종료되었습니다.');
         dupEmail();
       })
@@ -263,7 +263,7 @@
 
         // Get the phone number from the input field
 
-        var email = $('#emailel').val();
+        var email = $('#emailal').val();
         console.log("이메일 :" + email);
         var resultText = $('#resultText'); // resultText 변수 추가
 
@@ -282,7 +282,7 @@
               dupEEmail = data;
 
               if (dupEEmail === "1") {
-                resultText.text("사용가능한 이메일입니다.").css('color', 'white');
+                resultText.text("사용가능한 이메일입니다.").css('color', 'blue');
               } else {
                 resultText.text("이미 사용중인 이메일입니다.").css('color', 'red');
               }
@@ -523,7 +523,7 @@
     $(function adUser() {
       $("#addUser").on("click", function() {
 
-        var email = $('#emailel').val();
+        var email = $('#email').val();
         var pwd12 = $('#password').val();
         var confirmPassword = $('#confirmPassword').val();
         var name = $('#name').val();
@@ -546,12 +546,7 @@
           return;
         }
 
-        if (email == null || email.length < 1) {
-          userEnteredValue = "이메일을 입력하세여";
-          updateToastText();
-          showToast();
-          return;
-        }
+
 
         if (emailErr == 2) {
         	userEnteredValue = "형식을 지켜주세여";
@@ -697,8 +692,7 @@
 
 <div class="card card-style">
       <div class="content">
-        <h1 class="text-center font-800 font-30 mb-2">Sign In</h1>
-        <p class="text-center font-13 mt-n2 mb-3">Enter your Credentials</p>
+        <h1 class="text-center font-800 font-30 mb-2">로그인</h1>
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-person-circle font-14"></i>
           <input type="text" class="form-control rounded-xs" id="name" name="name" placeholder="이름"/>
@@ -706,18 +700,19 @@
           <span>(required)</span>
         </div>
         
+        
          
          <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-envelope font-14"></i>
-          <c:if test = "${role !=null}">
+    
+          <c:if test = "${param.role == null}">
           <input type="text" class="form-control rounded-xs" id="email" name="email" 
           value="${not empty param.kakaoProfile ? param.kakaoProfile : param.naver}" placeholder="이메일"/>
           <label for="email" class="color-theme">Email</label>
           </c:if>
           <c:if test = "${param.role !=null}">
-          <input type="text" class="form-control rounded-xs" id="emailel" name="email" 
-           placeholder="이메일"/>
-          <label for="emailel" class="color-theme">Email</label>
+          <input type="text" class="form-control rounded-xs" id="emailal" name="email" value="" placeholder="이메일"/>
+          <label for="email" class="color-theme">Email</label>
           </c:if>        
           
           <span id="resultText" style="margin-left: 10px;"></span>
