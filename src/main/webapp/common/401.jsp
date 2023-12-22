@@ -49,12 +49,12 @@ function getTime() {
 </script>
 
 <meta charset="UTF-8">
-<title>500</title>
+<title>401</title>
 </head>
 <body onload="getTime()">
 <jsp:include page="/home/top.jsp" />
 <div class="visual">
-<h1 id="errorTitle">500 오류</h1>
+<h1 id="errorTitle">401 오류</h1>
 <h1 id="errorDetail"></h1>
 <img alt="" src="/images/errorTaxi.png" >
 </div>
