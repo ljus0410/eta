@@ -28,21 +28,21 @@ public class ErrorPageController {
 	@RequestMapping("/error/403")
 	public String errorPage403(HttpServletRequest request, HttpServletResponse response) {
 
-		System.out.println("403 GET");
+		System.out.println("/error/403 GET");
 		return "/common/403.jsp";
 	}
 
 	@RequestMapping("/error/404")
 	public String errorPage404(HttpServletRequest request, HttpServletResponse response) {
 
-		System.out.println("404 GET");
+		System.out.println("/error/404 GET");
 		return "/common/404.jsp";
 	}
 
-	@RequestMapping("/error/500")
+	@RequestMapping("500")
 	public String errorPage500(HttpServletRequest request, HttpServletResponse response) {
 
-		System.out.println("500 GET");
+		System.out.println("/error/500 GET");
 		return "/common/500.jsp";
 	}
 
