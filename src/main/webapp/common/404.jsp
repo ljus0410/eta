@@ -26,7 +26,7 @@
 #errorDetail {
 	color: #D4D6D5;
 	position: absolute;
-	left: 10%;
+	left: 8%;
 	bottom: 10%
 }
 
