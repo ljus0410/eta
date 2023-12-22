@@ -73,11 +73,14 @@
         var modal = document.getElementById('notification-bar-6');
         var confirmBtn = document.getElementById('confirmButton');
         
+        var queryParams = new URLSearchParams(window.location.search);
+        var callNo = queryParams.get('callNo');
+        
 
         stompClient2.connect({}, function(frame) {
         	console.log('Connected: ' + frame);
             confirmBtn.onclick = function() {
-                window.location.href = '/feedback/addStar';
+                window.location.href = '/feedback/addStar/'+callNo;
             }
             stompClient2.subscribe('/topic/notifications/' + passengerNo, function(notification) {
             	var messageElement = document.getElementById('notificationMessage');

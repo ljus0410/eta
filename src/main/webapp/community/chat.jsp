@@ -25,7 +25,7 @@
     </div>
 
     <div class="header-bar header-fixed header-app header-center header-bar-detached">
-        <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-main" class="bi bi-list" style="font-size: 30px;"></a>
+        <a data-back-button="" href="#"><i class="bi bi-caret-left-fill font-11 color-theme ps-2"></i></a>
         <a href="/home.jsp" class="header-title color-theme font-13">eTa</a>
 
         <c:choose>
@@ -59,6 +59,33 @@
     </form>
 
     <div class="page-content header-clear-medium">
+
+        <div class="card card-style">
+            <div class="content" style="height:5%">
+              <div class="accordion accordion-m border-0" id="accordion-group-5">
+
+			          <div class="accordion-item">
+			            <button class="accordion-button px-0 ps-1 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion5-3" aria-expanded="false">
+			             <i class="bi bi-check-circle-fill color-green-dark pe-3 font-14"></i>
+			             <span class="font-600 font-13">배차정보</span>
+			              <i class="bi bi-arrow-down-short font-20"></i>
+			            </button>
+			            <div id="accordion5-3" class="accordion-collapse collapse" data-bs-parent="#accordion-group-5" style="">
+			            <p class="mb-0 pb-3">
+                      배차 번호 : ${call.callNo}<input type="hidden" id="callNo" value="${call.callNo}"><br/>
+                      출발 : ${call.startAddr}<br/>
+                      도착 : ${call.endAddr}<br/>
+                  </p>
+                  <button type="button" class="btn-xxs btn border-blue-dark color-blue-dark" onclick="startShare()">
+                      배차
+                  </button>
+			            </div>
+			          </div>
+              </div>
+             
+            </div>
+        </div><!-- card card-style 끝 -->
+
         <div class="content mt-0">
             <div id="chat">
                 <div id="messages"></div>

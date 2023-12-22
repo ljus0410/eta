@@ -27,7 +27,9 @@ import kr.pe.eta.redis.AddCallEntity;
 import kr.pe.eta.redis.RedisEntity;
 import kr.pe.eta.redis.RedisService;
 import kr.pe.eta.service.callres.CallResService;
+import kr.pe.eta.service.community.CommunityService;
 import kr.pe.eta.service.pay.PayService;
+import kr.pe.eta.service.user.UserService;
 
 @Controller
 @RequestMapping("/callres/*")
@@ -38,6 +40,12 @@ public class CallResController {
 
 	@Autowired
 	private PayService payService;
+
+	@Autowired
+	private CommunityService communityService;
+
+	@Autowired
+	private UserService userService;
 
 	@Autowired
 	private final RedisService redisService;
@@ -109,10 +117,47 @@ public class CallResController {
 
 	}
 
+	@GetMapping("getRecord")
+	public String getRecord(@RequestParam("callNo") int callNo, Model model) throws Exception {
+
+		System.out.println("dgrpCont");
+		System.out.println(callNo);
+		// Business Logic
+		Call call = callResService.getCallByNo(callNo);
+		System.out.println("예약중" + call.getCallStateCode());
+		User user = callResService.getUserByCallNop(callNo);
+		List<ShareReq> shares = callResService.getSharesByCallNod(callNo);
+		int passengerNo = callResService.getMatchByCallnod(callNo);
+		int blacklist = callResService.getBlacklistByCallNod(callNo);
+
+		// Model 과 View 연결
+		model.addAttribute("call", call);
+		model.addAttribute("users", user);
+		model.addAttribute("share", shares);
+		model.addAttribute("passengerNo", passengerNo);
+		model.addAttribute("blacklist", blacklist);
+
+		if (!"예약중".equals(call.getCallStateCode())) {
+			return "/callres/getRecord.jsp";
+		} else {
+			return "/callres/getReservation.jsp";
+		}
+
+	}
+
 	@PostMapping("callEnd")
 	@ResponseBody
 	public void callEnd(@RequestBody Call call) throws Exception {
 		call.setCallStateCode("운행후");
+		int passengerNo = callResService.getMatchByCallnod(call.getCallNo());
+		User user = userService.getUsers(passengerNo);
+		if (user.isDealCode() == true) {
+			communityService.updateDealCode(passengerNo);
+		}
+		if (user.isShareCode() == true) {
+			communityService.updateDealCode(passengerNo);
+		}
+
 		RedisEntity redisEntity = new RedisEntity();
 		String userNo = String.valueOf(call.getCallNo());
 		redisEntity.setId(userNo);
@@ -197,7 +242,7 @@ public class CallResController {
 		}
 
 		// 피드백하러 가기
-		return "forward:/callres/home.jsp";
+		return "forward:/feedback/addBlacklist/" + callNo;
 	}
 
 	@GetMapping("callAccept")
@@ -253,7 +298,7 @@ public class CallResController {
 			int currentMoney = payService.getMyMoney(passengerNo);
 			payService.updateMyMoney(passengerNo, currentMoney - call.getRealPay());
 
-			return "forward:/callres/getReservationList.jsp";
+			return "forward:/callres/getReservationList";
 
 		} else {
 			call.setCallStateCode("운행중");
@@ -296,15 +341,25 @@ public class CallResController {
 			throws Exception {
 
 		Call call = callResService.getCallByNo(callNo);
+		int driverNo = ((User) session.getAttribute("user")).getUserNo();
 
 		call.setCallStateCode("운행중");
 		callResService.updateCallStateCode(call);
 		System.out.println("updatecallstatecode");
 
+		String driverNo1 = String.valueOf(driverNo);
+		RedisEntity location = redisService.getUserById(driverNo1);
+		double currentX = location.getCurrentX().doubleValue();
+		double currentY = location.getCurrentY().doubleValue();
+
 		int passengerNo = callResService.getMatchByCallnod(callNo);
 		System.out.println("getmatchbycallnod");
-		model.addAttribute("call", callResService.getRecordDriver(callNo));
+
+		model.addAttribute("currentX", currentX);
+		model.addAttribute("currentY", currentY);
+		model.addAttribute("call", callResService.getCallByNo(callNo));
 		model.addAttribute("passengerNo", passengerNo);
+		model.addAttribute("driverNo", driverNo);
 		return "forward:/callres/driving.jsp";
 	}
 
@@ -393,13 +448,21 @@ public class CallResController {
 	public String getRequest(Model model, HttpSession session) throws Exception {
 		int userNo = ((User) session.getAttribute("user")).getUserNo();
 		String driverNo = String.valueOf(userNo);
+
 		AddCallEntity callRequest = redisService.getCallById(driverNo);
-		int callNo = callRequest.getCallNo();
-		int passengerNo = callResService.getMatchByCallnod(callNo);
-		Call call = callResService.getCallByNo(callNo);
-		model.addAttribute("call", call);
-		model.addAttribute("passengerNo", passengerNo);
-		System.out.println(call);
+		if (callRequest != null) {
+			int callNo = callRequest.getCallNo();
+			int passengerNo = callResService.getMatchByCallnod(callNo);
+			Call call = callResService.getCallByNo(callNo);
+
+			model.addAttribute("call", call);
+			model.addAttribute("passengerNo", passengerNo);
+		} else {
+			// callRequest가 null일 경우, 모델에 null을 설정
+			model.addAttribute("call", null);
+			model.addAttribute("passengerNo", 0); // 혹은 적절한 기본값 설정
+		}
+
 		return "forward:/callres/callAcceptReject.jsp";
 	}
 

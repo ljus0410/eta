@@ -190,10 +190,10 @@
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        startX: firstLocation.lat,
-                        startY: firstLocation.lng,
-                        endX: lastLocation.lat,
-                        endY: lastLocation.lng,
+                        startX: firstLocation.lng,
+                        startY: firstLocation.lat,
+                        endX: lastLocation.lng,
+                        endY: lastLocation.lat,
                         callNo: callNo
                     }),
                     success: function(response) {
@@ -270,7 +270,7 @@
 		<div class="card card-style">
 			<div class="content">
 				<div class="col-md-6">
-					<div id="map" style="width: 100%; height: 670px;"></div>
+					<div id="map" style="width: 100%; height: 690px;"></div>
 				</div>
 
 

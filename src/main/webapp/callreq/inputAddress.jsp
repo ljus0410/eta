@@ -73,8 +73,8 @@ if (navigator.geolocation) {
         if (startAddress == null) {
             document.getElementById('startAddrKeyword').value = "현 위치 : " + firstPlaceName;
             registerInputEvents(startAddrKeyword, "현 위치 : " +firstPlaceName);
-            document.getElementById('startx').value =firstLat;
-            document.getElementById('starty').value =firstLng;
+            document.getElementById('startx').value =firstLng;
+            document.getElementById('starty').value =firstLat;
             window.selectOptionsStartData = {
                     startAddress: firstAddr,
                     startPlaceName: firstPlaceName,
@@ -170,6 +170,13 @@ function messageAlert(message) {
 .hiddenButton{
   display: none; 
 }
+
+  .btn-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top:0px;
+  }
 </style>
 </head>
 <body class="theme-light">
@@ -246,63 +253,66 @@ function messageAlert(message) {
           <input type="hidden" value="${callCode}" id="getCallCode">
           
               <!-- 즐겨찾기 리스트-->
+       <h5>&nbsp;&nbsp;즐겨찾기</h5><br>               
+   <div class="btn-container">
     <c:set var="i" value="0" />
     <c:forEach var="likeList" items="${likeList}">
       <c:set var="i" value="${ i+1 }" /> 
       <c:choose>
         <c:when test="${empty likeList.likeAddr && !empty likeList.likeName && likeList.likeName eq '집'}">
-             <button type="button" class="btn btn-secondary" onclick="handleButtonClick('${likeList.likeAddr}')" disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-slash" viewBox="0 0 16 16">
+             <a style="width:33%" class="btn btn-secondary" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-house-slash" viewBox="0 0 16 16">
 								  <path d="M13.879 10.414a2.5 2.5 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95Z"/>
 								  <path d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.708L8 2.207l-5 5V13.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 2 13.5V8.207l-.646.647a.5.5 0 1 1-.708-.708z"/>
-								</svg>
-              </button>     
+								</svg> 집
+              </a>     
         </c:when>
         <c:when test="${empty likeList.likeAddr && !empty likeList.likeName && likeList.likeName eq '회사'}">
-             <button type="button" class="btn btn-secondary" onclick="handleButtonClick('${likeList.likeAddr}')" disabled>
-				       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building-slash" viewBox="0 0 16 16">
+             <a style="width:33%" class="btn btn-secondary" href="#">
+				       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-building-slash" viewBox="0 0 16 16">
 								  <path d="M13.879 10.414a2.501 2.501 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95Z"/>
 								  <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z"/>
 								  <path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
-								</svg>
-              </button>    
+								</svg> 회사
+              </a>    
         </c:when>
         <c:when test="${empty likeList.likeAddr && empty likeList.likeName}">
-             <button type="button" class="btn btn-secondary" onclick="handleButtonClick('${likeList.likeAddr}')" disabled>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-x" viewBox="0 0 16 16">
+             <a style="width:33%" class="btn btn-secondary" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-bookmark-x" viewBox="0 0 16 16">
 								  <path fill-rule="evenodd" d="M6.146 5.146a.5.5 0 0 1 .708 0L8 6.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 7l1.147 1.146a.5.5 0 0 1-.708.708L8 7.707 6.854 8.854a.5.5 0 1 1-.708-.708L7.293 7 6.146 5.854a.5.5 0 0 1 0-.708"/>
 								  <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
-								</svg>
-              </button>     
+								</svg> 별칭
+              </a>     
         </c:when>
         <c:when test="${!empty likeList.likeAddr && !empty likeList.likeName && likeList.likeName eq '집'}">
-                <button type="button" class="btn-full btn border-blue-dark color-blue-dark" onclick="handleButtonClick('${likeList.likeAddr}','${likeList.likeName}','${likeList.likeX}','${likeList.likeY}')">
+                <a style="width:33%" class="btn-full btn border-blue-dark color-blue-dark" onclick="handleButtonClick('${likeList.likeAddr}','${likeList.likeName}','${likeList.likeX}','${likeList.likeY}')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-check-fill" viewBox="0 0 16 16">
 									  <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
 									  <path d="m8 3.293 4.712 4.712A4.5 4.5 0 0 0 8.758 15H3.5A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
 									  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.707l.547.547 1.17-1.951a.5.5 0 1 1 .858.514Z"/>
-									</svg>
-              </button>
+									</svg> 집
+              </a>
         </c:when>
         <c:when test="${!empty likeList.likeAddr && !empty likeList.likeName && likeList.likeName eq '회사'}">
-              <button type="button" class="btn-full btn border-blue-dark color-blue-dark" onclick="handleButtonClick('${likeList.likeAddr}','${likeList.likeName}','${likeList.likeX}','${likeList.likeY}')">
+              <a style="width:33%" class="btn-full btn border-blue-dark color-blue-dark" onclick="handleButtonClick('${likeList.likeAddr}','${likeList.likeName}','${likeList.likeX}','${likeList.likeY}')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building-fill-check" viewBox="0 0 16 16">
 								  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514Z"/>
 								  <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7.256A4.493 4.493 0 0 0 12.5 8a4.493 4.493 0 0 0-3.59 1.787A.498.498 0 0 0 9 9.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .39-.187A4.476 4.476 0 0 0 8.027 12H6.5a.5.5 0 0 0-.5.5V16H3a1 1 0 0 1-1-1zm2 1.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5m3 0v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5m3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5M7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5M4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
-								</svg>
-              </button> 
+								</svg> 회사
+              </a> 
         </c:when>
         <c:otherwise>
-         <button type="button" class="btn-full btn border-blue-dark color-blue-dark" onclick="handleButtonClick('${likeList.likeAddr}','${likeList.likeName}','${likeList.likeX}','${likeList.likeY}')">
+         <a style="width:33%" class="btn-full btn border-blue-dark color-blue-dark" onclick="handleButtonClick('${likeList.likeAddr}','${likeList.likeName}','${likeList.likeX}','${likeList.likeY}')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-star-fill" viewBox="0 0 16 16">
 								  <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5M8.16 4.1a.178.178 0 0 0-.32 0l-.634 1.285a.178.178 0 0 1-.134.098l-1.42.206a.178.178 0 0 0-.098.303L6.58 6.993c.042.041.061.1.051.158L6.39 8.565a.178.178 0 0 0 .258.187l1.27-.668a.178.178 0 0 1 .165 0l1.27.668a.178.178 0 0 0 .257-.187L9.368 7.15a.178.178 0 0 1 .05-.158l1.028-1.001a.178.178 0 0 0-.098-.303l-1.42-.206a.178.178 0 0 1-.134-.098z"/>
 								</svg>
 								${likeList.likeName}
-         </button>
+         </a>
         </c:otherwise>
       </c:choose>     
      
     </c:forEach>
+    </div>
     <br>
         <div class="list-group list-custom list-group-m rounded-xs"> 
         <h5>&nbsp;&nbsp;최근 내역</h5><br>     
@@ -719,10 +729,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 function handleButtonClick(Addr, Name, X, Y) {
     
-    alert(Addr);
+   /* alert(Addr);
     alert(Name);
     alert(X);
-    alert(Y);
+    alert(Y);*/
     
    var endAddrKeywordInput = document.getElementById('endAddrKeyword');
         endAddrKeywordInput.value=Addr;

@@ -80,11 +80,11 @@
                         </span>
                     </div>
                     <div class="align-self-center">
-                        <h5 class="font-16 ps-2 ms-1 mb-0 color-white">Call to Action</h5>
+                        <h5 class="font-16 ps-2 ms-1 mb-0 color-white">배차 완료</h5>
                     </div>
                 </div>
                 <p id="notificationMessage" class="font-12 pt-2 mb-3 color-white opacity-70">
-                    Please click a button to dismiss the notification. These are user action based.
+                    배차 요청이 수락되셨습니다. 택시 기사의 위치 또는 정보를 보시겠습니까?
                 </p>
                 <div class="row">
                     <div class="col-6">
@@ -134,7 +134,13 @@ var confirmBtn = document.getElementById('confirmButton');
 stompClient.connect({}, function(frame) {
    console.log('Connected: ' + frame);
     confirmBtn.onclick = function() {
-        window.location.href = '/callres/drivingP.jsp';
+    	var callNo = document.getElementById('callNo').value;
+    	var callCode = '${call.callCode}';
+    	if (callCode === 'R') {
+            window.location.href = '/callres/getReservationList';
+        } else {
+            window.location.href = '/callres/drivingP.jsp?callNo=' + callNo;
+        }
     }
     stompClient.subscribe('/topic/startnotifications/' + passengerNo, function(notification) {
        var messageElement = document.getElementById('notificationMessage');

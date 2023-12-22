@@ -215,20 +215,23 @@ public class UserController {
 			@RequestParam(name = "userNo", required = false) Integer userNo, HttpSession session) throws Exception {
 		System.out.println("/user/getUser : GET");
 		ModelAndView model = new ModelAndView();
+
 		User user = null;
 
 		if (email == null) {
+			System.out.println("이메일없음");
 			user = userService.getUsers(userNo);
-			System.out.println("돈돈돈 : " + user.getMyMoney());
+			System.out.println("meail : " + user.getMyMoney());
 		} else {
+			System.out.println("넘버 없음");
 			user = userService.getUser(email);
-			System.out.println("돈돈돈 : " + user.getMyMoney());
+			System.out.println("userNo : " + user.getMyMoney());
 		}
 
 		System.out.println("userInfo = " + user);
 		model.setViewName("forward:/user/getUser.jsp");
 		model.addObject("user", user);
-		model.addObject("money", user.getMyMoney());
+
 		return model;
 	}
 
@@ -269,20 +272,20 @@ public class UserController {
 		System.out.println("/user/updatePwd : GET");
 		ModelAndView model = new ModelAndView();
 
-		model.setViewName("redirect:/user/updatepwd.jsp");
+		model.setViewName("forward:/user/updatepwd.jsp");
 
 		return model;
 
 	}
 
 	@RequestMapping(value = "updatePwd", method = RequestMethod.POST)
-	public ModelAndView updatePwd(@ModelAttribute("user") User user) throws Exception {
-		System.out.println("/user/updatePwd : POST");
+	public ModelAndView updatePwd(@ModelAttribute("user") User user, HttpSession session) throws Exception {
+		System.out.println("/user/updatePwd : POST 아니 업데이트 pwd");
 		ModelAndView model = new ModelAndView();
-
+		System.out.println("user :" + user);
 		userService.updatePwd(user);
 
-		model.setViewName("forward:/user/home.jsp");
+		model.setViewName("redirect:/");
 		return model;
 
 	}

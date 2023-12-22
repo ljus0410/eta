@@ -42,6 +42,12 @@
         }
     </style>
 
+<script>
+
+
+
+</script>
+
 </head>
 
 <body class="theme-light">
@@ -76,7 +82,7 @@
      class="offcanvas offcanvas-start offcanvas-detached rounded-m" aria-modal="true" role="dialog">
 </div>
 
-<form>
+<form id="loginNa">
     <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-login">
         <div class="content">
             <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
@@ -173,7 +179,7 @@
                 <i class="bi bi bi-currency-dollar font-13"></i>
                 <input type="text" class="form-control rounded-xs readonly" id="c3" value ="${user.myMoney}원" readonly />
                 <label for="c2" class="color-theme">myMoney</label>
-                <span>Tpay</span>
+                <span>Tpay </span>
             </div>
         </c:if>
         <a href="#" class="btn btn-full get-User gradient-blue shadow-bg shadow-bg-s mt-4">더보기</a>
@@ -190,17 +196,17 @@
 
         <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
             <i class="bi bi-person-circle font-13"></i>
-            <input type="password" class="form-control rounded-xs" id="ca1" value="${user.pwd}" readonly/>
+            <input type="password" class="form-control rounded-xs" id="pwd123" value="${user.pwd}" readonly/>
+            <input type="hidden" name="email" value="${user.email}">
         </div>
 
         <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
             <i class="bi bi-at font-17"></i>
-            <input type="password" class="form-control rounded-xs" id="ca2" placeholder="비밀번호 확인" value='' oninput="checkPassword()" />
+            <input type="password" class="form-control rounded-xs" id="pwd1234" name="pwd" placeholder="비밀번호 확인" value='' oninput="checkPassword()" />
             <div id="passwordMatchMessage" style="font-size: 10px; color: red;"></div>
         </div>
     </div>
 </div>
-
 
 
 
@@ -317,8 +323,8 @@
             });
             //내정보
             $(".get-User").on("click", function() {
-
-                self.location = "/user/getUser?userNo=${user.userNo}"
+            	console.log("userNo: ", ${user.userNo});
+                self.location = "/user/getUser?email=${user.email}"
             });
 
             //Tpay 이용내역
@@ -468,7 +474,7 @@
 
     $( function() {
         $("#confirmationButton").on("click" , function() {
-            $("form").attr("method", "POST").attr("action", "/user/login").submit();
+            $("#loginNa").attr("method", "POST").attr("action", "/user/login").submit();
         });
     });
 
@@ -500,8 +506,8 @@
 
     //비밀번호 확인
     function checkPassword() {
-        var password1 = document.getElementById('ca1').value;
-        var password2 = document.getElementById('ca2').value;
+        var password1 = document.getElementById('pwd123').value;
+        var password2 = document.getElementById('pwd1234').value;
         var passwordMatchMessage = document.getElementById('passwordMatchMessage');
 
         if (password2 === "") {
@@ -521,8 +527,9 @@
         }
     }
     function submitForm() {
+    	console.log("여기가 수정이잖아");
         // 비밀번호가 일치하면 현재 페이지를 지정된 URL로 전환
-        self.location = "/user/updatePwd"
+    	self.location = "/user/updatePwd"
     }
 
     function deleteUserView(){
