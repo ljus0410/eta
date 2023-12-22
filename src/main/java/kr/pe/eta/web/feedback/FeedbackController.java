@@ -25,6 +25,7 @@ import kr.pe.eta.domain.Report;
 import kr.pe.eta.domain.Star;
 import kr.pe.eta.domain.User;
 import kr.pe.eta.service.feedback.FeedbackService;
+import kr.pe.eta.service.user.UserService;
 
 @Controller
 @RequestMapping("/feedback/*")
@@ -32,6 +33,9 @@ public class FeedbackController {
 
 	@Autowired
 	private FeedbackService feedbackService;
+
+	@Autowired
+	private UserService userService;
 
 	public FeedbackController() {
 		System.out.println(this.getClass());
@@ -54,7 +58,7 @@ public class FeedbackController {
 		// int callNo = feedbackService.getCallNo(user);
 		int driverNo = feedbackService.getDriverNoByCallNo(callNo);
 		Star star = Star.builder().callNo(callNo).driverNo(driverNo).build();
-
+		session.setAttribute("user", userService.getUsers(user.getUserNo()));
 		modelAndView.addObject("star", star);
 		return modelAndView;
 	}

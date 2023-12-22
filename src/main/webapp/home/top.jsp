@@ -86,7 +86,7 @@
     <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-login">
         <div class="content">
             <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
-            <h1 class="font-24 font-800 mb-3">Login</h1>
+            <h1 class="font-24 font-800 mb-3">로그인</h1>
             <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
                 <i class="bi bi-person-circle font-13"></i>
                 <input type="text" class="form-control rounded-xs" id="email" name="email" placeholder="email" />
@@ -97,23 +97,23 @@
             </div>
 
             <div style="text-align: center; margin: -18px auto 0;">
-                <a href="#" id="loginBtn" style="color: white; width: 250px; display: inline-block;" class="btn-full gradient-blue mt-1">SIGN IN</a>
+                <a href="#" id="loginBtn" style=" padding-top: 8px; color: white; height: 35px; width: 250px; display: inline-block;" class="btn-full gradient-blue mt-1">로그인</a>
 
                 <a href="#" id="kakao" class="btn-full mt-1">
-                    <img src="/images/kakao.png" class="btn-full" data-bs-toggle="offcanvas" data-bs-target="#menu-kakao" style="width: 250px; height: 24px; display: block; margin: 0 auto;" />
+                    <img src="/images/kakao.png" class="btn-full" data-bs-toggle="offcanvas" data-bs-target="#menu-kakao" style="width: 250px; height: 35px; display: block; margin: 0 auto;" />
                 </a>
 
-                <a href="#" id="naver" class="btn-full mt-1">
-                    <img src="/images/naver.png" class="btn-full" data-bs-toggle="offcanvas" data-bs-target="#menu-role" style="width: 250px; height: 24px; display: block; margin: 0 auto;" />
+                <a href="#" id="naverNavigation" class="btn-full mt-1">
+                    <img src="/images/naver.png" class="btn-full" data-bs-toggle="offcanvas" data-bs-target="#menu-naver" style="width: 250px; height: 35px; display: block; margin: 0 auto;" />
                 </a>
             </div>
 
-            <div class="row" style="margin: -18px auto 0;">
-                <div class="col-6 text-start">
-                    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-forgot" class="font-11 color-theme opacity-40 pt-3 d-block">비밀번호 찾기</a>
+            <div class="row" style="margin: -15px auto 0;">
+                <div class="col-6 text-start" style="margin-top:20px;">
+                    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-forgot" style="margin-top:5px;" class="font-11 color-theme opacity-40 pt-3 d-block">비밀번호 찾기</a>
                 </div>
-                <div class="col-6 text-end">
-                    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-role" class="font-11 color-theme opacity-40 pt-3 d-block">회원가입</a>
+                <div class="col-6 text-end" style="margin-top:20px;">
+                    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#roleNavi" style="margin-top:5px;" class="font-11 color-theme opacity-40 pt-3 d-block">회원가입</a>
                 </div>
             </div>
         </div>
@@ -210,7 +210,7 @@
 
 
 
-<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px; height:240px;" id="menu-role">
+<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px; height:240px;" id="roleNavi">
     <div class="content2 text-center">
         <div class="d-flex pb-2">
             <div class="align-self-center">
@@ -240,11 +240,41 @@
     </div>
 </div>
 
+<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px; height:240px;" id="menu-naver">
+    <div class="content2 text-center">
+        <div class="d-flex pb-2">
+            <div class="align-self-center">
+                <h4 class="font-700">네이버</h4>
+            </div>
+        </div>
+        <div class="list-group list-custom list-group-m rounded-xs list-group-flush bg-theme">
+        </div>
+    </div>
+    <div class="card card-style" style="display: flex; align-items: flex-start; margin-top:-20px;">
+
+        <div class="content mb-0">
+            <div class="row" style="display: flex; align-items: center;">
+
+                <div class="col text-center" id="naverpassenger">
+                    <img src="../images/신한.png" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
+                    <p style = "align-left:40px;" class="font-600 color-theme font-12 pb-3">passenger</p>
+                </div>
+
+                <div class="col text-center" id="naverdriver">
+                    <img src="../images/신한.png" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
+                    <p  class="font-600 color-theme font-12 pb-3">driver</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px; height:240px;" id="menu-kakao">
     <div class="content2 text-center">
         <div class="d-flex pb-2">
             <div class="align-self-center">
-                <h4 class="font-700">회원가입</h4>
+                <h4 class="font-700">카카오</h4>
             </div>
         </div>
         <div class="list-group list-custom list-group-m rounded-xs list-group-flush bg-theme">
@@ -381,10 +411,6 @@
                 self.location = "/user/addUser"
             });
 
-            $('#naver').on('click', function() {
-
-                self.location = "/user/naver-login"
-            });
 
             $('#kakaopaseen').on('click', function() {
 
@@ -393,6 +419,14 @@
             $('#kakaodriver').on('click', function() {
 
                 self.location = "/user/kakao-login?role=driver"
+            });
+            $('#naverpassenger').on('click', function() {
+
+                self.location = "/user/naver-login?role=passenger"
+            });
+            $('#naverdriver').on('click', function() {
+
+                self.location = "/user/naver-login?role=driver"
             });
             $('#passenger').on('click', function() {
 

@@ -103,10 +103,13 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "login", method = RequestMethod.GET)
-	public ModelAndView login(ModelAndView mv) throws Exception {
+	public ModelAndView login(ModelAndView mv, HttpSession session) throws Exception {
 
 		System.out.println("/user/login : GET");
-
+		if (session != null) {
+			System.out.println("세션 삭제하자");
+			session.invalidate(); // 세션을 무효화시킴
+		}
 		mv.setViewName("redirect:/user/login.jsp");
 
 		return mv;
@@ -148,7 +151,6 @@ public class UserController {
 			if (result == 1) {
 				// 블록 코드가 false이면 로그인 로직을 타게 하거나 다른 처리를 수행
 				if (user.getEmail().equals(db.getEmail()) && user.getPwd().equals(db.getPwd())) {
-					session.setAttribute("user", db);
 					System.out.println("로그인성공");
 					session.setAttribute("user", db);
 					modelAndView.setViewName("redirect:/home.jsp");
@@ -176,13 +178,18 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "addUser", method = RequestMethod.GET)
-	public ModelAndView addUser(@RequestParam("role") String role) throws Exception {
+	public ModelAndView addUser(@RequestParam("role") String role, HttpServletRequest request) throws Exception {
 		System.out.println("/user/addUser : GET");
 		ModelAndView model = new ModelAndView();
 
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			System.out.println("세션삭제하자");
+			session.invalidate(); // 세션을 무효화시킴
+		}
 		System.out.println("role :" + role);
 		model.addObject("role", role);
-		model.setViewName("redirect:/user/addUser.jsp");
+		model.setViewName("forward:/user/addUser.jsp");
 
 		return model;
 	}
@@ -199,10 +206,7 @@ public class UserController {
 		userService.addUser(user);
 		User newuser = userService.getUser(user.getEmail());
 		session.setAttribute("user", newuser);
-		if (user.getRole().equals("passenger")) {
 
-			callReqService.addLikeList(newuser.getUserNo());
-		}
 		System.out.println("방금 만든 회원 : " + userService.getUser(newuser.getEmail()));
 		System.out.println("즐겨찾기 보자 : " + callReqService.getLikeList(newuser.getUserNo()));
 		model.setViewName("forward:/home.jsp");
@@ -260,10 +264,11 @@ public class UserController {
 		ModelAndView model = new ModelAndView();
 		System.out.println("수정한 이름: " + user.getName());
 		userService.updateUser(user);
+		User unewuser = userService.getUsers(user.getUserNo());
+		System.out.println("새로운 정보 ㅣ " + unewuser);
+		session.setAttribute("user", unewuser);
 
-		session.setAttribute("user", user);
-
-		model.setViewName("forward:/home.jsp");
+		model.setViewName("redirect:/");
 		return model;
 	}
 
@@ -554,11 +559,15 @@ public class UserController {
 	}
 
 	@GetMapping("/naver-login")
-	public void naverLogin(HttpServletRequest request, HttpServletResponse response)
+	public void naverLogin(@RequestParam("role") String role, HttpServletRequest request, HttpServletResponse response)
 			throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
+
 		System.out.println("naver-login");
+		System.out.println("role : " + role);
 		String url = loginService.getNaverAuthorizeUrl("authorize");
 		try {
+			HttpSession session = request.getSession();
+			session.setAttribute("role", role);
 			response.sendRedirect(url);
 		} catch (Exception e) {
 			e.printStackTrace();
