@@ -10,10 +10,13 @@ import org.springframework.stereotype.Component;
 public class WebServerCustomizer implements WebServerFactoryCustomizer<ConfigurableWebServerFactory> {
 	@Override
 	public void customize(ConfigurableWebServerFactory factory) {
-		ErrorPage errorPage404 = new ErrorPage(HttpStatus.NOT_FOUND, "/common/404.jsp");
-		ErrorPage errorPage400 = new ErrorPage(HttpStatus.BAD_REQUEST, "/common/400.jsp");
-		ErrorPage errorPage500 = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/common/500.jsp");
-		ErrorPage errorPageEx = new ErrorPage(RuntimeException.class, "/common/500ex.jsp");
-		factory.addErrorPages(errorPage404, errorPage400, errorPage500, errorPageEx);
+		System.out.println("error 페이지 등록");
+		ErrorPage errorPage400 = new ErrorPage(HttpStatus.BAD_REQUEST, "/error/400");
+		ErrorPage errorPage401 = new ErrorPage(HttpStatus.UNAUTHORIZED, "/error/401");
+		ErrorPage errorPage403 = new ErrorPage(HttpStatus.FORBIDDEN, "/error/403");
+		ErrorPage errorPage404 = new ErrorPage(HttpStatus.NOT_FOUND, "/error/404");
+		ErrorPage errorPage500 = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error/500");
+		ErrorPage errorPageEx = new ErrorPage(RuntimeException.class, "/error/500ex");
+		factory.addErrorPages(errorPage400, errorPage401, errorPage403, errorPage404, errorPage500, errorPageEx);
 	}
 }
