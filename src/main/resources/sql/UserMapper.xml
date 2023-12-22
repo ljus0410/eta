@@ -29,7 +29,11 @@
 </resultMap>
 
 <insert id="addUser" parameterType="user">
-    INSERT INTO users (
+   <![CDATA[
+  DECLARE
+    v_user_no NUMBER;
+  BEGIN
+        INSERT INTO users (
         user_no, email, pwd, name, nick_name, birth, gender, phone,
         role, block_code, car_opt, pet_opt, car_num, bank, account, reg_date, my_money,
         deal_code, share_code
@@ -38,8 +42,13 @@
     seq_users_user_no.NEXTVAL, #{email:VARCHAR}, #{pwd:VARCHAR}, #{name:VARCHAR}, #{nickName:VARCHAR}, #{birth:VARCHAR}, #{gender:NUMERIC},
     #{phone:VARCHAR}, #{role:VARCHAR}, 0, #{carOpt:NUMERIC}, #{petOpt:NUMERIC}, #{carNum:VARCHAR}, #{bank:VARCHAR},
     #{account:VARCHAR}, SYSDATE, 0, 0, 0
-)
+) RETURNING user_no INTO v_user_no;
 
+    INSERT INTO likes (pri_like_no, like_no, user_no, like_name, like_addr, like_x, like_y) VALUES (seq_likes_pri_like_no.NEXTVAL, 1000, v_user_no, '집', null, null, null);
+      INSERT INTO likes (pri_like_no, like_no, user_no, like_name, like_addr, like_x, like_y) VALUES (seq_likes_pri_like_no.NEXTVAL, 1001, v_user_no, '회사', null, null, null);
+      INSERT INTO likes (pri_like_no, like_no, user_no, like_name, like_addr, like_x, like_y) VALUES (seq_likes_pri_like_no.NEXTVAL, 1002, v_user_no, null, null, null, null);      
+  END;
+    ]]>
 </insert>
 
   
