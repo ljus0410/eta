@@ -184,57 +184,6 @@ public class CommunityController {
 		return "forward:/callreq/searchCall.jsp";
 	}
 
-	public List<Integer> getDriverList(Call call, int userNo) throws Exception {
-
-		double passengerX = call.getStartX();
-		double passengerY = call.getStartY();
-		double driverX = 0;
-		double driverY = 0;
-
-		List<RedisEntity> driverList = redisService.getAllUser();
-
-		List<String> driverNoList = new ArrayList<>();
-		List<Integer> callDriverNoList = new ArrayList<>();
-		List<Integer> driverNoResult = new ArrayList<>();
-
-		for (int i = 0; i < driverList.size(); i++) {
-			driverX = driverList.get(i).getCurrentX();
-			driverY = driverList.get(i).getCurrentY();
-
-			double distance = userService.haversineDistance(passengerX, passengerY, driverX, driverY);
-
-			if (distance <= 3) { // passenger의 출발 위치로부터 3km 이내의 driver List
-				String driverNo = driverList.get(i).getId();
-				driverNoList.add(driverNo);
-			}
-		}
-
-		boolean petOpt = call.isPetOpt();
-		String carOpt = call.getCarOpt();
-
-		for (int i = 0; i < driverNoList.size(); i++) {
-			int driverNo = Integer.parseInt(driverNoList.get(i));
-			Integer callDriverNo = callReqService.getCallDriver(carOpt, petOpt, driverNo);
-			if (callDriverNo != null) {
-				callDriverNoList.add(callDriverNo);
-			}
-		}
-
-		List<Integer> blackNo = callReqService.getBlackList(userNo);
-
-		for (int i = 0; i < callDriverNoList.size(); i++) {
-			for (int j = 0; j < blackNo.size(); j++) {
-				if (callDriverNoList.get(i).equals(blackNo.get(j))) {
-					System.out.println("blackList driver : " + callDriverNoList.get(i));
-				} else {
-					driverNoResult.add(callDriverNoList.get(i));
-				}
-			}
-		}
-
-		return driverNoResult;
-	}
-
 	/////////// 딜
 
 	@RequestMapping(value = "addDeal", method = RequestMethod.POST)
@@ -445,6 +394,111 @@ public class CommunityController {
 		session.setAttribute("user", user);
 
 		return "redirect:/community/getShareList";
+	}
+
+	@RequestMapping(value = "startShareReq", method = RequestMethod.POST)
+	public String startShareReq(@ModelAttribute("call") Call call, HttpSession session, Model model) throws Exception {
+
+		System.out.println("/addReservationReq POST");
+
+		int userNo = ((User) session.getAttribute("user")).getUserNo();
+
+		int callNo = communityService.getCallNo(userNo, "S");
+
+		double passengerX = call.getStartX();
+		double passengerY = call.getStartY();
+		double driverX = 0;
+		double driverY = 0;
+
+		List<RedisEntity> driverList = null;
+		try {
+			driverList = redisService.getAllUser();
+			callReqService.addCall(call); // addCall()
+		} catch (RedisService.DatabaseHasNoDataException ex) {
+			String errorMessage = ex.getMessage();
+			System.out.print(errorMessage);
+
+			String callCode = call.getCallCode();
+			int myMoney = payService.getMyMoney(userNo);
+
+			model.addAttribute("myMoney", myMoney);
+			model.addAttribute("callCode", callCode);
+			model.addAttribute("hasNoDataException", true);
+
+			return "forward:/callreq/selectOptions.jsp";
+
+		}
+
+		List<String> driverNoList = new ArrayList<>();
+		List<Integer> callDriverNoList = new ArrayList<>();
+		List<Integer> driverNoResult = new ArrayList<>();
+
+		for (int i = 0; i < driverList.size(); i++) {
+			driverX = driverList.get(i).getCurrentX();
+			driverY = driverList.get(i).getCurrentY();
+
+			double distance = userService.haversineDistance(passengerX, passengerY, driverY, driverX);
+
+			if (distance <= 3) { // passenger의 출발 위치로부터 3km 이내의 driver List
+				String driverNo = driverList.get(i).getId();
+				System.out.println("3km 이내의 driverList: " + driverNo);
+				driverNoList.add(driverNo);
+			}
+		}
+
+		boolean petOpt = call.isPetOpt();
+		System.out.println("petOpt : " + petOpt);
+
+		String carOpt = call.getCarOpt();
+		System.out.println("carOpt : " + carOpt);
+
+		for (int i = 0; i < driverNoList.size(); i++) {
+			int driverNo = Integer.parseInt(driverNoList.get(i));
+			Integer callDriverNo = callReqService.getCallDriver(carOpt, petOpt, driverNo);
+			if (callDriverNo != null) {
+				System.out.println("반려동물, 차량옵션에 맞는 driver : " + callDriverNo);
+				callDriverNoList.add(callDriverNo);
+			}
+		}
+
+		int passengerNo = userNo;
+		List<Integer> blackNo = callReqService.getBlackList(passengerNo);
+		if (blackNo != null && !blackNo.isEmpty()) {
+			System.out.println("blackList 있음");
+			System.out.println("blackNo : " + blackNo);
+			for (int i = 0; i < callDriverNoList.size(); i++) {
+
+				for (int j = 0; j < blackNo.size(); j++) {
+					if (callDriverNoList.get(i).equals(blackNo.get(j))) {
+						System.out.println("blackList driver : " + callDriverNoList.get(i));
+					} else {
+						System.out.println("blackList 가 아닌 driver : " + callDriverNoList.get(i));
+						driverNoResult.add(callDriverNoList.get(i));
+						String driverNo = String.valueOf(callDriverNoList.get(i));
+						AddCallEntity addCallEntity = new AddCallEntity();
+						addCallEntity.setId(driverNo);
+						addCallEntity.setCallNo(callNo);
+						redisService.addCall(addCallEntity);
+					}
+				}
+			}
+		} else {
+			System.out.println("blackList 없음");
+			for (int i = 0; i < callDriverNoList.size(); i++) {
+				driverNoResult.add(callDriverNoList.get(i));
+				String driverNo = String.valueOf(callDriverNoList.get(i));
+				AddCallEntity addCallEntity = new AddCallEntity();
+				addCallEntity.setId(driverNo);
+				addCallEntity.setCallNo(callNo);
+				redisService.addCall(addCallEntity);
+			}
+		}
+
+		model.addAttribute("call", call);
+		model.addAttribute("callNo", callNo);
+		model.addAttribute("callDriverList", driverNoResult);
+
+		return "forward:/callreq/searchCall.jsp";
 	}
 
 	@RequestMapping(value = "chat", method = RequestMethod.GET)

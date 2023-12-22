@@ -262,7 +262,7 @@
                             </c:if>
                             <c:if test="${user.userNo!=share.firstSharePassengerNo}">
                                 <button type="button" class="btn-xxs btn border-blue-dark color-blue-dark shareOffer" id="${call.callNo}">
-                                    배차
+                                    참여
                                 </button>
                             </c:if>
                         </div>

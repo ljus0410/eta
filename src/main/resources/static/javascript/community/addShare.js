@@ -9,6 +9,7 @@ $(function (){
         let userInputMinutes = parseInt(userInputTime.split(":")[1]);
 
         let currentTime = new Date();
+        alert(userInputTime);
         let currentHours = currentTime.getHours();
         let currentMinutes = currentTime.getMinutes();
 
@@ -16,9 +17,11 @@ $(function (){
 
             currentTime.setDate(currentTime.getDate() + 1);
             userInputTime = currentTime.toISOString().split("T")[0] + " " + userInputTime+":00";
+            console.log(userInputTime);
             $("#shareDate").val(userInputTime);
         } else {
             userInputTime = currentTime.toISOString().split("T")[0] + " " + userInputTime+":00";
+            console.log(userInputTime);
             $("#shareDate").val(userInputTime);
         }
 

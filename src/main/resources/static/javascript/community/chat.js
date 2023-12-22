@@ -57,6 +57,10 @@ $(document).ready(function() {
 
     });
     
+function startShare() {
+  $("form").attr("method" , "POST").attr("action" , "/community/startShareReq").submit();
+}
+    
 function sendMessage() {
     const sender = document.getElementById('sender').value;
     const content = document.getElementById('content').value;
