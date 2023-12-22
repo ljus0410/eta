@@ -39,7 +39,7 @@ public class ErrorPageController {
 		return "/error/404.jsp";
 	}
 
-	@RequestMapping("500")
+	@RequestMapping("/error/500")
 	public String errorPage500(HttpServletRequest request, HttpServletResponse response) {
 
 		System.out.println("/error/500 GET");
