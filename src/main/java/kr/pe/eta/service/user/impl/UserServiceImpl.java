@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUser(String email) throws Exception {
+		System.out.println("이메일왔니" + email);
 
 		return userDao.getUser(email);
 	}

@@ -52,5 +52,10 @@ public interface CommunityService {
 
 	public void deleteShareOther(int userNo) throws Exception;
 
-	public List<ShareReq> getSharePassengerList(int callNo) throws Exception;
+	public List<ShareReq> getSharePassengerList(int callNo, String callStateCode) throws Exception;
+
+	public int getShareReqPassenger(int callNo) throws Exception;
+
+	public List<ShareReq> getSharePassengerallList(int callNo) throws Exception;
+
 }

@@ -524,8 +524,8 @@ function updateUser() {
 <form>
 <div id="page">
 <div class="page-content header-clear-medium" >
-        
-        
+        <input type="hidden" id="pwd" name="pwd" value="${user.pwd}">
+        <input type="hidden" id="userNo" name="userNo" value="${user.userNo}">
        <div class="card card-style" style="margin-bottom: 15px;">
     <div class="content" style="margin-bottom: 9px; display: flex; justify-content: space-between; align-items: center;">
         <h1 class="pb-2" style="width: 140px;">
@@ -693,9 +693,7 @@ function updateUser() {
       <input type="hidden" id="bankCodeInput" />
 
         <image src="../images/bank.png" onclick="openModal(); showInputAndButton()" style="margin-bottom:5px; width:25px; height:25px;">
-        <input type="hidden" id="acocount" name="account" value="${user.pwd}">
-        <input type="hidden" id="pwd" name="pwd" value="${user.pwd}">
-        <input type="hidden" id="userNo" name="userNo" value="${user.userNo}">
+        <input type="hidden" id="account" name="account" value="">
         <input type="text" id="bank" name="bank" value="${user.bank}" class="rounded-xs" readonly style="height:25px; width:60px; color:gray; border: 1px solid #ced4da !important;" placeholder="은행"/>
        <input class="rounded-xs"  name="account2" style="height:25px; color:gray;  border: 1px solid #ced4da !important;"type="text" id="bank_num" value="${user.account }"/>
             <div>
@@ -723,11 +721,11 @@ function updateUser() {
  </div>
  </div>
  
-   
+   </form>
  
 
         
-     </form>
+     
         
         
         

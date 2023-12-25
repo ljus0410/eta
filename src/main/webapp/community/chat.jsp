@@ -59,7 +59,7 @@
     </form>
 
     <div class="page-content header-clear-medium">
-
+    <div style="display: none;" id="userNo">${user.userNo}</div>
         <div class="card card-style">
             <div class="content" style="height:5%">
               <div class="accordion accordion-m border-0" id="accordion-group-5">
@@ -72,13 +72,12 @@
 			            </button>
 			            <div id="accordion5-3" class="accordion-collapse collapse" data-bs-parent="#accordion-group-5" style="">
 			            <p class="mb-0 pb-3">
-                      배차 번호 : ${call.callNo}<input type="hidden" id="callNo" value="${call.callNo}"><br/>
+                      배차 번호 : ${call.callNo}<br/>
                       출발 : ${call.startAddr}<br/>
                       도착 : ${call.endAddr}<br/>
                   </p>
-                  <button type="button" class="btn-xxs btn border-blue-dark color-blue-dark" onclick="startShare()">
-                      배차
-                  </button>
+                  <div id="shareStartButton">
+                  </div>
 			            </div>
 			          </div>
               </div>
