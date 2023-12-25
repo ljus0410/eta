@@ -62,11 +62,10 @@
         //window.innerHeight = 핸재보이는 브라우저 창 높이
         //window.scrollY 현재 스크롤 바 위치
          let scrollPosition = window.innerHeight + window.scrollY;
-        console.log(scrollPosition)
-        console.log(scrollHeight)
+       
         
         ///체크해가면서 window와 document확인
-        console.log("cex"+infiniteScrollEnabled)
+    
          
 
          if (infiniteScrollEnabled && scrollHeight - scrollPosition <10) {
@@ -82,15 +81,16 @@
               currentPageValue++;
 
               $('input[name="currentPage"]').val(currentPageValue);
-              
+              if($("#currentPage").val() <= ${resultPage.maxPage}){
+                  let data = {
+                    
+                    currentPage : $("#currentPage").val(),
+                    searchKeyword : $("input:text[name='searchKeyword']").val()
+                }
               
               $.ajax({
                   url: "/user/json/autoList",
-                  data: JSON.stringify({
-                      currentPage: currentPageValue,
-                      searchKeyword: searchKeywordValue,
-          
-                  }),
+                  data   :  JSON.stringify(data),
                   method: "POST",
                   contentType: "application/json",
                   dataType: "json",
@@ -125,9 +125,9 @@
           }
 
       
- });
+ }
     
-  
+    });
      
      
      $( function() {
@@ -140,16 +140,21 @@
                 
            
           });
+          
+          $("a:contains('검색')").on("click", function () {
+        	    
+        	    $("form").attr("method","POST").attr("action","/user/listUser").submit();
+        	  }) 
         });
 </script>
 </head>
 <body>
 
 <body class="theme-light">
+   <jsp:include page="../home/top.jsp" />
   <form>
     <div id="page" >
-    <jsp:include page="../home/top.jsp" />
-    <input type="hidden" name="currentPage" value="0" />
+ >
       <div class="page-content header-clear-medium" >
         <div class="card card-style" style="margin-bottom: 15px;">
           <div class="content"style="margin-bottom: 9px; ">
@@ -199,7 +204,7 @@
             </div>
           </div>
         </div>
-          <input type="hidden" id="hidden" name="hidden">
+          <input type="hidden" id="currentPage" name="currentPage" value=1>
       </div>
     </div>
   </form>

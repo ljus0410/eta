@@ -71,7 +71,7 @@ public class LoginService {
 	public String kakaoLoOut(HttpServletRequest request)
 			throws URISyntaxException, MalformedURLException, UnsupportedEncodingException {
 
-		System.out.println("카카오 로그아웃서비스");
+		System.out.println("카카오 URL서비스");
 		HttpSession session = request.getSession(false); // 세션이 없으면 새로 생성하지 않음
 		if (session != null) {
 			session.invalidate(); // 모든 속성을 제거하고 세션을 무효화함
@@ -79,7 +79,7 @@ public class LoginService {
 
 		UriComponents uriComponents = UriComponentsBuilder.fromUriString("https://kauth.kakao.com/oauth/logout?")
 				.queryParam("client_id", kaclienId).queryParam("logout_redirect_uri", logout).build();
-		System.out.println("uriComponents :" + uriComponents.toString());
+		System.out.println("uriComponents" + uriComponents.toString());
 		return uriComponents.toString();
 	}
 

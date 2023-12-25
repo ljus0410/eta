@@ -58,6 +58,18 @@
         WHERE email = #{email}
     </select>
     
+    <select id="getUserPhone" parameterType="string" resultMap="userSelectMap">
+        SELECT *
+        FROM users
+        WHERE phone = #{phone}
+    </select>
+    
+      <select id="getPhone" parameterType="string" >
+        SELECT phone
+        FROM users
+        WHERE phone = #{phone}
+    </select>
+    
     <select id="getUsers" parameterType="int" resultMap="userSelectMap">
         SELECT *
         FROM users
@@ -88,21 +100,16 @@
 
 
     
-    <select id= "getUserList" parameterType="search" resultMap="userSelectMap">
+      <select id= "getUserList" parameterType="search" resultMap="userSelectMap">
      SELECT *
      FROM ( SELECT inner_table.* , ROWNUM AS row_seq
                       FROM(SELECT user_no, name, email, role 
                             FROM users
-                        <if test="searchCondition != null">
-                        <where>
-                          <if test="searchCondition == 0 and searchKeyword !='' ">
-                            email LIKE '%' || #{searchKeyword} || '%'
-                          </if>
-                          <if test="searchCondition == 1 and searchKeyword !='' ">
-                            name LIKE '%' || #{searchKeyword} || '%'
-                          </if>
-                        </where>
-                      </if>
+                            <where>
+                        <if test="searchKeyword !='' and searchKeyword !=null">
+                  name LIKE '%'||#{searchKeyword}||'%'
+                </if> 
+                </where>
                    ORDER BY user_no ) inner_table
             WHERE ROWNUM &lt;= #{endRowNum} )
     WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}  
@@ -113,19 +120,29 @@
      FROM ( SELECT inner_table.* , ROWNUM AS row_seq
                       FROM(SELECT user_no, name, email, role 
                             FROM users
-                        <if test="searchCondition != null">
-                        <where>
-                          <if test="searchCondition == 0 and searchKeyword !='' ">
-                            email LIKE '%' || #{searchKeyword} || '%'
-                          </if>
+                        
+                        <where>                       
                           <if test="searchCondition == 1 and searchKeyword !='' ">
                             name LIKE '%' || #{searchKeyword} || '%'
                           </if>
                         </where>
-                      </if>
+                     
                    ORDER BY user_no ) inner_table)          
    </select>
     
+    <select id="getTotalCount" parameterType="search" resultType="int">
+    
+    SELECT count(*)
+    FROM  ( SELECT user_no, name, email, role 
+              FROM users
+           <where>                       
+            <if test="searchCondition == 1 and searchKeyword !='' ">
+              name LIKE '%' || #{searchKeyword} || '%'
+            </if>
+          </where>
+            ORDER BY user_no ) inner_table          
+    
+    </select>
    
   <delete id="deleteUser" parameterType="int">
    DELETE FROM users

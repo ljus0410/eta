@@ -43,13 +43,14 @@ public class UserServiceImpl implements UserService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		int drivertotalCount = userDao.getDriverCount(search);
 		int passengertotalCount = userDao.getPassengerCount(search);
-		map.put("list", list);
+		int totalCount = userDao.getTotalCount(search);
 		map.put("drivertotalCount", new Integer(drivertotalCount));
 		map.put("passengertotalCount", new Integer(passengertotalCount));
 
 		System.out.println("passengertotalCount " + passengertotalCount);
 		System.out.println("drivertotalCount " + drivertotalCount);
 		map.put("list", list);
+		map.put("totalCount", totalCount);
 		return map;
 	}
 
@@ -81,6 +82,17 @@ public class UserServiceImpl implements UserService {
 	public boolean dupNickname(String nickName) throws Exception {
 		boolean result = true;
 		User user = userDao.getNickName(nickName);
+
+		// 중복이 false
+		if (user != null) {
+			result = false;
+		}
+		return result;
+	}
+
+	public boolean dupPhone(String Phone) throws Exception {
+		boolean result = true;
+		User user = userDao.getPhone(Phone);
 
 		// 중복이 false
 		if (user != null) {
@@ -148,6 +160,12 @@ public class UserServiceImpl implements UserService {
 		System.out.println("여기야 여기");
 		return userDao.deleteUser(userNo);
 
+	}
+
+	@Override
+	public User getUsersPhone(String phone) throws Exception {
+
+		return userDao.getUsersPhone(phone);
 	}
 
 }

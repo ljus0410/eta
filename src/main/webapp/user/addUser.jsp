@@ -697,7 +697,7 @@
           <i class="bi bi-person-circle font-14"></i>
           <input type="text" class="form-control rounded-xs" id="name" name="name" placeholder="이름"/>
          <label for="name" class="color-theme">Name</label>
-          <span>(required)</span>
+          <span></span>
         </div>
         
         
@@ -722,16 +722,16 @@
  
 
 
-        
+       
         <div class="form-custom form-label form-icon mb-3">
-          <i class="bi bi-unlock font-12"></i>
+          <i class="bi bi-lock font-12"></i>
           <input type="password" class="form-control rounded-xs" id="password" name="pwd" placeholder="특수문자 포함 8자이상"/>
           <label for="password" class="color-theme">Password</label>
          <span id="passwordMessage" style="margin-left: 10px;"></span>
         </div>
         
         <div class="form-custom form-label form-icon mb-3">
-          <i class="bi bi-lock font-12"></i>
+          <i class="bi bi-unlock font-12"></i>
           <input type="password" class="form-control rounded-xs" id="confirmPassword" placeholder="비밀번호 확인"/>
           <label for="confirmPassword" class="color-theme">Password22</label>
            <span id="checkPasswordMatch" style="margin-left: 10px;"></span>
@@ -759,7 +759,7 @@
         
 <div class="custom-border3 form-control rounded-xs" style="align-items: center;">
     <div style="display: flex;">
-        <i style="font-size: 13px;" class="bi bi-currency-dollar font-12"></i>
+        <i style="font-size: 13px;" class="bi bi-telephone-plus-fill font-12"></i>
         <span style="font-size: 13px; flex-direction: column; margin-bottom: 8px; margin-left:14px; color: gray;">전화번호</span>
     </div>
     <div style="justify-content: flex-start; display: flex; align-items: center; margin-left: 10px;">
