@@ -175,8 +175,21 @@ public class CommunityServiceImpl implements CommunityService {
 		communityDao.deleteShareOther(userNo);
 	}
 
-	public List<ShareReq> getSharePassengerList(int callNo) throws Exception {
+	public List<ShareReq> getSharePassengerList(int callNo, String callStateCode) throws Exception {
 
-		return communityDao.getSharePassengerList(callNo);
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("callNo", callNo);
+		param.put("callStateCode", callStateCode);
+
+		return communityDao.getSharePassengerList(param);
+	}
+
+	public int getShareReqPassenger(int callNo) throws Exception {
+		return communityDao.getShareReqPassenger(callNo);
+	}
+
+	@Override
+	public List<ShareReq> getSharePassengerallList(int callNo) throws Exception {
+		return communityDao.getSharePassengerallList(callNo);
 	}
 }

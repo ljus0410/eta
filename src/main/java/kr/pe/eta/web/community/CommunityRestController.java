@@ -204,4 +204,17 @@ public class CommunityRestController {
 		return shareReq;
 	}
 
+	@RequestMapping(value = "getShareReqPassenger")
+	public String getShareReqPassenger(@RequestParam int callNo) throws Exception {
+
+		System.out.println("/json/getShareReqPassenger GET");
+
+		int userNo = communityService.getShareReqPassenger(callNo);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		// Java 객체를 JSON 문자열로 변환
+		String jsonString = objectMapper.writeValueAsString(userNo);
+		return jsonString;
+	}
 }
