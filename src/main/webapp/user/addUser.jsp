@@ -10,7 +10,7 @@
 
         /* 추가한 스타일 */
         #phone, #authButton {
-            display: inline-block; /* 인라인 블록으로 설정하여 같은 줄에 위치하도록 함 */
+            display: inline-block; /* 인라인 블록으로 설정하요 같은 줄에 위치하도록 함 */
             vertical-align: middle; /* 수직 정렬을 중앙에 맞춤 */
             }       
 .custom-border {
@@ -178,7 +178,7 @@
         console.log("입력값: " + userInput);
         resultText.text("일치합니다").css('color', 'blue');
 
-        // 부트스트랩 JavaScript API를 사용하여 모달 닫기
+        // 부트스트랩 JavaScript API를 사용하요 모달 닫기
         $('#phone-Num').offcanvas('hide');
         $('#phone-Num').on('hidden.bs.offcanvas', function() {
 
@@ -209,7 +209,7 @@
       // bankname 함수 호출
 
 
-      // 여기서 필요한 로직 수행
+      // 요기서 필요한 로직 수행
     }
 
     function bankname(bankCode) {
@@ -348,10 +348,10 @@
 
 
 //          document.getElementById("gender").value = "0";
-    //여자 남자
+    //요자 남자
 
     document.addEventListener("DOMContentLoaded", function() {
-      // 초기값을 여 (1)로 설정
+      // 초기값을 요 (1)로 설정
       toggleGenderLabel(document.getElementById("genderch"));
     });
 
@@ -365,7 +365,7 @@
         console.log("Gender Value: " + gender.value);
         document.getElementById("gender").value = "0";
       } else {
-        label.innerText = "여";
+        label.innerText = "요";
         gender.value = "1";
         console.log("Gender Value: " + gender.value);
         document.getElementById("gender").value = "1";
@@ -401,10 +401,10 @@
           // 비밀번호 길이가 8자 이상이고, 특수문자를 포함하는지 확인
           if (password.length >= 8 && /[!@#$%^&*(),.?":{}|<>]/.test(password)) {
             Numer = 0;
-            message.text("조건 만족").css('color', 'white');
+            message.text("").css('color', 'white');
           } else {
             Numer = 2;
-            message.text("형식을 지켜주세여").css('color', 'red');
+            message.text("형식을 지켜주세요").css('color', 'red');
           }
         });
       });
@@ -425,7 +425,7 @@
             message.text("사용가능").css('color', 'blue');
           } else {
 
-            message.text("형식을 지켜주세여").css('color', 'red');
+            message.text("형식을 지켜주세요").css('color', 'red');
           }
         });
       });
@@ -475,7 +475,7 @@
 
           // 결과를 출력하거나 원하는 작업을 수행할 수 있습니다.
           console.log("생년월일: ");
-          message.text("조건만족").css('color', 'white');
+          message.text("").css('color', 'white');
         } else {
           // 형식에 맞지 않을 때의 처리
           birform = 2;
@@ -539,7 +539,7 @@
 
 
         if (name == null || name.length < 1) {
-          userEnteredValue = "이름을 입력하세여";
+          userEnteredValue = "이름을 입력하세요";
           updateToastText();
           showToast();
 
@@ -549,7 +549,7 @@
 
 
         if (emailErr == 2) {
-          userEnteredValue = "형식을 지켜주세여";
+          userEnteredValue = "형식을 지켜주세요";
             updateToastText();
             showToast();
 
@@ -567,7 +567,7 @@
 
 
         if (pwd12 == null || pwd12.length < 1) {
-          userEnteredValue = "비밀번호을 입력하세여";
+          userEnteredValue = "비밀번호을 입력하세요";
           updateToastText();
           showToast();
           return;
@@ -575,13 +575,13 @@
         }
 
         if (confirmPassword == null || confirmPassword.length < 1) {
-          userEnteredValue = "비밀번호확인을 입력하세여";
+          userEnteredValue = "비밀번호확인을 입력하세요";
           updateToastText();
           showToast();
           return;
         }
         if (Numer == 2) {
-            userEnteredValue = "형식을 지켜주세여";
+            userEnteredValue = "형식을 지켜주세요";
             updateToastText();
             showToast();
             return;
@@ -597,7 +597,7 @@
         
        
         if (nickNum == null || nickNum.length < 1) {
-          userEnteredValue = "닉네임을 입력하세여";
+          userEnteredValue = "닉네임을 입력하세요";
           updateToastText();
           showToast();
           return;
@@ -607,7 +607,7 @@
           return;
         }
         if (birth === null || birth.length < 1) {
-          userEnteredValue = "생년월일 입력하세여";
+          userEnteredValue = "생년월일 입력하세요";
           updateToastText();
           showToast();
           return;
@@ -619,7 +619,7 @@
           return;
         }
         if (phone === null || phone.length < 1) {
-          userEnteredValue = "전화번호를 입력하세여";
+          userEnteredValue = "전화번호를 입력하세요";
           updateToastText();
           showToast();
           return;
@@ -636,14 +636,14 @@
 
 
         if (role === "driver" && (carNum === null || carNum.length < 1)) {
-          userEnteredValue = "차량번호를 입력하세여";
+          userEnteredValue = "차량번호를 입력하세요";
           updateToastText();
           showToast();
           return;
         }
 
         if (role === "driver" && (account === null || account.length < 1)) {
-          userEnteredValue = "계좌번호를 입력하세여";
+          userEnteredValue = "계좌번호를 입력하세요";
           updateToastText();
           showToast();
           return;
