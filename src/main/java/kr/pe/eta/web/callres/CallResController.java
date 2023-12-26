@@ -153,31 +153,25 @@ public class CallResController {
 	@ResponseBody
 	public void callEnd(@RequestBody Call call, HttpSession session) throws Exception {
 		call.setCallStateCode("운행후");
+		System.out.println("callEnd");
 		int passengerNo = callResService.getMatchByCallnod(call.getCallNo());
 		int driverNo = ((User) session.getAttribute("user")).getUserNo();
 		User driver = userService.getUsers(driverNo);
 		User pass = userService.getUsers(passengerNo);
-
-		if (call.getCallCode() == "S") {
-			List<ShareReq> shareUserNo = callResService.getSharesByCallNod(call.getCallNo());
+		Call callResult = callResService.getCallByNo(call.getCallNo());
+		System.out.println("callCode: " + callResult.getCallCode());
+		if (callResult.getCallCode().equals("S")) {
+			List<ShareReq> shareUserNo = communityService.getSharePassengerallList(call.getCallNo());
 			for (ShareReq shareReq : shareUserNo) {
 				int userNo = shareReq.getFirstSharePassengerNo();
-				if (pass.isShareCode() == true) {
-					communityService.updateShareCode(userNo);
-				}
+				System.out.println(userNo);
+				communityService.updateShareCode(userNo);
 			}
-		}
-
-		if (pass.isDealCode() == true) {
-			communityService.updateDealCode(passengerNo);
-		}
-
-		if (driver.isDealCode() == true) {
-			communityService.updateDealCode(driverNo);
-		}
-
-		if (driver.isShareCode() == true) {
 			communityService.updateShareCode(driverNo);
+		}
+		if (callResult.getCallCode().equals("D")) {
+			communityService.updateDealCode(passengerNo);
+			communityService.updateDealCode(driverNo);
 		}
 		User driverSession = userService.getUsers(driverNo);
 		session.setAttribute("user", driverSession);
@@ -303,6 +297,9 @@ public class CallResController {
 			RedisEntity location = redisService.getUserById(driverNo1);
 			double currentX = location.getCurrentX().doubleValue();
 			double currentY = location.getCurrentY().doubleValue();
+			if (call.getCallCode().equals("D")) {
+				communityService.updateDealCode(driverNo);
+			}
 
 			model.addAttribute("currentX", currentX);
 			model.addAttribute("currentY", currentY);
@@ -359,6 +356,7 @@ public class CallResController {
 			RedisEntity location = redisService.getUserById(driverNo1);
 			double currentX = location.getCurrentX().doubleValue();
 			double currentY = location.getCurrentY().doubleValue();
+			communityService.updateShareCode(driverNo);
 			System.out.println(passengerNosList);
 
 			model.addAttribute("currentX", currentX);

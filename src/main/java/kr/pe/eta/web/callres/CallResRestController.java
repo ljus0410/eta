@@ -82,6 +82,7 @@ public class CallResRestController {
 	@RequestMapping(value = "deleteRequest/{callNo}")
 	public void deleteRequest(@PathVariable int callNo, Model model, HttpSession session) throws Exception {
 		int userNo = ((User) session.getAttribute("user")).getUserNo();
+		System.out.println(callNo);
 		String driverNo = String.valueOf(userNo);
 		AddCallEntity deleteEntity = new AddCallEntity();
 		deleteEntity.setCallNo(callNo);

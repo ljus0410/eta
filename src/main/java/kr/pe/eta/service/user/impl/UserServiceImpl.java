@@ -163,9 +163,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getUsersPhone(String phone) throws Exception {
+	public User getUserPhone(String phone) throws Exception {
 
-		return userDao.getUsersPhone(phone);
+		return userDao.getUserPhone(phone);
 	}
 
 }

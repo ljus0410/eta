@@ -54,7 +54,7 @@
 
         // 거절 버튼 이벤트 리스너
         rejectButton.addEventListener('click', function() {
-            window.location.href = '/callres/json/getRequest';
+            window.location.href = '/callres/json/deleteRequest/' + callNo;
         });
     };
 </script>
