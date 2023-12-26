@@ -63,6 +63,10 @@ public interface CommunityDao {
 
 	public void deleteShareOther(int userNo) throws Exception;
 
-	public List<ShareReq> getSharePassengerList(int callNo) throws Exception;
+	public List<ShareReq> getSharePassengerList(Map param) throws Exception;
+
+	public int getShareReqPassenger(int callNo) throws Exception;
+
+	public List<ShareReq> getSharePassengerallList(int callNo) throws Exception;
 
 }

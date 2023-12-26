@@ -175,6 +175,25 @@
 <input type="hidden" id="hasNoDataException" value="${hasNoDataException}">
 </div>
 </form>
+
+<!--Warning Toast Bar-->
+  <div id="shareAlert" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+
+    <div class="align-self-center">
+      <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+    </div>
+
+    <div class="align-self-center">
+      <span class="font-10 mt-n1 opacity-70">합승은 펫 탑승이 불가능합니다.</span>
+    </div>
+
+    <div class="align-self-center ms-auto">
+      <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+    </div>
+
+  </div>
+  <!-- Warning Toast Bar 끝 -->
+    
 </div>
 </div>
 </div>
@@ -259,19 +278,23 @@ function handleCarClick(type) {
 
 	}
 function handlePetClick() {
+	
+	if ($("#callCode").val()=="S") {
+		$("#shareAlert").addClass("fade show");
+	} else {
+		var checkBtn = petButtonSpan.querySelector('input[type="checkbox"]');
 
-	 var checkBtn = petButtonSpan.querySelector('input[type="checkbox"]');
-
-	  if (checkBtn.checked) {
-	    checkBtn.checked = false;
-	    petImage.src = "../images/pet_before.png";
-	    console.log('체크 해제됨');
-	  } else {
-	    checkBtn.checked = true;
-	    petImage.src = "../images/pet_after.png";
-	    console.log('체크됨');
-	  }
-	  updatePrepay();
+	    if (checkBtn.checked) {
+	      checkBtn.checked = false;
+	      petImage.src = "../images/pet_before.png";
+	      console.log('체크 해제됨');
+	    } else {
+	      checkBtn.checked = true;
+	      petImage.src = "../images/pet_after.png";
+	      console.log('체크됨');
+	    }
+	    updatePrepay();
+	}
       
   }
 recommendRouteSpan.addEventListener('click', function () {

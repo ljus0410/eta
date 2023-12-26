@@ -18,6 +18,8 @@ public interface UserDao {
 
 	public User getNickName(String nickName);
 
+	public User getPhone(String Phone);
+
 	public User getEmail(String email) throws Exception;
 
 	public void updatePwd(User user) throws Exception;
@@ -26,7 +28,11 @@ public interface UserDao {
 
 	public User getUsers(int userNo) throws Exception;
 
+	public User getUsersPhone(String phone) throws Exception;
+
 	public int deleteUser(int userNo) throws Exception;
+
+	public int getTotalCount(Search search) throws Exception;
 
 	public int getPassengerCount(Search search) throws Exception;
 
