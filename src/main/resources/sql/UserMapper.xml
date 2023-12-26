@@ -145,8 +145,15 @@
     </select>
    
   <delete id="deleteUser" parameterType="int">
+   <![CDATA[
+  BEGIN
+     DELETE FROM likes
+   WHERE user_no = #{userNo};
+
    DELETE FROM users
-   WHERE user_no = #{userNo}
+   WHERE user_no = #{userNo};
+  END;
+    ]]>
 </delete>
 
 

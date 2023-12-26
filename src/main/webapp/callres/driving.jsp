@@ -133,7 +133,11 @@
             if (stompClient && stompClient.connected) {
                 const location = index;
                 const locationData = { lat: location.getLat(), lng: location.getLng() };
-                stompClient.send("/sendLocation/" + passengerNo, {}, JSON.stringify(locationData));
+                if (callCode=="S") {
+                    stompClient.send("/chat/shareStart/" + ${call.callNo}, {}, JSON.stringify(locationData));
+                  } else {
+                    stompClient.send("/sendLocation/" + passengerNo, {}, JSON.stringify(locationData));
+                  }
                 
                 addLocation(locationData);
 
@@ -248,7 +252,12 @@
         var stompClient2 = Stomp.over(socket2);
 
         function sendEndDriving() {
-            stompClient2.send("/sendNotification/" + passengerNo, {}, '운행종료');
+        	if (callCode=="S") {
+                alert("S")
+                stompClient2.send("/chat/shareEnd/" + callNo, {}, '운행종료');
+              } else {
+                stompClient2.send("/sendNotification/" + passengerNo, {}, '운행종료');
+              }
         }
         
         function showPassedWaypointAlert() {
@@ -271,15 +280,28 @@
         }
 
     </script>
+    
+    <style>
+    /* Add this style to your existing <style> section or in a <style> tag in the <head> */
+    .btn{
+    	padding : 10px 95%;
+    	 text-align: center;
+    }
+    .text-start {
+    white-space: nowrap; /* Prevents wrapping */
+}
+</style>
 </head>
 <body>
-	<div class="page-content header-clear-medium">
+
+
+	<div id="map" style="width: 100%; height: 680px;"></div>
+				
+
 
 		<div class="card card-style">
 			<div class="content">
-				<div class="col-md-6">
-					<div id="map" style="width: 100%; height: 690px;"></div>
-				</div>
+				
 
 
 				<div class="row">
@@ -289,7 +311,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+
 
 	<script
 		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>

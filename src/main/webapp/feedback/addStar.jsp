@@ -35,7 +35,7 @@
 	 
 	}
 	window.removeReport= function () {
-	$( "a:contains('신고')").remove();
+		$( "#reportButtom").remove();
 	}
 $(function () {
 	let starAddToast = new bootstrap.Toast($("#toast-star-add"));
@@ -164,7 +164,7 @@ $(function () {
 						<div align="right">
 							<a class="btn btn-xxs border-blue-dark color-blue-dark"
 								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">등록</a>
-							<a class="btn btn-xxs border-red-dark color-red-dark"
+							<a class="btn btn-xxs border-red-dark color-red-dark" id = "reportButtom"
 								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">신고</a>
 							
 						</div>
