@@ -11,7 +11,7 @@ window.closeModal = function() {
 	 $( '#menu-report' ).offcanvas( 'hide' );
 	}
 window.removeReport= function () {
-	$( "a:contains('신고')").remove();
+	$( "#reportButtom").remove();
 	}
 
 function setStar(star) {
@@ -131,7 +131,7 @@ function setStar(star) {
 							<a class="btn btn-xxs border-blue-dark color-blue-dark"
 								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">수정</a>
 
-							<a class="btn btn-xxs border-red-dark color-red-dark"
+							<a class="btn btn-xxs border-red-dark color-red-dark" id = "reportButtom"
 								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">신고</a>
 						</div>
 					</div>
