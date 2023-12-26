@@ -161,7 +161,8 @@
             <!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
             <h1 class="pb-2" style="width: 140px; white-space: nowrap; display: inline-block;">
-              <i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;회원 리스트
+              <i class="has-bg rounded-s bi bg-teal-dark bi-list" style="vertical-align:bottom !important; line-height: 0px!important;height: 30px !important;font-size: 30px !important; all:initial; display: inline-block;"></i>&nbsp;&nbsp;회원 리스트
+            
             </h1>
           </div>
         </div>

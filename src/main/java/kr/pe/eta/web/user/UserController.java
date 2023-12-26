@@ -615,7 +615,7 @@ public class UserController {
 			try {
 				// access_token이 null인 경우 Kakao 로그아웃 URL 생성 및 리다이렉트
 				String url = loginService.kakaoLoOut(request1);
-				response.sendRedirect(url);
+				model.setViewName("redirect:/home.jsp");
 
 			} catch (IOException e) {
 				e.printStackTrace(); // 또는 로깅 등의 적절한 예외 처리 로직을 추가할 수 있습니다.
