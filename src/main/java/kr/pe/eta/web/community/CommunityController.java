@@ -379,7 +379,7 @@ public class CommunityController {
 		int userNo = ((User) session.getAttribute("user")).getUserNo();
 		int callNo = communityService.getCallNo(userNo, "S");
 
-		List<ShareReq> list = communityService.getSharePassengerList(callNo);
+		List<ShareReq> list = communityService.getSharePassengerList(callNo, "운행전");
 
 		System.out.println(list);
 
@@ -396,14 +396,16 @@ public class CommunityController {
 		return "redirect:/community/getShareList";
 	}
 
-	@RequestMapping(value = "startShareReq", method = RequestMethod.POST)
-	public String startShareReq(@ModelAttribute("call") Call call, HttpSession session, Model model) throws Exception {
+	@RequestMapping(value = "startShareReq", method = RequestMethod.GET)
+	public String startShareReq(@RequestParam int callNo, HttpSession session, Model model) throws Exception {
 
-		System.out.println("/addReservationReq POST");
+		System.out.println("/startShareReq GET");
 
 		int userNo = ((User) session.getAttribute("user")).getUserNo();
 
-		int callNo = communityService.getCallNo(userNo, "S");
+		Call call = callReqService.getCall(callNo);
+		System.out.println(call);
+		ShareReq shareReq = communityService.getShare(userNo);
 
 		double passengerX = call.getStartX();
 		double passengerY = call.getStartY();
@@ -413,7 +415,6 @@ public class CommunityController {
 		List<RedisEntity> driverList = null;
 		try {
 			driverList = redisService.getAllUser();
-			callReqService.addCall(call); // addCall()
 		} catch (RedisService.DatabaseHasNoDataException ex) {
 			String errorMessage = ex.getMessage();
 			System.out.print(errorMessage);
@@ -425,7 +426,7 @@ public class CommunityController {
 			model.addAttribute("callCode", callCode);
 			model.addAttribute("hasNoDataException", true);
 
-			return "forward:/callreq/selectOptions.jsp";
+			return "redirect:/community/chat";
 
 		}
 
@@ -446,10 +447,10 @@ public class CommunityController {
 			}
 		}
 
-		boolean petOpt = call.isPetOpt();
+		boolean petOpt = false;
 		System.out.println("petOpt : " + petOpt);
 
-		String carOpt = call.getCarOpt();
+		String carOpt = Integer.toString(shareReq.getMaxShareCount());
 		System.out.println("carOpt : " + carOpt);
 
 		for (int i = 0; i < driverNoList.size(); i++) {

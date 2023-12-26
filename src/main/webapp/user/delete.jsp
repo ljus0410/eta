@@ -4,13 +4,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>eTa</title>
 
 <script>
 
 function checkPasswordAndDeleteUser() {
-    var password = document.getElementById('czxc1').value;
-    var confirmPassword = document.getElementById('czxc2').value;
+    var password = document.getElementById('oriPassword').value;
+    var confirmPassword = document.getElementById('cerPassword').value;
 
     var passwordMessage = document.getElementById('passwordMessage');
     var confirmPasswordMessage = document.getElementById('confirmPasswordMessage');
@@ -23,11 +23,13 @@ function checkPasswordAndDeleteUser() {
     }
 
     // 비밀번호 일치 여부 확인
-    if (password === confirmPassword) {
+    if (password == confirmPassword) {
+    	console.log(password+"값"+confirmPassword);
  
         // 여기에서 회원탈퇴 로직을 추가하면 됩니다.
         deleteUser();
     } else {
+    	console.log(password+"값"+confirmPassword);
         confirmPasswordMessage.innerHTML = '비밀번호가 일치하지 않습니다.';
         confirmPasswordMessage.style.color = 'red';  // 일치하지 않을 때의 메시지 색상
         // 비밀번호가 일치하지 않을 때 얼럿을 띄우는 부분 추가
@@ -52,7 +54,7 @@ function checkPasswordAndDeleteUser() {
 <jsp:include page="../home/top.jsp" />
 <form>
 
-
+<div id="page">
 <div class="page-content header-clear-medium" >
         <div class="card card-style" style="margin-bottom: 15px;">
           <div class="content"style="margin-bottom: 9px; ">
@@ -71,13 +73,13 @@ function checkPasswordAndDeleteUser() {
       <div class="content">
        <div class="form-custom form-label form-icon mb-3">
     <i class="bi bi-at font-16"></i>
-    <input type="password" class="form-control rounded-xs" id="czxc1" value="${user.pwd}" />
+    <input type="password" class="form-control rounded-xs" id="oriPassword" value="${user.pwd}" />
     <span id="passwordMessage">비밀번호</span>
 </div>
 
 <div class="form-custom form-label form-icon mb-3">
     <i class="bi bi-at font-16"></i>
-    <input type="password" class="form-control rounded-xs" id="czxc2" name="pwd" value="" placeholder="password"/>
+    <input type="password" class="form-control rounded-xs" id="cerPassword" name="pwd" value="" placeholder="password"/>
     <span id="passwordMessage">비밀번호 확인</span>
     <div style = "margin-left:5px; font-size: 11px;" id="confirmPasswordMessage"></div> 
 </div>
@@ -87,6 +89,7 @@ function checkPasswordAndDeleteUser() {
     </div>       
         </div>
         <input type="hidden" name="userNo" value="${user.userNo}">
+        </div>
     </form>    
         
         
