@@ -451,6 +451,8 @@
 
 		AND
 		c.call_state_code = '예약중'
+		OR
+		c.call_state_code = '운행중'
 
 
 
