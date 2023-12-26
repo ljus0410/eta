@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>eTa</title>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script type="text/javascript">
@@ -25,19 +25,19 @@ function updateToastText() {
 }
   
 function updatePwd(){
-	
-	 if (Numer==2) {
-         userEnteredValue = "형식을 지켜주세여";
+  
+   if (Numer==2) {
+         userEnteredValue = "형식을 지켜주세요";
          updateToastText();
          showToast();
          return;
        }
 
-	$("#updatePwdP").attr("method", "POST").attr("action", "/user/updatePwd").submit();
+  $("#updatePwdP").attr("method", "POST").attr("action", "/user/updatePwd").submit();
 
-	 
+   
 }
-	
+  
 $(document).ready(function() {
     $("#password").on("keyup", function() {
       console.log("비밀번호 입력 ");
@@ -54,7 +54,7 @@ $(document).ready(function() {
       }
     });
   });
-	
+  
 
 
 </script>

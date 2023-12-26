@@ -79,7 +79,7 @@
     <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-main"><i class="bi bi-list"></i><span>Menu</span></a>
 </div>
 
-<div id="menu-main" data-menu-active="nav-comps" data-menu-load="../home/menu.jsp" style="width:280px;"
+<div id="menu-main" data-menu-active="nav-comps" data-menu-load="/home/menu.jsp" style="width:280px;"
      class="offcanvas offcanvas-start offcanvas-detached rounded-m" aria-modal="true" role="dialog">
 </div>
 
@@ -208,7 +208,7 @@
         <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
             <i class="bi bi-at font-17"></i>
             <input type="password" class="form-control rounded-xs" id="pwd1234" name="pwd" placeholder="비밀번호 확인" value='' oninput="checkPassword()" />
-            <div id="passwordMatchMessage" style="font-size: 10px; color: red;"></div>
+            <div id="passwordMatchMessage" style="margin-left:10px; font-size: 10px; color: red;"></div>
         </div>
     </div>
 </div>
@@ -275,6 +275,8 @@
     </div>
 </div>
 
+
+
 <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="searchEamil">
     <div class="content">
       <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
@@ -290,6 +292,9 @@
 
     </div>
    </div>
+   
+   
+   
    
    <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="searchPwd">
     <div class="content">
@@ -362,11 +367,11 @@ $("#sendPhone").click(function() {
 
           if (dupEEmail === "2") {
             
-        	  sendPhone();
+            sendPhone();
             
             
           } else {
-        	  resultText.text("등록된 핸드폰 번호가 없습니다").css('color', 'red');
+            resultText.text("등록된 핸드폰 번호가 없습니다").css('color', 'red');
            
           }
         },
@@ -380,7 +385,7 @@ $("#sendPhone").click(function() {
 
 function sendPhone(){
 
-	var phone = $('#phoneNum').val();
+  var phone = $('#phoneNum').val();
     var messege;
     // Perform AJAX request using jQuery
     $.ajax({
@@ -407,10 +412,10 @@ function sendPhone(){
 
 $(document).ready(function() {
 $("#senCode").click(function() {
-	var email = $("#EmailAddress").val();
-	var resultText2 = $('#resultText2');
-	
-	$.ajax({
+  var email = $("#EmailAddress").val();
+  var resultText2 = $('#resultText2');
+  
+  $.ajax({
         url: '/user/json/dupEmail', // Specify your server endpoint
         method: 'GET',
         data: {
@@ -423,19 +428,19 @@ $("#senCode").click(function() {
 
           if (dupEEmail === "2") {
             
-        	  sendEmail();
-        	  
-        	  
+            sendEmail();
+            
+            
           } else {
-        	  resultText2.text("등록된 이메일이 없습니다").css('color', 'red');
-        	 
+            resultText2.text("등록된 이메일이 없습니다").css('color', 'red');
+           
           }
         },
         error: function(error) {
           // Handle the error
           console.error(error);
         }
-      });	
+      }); 
 });
 });
   
@@ -511,7 +516,7 @@ $("#senCode").click(function() {
             });
             //내정보
             $(".get-User").on("click", function() {
-            	console.log("userNo: ", ${user.userNo});
+              console.log("userNo: ", ${user.userNo});
                 self.location = "/user/getUser?email=${user.email}"
             });
 
@@ -656,7 +661,7 @@ $("#senCode").click(function() {
                         // 실패 메시지 처리 (fail 또는 ment 중 하나라도 존재할 경우)
                         showLoginFailedBlock(data.ment, data.block.unblockDateStr, data.block.blockCount, data.report.reportCategory, data.report.regDate)
                     }else if(fail != null){
-                    	 var fail=data.fail; 
+                       var fail=data.fail; 
                         console.log("로그인실패했잖아"+fail);
                         showLoginFailed(data.fail);
                     }
@@ -702,9 +707,9 @@ $("#senCode").click(function() {
         var warningMessage = document.getElementById('menu-warning').querySelector('p');
         warningTitle.textContent = ment;
         if(blockCount == '4'){
-        	warningMessage.innerHTML = '<p class="color-white opacity-60 pt-2">귀하는 '+reportRegDate+' 이용한 서비스에서</br>'+reportCategory+'사유로 신고가 접수되어 비활성화 처리되었습니다.</br></br>현재 누적 비활성화 횟수 '+blockCount+'회로</br>영구정지되어 본 서비스 이용이 불가합니다.</p>'
+          warningMessage.innerHTML = '<p class="color-white opacity-60 pt-2">귀하는 '+reportRegDate+' 이용한 서비스에서</br>'+reportCategory+'사유로 신고가 접수되어 비활성화 처리되었습니다.</br></br>현재 누적 비활성화 횟수 '+blockCount+'회로</br>영구정지되어 본 서비스 이용이 불가합니다.</p>'
         }else{
-        	warningMessage.innerHTML = '<p class="color-white opacity-60 pt-2">귀하는 '+reportRegDate+' 이용한 서비스에서</br>'+reportCategory+'사유로 신고가 접수되어 비활성화 처리되었습니다.</br></br>현재 누적 비활성화 횟수 '+blockCount+'회로</br>'+unblockDate+' 이후 본 서비스 이용 가능합니다.</p>'	
+          warningMessage.innerHTML = '<p class="color-white opacity-60 pt-2">귀하는 '+reportRegDate+' 이용한 서비스에서</br>'+reportCategory+'사유로 신고가 접수되어 비활성화 처리되었습니다.</br></br>현재 누적 비활성화 횟수 '+blockCount+'회로</br>'+unblockDate+' 이후 본 서비스 이용 가능합니다.</p>' 
         }
         
         
@@ -735,9 +740,9 @@ $("#senCode").click(function() {
         }
     }
     function submitForm() {
-    	console.log("여기가 수정이잖아");
+      console.log("여기가 수정이잖아");
         // 비밀번호가 일치하면 현재 페이지를 지정된 URL로 전환
-    	self.location = "/user/updatePwd"
+      self.location = "/user/updatePwd"
     }
 
     function deleteUserView(){

@@ -1,5 +1,6 @@
 package kr.pe.eta.web.callres;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import jakarta.servlet.http.HttpSession;
 import kr.pe.eta.common.Page;
@@ -153,21 +153,24 @@ public class CallResController {
 	@ResponseBody
 	public void callEnd(@RequestBody Call call, HttpSession session) throws Exception {
 		call.setCallStateCode("운행후");
+		System.out.println("callEnd");
 		int passengerNo = callResService.getMatchByCallnod(call.getCallNo());
 		int driverNo = ((User) session.getAttribute("user")).getUserNo();
 		User driver = userService.getUsers(driverNo);
 		User pass = userService.getUsers(passengerNo);
-		if (pass.isDealCode() == true) {
+		Call callResult = callResService.getCallByNo(call.getCallNo());
+		System.out.println("callCode: " + callResult.getCallCode());
+		if (callResult.getCallCode().equals("S")) {
+			List<ShareReq> shareUserNo = communityService.getSharePassengerallList(call.getCallNo());
+			for (ShareReq shareReq : shareUserNo) {
+				int userNo = shareReq.getFirstSharePassengerNo();
+				System.out.println(userNo);
+				communityService.updateShareCode(userNo);
+			}
+			communityService.updateShareCode(driverNo);
+		}
+		if (callResult.getCallCode().equals("D")) {
 			communityService.updateDealCode(passengerNo);
-		}
-		if (pass.isShareCode() == true) {
-			communityService.updateDealCode(passengerNo);
-		}
-
-		if (driver.isDealCode() == true) {
-			communityService.updateDealCode(driverNo);
-		}
-		if (driver.isShareCode() == true) {
 			communityService.updateDealCode(driverNo);
 		}
 		User driverSession = userService.getUsers(driverNo);
@@ -229,6 +232,9 @@ public class CallResController {
 			List<ShareReq> shares = callResService.getSharesByCallNod(callNo);
 			int numberOfShares = shares.size();
 			int allCount = 0;
+			call.setCallNo(callNo);
+			call.setRealPay(money);
+			callResService.updateRealPay(call);
 			for (ShareReq share : shares) {
 				allCount += share.getFirstShareCount();
 			}
@@ -294,6 +300,9 @@ public class CallResController {
 			RedisEntity location = redisService.getUserById(driverNo1);
 			double currentX = location.getCurrentX().doubleValue();
 			double currentY = location.getCurrentY().doubleValue();
+			if (call.getCallCode().equals("D")) {
+				communityService.updateDealCode(driverNo);
+			}
 
 			model.addAttribute("currentX", currentX);
 			model.addAttribute("currentY", currentY);
@@ -325,6 +334,7 @@ public class CallResController {
 			callResService.updateMatchDriver(callNo, driverNo);
 			List<ShareReq> shares = callResService.getSharesByCallNod(callNo);
 			int passengerNo = callResService.getMatchByCallnod(callNo);
+			List<String> passengerNosList = new ArrayList<>();
 
 			int allCount = 0; // 택시를 타는 총 인원수
 			for (ShareReq share : shares) {
@@ -345,8 +355,16 @@ public class CallResController {
 				payService.updateMyMoney(share.getFirstSharePassengerNo(), currentMoney - myAccount);
 			}
 
+			String driverNo1 = String.valueOf(driverNo);
+			RedisEntity location = redisService.getUserById(driverNo1);
+			double currentX = location.getCurrentX().doubleValue();
+			double currentY = location.getCurrentY().doubleValue();
+			communityService.updateShareCode(driverNo);
+			System.out.println(passengerNosList);
+
+			model.addAttribute("currentX", currentX);
+			model.addAttribute("currentY", currentY);
 			model.addAttribute("call", call);
-			model.addAttribute(shares);
 			model.addAttribute("passengerNo", passengerNo);
 			model.addAttribute("driverNo", driverNo);
 
@@ -416,6 +434,29 @@ public class CallResController {
 		return "forward:/callres/getRecordList.jsp";
 	}
 
+	@RequestMapping(value = "getCallResList")
+	public String getCallResList(@ModelAttribute Search search, Model model, @RequestParam("month") String month)
+			throws Exception {
+		System.out.println(month);
+		if (search.getCurrentPage() == 0) {
+			search.setCurrentPage(1);
+		}
+		search.setPageSize(pageSize);
+		search.setSearchCondition(null);
+
+		System.out.println(search);
+
+		Map<String, Object> map = callResService.getCallResList(search, month);
+		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
+				pageSize);
+
+		model.addAttribute("list", map.get("list"));
+		model.addAttribute("resultPage", resultPage);
+		model.addAttribute("search", search);
+		model.addAttribute("month", month);
+		return "forward:/callres/getCallRecordList.jsp";
+	}
+
 	@GetMapping(value = "getReservationList")
 	public String getReservationList(@ModelAttribute Search search, Model model, HttpSession session) throws Exception {
 		System.out.println("crContRL");
@@ -443,25 +484,6 @@ public class CallResController {
 		model.addAttribute("user", users);
 
 		return "forward:/callres/getReservationList.jsp";
-	}
-
-	@GetMapping(value = "getCallResList")
-	public ModelAndView getCallResList(@ModelAttribute Search search, Model model) throws Exception {
-		String viewName = "/callres/getCallRecordList.jsp";
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName(viewName);
-
-		search.setCurrentPage(1);
-
-		search.setPageSize(pageSize);
-
-		Map<String, Object> map = callResService.getCallResList(search);
-		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(), pageUnit,
-				pageSize);
-
-		modelAndView.addObject("list", map.get("list"));
-		modelAndView.addObject("resultPage", resultPage);
-		return modelAndView;
 	}
 
 	@GetMapping(value = "getRequest")

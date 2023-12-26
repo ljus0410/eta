@@ -39,7 +39,7 @@
     	var passengerNo = "${passengerNo}";
     	var driverNo = "${driverNo}";
     	var waypointCoordinates; //경유지 좌표
-    	var callCode = "&{call.callCode}";
+    	var callCode = "${call.callCode}";
     	
         async function loadMapData() {
         	
@@ -101,11 +101,27 @@
             });
 
             polyline.setMap(map);
-
+	
+            var imageSrc = 'https://ifh.cc/g/6gaYnh.png', // 마커이미지의 주소입니다    
+            imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
+            imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+              
+        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+            markerPosition = new kakao.maps.LatLng(37.54699, 127.09598);
+            
             let marker = new kakao.maps.Marker({
                 map: map,
                 position: linePath[0],
+                image: markerImage
             });
+            
+            let marker1 = new kakao.maps.Marker({
+                map: map,
+                position: waypointCoordinates,
+            });
+           	console.log(linePath[0]);
+        	console.log(waypointCoordinates);
 
             let index = 0;
 
@@ -133,7 +149,11 @@
             if (stompClient && stompClient.connected) {
                 const location = index;
                 const locationData = { lat: location.getLat(), lng: location.getLng() };
-                stompClient.send("/sendLocation/" + passengerNo, {}, JSON.stringify(locationData));
+                if (callCode=="S") {
+                    stompClient.send("/chat/shareStart/" + ${call.callNo}, {}, JSON.stringify(locationData));
+                  } else {
+                    stompClient.send("/sendLocation/" + passengerNo, {}, JSON.stringify(locationData));
+                  }
                 
                 addLocation(locationData);
 
@@ -248,7 +268,11 @@
         var stompClient2 = Stomp.over(socket2);
 
         function sendEndDriving() {
-            stompClient2.send("/sendNotification/" + passengerNo, {}, '운행종료');
+        	if (callCode=="S") {
+                stompClient2.send("/chat/shareEnd/" + callNo, {}, '운행종료');
+              } else {
+                stompClient2.send("/sendNotification/" + passengerNo, {}, '운행종료');
+              }
         }
         
         function showPassedWaypointAlert() {
@@ -271,15 +295,28 @@
         }
 
     </script>
+    
+    <style>
+    /* Add this style to your existing <style> section or in a <style> tag in the <head> */
+    .btn{
+    	padding : 10px 95%;
+    	 text-align: center;
+    }
+    .text-start {
+    white-space: nowrap; /* Prevents wrapping */
+}
+</style>
 </head>
 <body>
-	<div class="page-content header-clear-medium">
+
+
+	<div id="map" style="width: 100%; height: 660px;"></div>
+				
+
 
 		<div class="card card-style">
 			<div class="content">
-				<div class="col-md-6">
-					<div id="map" style="width: 100%; height: 690px;"></div>
-				</div>
+				
 
 
 				<div class="row">
@@ -289,7 +326,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+
 
 	<script
 		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>

@@ -297,6 +297,9 @@ public class UserController {
 		ModelAndView model = new ModelAndView();
 		System.out.println("user :" + user);
 		userService.updatePwd(user);
+		User newUser = userService.getUser(user.getEmail());
+
+		session.setAttribute("user", newUser);
 
 		model.setViewName("redirect:/");
 		return model;
@@ -540,6 +543,22 @@ public class UserController {
 		String email = naverProfile.getResponse().getEmail();
 		User user = userService.getUser(email);
 		if (user != null) {
+
+			Point location = userService.calculateRandomLocation();
+			double X = location.getX();
+			System.out.println("X : " + X);
+			double Y = location.getY();
+			System.out.println("Y : " + Y);
+
+			if (user.getRole().equals("driver")) {
+				RedisEntity redisEntity = new RedisEntity();
+				String userNo = String.valueOf(user.getUserNo());
+				redisEntity.setId(userNo);
+				redisEntity.setCurrentX(X);
+				redisEntity.setCurrentY(Y);
+				redisService.addUser(redisEntity);
+			}
+
 			session.setAttribute("user", user);
 			model.setViewName("redirect:/home.jsp");
 		} else {
@@ -585,17 +604,18 @@ public class UserController {
 	}
 
 	@GetMapping("/kakao-logOut")
-	public void kakaoLoOut(@RequestParam(name = "token", required = false) String access_token,
+	public ModelAndView kakaoLoOut(@RequestParam(name = "token", required = false) String access_token,
 			HttpServletRequest request, HttpServletResponse response, HttpServletRequest request1)
 			throws MalformedURLException, UnsupportedEncodingException, URISyntaxException {
 		System.out.println("kakao-logout");
 		System.out.println("token : " + access_token);
+		ModelAndView model = new ModelAndView();
 
 		if (access_token == null) {
 			try {
 				// access_token이 null인 경우 Kakao 로그아웃 URL 생성 및 리다이렉트
 				String url = loginService.kakaoLoOut(request1);
-				response.sendRedirect(url);
+				model.setViewName("redirect:/home.jsp");
 
 			} catch (IOException e) {
 				e.printStackTrace(); // 또는 로깅 등의 적절한 예외 처리 로직을 추가할 수 있습니다.
@@ -604,9 +624,10 @@ public class UserController {
 		} else {
 			// access_token이 null이 아닌 경우 Naver 로그아웃 URL 생성 및 리다이렉트
 			String url = loginService.naverLoOut(access_token, request1, response);
-
+			model.setViewName("redirect:/home.jsp");
 		}
 
+		return model;
 	}
 
 	@GetMapping("/auth/kakao/logout")
@@ -633,11 +654,11 @@ public class UserController {
 		if (code != null) {
 			model.addObject("code", code);
 			model.addObject("email", email);
-			model.setViewName("redirect:/user/searchPwd.jsp");
+			model.setViewName("forward:/user/searchPwd.jsp");
 		} else {
 			model.addObject("message", message);
 			model.addObject("phone", phone);
-			model.setViewName("redirect:/user/searchPwd.jsp");
+			model.setViewName("forward:/user/searchPwd.jsp");
 		}
 
 		// searchPwd.jsp로 이동
@@ -654,12 +675,12 @@ public class UserController {
 			User emailinfo = userService.getUser(email);
 			System.out.println("info : " + emailinfo);
 			model.addObject("email", emailinfo);
-			model.setViewName("user/searchAnswer.jsp");
+			model.setViewName("forward:/user/searchAnswer.jsp");
 		} else {
-			User phoneInfo = userService.getUsersPhone(phone);
+			User phoneInfo = userService.getUserPhone(phone);
 			System.out.println("phoneInfo : " + phoneInfo);
 			model.addObject("phone", phoneInfo);
-			model.setViewName("user/searchAnswer.jsp");
+			model.setViewName("forward:/user/searchAnswer.jsp");
 		}
 		// searchPwd.jsp로 이동
 		return model;

@@ -118,13 +118,26 @@ $(function () {
 
 	});
 	
-	$("a:contains('검색')").on("click", function () {
-		
-		$("form").attr("method","POST").attr("action","/callres/getCallResList").submit();
-	}) 
+	$(document).ready(function() {
+	    // Get the value of the 'month' parameter from the URL
+	    var selectedMonth = "${param.month}";
+
+	    // Set the selected value in the <select> element
+	    $("#month").val(selectedMonth);
+
+	    // Attach a click event handler to the search button
+	    $("#searchButton").on("click", function() {
+	        // Get the selected value from the <select> element
+	        var month = $("#month").val();
+	        
+	        // Redirect to the URL with the selected month parameter
+	        self.location = "/callres/getRecordList?month=" + month;
+	    });
+	});
+
 	$(document).on("click","tr", function () {
 		
-		self.location="/callres/getRecord?calleNo="+$(this).children().eq(0).text()
+		self.location="/callres/getRecord?callNo="+$(this).children().eq(0).text()
 	})
 	
 
@@ -223,7 +236,12 @@ $(function () {
 									</div>
 									<div style="margin-left: 2.5em;">
 										<p>날짜/시간: ${record.callDate}</p>
-										<p>호출: ${record.callCode}</p>
+										<p>
+											<c:if test="${call.callCode == 'N'}">호출 유형: 일반 배차</c:if>
+								            <c:if test="${call.callCode == 'R'}">호출 유형: 예약 배차</c:if>
+								            <c:if test="${call.callCode == 'D'}">호출 유형: 딜 배차</c:if>
+								            <c:if test="${call.callCode == 'S'}">호출 유형: 합승 배차</c:if>
+										</p>
 										<p>출발: ${record.startKeyword}</p>
 										<p>도착: ${record.endKeyword}</p>
 										<p>금액: ${record.realPay}</p>

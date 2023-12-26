@@ -4,14 +4,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>별점 수정</title>
+<title>eTa</title>
 
 <script type="text/javascript">
 window.closeModal = function() {
 	 $( '#menu-report' ).offcanvas( 'hide' );
 	}
 window.removeReport= function () {
-	$( "a:contains('신고')").remove();
+	$( "#reportButtom").remove();
 	}
 
 function setStar(star) {
@@ -80,11 +80,7 @@ function setStar(star) {
 </script>
 </head>
 <body class="theme-light">
-	<form name="detailform">
-
-
-		<div id="page">
-			<div class="page-content header-clear-medium">
+	
 
 				<div class="card card-style mb-3">
 					<div class="content">
@@ -135,13 +131,13 @@ function setStar(star) {
 							<a class="btn btn-xxs border-blue-dark color-blue-dark"
 								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">수정</a>
 
-							<a class="btn btn-xxs border-red-dark color-red-dark"
+							<a class="btn btn-xxs border-red-dark color-red-dark" id = "reportButtom"
 								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">신고</a>
 						</div>
 					</div>
 
 				</div>
-			</div>
+			
 
 
 			<div
@@ -153,12 +149,12 @@ function setStar(star) {
 						style="width: 100%; height: 400px; border: none;"></iframe>
 				</div>
 			</div>
-		</div>
+		
 		<div id="toast-star-fix"
 			class="toast toast-pill toast-bottom toast-s rounded-l bg-green-dark shadow-bg shadow-bg-s "
 			data-bs-delay="1000" style="width: 130px">
 			<span class="font-12"><i class="bi bi-check font-20"></i>수정되었습니다!</span>
 		</div>
-	</form>
+	
 </body>
 </html>

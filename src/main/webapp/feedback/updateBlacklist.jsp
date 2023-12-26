@@ -6,7 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<title>Insert title here</title>
+<title>eTa</title>
 
 <script type="text/javascript">
 
@@ -14,7 +14,7 @@ window.closeModal = function() {
 	 $( '#menu-report' ).offcanvas( 'hide' );
 	}
 window.removeReport= function () {
-	$( "a:contains('신고')").remove();
+	$( "#reportButtom").remove();
 	}
 
 
@@ -84,10 +84,7 @@ $(function () {
 </script>
 </head>
 <body class="theme-light">
-	<form action="/home" method="post">
-		<div id="page">
-			
-			<div class="page-content header-clear-medium">
+	
 
 				<div class="card card-style mb-3">
 					<div class="content">
@@ -123,13 +120,13 @@ $(function () {
 						<div align="right">
 
 
-							<a class="btn btn-xxs border-red-dark color-red-dark"
+							<a class="btn btn-xxs border-red-dark color-red-dark" id = "reportButtom"
 								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-right: 10px">신고</a>
 						</div>
 					</div>
 
 				</div>
-			</div>
+			
 			<div
 				class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme"
 				style="width: 340px;" id="menu-report">
@@ -145,9 +142,9 @@ $(function () {
 
 				</div>
 			</div>
-		</div>
+		
 		<div id="toast-blacklist-add"  class="toast toast-pill toast-bottom toast-s rounded-l bg-blue-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>등록되었습니다!</span></div>
 		<div id="toast-blacklist-del"  class="toast toast-pill toast-bottom toast-s rounded-l bg-green-dark shadow-bg shadow-bg-s " data-bs-delay="1000" style="width: 130px"><span class="font-12"><i class="bi bi-check font-20"></i>해제되었습니다!</span></div>
-	</form>
+	
 </body>
 </html>

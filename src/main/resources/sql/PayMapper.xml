@@ -20,6 +20,12 @@
     <result property="star"         column="cash_code"          jdbcType="NUMERIC" />
   </resultMap>
   
+    <resultMap id="cashDriverCompleteSelectMap" type="Call">
+    <result property="callDate" column="call_month"    jdbcType="VARCHAR" />
+    <result property="realPay"         column="cash_total"          jdbcType="NUMERIC" />
+    <result property="userNo"         column="cash_driver_no"          jdbcType="NUMERIC" />
+  </resultMap>
+  
   <resultMap id="myCashSelectMap" type="Call">
     <result property="callNo" column="call_no"    jdbcType="NUMERIC" />
     <result property="callDate"         column="call_date"          jdbcType="DATE" />
@@ -100,42 +106,15 @@
 		 </if>
   </select>
   
-    <select id="getCashDriverListComplete"  parameterType="String" resultMap="cashDriverSelectMap">
+    <select id="getCashDriverListComplete"  parameterType="String" resultMap="cashDriverCompleteSelectMap">
     <if test="month == 'all'">
-         SELECT
-              M.driver_no,
-              TO_CHAR(C.call_date, 'YYYY-MM') AS call_month,
-              SUM(CA.cash_total) AS total_real_pay,
-              COALESCE(CA.cash_code, 0) AS cash_code
-          FROM
-              call C
-          JOIN
-              match M ON C.call_no = M.call_no
-          LEFT JOIN
-              cash CA ON TO_CHAR(C.call_date, 'YYYY-MM') = CA.cash_month AND M.driver_no = CA.cash_driver_no
-          WHERE
-              M.driver_no IS NOT NULL AND cash_code = 1
-          GROUP BY
-              M.driver_no, TO_CHAR(C.call_date, 'YYYY-MM'), CA.cash_code
-          ORDER BY
-              M.driver_no, TO_CHAR(C.call_date, 'YYYY-MM'), CA.cash_code
+         SELECT cash_driver_no, cash_month, cash_total
+         FROM cash
      </if>
      <if test="month != 'all'">
-        SELECT
-            M.driver_no,
-            TO_CHAR(C.call_date, 'YYYY-MM') AS call_month,
-            SUM(CA.cash_total) AS total_real_pay,
-            COALESCE(CA.cash_code,0) AS cash_code
-        FROM
-            call C
-        JOIN
-            match M ON C.call_no = M.call_no
-        LEFT JOIN
-            cash CA ON TO_CHAR(C.call_date, 'YYYY-MM') = CA.cash_month AND M.driver_no = CA.cash_driver_no
-        WHERE
-            M.driver_no IS NOT NULL AND TO_CHAR(C.call_date, 'MM') = #{month:VARCHAR} AND cash_code = 1
-        GROUP BY
-            M.driver_no, TO_CHAR(C.call_date, 'YYYY-MM'), CA.cash_code
+        SELECT cash_driver_no, cash_month, cash_total
+        FROM cash
+        WHERE SUBSTR(cash_month, 6, 2) = #{month:VARCHAR}
      </if>
   </select>
   
@@ -203,18 +182,14 @@
   
     <select id="getMyCashListComplete"  parameterType="map" resultMap="myCashCompleteSelectMap">
     <if test="month == 'all'">
-        SELECT C.call_no, C.call_date, CA.cash_total, COALESCE(CA.cash_code,0) AS cash_code
-        FROM call C
-        JOIN match M ON C.call_no = M.call_no
-        LEFT JOIN cash CA ON TO_CHAR(C.call_date, 'YYYY-MM') = CA.cash_month AND M.driver_no = CA.cash_driver_no
-        WHERE M.driver_no = #{userNo:NUMERIC} AND cash_code = 1
+        SELECT cash_month, cash_total
+        FROM cash
+        WHERE cash_driver_no = #{userNo:NUMERIC}
     </if>
     <if test="month != 'all'">
-        SELECT C.call_no, C.call_date, CA.cash_total, COALESCE(CA.cash_code,0) AS cash_code
-        FROM call C
-        JOIN match M ON C.call_no = M.call_no
-        LEFT JOIN cash CA ON TO_CHAR(C.call_date, 'YYYY-MM') = CA.cash_month AND M.driver_no = CA.cash_driver_no
-        WHERE M.driver_no = #{userNo:NUMERIC} AND TO_CHAR(C.call_date, 'MM') = #{month:VARCHAR} AND cash_code = 1
+       SELECT cash_month, cash_total
+       FROM cash
+       WHERE cash_driver_no = #{userNo:NUMERIC} AND SUBSTR(cash_month, 6, 2) = #{month:VARCHAR}
     </if>
      
   </select>

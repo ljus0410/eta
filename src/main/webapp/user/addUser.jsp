@@ -4,13 +4,13 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Insert title here</title>
+    <title>eTa</title>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
 
         /* 추가한 스타일 */
         #phone, #authButton {
-            display: inline-block; /* 인라인 블록으로 설정하여 같은 줄에 위치하도록 함 */
+            display: inline-block; /* 인라인 블록으로 설정하요 같은 줄에 위치하도록 함 */
             vertical-align: middle; /* 수직 정렬을 중앙에 맞춤 */
             }       
 .custom-border {
@@ -178,9 +178,9 @@
         console.log("입력값: " + userInput);
         resultText.text("일치합니다").css('color', 'blue');
 
-        // 부트스트랩 JavaScript API를 사용하여 모달 닫기
-        $('#phoneNum').offcanvas('hide');
-        $('#phoneNum').on('hidden.bs.offcanvas', function() {
+        // 부트스트랩 JavaScript API를 사용하요 모달 닫기
+        $('#phone-Num').offcanvas('hide');
+        $('#phone-Num').on('hidden.bs.offcanvas', function() {
 
 
           // 입력 필드 비활성화
@@ -209,7 +209,7 @@
       // bankname 함수 호출
 
 
-      // 여기서 필요한 로직 수행
+      // 요기서 필요한 로직 수행
     }
 
     function bankname(bankCode) {
@@ -246,8 +246,8 @@
 
         },
         error: function(error) {
-        	 var asdasdasd = $('#asdasdasd');
-        	 asdasdasd.text("일치하는 정보가 없습니다").css('color', 'red');
+           var asdasdasd = $('#asdasdasd');
+           asdasdasd.text("일치하는 정보가 없습니다").css('color', 'red');
           // Handle the error
           console.error(error);
         }
@@ -348,10 +348,10 @@
 
 
 //          document.getElementById("gender").value = "0";
-    //여자 남자
+    //요자 남자
 
     document.addEventListener("DOMContentLoaded", function() {
-      // 초기값을 여 (1)로 설정
+      // 초기값을 요 (1)로 설정
       toggleGenderLabel(document.getElementById("genderch"));
     });
 
@@ -401,10 +401,10 @@
           // 비밀번호 길이가 8자 이상이고, 특수문자를 포함하는지 확인
           if (password.length >= 8 && /[!@#$%^&*(),.?":{}|<>]/.test(password)) {
             Numer = 0;
-            message.text("조건 만족").css('color', 'white');
+            message.text("").css('color', 'white');
           } else {
             Numer = 2;
-            message.text("형식을 지켜주세여").css('color', 'red');
+            message.text("형식을 지켜주세요").css('color', 'red');
           }
         });
       });
@@ -421,11 +421,11 @@
           console.log("확인"+password+"비번"+passcer);
           // 비밀번호 길이가 8자 이상이고, 특수문자를 포함하는지 확인
           if (password === passcer) {
-        	  console.log("확인"+password+"비번"+passcer);
+            console.log("확인"+password+"비번"+passcer);
             message.text("사용가능").css('color', 'blue');
           } else {
 
-            message.text("형식을 지켜주세여").css('color', 'red');
+            message.text("형식을 지켜주세요").css('color', 'red');
           }
         });
       });
@@ -437,7 +437,7 @@
 
 
     function updateAnimalOptValue() {
-    	 var animalOptCheckbox = document.getElementById('animalOpt');
+       var animalOptCheckbox = document.getElementById('animalOpt');
          var img = document.querySelector('img');
          
          animalOptCheckbox.checked = !animalOptCheckbox.checked;
@@ -475,7 +475,7 @@
 
           // 결과를 출력하거나 원하는 작업을 수행할 수 있습니다.
           console.log("생년월일: ");
-          message.text("조건만족").css('color', 'white');
+          message.text("").css('color', 'white');
         } else {
           // 형식에 맞지 않을 때의 처리
           birform = 2;
@@ -501,13 +501,13 @@
     }
     
     function handleIconClick(value, element) {
-    	  // 선택된 아이콘의 값을 활용하거나, 원하는 동작 수행
-    	  console.log('선택된 값:', value);
+        // 선택된 아이콘의 값을 활용하거나, 원하는 동작 수행
+        console.log('선택된 값:', value);
 
-    	  // 클릭된 아이콘에 선택 효과 추가
+        // 클릭된 아이콘에 선택 효과 추가
     
-    	  // 다른 모든 아이콘에서 선택 효과를 제거
-    	  var icons = document.querySelectorAll('.carOptStyle');
+        // 다른 모든 아이콘에서 선택 효과를 제거
+        var icons = document.querySelectorAll('.carOptStyle');
           icons.forEach(icon => {
             icon.classList.remove('selectedIcon');
           });
@@ -517,7 +517,7 @@
           var radioBtn = document.querySelector('input[name="carOpt"][value="' + value + '"]');
           console.log('현재 선택된 라디오 버튼의 값:', radioBtn ? radioBtn.value : '없음');
           if (radioBtn) {
-        	    radioBtn.checked = true;
+              radioBtn.checked = true;
         }
     }
     $(function adUser() {
@@ -539,7 +539,7 @@
 
 
         if (name == null || name.length < 1) {
-          userEnteredValue = "이름을 입력하세여";
+          userEnteredValue = "이름을 입력하세요";
           updateToastText();
           showToast();
 
@@ -549,7 +549,7 @@
 
 
         if (emailErr == 2) {
-        	userEnteredValue = "형식을 지켜주세여";
+          userEnteredValue = "형식을 지켜주세요";
             updateToastText();
             showToast();
 
@@ -557,7 +557,7 @@
         }
 
         if (dupEEmail == 2) {
-        	userEnteredValue = "이메일중복";
+          userEnteredValue = "이메일중복";
             updateToastText();
             showToast();
           
@@ -567,7 +567,7 @@
 
 
         if (pwd12 == null || pwd12.length < 1) {
-          userEnteredValue = "비밀번호을 입력하세여";
+          userEnteredValue = "비밀번호을 입력하세요";
           updateToastText();
           showToast();
           return;
@@ -575,20 +575,20 @@
         }
 
         if (confirmPassword == null || confirmPassword.length < 1) {
-          userEnteredValue = "비밀번호확인을 입력하세여";
+          userEnteredValue = "비밀번호확인을 입력하세요";
           updateToastText();
           showToast();
           return;
         }
         if (Numer == 2) {
-            userEnteredValue = "형식을 지켜주세여";
+            userEnteredValue = "형식을 지켜주세요";
             updateToastText();
             showToast();
             return;
           }
 
         if (confirmPassword != pwd12) {
-        	userEnteredValue = "비밀번호가 일치하지 않습니다";
+          userEnteredValue = "비밀번호가 일치하지 않습니다";
             updateToastText();
             showToast();
           console.log("비밀번호 확인일치" + confirmPassword);
@@ -597,7 +597,7 @@
         
        
         if (nickNum == null || nickNum.length < 1) {
-          userEnteredValue = "닉네임을 입력하세여";
+          userEnteredValue = "닉네임을 입력하세요";
           updateToastText();
           showToast();
           return;
@@ -607,7 +607,7 @@
           return;
         }
         if (birth === null || birth.length < 1) {
-          userEnteredValue = "생년월일 입력하세여";
+          userEnteredValue = "생년월일 입력하세요";
           updateToastText();
           showToast();
           return;
@@ -619,14 +619,14 @@
           return;
         }
         if (phone === null || phone.length < 1) {
-          userEnteredValue = "전화번호를 입력하세여";
+          userEnteredValue = "전화번호를 입력하세요";
           updateToastText();
           showToast();
           return;
         }
 
         if (phoneCer === 0 || phoneCer == 2) {
-        	userEnteredValue = "휴대폰 인증을 진행해세요";
+          userEnteredValue = "휴대폰 인증을 진행해세요";
             updateToastText();
             showToast();
 
@@ -636,20 +636,20 @@
 
 
         if (role === "driver" && (carNum === null || carNum.length < 1)) {
-          userEnteredValue = "차량번호를 입력하세여";
+          userEnteredValue = "차량번호를 입력하세요";
           updateToastText();
           showToast();
           return;
         }
 
         if (role === "driver" && (account === null || account.length < 1)) {
-          userEnteredValue = "계좌번호를 입력하세여";
+          userEnteredValue = "계좌번호를 입력하세요";
           updateToastText();
           showToast();
           return;
         }
         if (role === "driver" && (moneyName == 0)) {
-        	userEnteredValue = "예금주 인증을 진행해주세요";
+          userEnteredValue = "예금주 인증을 진행해주세요";
             updateToastText();
             showToast();
           console.log("예금주 인증" + moneyName);
@@ -692,7 +692,7 @@
 
 <div class="card card-style">
       <div class="content">
-        <h1 class="text-center font-800 font-30 mb-2">로그인</h1>
+        <h1 class="text-center font-800 font-30 mb-2">회원가입</h1>
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-person-circle font-14"></i>
           <input type="text" class="form-control rounded-xs" id="name" name="name" placeholder="이름"/>
@@ -733,7 +733,7 @@
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-unlock font-12"></i>
           <input type="password" class="form-control rounded-xs" id="confirmPassword" placeholder="비밀번호 확인"/>
-          <label for="confirmPassword" class="color-theme">Password22</label>
+          <label for="confirmPassword" class="color-theme">Password</label>
            <span id="checkPasswordMatch" style="margin-left: 10px;"></span>
           </div>
           
@@ -765,7 +765,7 @@
     <div style="justify-content: flex-start; display: flex; align-items: center; margin-left: 10px;">
         <div id="inputContainer">
             <input class="rounded-xs" name="phone" style="height:25px; color: gray; margin-left: 10px; border: 1px solid #ced4da !important; font-size: 14px;" type="text" id="phone" value="" placeholder="01066726545"/>
-            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#phoneNum" style="text-align: center; width: 60px; margin-left: 5px; height: 25px; line-height: 7px; white-space: nowrap; font-size: 10px; vertical-align: middle;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
+            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#phone-Num" style="text-align: center; width: 60px; margin-left: 5px; height: 25px; line-height: 7px; white-space: nowrap; font-size: 10px; vertical-align: middle;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
 
         </div>
     </div>
@@ -862,7 +862,7 @@
           <i class="bi bi-123 font-12"></i>
           <input type="text" class="form-control rounded-xs" id="carNum" name="carNum" placeholder="차량번호"/>
           <label for="c2" class="color-theme">CarNum</label>
-          <span>(required)</span>
+          <span></span>
         </div>
         
         
@@ -1008,7 +1008,7 @@
 
 
 
-<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="phoneNum">
+<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="phone-Num">
     <div class="content">
       <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
       <h1 class="font-24 font-800 mb-3">인증번호</h1>

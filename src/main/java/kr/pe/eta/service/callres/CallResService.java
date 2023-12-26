@@ -19,7 +19,7 @@ public interface CallResService {
 
 	public void updateCallStateCode(Call call) throws Exception;
 
-	public Map<String, Object> getCallResList(Search search) throws Exception;
+	public Map<String, Object> getCallResList(Search search, String month) throws Exception;
 
 	public void updateEndXY(Call call) throws Exception;
 

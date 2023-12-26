@@ -5,7 +5,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>택시비 딜 상세 조회</title>
+  <title>eTa</title>
   
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
@@ -15,7 +15,7 @@
 
   <div id="page">
 
-    <jsp:include page="../home/top.jsp" />
+    <jsp:include page="/home/top.jsp" />
   
     <div class="page-content header-clear-medium">
 
@@ -40,8 +40,8 @@
             <input type="hidden" id="limitTime" value="${dealReq.limitTime}">
             <li><strong>출발</strong> : ${call.startAddr}</li>
             <li><strong>도착</strong> : ${call.endAddr}</li>
-            <li><strong>경로 옵션</strong> : ${call.routeOpt}</li>
-            <li><strong>제시 금액</strong> : ${dealReq.passengerOffer}</li>
+            <li><strong>경로 옵션</strong> : <span id="routeOpt">${call.routeOpt}</span></li>
+            <li><strong>제시 금액</strong> : <span id="passengerOffer">${dealReq.passengerOffer}</span> 원</li>
             <li><strong>종료 시간</strong> : ${dealReq.limitTime}</li>
           </ul>
         </div>
@@ -54,9 +54,20 @@
                 <h5 class="pb-2" style=" margin-top: 10px;">참여한 driver가 없습니다.</h5>
               </c:when>
               <c:otherwise>
+              <div class="row">
+                <div class="col-9">
+                <h5 class="pb-2" style=" margin-top: 10px;">drvier / 제시금액 / 별점</h5>
+                </div>
+                <div class="col-3">
+                  <button class="btn-full btn btn-xxs bg-fade2-blue color-blue-dark" type="submit" id="match">선택</button>
+                </div>
                 <form>
+                <div class="divider"></div>
                 <c:forEach var="driver" items="${driverList}">
+                  <div class="col-12">
                   <input type="radio" name="driverNo" id="driverNo" value="${driver.userNo}"> &nbsp; &nbsp; ${driver.userNo} : ${driver.driverOffer} 원 / ${driver.starAvg} 점 <br/>
+                  </div>
+                  <div class="divider"></div>
                 </c:forEach>
                 </form>
               </c:otherwise>
@@ -64,7 +75,7 @@
           </div>
         </div>
 
-      <button class="btn-full btn bg-fade2-blue color-blue-dark" type="submit" style="float: right; margin-right: 15px;" id="match">선택하기</button>
+
     
     </div><!-- page-content header-clear-medium 끝 -->
 
@@ -151,6 +162,16 @@
     }
 
     $(function() {
+      if($("#routeOpt").text()=="RECOMMEND") {
+        $("#routeOpt").text("추천")
+      } else if ($("#routeOpt").text()=="TIME") {
+        $("#routeOpt").text("최소시간")
+      } else if ($("#routeOpt").text()=="DISTANCE") {
+        $("#routeOpt").text("최단거리")
+      }
+      let offer = parseInt($("#passengerOffer").text())
+
+      $("#passengerOffer").text((offer).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
 
       $( "#dealDelete" ).on("click" , function() {
         $('#dealDeleteAlert').addClass('fade show');
