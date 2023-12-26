@@ -28,7 +28,7 @@ public interface UserDao {
 
 	public User getUsers(int userNo) throws Exception;
 
-	public User getUsersPhone(String phone) throws Exception;
+	public User getUserPhone(String phone) throws Exception;
 
 	public int deleteUser(int userNo) throws Exception;
 
