@@ -15,7 +15,7 @@
 
   <div id="page">
 
-    <jsp:include page="../home/top.jsp" />
+    <jsp:include page="/home/top.jsp" />
   
     <div class="page-content header-clear-medium">
 
@@ -62,10 +62,12 @@
                   <button class="btn-full btn btn-xxs bg-fade2-blue color-blue-dark" type="submit" id="match">선택</button>
                 </div>
                 <form>
+                <div class="divider"></div>
                 <c:forEach var="driver" items="${driverList}">
                   <div class="col-12">
                   <input type="radio" name="driverNo" id="driverNo" value="${driver.userNo}"> &nbsp; &nbsp; ${driver.userNo} : ${driver.driverOffer} 원 / ${driver.starAvg} 점 <br/>
                   </div>
+                  <div class="divider"></div>
                 </c:forEach>
                 </form>
               </c:otherwise>

@@ -2,11 +2,15 @@ $(function (){
 
     $("#passengerOffer").on("keyup", function (){
         let value = $("#passengerOffer").val();
+        
+        if (value!='') {
+          let offer = parseFloat(value.replace(/,/g, ''));
+          let numberWithCommas = Math.floor(offer).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-        let offer = parseFloat(value.replace(/,/g, ''));
-        let numberWithCommas = Math.floor(offer).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+          $("#passengerOffer").val(numberWithCommas);
+        }
 
-         $("#passengerOffer").val(numberWithCommas);
+        
     })
 
     //폼 제출
