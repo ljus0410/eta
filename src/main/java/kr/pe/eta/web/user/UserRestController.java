@@ -72,7 +72,7 @@ public class UserRestController {
 
 	public UserRestController(RedisService redisService) {
 		System.out.println(this.getClass());
-		this.messageService = NurigoApp.INSTANCE.initialize("NCSMOXVRHXMS5UNM", "ACJ94REWVJTBOWKDKHSM3NBX4KZF1ERP",
+		this.messageService = NurigoApp.INSTANCE.initialize("NCSLF0VBHEZH5BP2", "W4UW6YM1XEG4QSGEY2MDAHY7ZS5DPQOL",
 				"https://api.coolsms.co.kr");
 		this.redisService = redisService;
 	}
@@ -89,7 +89,7 @@ public class UserRestController {
 		}
 
 		Message message = new Message();
-		message.setFrom("01066779045");
+		message.setFrom("01043990629");
 		message.setTo(phone);
 		message.setText("[인증번호 안내] 입력하셔야할 인증번호는[" + numStr + "]입니다");
 

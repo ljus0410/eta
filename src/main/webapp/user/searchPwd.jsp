@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<title>eTa</title>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="/templates/scripts/bootstrap.min.js"></script>
 <script src="/templates/scripts/custom.js"></script>
@@ -33,7 +34,10 @@
                 window.location.href = "/user/searchAnswer?phone=" + phone;
             } else {
                 // 코드가 일치하지 않으면 알림 표시
-                alert("인증번호가 맞지 않습니다");
+                userEnteredValue = "인증번호가 맞지 않습니다";
+                updateToastText();
+                showToast();
+               
             }
         } else if (code != null ) {
         	  if(code == codeCer){
@@ -41,18 +45,31 @@
         
         } else {
             // 적절한 처리: code와 phone이 모두 null이면 또는 message가 codeCer 값과 일치하지 않으면
-            alert("인증코드가 올바르지 않습니다");
+        	 userEnteredValue = "인증번호가 맞지 않습니다";
+             updateToastText();
+             showToast();
         }
         }
         
         });
 });
+    function showToast() {
+        var toastElement = document.getElementById('addUserTa');
+        var toast = new bootstrap.Toast(toastElement);
+        toast.show();
 
+      }
+
+      var userEnteredValue
+      function updateToastText() {
+        // 사용자가 입력한 값을 각 요소에 적용
+        document.getElementById('messgeInfo').textContent = userEnteredValue;
+
+      }
 
 
 
 </script>
-<title>Insert title here</title>
 </head>
 <body class="theme-light">
 <div id="page">
@@ -87,6 +104,22 @@
 </div>
 </div>
 </div>
+
+      
+<div id="addUserTa" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+    <div class="align-self-center">
+      <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+    </div>
+    <div class="align-self-center">
+      <strong id ="messgeInfo" class="font-13 mb-n2"></strong>
+      <span class="font-10 mt-n1 opacity-70">Failed. Try again.</span>
+    </div>
+    <div class="align-self-center ms-auto">
+      <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+
+
 
 </body>
 </html>
