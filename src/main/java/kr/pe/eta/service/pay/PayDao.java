@@ -28,4 +28,12 @@ public interface PayDao {
 	public List<Call> getMyCashList(int userNo, String month) throws Exception;
 
 	public void updateRealPay(int callNo, int money) throws Exception;
+
+	public List<Call> getCashDriverListComplete(String month) throws Exception;
+
+	public List<Call> getCashDriverListWait(String month) throws Exception;
+
+	public List<Call> getMyCashListWait(int userNo, String month) throws Exception;
+
+	public List<Call> getMyCashListComplete(int userNo, String month) throws Exception;
 }
