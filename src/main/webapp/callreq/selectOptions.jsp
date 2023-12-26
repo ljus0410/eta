@@ -37,14 +37,14 @@
   .routeOptStyle{
     color: #E6E6E6;
     font-size : 20px;
-    padding-right:20px;
-    padding-left:15px;
+    width:30%;
+    padding-right:10px;
   }
   .routeOptStyle.checked{
     color: #6E6E6E;
     font-size : 20px;
-    padding-right:20px;
-    padding-left:15px;
+    width:30%;
+    padding-right:10px;
   }
   .carOptStyle{
     color: #E6E6E6;
@@ -468,7 +468,8 @@ const drawPolylineAndMoveMarker = (data, map) => {
 	    }
 	    // Fare 값 가져오기
 	    var fareInput = document.getElementById('fare');
-	    var recommendFare = parseFloat(fareInput.innerHTML.replace('원', '')); // 금액 숫자로 변환
+	    var recommendFareString = fareInput.innerHTML.replace(/,/g, '').replace('원', '');
+	    var recommendFare = parseFloat(recommendFareString);
 	    
 	   //alert(carOption); alert(petOption); alert(recommendFare);
 	   if(carOption == '4'){
@@ -582,7 +583,8 @@ async function getRoute(type, map) {
         console.log("Fare (taxi):", data.routes[0].summary.fare.taxi);
         var recommendFare = data.routes[0].summary.fare.taxi;
         var fareInput = document.getElementById('fare');
-            fareInput.innerHTML  = recommendFare + "원";
+        var formattedFare = recommendFare.toLocaleString('ko-KR');
+            fareInput.innerHTML  = formattedFare + "원";
  
 
         updatePrepay();

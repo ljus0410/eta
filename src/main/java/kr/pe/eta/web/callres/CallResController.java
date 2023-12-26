@@ -26,6 +26,7 @@ import kr.pe.eta.domain.User;
 import kr.pe.eta.redis.AddCallEntity;
 import kr.pe.eta.redis.RedisEntity;
 import kr.pe.eta.redis.RedisService;
+import kr.pe.eta.service.callreq.CallReqService;
 import kr.pe.eta.service.callres.CallResService;
 import kr.pe.eta.service.community.CommunityService;
 import kr.pe.eta.service.pay.PayService;
@@ -46,6 +47,9 @@ public class CallResController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private CallReqService callReqService;
 
 	@Autowired
 	private final RedisService redisService;
@@ -180,8 +184,12 @@ public class CallResController {
 	}
 
 	@GetMapping("getRealPay")
-	public String getRealPay(@RequestParam("callNo") int callNo, Model model) {
+	public String getRealPay(@RequestParam("callNo") int callNo, Model model) throws Exception {
+
+		Call call = callReqService.getCall(callNo);
+
 		model.addAttribute("callNo", callNo);
+		model.addAttribute("call", call);
 		return "forward:/callres/addRealPay.jsp";
 	}
 

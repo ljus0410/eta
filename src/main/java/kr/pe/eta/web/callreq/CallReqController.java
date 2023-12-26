@@ -201,13 +201,28 @@ public class CallReqController {
 			}
 		}
 
-		System.out.println("driverNoResult : " + driverNoResult);
-		System.out.println("callNo : " + callNo);
-		model.addAttribute("call", call);
-		model.addAttribute("callNo", callNo);
-		model.addAttribute("driverNoResult", driverNoResult);
+		if (driverNoResult.isEmpty()) {
 
-		return "forward:/callreq/searchCall.jsp";
+			System.out.print("driverNoResult 가 없음");
+
+			int userNo = call.getUserNo();
+			String callCode = call.getCallCode();
+			int myMoney = payService.getMyMoney(userNo);
+
+			model.addAttribute("myMoney", myMoney);
+			model.addAttribute("callCode", callCode);
+			model.addAttribute("hasNoDataException", true);
+
+			return "forward:/callreq/selectOptions.jsp";
+
+		} else {
+			System.out.println("driverNoResult : " + driverNoResult);
+			System.out.println("callNo : " + callNo);
+			model.addAttribute("call", call);
+			model.addAttribute("callNo", callNo);
+			model.addAttribute("driverNoResult", driverNoResult);
+			return "forward:/callreq/searchCall.jsp";
+		}
 	}
 
 	@RequestMapping(value = "deleteCall", method = RequestMethod.GET)
