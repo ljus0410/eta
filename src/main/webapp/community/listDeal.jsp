@@ -5,7 +5,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>택시비 딜 리스트 조회</title>
+  <title>eTa</title>
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
