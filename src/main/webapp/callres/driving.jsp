@@ -106,6 +106,13 @@
                 map: map,
                 position: linePath[0],
             });
+            
+            let marker1 = new kakao.maps.Marker({
+                map: map,
+                position: waypointCoordinates,
+            });
+           	console.log(linePath[0]);
+        	console.log(waypointCoordinates);
 
             let index = 0;
 
@@ -253,7 +260,6 @@
 
         function sendEndDriving() {
         	if (callCode=="S") {
-                alert("S")
                 stompClient2.send("/chat/shareEnd/" + callNo, {}, '운행종료');
               } else {
                 stompClient2.send("/sendNotification/" + passengerNo, {}, '운행종료');
@@ -295,7 +301,7 @@
 <body>
 
 
-	<div id="map" style="width: 100%; height: 680px;"></div>
+	<div id="map" style="width: 100%; height: 660px;"></div>
 				
 
 
