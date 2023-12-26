@@ -124,15 +124,30 @@ $(function () {
 	    lastScroll = currentScroll;
 
 	});
-	
-	$("a:contains('검색')").on("click", function () {
-		
-		$("form").attr("method","POST").attr("action","/callres/getCallResList").submit();
-	}) 
-	$(document).on("click","tr", function () {
-		
-		self.location="/callres/getRecord?callNo="+$(this).children().eq(0).text()
-	})
+
+	$(document).ready(function() {
+	    // Event handler for 검색 button click
+	    $("#searchButton").on("click", function() {
+	        // Get the selected month value
+	        var selectedMonth = $("#month").val();
+
+	        // Set the selected month as a parameter in the form action
+	        $("form[name='detailform']").attr("method", "POST")
+	            .attr("action", "/callres/getCallResList?month=" + selectedMonth)
+	            .submit();
+	    });
+
+	    // Event handler for tr click
+	    $(document).on("click", "tr", function() {
+	        // Redirect with the selected callNo as a parameter
+	        self.location = "/callres/getRecord?callNo=" + $(this).children().eq(0).text();
+	    });
+
+	    // Set the selected value in the <select> element based on the 'month' parameter
+	    var selectedMonth = "${param.month}";
+	    $("#month").val(selectedMonth);
+	});
+
 	
 
 })
@@ -150,41 +165,64 @@ $(function () {
                 <div class="card card-style">
                     <div class="content">
                         <h1 class="pb-2">
-                            <i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;공지사항
+                            <i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;전체 운행기록
                         </h1>
                     </div>
                 </div>
 
                 <div class="card overflow-visible card-style">
                     <div class="content mb-0">
-                        <div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
-                            <a class="btn btn-xxs bg-fade2-blue color-blue-dark" href="../notice/addNotice" style="display: inline-block; padding-top: 3px; padding-bottom: 3px; float: left;">등록</a>
-                            <input type="text" class="form-control rounded-xs" style="width: 40%; display: inline-block" name="searchKeyword" value="${!empty search.searchKeyword ? search.searchKeyword : ''}">
-                            <a class="btn btn-xxs border-blue-dark color-blue-dark" style="display: inline-block; padding-top: 3px; padding-bottom: 3px">검색</a>
-                        </div>
+                       <div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
+                  <select id="month" class="form-select"  style="padding-top: 3px; padding-bottom: 3px; width: 30%; display: inline-block">
+										  <option value="all">전체</option>
+										  <option value="01">1월</option>
+										  <option value="02">2월</option>
+										  <option value="03">3월</option>
+										  <option value="04">4월</option>
+										  <option value="05">5월</option>
+										  <option value="06">6월</option>
+										  <option value="07">7월</option>
+										  <option value="08">8월</option>
+										  <option value="09">9월</option>
+										  <option value="10">10월</option>
+										  <option value="11">11월</option>
+										  <option value="12">12월</option>
+										</select>
+              <a class="btn btn-xxs border-blue-dark color-blue-dark" id="searchButton"
+                style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-left: 5px; ">검색</a>
+            </div>
 
-                        <div class="table-responsive">
-                            <table class="table color-theme mb-2" id="muhanlist">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">호출번호</th>
-                                        <th scope="col">날짜시간</th>
-                                        <th scope="col">출발</th>
-                                        <th scope="col">도착</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach var="record" items="${list }" begin="0" step="1" varStatus="status">
-                                        <tr class="list">
-                                            <td>${record.callNo}</td>
-                                            <td>${record.callDate}</td>
-                                            <td>${record.startKeyword}</td>
-                                            <td>${record.endKeyword}</td>
+                         <div class="table-responsive">
+                        <table class="table color-theme mb-2" id="muhanlist">
+                            <thead>
+                                <tr>
+                                    <th scope="col">배차번호</th>
+                                    <th scope="col">날짜시간</th>
+                                    <th scope="col">출발</th>
+                                    <th scope="col">도착</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:choose>
+                                    <c:when test="${not empty list}">
+                                        <c:forEach var="record" items="${list}" begin="0" step="1" varStatus="status">
+                                            <tr class="list">
+                                                <td>${record.callNo}</td>
+                                                <td>${record.callDate}</td>
+                                                <td>${record.startKeyword}</td>
+                                                <td>${record.endKeyword}</td>
+                                            </tr>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <tr>
+                                            <td colspan="4" class="no-records-message">운행 기록이 없습니다.</td>
                                         </tr>
-                                    </c:forEach>
-                                </tbody>
-                            </table>
-                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </tbody>
+                        </table>
+                    </div>
                     </div>
                 </div>
                 <input type="hidden" id="currentPage" name="currentPage" value=1>
