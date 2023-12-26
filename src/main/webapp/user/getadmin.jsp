@@ -281,7 +281,7 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
           <i class="bi bi-123 font-12"></i>
           <input readonly type="text" class="form-control rounded-xs" id="carNum" name="carNum" placeholder="차량번호"/>
           <label for="c2" class="color-theme">CarNum</label>
-          <span>(required)</span>
+          <span></span>
         </div>
         
         
