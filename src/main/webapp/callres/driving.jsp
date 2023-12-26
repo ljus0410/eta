@@ -106,6 +106,13 @@
                 map: map,
                 position: linePath[0],
             });
+            
+            let marker1 = new kakao.maps.Marker({
+                map: map,
+                position: waypointCoordinates,
+            });
+           	console.log(linePath[0]);
+        	console.log(waypointCoordinates);
 
             let index = 0;
 
@@ -133,7 +140,11 @@
             if (stompClient && stompClient.connected) {
                 const location = index;
                 const locationData = { lat: location.getLat(), lng: location.getLng() };
-                stompClient.send("/sendLocation/" + passengerNo, {}, JSON.stringify(locationData));
+                if (callCode=="S") {
+                    stompClient.send("/chat/shareStart/" + ${call.callNo}, {}, JSON.stringify(locationData));
+                  } else {
+                    stompClient.send("/sendLocation/" + passengerNo, {}, JSON.stringify(locationData));
+                  }
                 
                 addLocation(locationData);
 
@@ -248,7 +259,11 @@
         var stompClient2 = Stomp.over(socket2);
 
         function sendEndDriving() {
-            stompClient2.send("/sendNotification/" + passengerNo, {}, '운행종료');
+        	if (callCode=="S") {
+                stompClient2.send("/chat/shareEnd/" + callNo, {}, '운행종료');
+              } else {
+                stompClient2.send("/sendNotification/" + passengerNo, {}, '운행종료');
+              }
         }
         
         function showPassedWaypointAlert() {
@@ -286,7 +301,7 @@
 <body>
 
 
-	<div id="map" style="width: 100%; height: 680px;"></div>
+	<div id="map" style="width: 100%; height: 660px;"></div>
 				
 
 
