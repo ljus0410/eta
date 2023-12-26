@@ -167,7 +167,8 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
        <div class="card card-style" style="margin-bottom: 15px;">
     <div class="content" style="margin-bottom: 9px; display: flex; justify-content: space-between; align-items: center;">
         <h1 class="pb-2" style="width: 140px;">
-            <i class="has-bg rounded-s bi bg-teal-dark bi-list-columns"></i>&nbsp;&nbsp;회원정보
+            <i class="has-bg rounded-s bi bg-green-dark bi-person-fill" style="vertical-align:bottom !important; line-height: 0px!important;height: 30px !important;font-size: 30px !important; all:initial; display: inline-block;"></i>&nbsp;&nbsp;회원정보
+            
         </h1>
     <div style="text-align: right;">
       <p class="font-12 color-highlight" style="margin-bottom: 0;text-align: left;">${users.role }</p>
