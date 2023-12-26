@@ -79,7 +79,7 @@
     <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-main"><i class="bi bi-list"></i><span>Menu</span></a>
 </div>
 
-<div id="menu-main" data-menu-active="nav-comps" data-menu-load="../home/menu.jsp" style="width:280px;"
+<div id="menu-main" data-menu-active="nav-comps" data-menu-load="/home/menu.jsp" style="width:280px;"
      class="offcanvas offcanvas-start offcanvas-detached rounded-m" aria-modal="true" role="dialog">
 </div>
 
@@ -208,7 +208,7 @@
         <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
             <i class="bi bi-at font-17"></i>
             <input type="password" class="form-control rounded-xs" id="pwd1234" name="pwd" placeholder="비밀번호 확인" value='' oninput="checkPassword()" />
-            <div id="passwordMatchMessage" style="font-size: 10px; color: red;"></div>
+            <div id="passwordMatchMessage" style="margin-left:10px; font-size: 10px; color: red;"></div>
         </div>
     </div>
 </div>

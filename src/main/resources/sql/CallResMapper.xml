@@ -410,11 +410,17 @@
 				FROM call c
 				JOIN match m ON c.call_no = m.call_no
 				WHERE c.call_state_code = '운행후'
-				ORDER BY c.call_date DESC
+				<if test="month != 'all'">
+
+					AND EXTRACT(MONTH FROM c.call_date) =
+					#{month}
+		
+				</if>
+			ORDER BY c.call_date DESC
 			) inner_table
-		WHERE ROWNUM &lt;= #{endRowNum}
+		WHERE ROWNUM &lt;= #{search.endRowNum}
 		)
-		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 
 	</select>
 

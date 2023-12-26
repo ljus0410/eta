@@ -43,6 +43,10 @@ public class comfirmEmail {
 		this.resizedImagePart = resizeImageAndAttach(
 				"/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/static/templates/images/pictures/taxi11.png", 300, 200);
 	}
+//	public comfirmEmail() throws IOException, MessagingException {
+//		this.resizedImagePart = resizeImageAndAttach("src/main/resources/static/templates/images/pictures/taxi11.png",
+//				300, 200);
+//	}
 
 	public MimeMessage createMessage(String email) throws MessagingException, IOException {
 		MimeMessage message = javaMailSender.createMimeMessage();
