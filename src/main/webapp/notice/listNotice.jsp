@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-<title>공지사항내역</title>
+<title>eTa</title>
 <link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
 <link rel="stylesheet" type="text/css" href="/templates/styles/style.css">
@@ -118,15 +118,16 @@ $(function () {
 </head>
 <body class="theme-light">
 	<form name="detailform">
-		<div id="page" >
-		<jsp:include page="/home/top.jsp" />
-			<div class="page-content header-clear-medium" >
+		<div id="page">
+			<jsp:include page="/home/top.jsp" />
+			<div class="page-content header-clear-medium">
 				<div class="card card-style" style="margin-bottom: 15px;">
-					<div class="content"style="margin-bottom: 9px; ">
+					<div class="content" style="margin-bottom: 9px;">
 						<!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
 						<h1 class="pb-2" style="width: 140px; display: inline-block;">
-							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns" style="vertical-align:bottom !important; line-height: 0px!important;height: 30px !important;font-size: 30px !important; all:initial; display: inline-block;"></i>&nbsp;&nbsp;공지사항
+							<i class="has-bg rounded-s bi bg-teal-dark bi-list-columns"
+								style="vertical-align: bottom !important; line-height: 0px !important; height: 30px !important; font-size: 30px !important; all: initial; display: inline-block;"></i>&nbsp;&nbsp;공지사항
 						</h1>
 
 					</div>
@@ -135,20 +136,18 @@ $(function () {
 				<div class="card overflow-visible card-style">
 					<div class="content mb-0">
 						<div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
-						<c:if test="${user.role eq 'admin'}">
-							<a class="btn-full btn bg-blue-dark"
-								href="../notice/addNotice"
-								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; float: left; margin-top: 2px">등록</a>
-						</c:if>
+							<c:if test="${user.role eq 'admin'}">
+								<a class="btn-full btn bg-blue-dark" href="../notice/addNotice"
+									style="display: inline-block; padding-top: 5px; padding-bottom: 5px; float: left; margin-top: 2px">등록</a>
+							</c:if>
 							<input type="text" class="form-control rounded-xs"
 								style="width: 40%; display: inline-block" name="searchKeyword"
 								value="${!empty search.searchKeyword ? search.searchKeyword : ''}">
 
 
 							<a class="btn btn-xxs border-blue-dark color-blue-dark"
-								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px;margin-left: 5px; ">검색</a>
+								style="display: inline-block; padding-top: 5px; padding-bottom: 5px; padding-left: 20px; padding-right: 20px; margin-left: 5px;">검색</a>
 						</div>
-
 						<div class="table-responsive">
 							<table class="table color-theme mb-2" id="muhanlist">
 								<thead>
@@ -173,8 +172,15 @@ $(function () {
 								</tbody>
 							</table>
 						</div>
+
+
 					</div>
+
 				</div>
+				<c:if test="${empty noticelist}">
+					<div class="text-center" style="color: grey; margin-top: 50px;">기록이
+						존재하지 않습니다</div>
+				</c:if>
 
 				<input type="hidden" id="currentPage" name="currentPage" value=1>
 

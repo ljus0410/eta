@@ -60,6 +60,11 @@
     height: auto;
     overflow: hidden; /* 내용이 넘치는 경우 숨김 */
 }
+
+.card.card-style {
+    margin-bottom: 0; /* 하단 마진 제거 */
+    /* 필요에 따라 패딩 조정 */
+}
 </style>
 
 
@@ -72,98 +77,65 @@
 	src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=843ae0fd7d31559bce57a18dcd82bf62"></script>
 
 <script>
-	var routeId = "${call.callNo}";
-	console.log("Fetching route data from MongoDB for ID:", routeId);
-	var url = '/route/' + routeId;
-
-	$.ajax({
-		url : url,
-		method : 'GET',
-		success : function(response) {
-			console.log("Successfully fetched route data:", response);
-			const linePath = [];
-			var bounds = new kakao.maps.LatLngBounds();
-
-			for (let i = 0; i < response.route.length; i += 2) {
-				const lat = response.route[i];
-				const lng = response.route[i + 1];
-				linePath.push(new kakao.maps.LatLng(lat, lng));
-				bounds.extend(new kakao.maps.LatLng(lat, lng));
-			}
-
-			var polyline = new kakao.maps.Polyline({
-				path : linePath,
-				strokeWeight : 5,
-				strokeColor : '#000000',
-				strokeOpacity : 0.7,
-				strokeStyle : 'solid'
-			});
-
-			polyline.setMap(map);
-			map.setBounds(bounds);
-		},
-		error : function(error) {
-			console.error("Error fetching route data from MongoDB: ", error);
-		}
-	});
-
-	$(document).ready(function() {
-	    $("#accordion5-3-button").click(function() {
-	    	 var accordionId = "#accordion5-3";
+var routeId = "${call.callNo}";
+$(document).ready(function() {
+    $("#accordion5-3-button").click(function() {
+    	 var accordionId = "#accordion5-3";
 
 
-	            // AJAX 요청 및 아코디언 처리
-	            var badCallNo = routeId;
-	            $.ajax({
-	                url : '/feedback/updateBlacklist/' + badCallNo,
-	            
-	                type : 'GET',
-	                success : function(response) {
-						// 성공 시, 아코디언 본문에 내용 삽입
-						;
-						if ($(accordionId).hasClass('show')) {
-		                    $(accordionId).collapse('hide');
-		                } else {
-		                    $(accordionId).collapse('show');
-		                    $("#accordion5-3").html(response)
-		                }
-					},
-	                error : function(error) {
-	                    console.log("오류 응답:", error);
+            // AJAX 요청 및 아코디언 처리
+            var badCallNo = routeId;
+            $.ajax({
+                url : '/feedback/updateBlacklist/' + badCallNo,
+            
+                type : 'GET',
+                success : function(response) {
+					// 성공 시, 아코디언 본문에 내용 삽입
+					;
+					if ($(accordionId).hasClass('show')) {
+	                    $(accordionId).collapse('hide');
+	                } else {
+	                    $(accordionId).collapse('show');
+	                    $("#accordion5-3").html(response)
 	                }
-	            });
-	        
-	    });
-	});
-	
-	$(document).ready(function() {
-	    $("#accordion5-2-button").click(function() {
-	    	var accordionId = "#accordion5-2";
+				},
+                error : function(error) {
+                    console.log("오류 응답:", error);
+                }
+            });
+        
+    });
+});
 
-	        // 아코디언이 이미 열려있는지 확인
+$(document).ready(function() {
+    $("#accordion5-2-button").click(function() {
+    	var accordionId = "#accordion5-2";
 
-	            // AJAX 요청 및 아코디언 처리
-	            var badCallNo = routeId;
-	            $.ajax({
-	                url : '/feedback/updateStar/' + badCallNo,
-	                type : 'GET',
-	                success : function(response) {
-						// 성공 시, 아코디언 본문에 내용 삽입
-						
-						if ($(accordionId).hasClass('show')) {
-		                    $(accordionId).collapse('hide');
-		                } else {
-		                    $(accordionId).collapse('show');
-		                    $("#accordion5-2").html(response);
-		                }
-					},
-	                error : function(error) {
-	                    console.log("오류 응답:", error);
+        // 아코디언이 이미 열려있는지 확인
+
+            // AJAX 요청 및 아코디언 처리
+            var badCallNo = routeId;
+            $.ajax({
+                url : '/feedback/updateStar/' + badCallNo,
+                type : 'GET',
+                success : function(response) {
+					// 성공 시, 아코디언 본문에 내용 삽입
+					
+					if ($(accordionId).hasClass('show')) {
+	                    $(accordionId).collapse('hide');
+	                } else {
+	                    $(accordionId).collapse('show');
+	                    $("#accordion5-2").html(response);
 	                }
-	            });
-	        
-	    });
-	});
+				},
+                error : function(error) {
+                    console.log("오류 응답:", error);
+                }
+            });
+        
+    });
+});
+
 </script>
 </head>
 <body class="theme-light">
@@ -223,11 +195,6 @@
 							</button>
 							<div id="accordion5-2" class="accordion-collapse collapse"
 								data-bs-parent="#accordion-group-5">
-							<h5 class="pt-1 font-700">This is an Image</h5>
-							<p class="mb-0 pb-3 opacity-70">
-								This is the accordion body. It can support most content you want without restrictions. You can use
-								images, videos lists or whatever you want.
-							</p>
 							</div>
 						</div>
 						</div>
@@ -273,7 +240,7 @@
 			</div>
 
 			<div
-				style="margin-top: 10px; display: flex; justify-content: center; align-items: center; height: 100%;">
+				style="display: flex; justify-content: center; align-items: center; height: 100%;">
 				<div id="map"
 					style="width: 90%; height: 300px; border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);"></div>
 			</div>
@@ -281,11 +248,67 @@
 
 
 	<script>
-		var mapContainer = document.getElementById('map'), mapOption = {
-			center : new kakao.maps.LatLng(37.4939072071976, 127.0143838311636),
-			level : 3
-		};
-		var map = new kakao.maps.Map(mapContainer, mapOption);
+	 var map; // map 전역 변수 선언
+
+	    // 지도 초기화 함수
+	    function initMap() {
+	        var mapContainer = document.getElementById('map'),
+	        mapOption = {
+	            center: new kakao.maps.LatLng(37.4939072071976, 127.0143838311636),
+	            level: 3
+	        };
+
+	        map = new kakao.maps.Map(mapContainer, mapOption);
+	    }
+
+	    // AJAX 호출 및 라인 그리기
+	    function drawRoute() {
+	        var routeId = "${call.callNo}";
+	        console.log("Fetching route data from MongoDB for ID:", routeId);
+	        var url = '/route/' + routeId;
+
+	        $.ajax({
+	            url : url,
+	            method : 'GET',
+	            success : function(response) {
+	                console.log("Successfully fetched route data:", response);
+	                const linePath = [];
+	                var bounds = new kakao.maps.LatLngBounds();
+
+	                for (let i = 0; i < response.route.length; i += 2) {
+	                    const lat = response.route[i];
+	                    const lng = response.route[i + 1];
+	                    linePath.push(new kakao.maps.LatLng(lat, lng));
+	                    bounds.extend(new kakao.maps.LatLng(lat, lng));
+	                }
+
+	                var polyline = new kakao.maps.Polyline({
+	                    path : linePath,
+	                    strokeWeight : 5,
+	                    strokeColor : '#000000',
+	                    strokeOpacity : 0.7,
+	                    strokeStyle : 'solid'
+	                });
+
+	                console.log("polyline");
+	                console.log(map);
+	                polyline.setMap(map);
+	                console.log("setMap");
+	                map.setBounds(bounds);
+	            },
+	            error : function(error) {
+	                console.error("Error fetching route data from MongoDB: ", error);
+	            }
+	        });
+	    }
+
+	    // 문서 로드 완료 시 지도 초기화 및 라우트 그리기 실행
+	    $(document).ready(function() {
+	        initMap();  // 지도 초기화
+	        drawRoute(); // 라우트 그리기
+	    });
+
+
 	</script>
 
 

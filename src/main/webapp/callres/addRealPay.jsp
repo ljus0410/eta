@@ -39,14 +39,14 @@
 				<div class="content">
 					<h1 class="text-center font-800 font-22 mb-2">실결제금액을 입력해주세요</h1>
 					<p class="text-center font-13 mt-n2 mb-2">입력 하지 않을 시 운행 종료되지
-						않습니다</p>
+						않습니다</p><input type="hidden" name="realPay" value="${call.realPay}" />
 					<div class="text-center mb-3 pt-3 pb-2">
-						<form action="/callres/addRealPay" method="get">
+						<form>
 						    <input type="hidden" name="callNo" value="${callNo}" />
 						    <!-- 'name' 속성을 'money'로 설정해 사용자 입력값을 'money' 파라미터로 전송 -->
 						    <input type="text" class="form-control rounded-xs" name="money" required placeholder="실결제금액 입력"/>
 						   <div style="text-align: center;">
-					            <button type="submit" class='btn rounded-sm btn-m gradient-green text-uppercase font-700 mt-4 btn-full shadow-bg shadow-bg-s'>결제하기</button>
+					            <button type="button" onclick="validateForm()" class='btn rounded-sm btn-m gradient-green text-uppercase font-700 mt-4 btn-full shadow-bg shadow-bg-s'>결제하기</button>
 					        </div>
 						</form>
 
@@ -55,6 +55,53 @@
 			</div>
 		</div>
 	</div>
+	<script>
+	function validateForm() {
+	    var moneyValue = document.getElementsByName("money")[0].value;
+	    var realPay = document.getElementsByName("realPay")[0].value;
+
+	    if (parseFloat(moneyValue) > parseFloat(realPay) + 10000) {
+	     //   alert(parseFloat(realPay) + 10000);
+	     //   alert(moneyValue);
+	        messageAlert("실결제금액을 정확히 입력해주세요.");
+	    } else {
+	     //   alert(moneyValue);
+
+	        // 폼 속성 설정
+	        var form = document.forms[0];
+	        form.method = "GET";
+	        form.action = "/callres/addRealPay";
+
+	        // 폼 제출
+	        form.submit();
+	    }
+	}
+	function messageAlert(message) {
+	    var toastContainer = document.createElement('div');
+	      toastContainer.innerHTML = '<div id="notification-bar-5" class="notification-bar glass-effect detached rounded-s shadow-l fade show" data-bs-delay="15000">' +
+	          '<div class="toast-body px-3 py-3">' +
+	          '<div class="d-flex">' +
+	          '<div class="align-self-center">' +
+	          '<span class="icon icon-xxs rounded-xs bg-fade-red scale-box"><i class="bi bi-exclamation-triangle color-red-dark font-16"></i></span>' +
+	          '</div>' +
+	          '<div class="align-self-center">' +
+	          '<h5 class="font-16 ps-2 ms-1 mb-0">'+message+'</h5>' +
+	          '</div>' +
+	          '</div><br>' +
+	          '<a href="#" data-bs-dismiss="toast" id="confirmBtn" class="btn btn-s text-uppercase rounded-xs font-11 font-700 btn-full btn-border border-fade-red color-red-dark" aria-label="Close">확인</a>' +
+	          '</div>' +
+	          '</div>';
+
+	      document.body.appendChild(toastContainer.firstChild); // body에 토스트 알림창 추가
+	      
+	      document.getElementById('confirmBtn').addEventListener('click', function () {
+	          // Remove the toast element from the DOM
+	          document.getElementById('notification-bar-5').remove();
+	      });
+	      $('.toast').toast('show'); // Bootstrap 토스트 표시 함수 호출
+	 }
+
+</script>
 	<script src="/templates/bootstrap.min.js"></script>
 	<script src="/templates/custom.js"></script>
 </body>

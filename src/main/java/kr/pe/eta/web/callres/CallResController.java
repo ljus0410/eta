@@ -26,6 +26,7 @@ import kr.pe.eta.domain.User;
 import kr.pe.eta.redis.AddCallEntity;
 import kr.pe.eta.redis.RedisEntity;
 import kr.pe.eta.redis.RedisService;
+import kr.pe.eta.service.callreq.CallReqService;
 import kr.pe.eta.service.callres.CallResService;
 import kr.pe.eta.service.community.CommunityService;
 import kr.pe.eta.service.pay.PayService;
@@ -46,6 +47,9 @@ public class CallResController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private CallReqService callReqService;
 
 	@Autowired
 	private final RedisService redisService;
@@ -147,16 +151,27 @@ public class CallResController {
 
 	@PostMapping("callEnd")
 	@ResponseBody
-	public void callEnd(@RequestBody Call call) throws Exception {
+	public void callEnd(@RequestBody Call call, HttpSession session) throws Exception {
 		call.setCallStateCode("운행후");
 		int passengerNo = callResService.getMatchByCallnod(call.getCallNo());
-		User user = userService.getUsers(passengerNo);
-		if (user.isDealCode() == true) {
+		int driverNo = ((User) session.getAttribute("user")).getUserNo();
+		User driver = userService.getUsers(driverNo);
+		User pass = userService.getUsers(passengerNo);
+		if (pass.isDealCode() == true) {
 			communityService.updateDealCode(passengerNo);
 		}
-		if (user.isShareCode() == true) {
+		if (pass.isShareCode() == true) {
 			communityService.updateDealCode(passengerNo);
 		}
+
+		if (driver.isDealCode() == true) {
+			communityService.updateDealCode(driverNo);
+		}
+		if (driver.isShareCode() == true) {
+			communityService.updateDealCode(driverNo);
+		}
+		User driverSession = userService.getUsers(driverNo);
+		session.setAttribute("user", driverSession);
 
 		RedisEntity redisEntity = new RedisEntity();
 		String userNo = String.valueOf(call.getCallNo());
@@ -169,8 +184,12 @@ public class CallResController {
 	}
 
 	@GetMapping("getRealPay")
-	public String getRealPay(@RequestParam("callNo") int callNo, Model model) {
+	public String getRealPay(@RequestParam("callNo") int callNo, Model model) throws Exception {
+
+		Call call = callReqService.getCall(callNo);
+
 		model.addAttribute("callNo", callNo);
+		model.addAttribute("call", call);
 		return "forward:/callres/addRealPay.jsp";
 	}
 
@@ -305,6 +324,7 @@ public class CallResController {
 			callResService.updateCallStateCode(call);
 			callResService.updateMatchDriver(callNo, driverNo);
 			List<ShareReq> shares = callResService.getSharesByCallNod(callNo);
+			int passengerNo = callResService.getMatchByCallnod(callNo);
 
 			int allCount = 0; // 택시를 타는 총 인원수
 			for (ShareReq share : shares) {
@@ -327,7 +347,7 @@ public class CallResController {
 
 			model.addAttribute("call", call);
 			model.addAttribute(shares);
-			model.addAttribute("passengerNo", 1001);// 일단 이렇게 보내줌 driving.jsp 고쳐야됌
+			model.addAttribute("passengerNo", passengerNo);
 			model.addAttribute("driverNo", driverNo);
 
 			return "forward:/callres/driving.jsp";

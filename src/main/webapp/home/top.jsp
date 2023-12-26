@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE HTML>
 <html lang="en">
@@ -86,7 +87,7 @@
     <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-login">
         <div class="content">
             <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
-            <h1 class="font-24 font-800 mb-3">Login</h1>
+            <h1 class="font-24 font-800 mb-3">로그인</h1>
             <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
                 <i class="bi bi-person-circle font-13"></i>
                 <input type="text" class="form-control rounded-xs" id="email" name="email" placeholder="email" />
@@ -97,23 +98,26 @@
             </div>
 
             <div style="text-align: center; margin: -18px auto 0;">
-                <a href="#" id="loginBtn" style="color: white; width: 250px; display: inline-block;" class="btn-full gradient-blue mt-1">SIGN IN</a>
+                <a href="#" id="loginBtn" style=" padding-top: 8px; color: white; height: 35px; width: 250px; display: inline-block;" class="btn-full gradient-blue mt-1">로그인</a>
 
                 <a href="#" id="kakao" class="btn-full mt-1">
-                    <img src="/images/kakao.png" class="btn-full" data-bs-toggle="offcanvas" data-bs-target="#menu-kakao" style="width: 250px; height: 24px; display: block; margin: 0 auto;" />
+                    <img src="/images/kakao.png" class="btn-full" data-bs-toggle="offcanvas" data-bs-target="#menu-kakao" style="width: 250px; height: 35px; display: block; margin: 0 auto;" />
                 </a>
 
-                <a href="#" id="naver" class="btn-full mt-1">
-                    <img src="/images/naver.png" class="btn-full" data-bs-toggle="offcanvas" data-bs-target="#menu-role" style="width: 250px; height: 24px; display: block; margin: 0 auto;" />
+                <a href="#" id="naverNavigation" class="btn-full mt-1">
+                    <img src="/images/naver.png" class="btn-full" data-bs-toggle="offcanvas" data-bs-target="#menu-naver" style="width: 250px; height: 35px; display: block; margin: 0 auto;" />
                 </a>
             </div>
 
-            <div class="row" style="margin: -18px auto 0;">
-                <div class="col-6 text-start">
-                    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-forgot" class="font-11 color-theme opacity-40 pt-3 d-block">비밀번호 찾기</a>
+            <div class="row" style="margin-top: 15px; margin-right: -15px; margin-bottom: auto; margin-left: -15px; height: 20px;">
+                <div class="col-4" style="d-flex align-items-center margin-top:5px;">
+                    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#searchEamil" style="margin-left:10px; margin-top:-20px;" class="font-11 color-theme opacity-40 pt-3 d-block">비밀번호 찾기</a>
                 </div>
-                <div class="col-6 text-end">
-                    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-role" class="font-11 color-theme opacity-40 pt-3 d-block">회원가입</a>
+                <div class="col-4 text-start" style="d-flex align-items-center margin-top:5px;">
+                    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#searchPwd" style="height:10px;margin-top:-20px;margin-left:10px;" class="font-11 color-theme opacity-40 pt-3 d-block">이메일 찾기</a>
+                </div>
+                <div class="col-4 text-end" style="d-flex align-items-center margin-top:5px;">
+                    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#roleNavi" style="margin-right:30px; margin-top:-20px;" class="font-11 color-theme opacity-40 pt-3 d-block">회원가입</a>
                 </div>
             </div>
         </div>
@@ -163,13 +167,13 @@
         <h1 class="font-24 font-800 mb-3">내정보</h1>
         <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
             <i class="bi bi-person-circle font-13"></i>
-            <input type="text" class="form-control rounded-xs readonly" id="c1" value = "${user.name}" readonly />
+            <input type="text" class="form-control rounded-xs readonly" id="nameRead" value = "${user.name}" readonly />
             <label for="c1" class="color-theme">Name</label>
             <span>name</span>
         </div>
         <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
             <i class="bi bi-at font-17"></i>
-            <input type="text" class="form-control rounded-xs readonly" id="c2" value = "${user.email}" readonly   />
+            <input type="text" class="form-control rounded-xs readonly" id="emailRead" value = "${user.email}" readonly   />
             <label for="c1" class="color-theme">Email</label>
             <span>email</span>
         </div>
@@ -177,7 +181,8 @@
         <c:if test="${user.role eq 'passenger'}">
             <div class="form-custom form-label form-border form-icon mb-4 bg-transparent">
                 <i class="bi bi bi-currency-dollar font-13"></i>
-                <input type="text" class="form-control rounded-xs readonly" id="c3" value ="${user.myMoney}원" readonly />
+           <fmt:formatNumber type="number" value="${user.myMoney}" var="formattedNumber" />
+<input type="text" class="form-control rounded-xs readonly" id="c3" value="${formattedNumber}원" readonly />
                 <label for="c2" class="color-theme">myMoney</label>
                 <span>Tpay </span>
             </div>
@@ -210,7 +215,7 @@
 
 
 
-<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px; height:240px;" id="menu-role">
+<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px; height:240px;" id="roleNavi">
     <div class="content2 text-center">
         <div class="d-flex pb-2">
             <div class="align-self-center">
@@ -226,12 +231,12 @@
             <div class="row" style="display: flex; align-items: center;">
 
                 <div class="col text-center" id="passenger">
-                    <img src="../images/신한.png" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
+                    <img src="../images/사진2.jpg" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
                     <p style = "align-left:40px;" class="font-600 color-theme font-12 pb-3">passenger</p>
                 </div>
 
                 <div class="col text-center" id="driver">
-                    <img src="../images/신한.png" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
+                    <img src="../images/사진.jpg" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
                     <p  class="font-600 color-theme font-12 pb-3">driver</p>
                 </div>
 
@@ -240,11 +245,73 @@
     </div>
 </div>
 
+<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px; height:240px;" id="menu-naver">
+    <div class="content2 text-center">
+        <div class="d-flex pb-2">
+            <div class="align-self-center">
+                <h4 class="font-700">네이버</h4>
+            </div>
+        </div>
+        <div class="list-group list-custom list-group-m rounded-xs list-group-flush bg-theme">
+        </div>
+    </div>
+    <div class="card card-style" style="display: flex; align-items: flex-start; margin-top:-20px;">
+
+        <div class="content mb-0">
+            <div class="row" style="display: flex; align-items: center;">
+
+                <div class="col text-center" id="naverpassenger">
+                    <img src="../images/사진2.jpg" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
+                    <p style = "align-left:40px;" class="font-600 color-theme font-12 pb-3">passenger</p>
+                </div>
+
+                <div class="col text-center" id="naverdriver">
+                    <img src="../images/사진.jpg" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
+                    <p  class="font-600 color-theme font-12 pb-3">driver</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="searchEamil">
+    <div class="content">
+      <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
+      <h1 class="font-18 font-800 mb-3">비밀번호 찾기</h1>
+     <div class="form-custom form-label form-border form-icon mb-2 bg-transparent" style="margin-bottom: 0;">
+        <i class="bi bi-envelope-open font-14"></i>
+        <input type="text" style="margin-bottom: -15px;" class="form-control rounded-xs" id="EmailAddress" placeholder="Email Address" />
+        <label for="EmailAddress" class="color-theme">Email Address</label>
+    
+      </div>
+      <span id="resultText2" style="font-size: 12px; margin-left: 10px;"></span>
+      <a href="#" id="senCode" style="margin-top: 0; font-size: 12px;" class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4">인증</a>
+
+    </div>
+   </div>
+   
+   <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="searchPwd">
+    <div class="content">
+      <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
+      <h1 class="font-18 font-800 mb-3">이메일 찾기</h1>
+      <div class="form-custom form-label form-border mb-2 form-icon bg-transparent">
+        <i class="bi bi-telephone font-14"></i>
+        <input type="text" class="form-control rounded-xs" id="phoneNum" placeholder="phone" />
+        <label for="EmailAddress" class="color-theme">phone</label>
+        
+      </div>
+       <span id="resultText" style="font-size: 12px; margin-left: 10px;"></span>
+      <a href="#" id="sendPhone" class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4">인증</a>
+     
+    </div>
+   </div>
+
 <div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px; height:240px;" id="menu-kakao">
     <div class="content2 text-center">
         <div class="d-flex pb-2">
             <div class="align-self-center">
-                <h4 class="font-700">회원가입</h4>
+                <h4 class="font-700">카카오</h4>
             </div>
         </div>
         <div class="list-group list-custom list-group-m rounded-xs list-group-flush bg-theme">
@@ -256,12 +323,12 @@
             <div class="row" style="display: flex; align-items: center;">
 
                 <div class="col text-center" id="kakaopaseen">
-                    <img src="../images/신한.png" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
+                    <img src="../images/사진2.jpg" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
                     <p style = "align-left:40px;" class="font-600 color-theme font-12 pb-3">passenger</p>
                 </div>
 
                 <div class="col text-center" id="kakaodriver">
-                    <img src="../images/신한.png" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
+                    <img src="../images/사진.jpg" style="width: 100%; height: auto;" class="preload-img img-fluid rounded-l" alt="img">
                     <p  class="font-600 color-theme font-12 pb-3">driver</p>
                 </div>
 
@@ -270,11 +337,132 @@
     </div>
 </div>
 
+
 <!-- templates 적용 -->
 <script src="../../templates/scripts/bootstrap.min.js"></script>
 <script src="../../templates/scripts/custom.js"></script>
 <!-- templates 적용 끝 -->
 <script type="text/javascript">
+$(document).ready(function() {
+$("#sendPhone").click(function() {
+    // Get the phone number from the input field
+    var phone = $('#phoneNum').val();
+    var resultText = $('#resultText');
+    // Perform AJAX request using jQuery
+    $.ajax({
+        url: '/user/json/dupPhone', // Specify your server endpoint
+        method: 'GET',
+        data: {
+          phone: phone
+        },
+        success: function(data) {
+          // Handle the success response
+          console.log("dupEEmail" + data);
+          dupEEmail = data;
+
+          if (dupEEmail === "2") {
+            
+        	  sendPhone();
+            
+            
+          } else {
+        	  resultText.text("등록된 핸드폰 번호가 없습니다").css('color', 'red');
+           
+          }
+        },
+        error: function(error) {
+          // Handle the error
+          console.error(error);
+        }
+      }); 
+});
+});
+
+function sendPhone(){
+
+	var phone = $('#phoneNum').val();
+    var messege;
+    // Perform AJAX request using jQuery
+    $.ajax({
+      url: '/user/json/send-one', // Specify your server endpoint
+      method: 'GET',
+      data: {
+        phone: phone
+      },
+      success: function(response) {
+        // Handle the success response
+        console.log("phone: " + phone);
+        console.log(response.num);
+        messege = response.num
+        
+        window.location.href = "/user/searchPwd?phone=" +phone + "&message=" + messege;
+        // You can update the UI here based on the response if needed
+      },
+      error: function(error) {
+        // Handle the error
+        console.error(error);
+      }
+    });
+}
+
+$(document).ready(function() {
+$("#senCode").click(function() {
+	var email = $("#EmailAddress").val();
+	var resultText2 = $('#resultText2');
+	
+	$.ajax({
+        url: '/user/json/dupEmail', // Specify your server endpoint
+        method: 'GET',
+        data: {
+          email: email
+        },
+        success: function(data) {
+          // Handle the success response
+          console.log("dupEEmail" + data);
+          dupEEmail = data;
+
+          if (dupEEmail === "2") {
+            
+        	  sendEmail();
+        	  
+        	  
+          } else {
+        	  resultText2.text("등록된 이메일이 없습니다").css('color', 'red');
+        	 
+          }
+        },
+        error: function(error) {
+          // Handle the error
+          console.error(error);
+        }
+      });	
+});
+});
+  
+    function sendEmail(){
+      // 이메일 주소를 가져오거나 필요에 따라 하드코딩
+      var email = $("#EmailAddress").val();
+      
+      // Ajax 요청
+      $.ajax({
+        type: "POST",
+        url: "/user/sendEmail",
+        data: { email: email },
+        success: function(response) {
+          // 성공 시 동작
+          console.log("이메일 인증 요청 성공");
+          console.log(response); 
+          window.location.href = "/user/searchPwd?code=" + response + "&email=" + email;
+        },
+        error: function(error) {
+          // 실패 시 동작
+          console.log("이메일 인증 요청 실패");
+          console.log(error);
+        }
+      });
+    }
+
+
     $(document).ready(function() {
         // id가 "logoutLink"인 요소에 클릭 이벤트를 추가
         $("#logOutButton").on("click", function() {
@@ -381,10 +569,6 @@
                 self.location = "/user/addUser"
             });
 
-            $('#naver').on('click', function() {
-
-                self.location = "/user/naver-login"
-            });
 
             $('#kakaopaseen').on('click', function() {
 
@@ -393,6 +577,14 @@
             $('#kakaodriver').on('click', function() {
 
                 self.location = "/user/kakao-login?role=driver"
+            });
+            $('#naverpassenger').on('click', function() {
+
+                self.location = "/user/naver-login?role=passenger"
+            });
+            $('#naverdriver').on('click', function() {
+
+                self.location = "/user/naver-login?role=driver"
             });
             $('#passenger').on('click', function() {
 
@@ -403,7 +595,11 @@
                 self.location = "/user/addUser?role=driver"
             });
 
+            $(".search-Pwd").on("click", function() {
 
+                self.location = "/user/searchPwd";
+            });
+            
             document.getElementById(topdropdown).addEventListener("click", function(e) {
                 e.preventDefault(); // 클릭 이벤트의 기본 동작을 막음
                 e.stopPropagation(); // 이벤트 버블링을 중지
@@ -444,13 +640,25 @@
                     pwd: pw
                 }),
                 success: function(data) {
-                    console.log("data: "+data.success);
-                    if (data.success) {
+                    var success=data.success;
+                    var ment=data.ment;
+                    var fail=data.fail;
+                    
+                    console.log("data: "+success);
+                    console.log("data: "+ment);
+                    console.log("data: "+fail);
+                    
+                    if (success != null) {
                         // 성공 메시지 처리
                         showSuccessModal(data.success);
-                    } else if (data.fail || data.ment) {
+                    } else if (ment != null ) {
+                    
                         // 실패 메시지 처리 (fail 또는 ment 중 하나라도 존재할 경우)
                         showLoginFailedBlock(data.ment, data.block.unblockDateStr, data.block.blockCount, data.report.reportCategory, data.report.regDate)
+                    }else if(fail != null){
+                    	 var fail=data.fail; 
+                        console.log("로그인실패했잖아"+fail);
+                        showLoginFailed(data.fail);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -472,7 +680,7 @@
     }
 
 
-    $( function() {
+    $(document).ready(function() {
         $("#confirmationButton").on("click" , function() {
             $("#loginNa").attr("method", "POST").attr("action", "/user/login").submit();
         });

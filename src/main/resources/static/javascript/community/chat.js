@@ -1,3 +1,33 @@
+$(function() {
+  
+  $.ajax({
+            url: "/community/json/getShareReqPassenger?callNo="+$("#callNo").val(),
+            type: "GET",
+            dataType: "json",
+            success: function (response){
+                    let receiveInt = parseInt(response);
+                    
+                      if($("#userNo").text()==receiveInt) {
+                        var newRow = '<button type="button" class="btn-xxs btn border-blue-dark color-blue-dark" onclick="startShare('+$("#callNo").val()+')">'
+                      + '배차'
+                      + '</button>'
+
+                      // 적절한 위치에 행 추가
+                      $('#shareStartButton').append(newRow);
+                      } else {
+                        var newRow = '<button type="button" class="btn-xxs btn border-blue-dark color-blue-dark" onclick="startShareOther('+$("#callNo").val()+')">'
+                      + '배차'
+                      + '</button>'
+
+                      // 적절한 위치에 행 추가
+                      $('#shareStartButton').append(newRow);
+                      }
+                      
+            }
+        })
+})
+
+
 // resources/static/js/chat.js
 const socket = new SockJS('/ws');
 const stompClient = Stomp.over(socket);
@@ -57,8 +87,19 @@ $(document).ready(function() {
 
     });
     
-function startShare() {
-  $("form").attr("method" , "POST").attr("action" , "/community/startShareReq").submit();
+function startShare(callNo) {
+  
+   const message = {
+        callNo: callNo,
+        content: "합승"
+      };
+  
+  /*stompClient.send("/chat/"+$("#callNo").val(), {}, JSON.stringify(message));*/
+  self.location="/community/startShareReq?callNo="+callNo;
+}
+
+function startShareOther(callNo) {
+  self.location="/callres/drivingP.jsp?callNo="+callNo;
 }
     
 function sendMessage() {
@@ -126,3 +167,4 @@ function appendMessage(message,sender,time) {
     }
     insertMessage(htmlContent);
 }
+

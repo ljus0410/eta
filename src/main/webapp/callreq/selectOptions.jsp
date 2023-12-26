@@ -37,14 +37,14 @@
   .routeOptStyle{
     color: #E6E6E6;
     font-size : 20px;
-    padding-right:20px;
-    padding-left:15px;
+    width:30%;
+    padding-right:10px;
   }
   .routeOptStyle.checked{
     color: #6E6E6E;
     font-size : 20px;
-    padding-right:20px;
-    padding-left:15px;
+    width:30%;
+    padding-right:10px;
   }
   .carOptStyle{
     color: #E6E6E6;
@@ -175,6 +175,25 @@
 <input type="hidden" id="hasNoDataException" value="${hasNoDataException}">
 </div>
 </form>
+
+<!--Warning Toast Bar-->
+  <div id="shareAlert" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+
+    <div class="align-self-center">
+      <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+    </div>
+
+    <div class="align-self-center">
+      <span class="font-10 mt-n1 opacity-70">합승은 펫 탑승이 불가능합니다.</span>
+    </div>
+
+    <div class="align-self-center ms-auto">
+      <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+    </div>
+
+  </div>
+  <!-- Warning Toast Bar 끝 -->
+    
 </div>
 </div>
 </div>
@@ -259,19 +278,23 @@ function handleCarClick(type) {
 
 	}
 function handlePetClick() {
+	
+	if ($("#callCode").val()=="S") {
+		$("#shareAlert").addClass("fade show");
+	} else {
+		var checkBtn = petButtonSpan.querySelector('input[type="checkbox"]');
 
-	 var checkBtn = petButtonSpan.querySelector('input[type="checkbox"]');
-
-	  if (checkBtn.checked) {
-	    checkBtn.checked = false;
-	    petImage.src = "../images/pet_before.png";
-	    console.log('체크 해제됨');
-	  } else {
-	    checkBtn.checked = true;
-	    petImage.src = "../images/pet_after.png";
-	    console.log('체크됨');
-	  }
-	  updatePrepay();
+	    if (checkBtn.checked) {
+	      checkBtn.checked = false;
+	      petImage.src = "../images/pet_before.png";
+	      console.log('체크 해제됨');
+	    } else {
+	      checkBtn.checked = true;
+	      petImage.src = "../images/pet_after.png";
+	      console.log('체크됨');
+	    }
+	    updatePrepay();
+	}
       
   }
 recommendRouteSpan.addEventListener('click', function () {
@@ -445,7 +468,8 @@ const drawPolylineAndMoveMarker = (data, map) => {
 	    }
 	    // Fare 값 가져오기
 	    var fareInput = document.getElementById('fare');
-	    var recommendFare = parseFloat(fareInput.innerHTML.replace('원', '')); // 금액 숫자로 변환
+	    var recommendFareString = fareInput.innerHTML.replace(/,/g, '').replace('원', '');
+	    var recommendFare = parseFloat(recommendFareString);
 	    
 	   //alert(carOption); alert(petOption); alert(recommendFare);
 	   if(carOption == '4'){
@@ -559,7 +583,8 @@ async function getRoute(type, map) {
         console.log("Fare (taxi):", data.routes[0].summary.fare.taxi);
         var recommendFare = data.routes[0].summary.fare.taxi;
         var fareInput = document.getElementById('fare');
-            fareInput.innerHTML  = recommendFare + "원";
+        var formattedFare = recommendFare.toLocaleString('ko-KR');
+            fareInput.innerHTML  = formattedFare + "원";
  
 
         updatePrepay();

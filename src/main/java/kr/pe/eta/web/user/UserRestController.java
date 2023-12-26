@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
+import net.nurigo.sdk.message.model.Message;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -83,7 +83,7 @@ public class UserRestController {
 		System.out.println("num :" + phone);
 		Random rand = new Random();
 		String numStr = "";
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 6; i++) {
 			String ran = Integer.toString(rand.nextInt(10));
 			numStr += ran;
 		}
@@ -111,6 +111,23 @@ public class UserRestController {
 
 		System.out.println("nickName==" + nickName);
 		boolean duplication = userService.dupNickname(nickName);
+		String ment = null;
+		if (duplication == true) {
+			ment = "1";
+		} else {
+			ment = "2";
+		}
+		System.out.println("result===" + duplication);
+
+		return ment;
+	}
+
+	@RequestMapping(value = "dupPhone", method = RequestMethod.GET)
+	public String dupPhone(@RequestParam("phone") String phone) throws Exception {
+		System.out.println("/Json/phone : GET");
+
+		System.out.println("phone==" + phone);
+		boolean duplication = userService.dupPhone(phone);
 		String ment = null;
 		if (duplication == true) {
 			ment = "1";
@@ -172,9 +189,7 @@ public class UserRestController {
 		System.out.println("lists-=====" + userNo);
 		System.out.println("lists-=====" + lists);
 
-		map.put("lists", lists);
 		map.put("list", map.get("list"));
-		map.put("userNo", userNo);
 
 		return map;
 	}
@@ -243,7 +258,7 @@ public class UserRestController {
 				success = "로그인 성공";
 			} else {
 				System.out.println("실패");
-				fail = "로그인 실패";
+				fail = "회원정보를 확인해주새요.";
 			}
 		}
 
