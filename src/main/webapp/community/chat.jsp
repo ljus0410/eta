@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>WebSocket Chat</title>
+    <title>eTa</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
@@ -64,22 +64,22 @@
             <div class="content" style="height:5%">
               <div class="accordion accordion-m border-0" id="accordion-group-5">
 
-			          <div class="accordion-item">
-			            <button class="accordion-button px-0 ps-1 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion5-3" aria-expanded="false">
-			             <i class="bi bi-check-circle-fill color-green-dark pe-3 font-14"></i>
-			             <span class="font-600 font-13">배차정보</span>
-			              <i class="bi bi-arrow-down-short font-20"></i>
-			            </button>
-			            <div id="accordion5-3" class="accordion-collapse collapse" data-bs-parent="#accordion-group-5" style="">
-			            <p class="mb-0 pb-3">
+                <div class="accordion-item">
+                  <button class="accordion-button px-0 ps-1 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion5-3" aria-expanded="false">
+                   <i class="bi bi-check-circle-fill color-green-dark pe-3 font-14"></i>
+                   <span class="font-600 font-13">배차 정보</span>
+                    <i class="bi bi-arrow-down-short font-20"></i>
+                  </button>
+                  <div id="accordion5-3" class="accordion-collapse collapse" data-bs-parent="#accordion-group-5" style="">
+                  <p class="mb-0 pb-3">
                       배차 번호 : ${call.callNo}<br/>
                       출발 : ${call.startAddr}<br/>
                       도착 : ${call.endAddr}<br/>
                   </p>
                   <div id="shareStartButton">
                   </div>
-			            </div>
-			          </div>
+                  </div>
+                </div>
               </div>
              
             </div>
@@ -90,12 +90,29 @@
                 <div id="messages"></div>
             </div>
         </div>
+
+    </div>
+    <div class="offcanvas offcanvas-bottom rounded-m offcanvas-detached bg-theme" id="menu-upload" aria-modal="true" role="dialog">
+        <div class="content">
+            <div class="list-group list-custom list-group-m rounded-xs list-group-flush bg-theme">
+                <a href="#" class="list-group-item" onclick="capturePhoto()">
+                    <i class="bi bi-image-fill color-theme opacity-30 font-16"></i>
+                    <div class="font-500 ps-2">Photo</div>
+                    <i class="bi bi-chevron-right pe-1"></i>
+                </a>
+                <a href="#" class="list-group-item">
+                    <i class="bi bi-geo-alt-fill color-theme opacity-30 font-16"></i>
+                    <div class="font-500 ps-2">Location</div>
+                    <i class="bi bi-chevron-right pe-1"></i>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="/javascript/community/chat.js"></script>
-    <script src="/templates/scripts/bootstrap.min.js"></script>
-    <script src="/templates/scripts/custom.js"></script>
+<script src="/templates/scripts/bootstrap.min.js"></script>
+<script src="/templates/scripts/custom.js"></script>
 </body>
 </html>

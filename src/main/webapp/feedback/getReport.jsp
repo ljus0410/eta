@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-<title>Insert title here</title>
+<title>eTa</title>
 <link rel="stylesheet" type="text/css" href="/templates/styles/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="/templates/fonts/bootstrap-icons.css">
 <link rel="stylesheet" type="text/css" href="/templates/styles/style.css">

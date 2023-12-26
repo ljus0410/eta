@@ -4,7 +4,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>예약 시간 설정</title>
+  <title>eTa</title>
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script src="/javascript/community/addReservation.js"></script>

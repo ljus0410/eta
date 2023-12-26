@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-    
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -534,7 +534,8 @@ function updateUser() {
        <div style="text-align: right;">
 
    <c:if test="${user.role ne 'driver'}">
-      <p class="font-12 color-highlight" style="margin-bottom: 0;text-align: left;">잔액: ${user.myMoney}원</p>
+   <fmt:formatNumber type="number" value="${user.myMoney}" var="formattedNumber" />
+      <p class="font-12 color-highlight" style="margin-bottom: 0;text-align: left;">잔액: ${formattedNumber}원</p>
    </c:if>
 
    <p class="font-12 color-highlight" style="margin-bottom: 0;">가입일자: ${user.regDate.substring(0, 10)}</p>
