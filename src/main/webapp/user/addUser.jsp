@@ -179,8 +179,8 @@
         resultText.text("일치합니다").css('color', 'blue');
 
         // 부트스트랩 JavaScript API를 사용하여 모달 닫기
-        $('#phoneNum').offcanvas('hide');
-        $('#phoneNum').on('hidden.bs.offcanvas', function() {
+        $('#phone-Num').offcanvas('hide');
+        $('#phone-Num').on('hidden.bs.offcanvas', function() {
 
 
           // 입력 필드 비활성화
@@ -246,8 +246,8 @@
 
         },
         error: function(error) {
-        	 var asdasdasd = $('#asdasdasd');
-        	 asdasdasd.text("일치하는 정보가 없습니다").css('color', 'red');
+           var asdasdasd = $('#asdasdasd');
+           asdasdasd.text("일치하는 정보가 없습니다").css('color', 'red');
           // Handle the error
           console.error(error);
         }
@@ -421,7 +421,7 @@
           console.log("확인"+password+"비번"+passcer);
           // 비밀번호 길이가 8자 이상이고, 특수문자를 포함하는지 확인
           if (password === passcer) {
-        	  console.log("확인"+password+"비번"+passcer);
+            console.log("확인"+password+"비번"+passcer);
             message.text("사용가능").css('color', 'blue');
           } else {
 
@@ -437,7 +437,7 @@
 
 
     function updateAnimalOptValue() {
-    	 var animalOptCheckbox = document.getElementById('animalOpt');
+       var animalOptCheckbox = document.getElementById('animalOpt');
          var img = document.querySelector('img');
          
          animalOptCheckbox.checked = !animalOptCheckbox.checked;
@@ -501,13 +501,13 @@
     }
     
     function handleIconClick(value, element) {
-    	  // 선택된 아이콘의 값을 활용하거나, 원하는 동작 수행
-    	  console.log('선택된 값:', value);
+        // 선택된 아이콘의 값을 활용하거나, 원하는 동작 수행
+        console.log('선택된 값:', value);
 
-    	  // 클릭된 아이콘에 선택 효과 추가
+        // 클릭된 아이콘에 선택 효과 추가
     
-    	  // 다른 모든 아이콘에서 선택 효과를 제거
-    	  var icons = document.querySelectorAll('.carOptStyle');
+        // 다른 모든 아이콘에서 선택 효과를 제거
+        var icons = document.querySelectorAll('.carOptStyle');
           icons.forEach(icon => {
             icon.classList.remove('selectedIcon');
           });
@@ -517,7 +517,7 @@
           var radioBtn = document.querySelector('input[name="carOpt"][value="' + value + '"]');
           console.log('현재 선택된 라디오 버튼의 값:', radioBtn ? radioBtn.value : '없음');
           if (radioBtn) {
-        	    radioBtn.checked = true;
+              radioBtn.checked = true;
         }
     }
     $(function adUser() {
@@ -549,7 +549,7 @@
 
 
         if (emailErr == 2) {
-        	userEnteredValue = "형식을 지켜주세여";
+          userEnteredValue = "형식을 지켜주세여";
             updateToastText();
             showToast();
 
@@ -557,7 +557,7 @@
         }
 
         if (dupEEmail == 2) {
-        	userEnteredValue = "이메일중복";
+          userEnteredValue = "이메일중복";
             updateToastText();
             showToast();
           
@@ -588,7 +588,7 @@
           }
 
         if (confirmPassword != pwd12) {
-        	userEnteredValue = "비밀번호가 일치하지 않습니다";
+          userEnteredValue = "비밀번호가 일치하지 않습니다";
             updateToastText();
             showToast();
           console.log("비밀번호 확인일치" + confirmPassword);
@@ -626,7 +626,7 @@
         }
 
         if (phoneCer === 0 || phoneCer == 2) {
-        	userEnteredValue = "휴대폰 인증을 진행해세요";
+          userEnteredValue = "휴대폰 인증을 진행해세요";
             updateToastText();
             showToast();
 
@@ -649,7 +649,7 @@
           return;
         }
         if (role === "driver" && (moneyName == 0)) {
-        	userEnteredValue = "예금주 인증을 진행해주세요";
+          userEnteredValue = "예금주 인증을 진행해주세요";
             updateToastText();
             showToast();
           console.log("예금주 인증" + moneyName);
@@ -733,7 +733,7 @@
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-unlock font-12"></i>
           <input type="password" class="form-control rounded-xs" id="confirmPassword" placeholder="비밀번호 확인"/>
-          <label for="confirmPassword" class="color-theme">Password22</label>
+          <label for="confirmPassword" class="color-theme">Password</label>
            <span id="checkPasswordMatch" style="margin-left: 10px;"></span>
           </div>
           
@@ -765,7 +765,7 @@
     <div style="justify-content: flex-start; display: flex; align-items: center; margin-left: 10px;">
         <div id="inputContainer">
             <input class="rounded-xs" name="phone" style="height:25px; color: gray; margin-left: 10px; border: 1px solid #ced4da !important; font-size: 14px;" type="text" id="phone" value="" placeholder="01066726545"/>
-            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#phoneNum" style="text-align: center; width: 60px; margin-left: 5px; height: 25px; line-height: 7px; white-space: nowrap; font-size: 10px; vertical-align: middle;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
+            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#phone-Num" style="text-align: center; width: 60px; margin-left: 5px; height: 25px; line-height: 7px; white-space: nowrap; font-size: 10px; vertical-align: middle;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
 
         </div>
     </div>
@@ -1008,7 +1008,7 @@
 
 
 
-<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="phoneNum">
+<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="phone-Num">
     <div class="content">
       <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
       <h1 class="font-24 font-800 mb-3">인증번호</h1>

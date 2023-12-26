@@ -20,6 +20,8 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/templates/app/icons/icon-192x192.png">
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 <style type="text/css">
   td{
     height: 100px;
@@ -29,6 +31,178 @@
   font-weight: bold;
   }
 </style>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+	  
+	  const ctx = document.getElementById('myChart');
+	  const myCash = ${completeTotal};
+	   const monthTotal = ${monthTotal};
+	   const completeTotal = ${completeTotal};
+	   const waitTotal = ${waitTotal};
+	   let month = '${month}';
+	   console.log("month : "+month);
+	   
+	if(month === 'all'){
+	     month = '전체';
+	   } else {
+	     month = month+'월';
+	   }
+	   
+	   console.log("monthTotal :"+monthTotal);
+	   
+	   const myChart = new Chart(ctx, {
+	        plugins: [ChartDataLabels],
+	        type: 'bar',
+	        data: {
+	            labels: ['전체금액', '정산금액', '정산대기', '실수익'],
+	            datasets: [{
+	                label: month,
+	                data: [monthTotal, completeTotal, waitTotal, myCash],
+	                backgroundColor: [
+	                    'rgba(255, 99, 132, 0.2)',
+	                    'rgba(54, 162, 235, 0.2)',
+	                    'rgba(255, 206, 86, 0.2)',
+	                    'rgba(75, 192, 192, 0.2)'
+	                ],
+	                borderColor: [
+	                    'rgba(255, 99, 132, 1)',
+	                    'rgba(54, 162, 235, 1)',
+	                    'rgba(255, 206, 86, 1)',
+	                    'rgba(75, 192, 192, 1)'
+	                ],
+	                borderWidth: 1,
+	                datalabels: {
+	                    anchor: 'end',
+	                    align: 'top',
+	                    formatter: (value, context) => {
+	                        // value를 정수로 반올림하고, 천 단위로 콤마를 추가하고, "원"을 붙임
+	                        return Math.round(value).toLocaleString() + '원';
+	                    },
+	                    font: {
+	                        size: 14,
+	                    },
+	                    color: 'rgba(0, 0, 0, 1)', // 데이터 레이블의 색상 설정
+	                }
+	            }]
+	        },
+	        options: {
+	          plugins:{
+	            title:{
+	              display:true,
+	              text:month
+	            },
+	            legend:{
+	              display:false
+	            }
+	          },
+	            scales: {
+	                y: {
+	                    beginAtZero: true,
+	                    fontColor: 'rgba(102, 102, 102, 1)',
+	                    fontSize: 14
+	                }
+	            }
+	        }
+	    });
+
+	  });
+document.addEventListener("DOMContentLoaded", function () {
+    
+    const ctx = document.getElementById('myPieChart');
+    let first = ${firstSeasonCash};
+    let second = ${secondSeasonCash};
+    let third = ${thirdSeasonCash};
+    let fourth = ${fourthSeasonCash};
+     
+    if(first == null || first == ''){
+    	first = 0;
+    } 
+    if(second == null || second == ''){
+    	second = 0;
+      } 
+    if(third == null || third == ''){
+    	third = 0;
+      } 
+    if(fourth == null || fourth == ''){
+    	fourth = 0;
+      } 
+    
+    
+     const myChart = new Chart(ctx, {
+          plugins: [ChartDataLabels],
+          type: 'pie',
+          data: {
+              labels: ['1분기', '2분기', '3분기', '4분기'],
+              datasets: [{
+                //  data: [jan, fab, mar, apr, may, jun, jul, aug, sep, oct, nov, dec],
+                data: [first, second, third, fourth],
+                  backgroundColor: [
+                      'rgba(255, 102, 204, 0.2)',
+                      'rgba(255, 204, 0, 0.2)',
+                      'rgba(204, 153, 255, 0.2)',
+                      'rgba(102, 153, 0, 0.2)'
+                  ],
+                  borderColor: [
+                	  'rgba(255, 102, 204, 1)',
+                	  'rgba(255, 204, 0, 1)',
+                	  'rgba(204, 153, 255, 1)',
+                	  'rgba(102, 153, 0, 1)'
+                  ],
+                  borderWidth: 1,
+                  datalabels: {
+                      anchor: 'end',
+                      align: 'top',
+                      formatter: (value, context) => {
+                          // value를 정수로 반올림하고, 천 단위로 콤마를 추가하고, "원"을 붙임
+                          return Math.round(value).toLocaleString() + '원';
+                      },
+                      font: {
+                          size: 14,
+                      },
+                      color: 'rgba(0, 0, 0, 1)', // 데이터 레이블의 색상 설정
+                  }
+              }]
+          },
+          options: {
+            plugins:{
+              title:{
+                display:true,
+                text:'나의 분기별 수익 통계'
+              }, 
+              legend:{
+            	  display:true,
+            		labels: {
+                        boxWidth: 20 // 범례 아이템의 너비
+                    }
+              }
+            },
+              scales: {
+                  y: {
+                      beginAtZero: true,
+                      fontColor: 'rgba(102, 102, 102, 1)',
+                      fontSize: 14
+                  }
+              }
+          }
+      });
+
+    });
+document.addEventListener("DOMContentLoaded", function () {
+	   var chartContainer = document.getElementById('chartContainer');
+	     chartContainer.style.display = 'none';
+	      var toggleChartBtn = document.getElementById('toggleChartBtn');
+
+	      toggleChartBtn.addEventListener('click', function() {
+	          // 토글
+	          if (chartContainer.style.display === 'none') {
+	              chartContainer.style.display = 'block';
+	          } else {
+	              chartContainer.style.display = 'none';
+	          }
+	      });
+
+	});
+</script>
 </head>
 <body class="theme-light">
 <jsp:include page="/home/top.jsp" />
@@ -75,6 +249,16 @@
               <i class="has-bg rounded-s bi bg-mint-dark bi-currency-dollar" style="vertical-align:bottom !important; line-height: 0px!important;height: 30px !important;font-size: 30px !important; all:initial; display: inline-block;"></i>&nbsp;&nbsp;정산 내역 리스트
             </h1>
 
+          </div>
+        </div>
+        
+         <div class="card card-style" style="margin-bottom: 15px ; align-items: center;">
+          <a id="toggleChartBtn" class="btn btn-xxs border-blue-dark color-blue-dark"
+                style="width:98%">
+           차트보기</a>
+          <div class="content" style="margin-bottom: 9px ;" id="chartContainer">
+            <canvas id="myChart" width="350" height="400"></canvas><br>
+            <canvas id="myPieChart" width="350" height="400"></canvas>
           </div>
         </div>
 
@@ -175,8 +359,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	var monthTotalFormatSpan = document.getElementById('monthTotal');
 	var monthTotalFormat= ${monthTotal};
+	 var discountedTotalFormat= ${discountedTotal};
 	var formattedMoney = parseFloat(monthTotalFormat).toLocaleString(); // myMoneyFormat를 숫자로 변환 후 형식화
-	monthTotalFormatSpan.textContent = '총 '+formattedMoney + ' 원';
+	var discountedTotalFormat = parseFloat(discountedTotalFormat).toLocaleString();
+	monthTotalFormatSpan.textContent = '총 '+formattedMoney + ' 원 / 정산 총 '+discountedTotalFormat+' 원';
 	  
 	  document.querySelectorAll('.myCashListMoney').forEach(function(spanElement) {
 	      var myCashListMoneyFormat = spanElement.textContent; // TpayList의 각 요소의 money 속성 가져오기
