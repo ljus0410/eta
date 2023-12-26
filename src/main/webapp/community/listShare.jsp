@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>합승 리스트 조회</title>
+    <title>eTa</title>
 
     <!-- templates 적용 -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

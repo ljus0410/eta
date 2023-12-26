@@ -1,11 +1,20 @@
 $(function (){
 
+    $("#passengerOffer").on("keyup", function (){
+        let value = $("#passengerOffer").val();
+
+        let offer = parseFloat(value.replace(/,/g, ''));
+        let numberWithCommas = Math.floor(offer).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+         $("#passengerOffer").val(numberWithCommas);
+    })
+
     //폼 제출
     $( "#dealSubmit" ).on("click" , function() {
 
-        let preMoney = parseFloat($("#money").val()); // 문자열을 숫자로 변환
-        let TPay = parseFloat($("#myMoney").val()); // 문자열을 숫자로 변환
-        let offer = parseFloat($("#passengerOffer").val()); // 문자열을 숫자로 변환
+        let preMoney = parseFloat($("#money").val().replace(/,/g, '')); // 문자열을 숫자로 변환
+        let TPay = parseFloat($("#myMoney").val().replace(/,/g, '')); // 문자열을 숫자로 변환
+        let offer = parseFloat($("#passengerOffer").val().replace(/,/g, ''));
 
         if (offer > TPay && offer > preMoney) {
             $('#dealTpayError').addClass('fade show');
@@ -18,6 +27,9 @@ $(function (){
             $('#dealAlert').addClass('fade show');
 
         } else if (offer > preMoney && offer < TPay) {
+            $("#money").val($("#money").val().replace(/,/g, ''));
+            $("#myMoney").val($("#myMoney").val().replace(/,/g, ''));
+            $("#passengerOffer").val($("#passengerOffer").val().replace(/,/g, ''));
             $("form").attr("method" , "POST").attr("action" , "/community/addDealReq").submit();
         }
     })
@@ -34,7 +46,8 @@ $(function (){
         dataType: "json",
         success: function (response){
             let receiveInt = parseInt(response);
-            $("#myMoney").val(receiveInt)
+            let myMoney = Math.floor(receiveInt).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            $("#myMoney").val(myMoney)
         }
     })
     
@@ -45,7 +58,7 @@ $(function (){
       success: function (response){
           let callNo = response.callNo;
           $("#callNo").val(callNo);
-          let money = response.realPay;
+          let money = Math.floor(response.realPay).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
           $("#money").val(money)
       }
     })

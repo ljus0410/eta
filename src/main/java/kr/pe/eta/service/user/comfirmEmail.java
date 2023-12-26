@@ -40,8 +40,7 @@ public class comfirmEmail {
 	private final MimeBodyPart resizedImagePart;
 
 	public comfirmEmail() throws IOException, MessagingException {
-		this.resizedImagePart = resizeImageAndAttach("src/main/resources/static/templates/images/pictures/taxi11.png",
-				300, 200);
+		this.resizedImagePart = resizeImageAndAttach("/eta/taxi11.png", 300, 200);
 	}
 
 	public MimeMessage createMessage(String email) throws MessagingException, IOException {
