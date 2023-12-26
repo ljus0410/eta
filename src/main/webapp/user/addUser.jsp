@@ -692,7 +692,7 @@
 
 <div class="card card-style">
       <div class="content">
-        <h1 class="text-center font-800 font-30 mb-2">로그인</h1>
+        <h1 class="text-center font-800 font-30 mb-2">회원가입</h1>
         <div class="form-custom form-label form-icon mb-3">
           <i class="bi bi-person-circle font-14"></i>
           <input type="text" class="form-control rounded-xs" id="name" name="name" placeholder="이름"/>

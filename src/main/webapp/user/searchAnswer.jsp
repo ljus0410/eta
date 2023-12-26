@@ -35,7 +35,8 @@ function navigateToHome() {
             <!-- <h6 class="font-700 mb-n1 color-highlight">Split Content</h6> -->
 
             <h1 class="pb-2" style="width: 220px; display: inline-block;">
-              <i class="has-bg rounded-s bi bg-teal-dark bi-list-columns">&nbsp;</i>&nbsp;&nbsp;회원정보
+            <i class="has-bg rounded-s bi bg-green-dark bi-person-fill" style="vertical-align:bottom !important; line-height: 0px!important;height: 30px !important;font-size: 30px !important; all:initial; display: inline-block;"></i>&nbsp;&nbsp;회원정보
+            
             </h1>
   
           </div>
