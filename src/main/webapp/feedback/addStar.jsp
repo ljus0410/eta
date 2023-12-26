@@ -9,7 +9,7 @@
 	content="black-translucent">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-<title>별점 등록</title>
+<title>eTa</title>
 <link rel="stylesheet" type="text/css"
 	href="/templates/styles/bootstrap.css">
 <link rel="stylesheet" type="text/css"

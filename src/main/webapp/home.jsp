@@ -13,7 +13,7 @@
         .card-style2 {
             width: 600px; /* 넓이를 원하는 값으로 조절 */
             overflow: hidden;
-            border-radius: 30px;
+            border-radius: 10px;
             margin: 0px 15px 30px 15px;
             border: none;
             box-shadow: rgba(0, 0, 0, 0.03) 0px 20px 25px -5px, rgba(0, 0, 0, 0.02) 0px 10px 10px -5px;
@@ -81,53 +81,59 @@
 
         <c:choose>
             <c:when test="${empty user.role}">
-                <div class="content px-2 text-center mb-0">
-                    <div class="row me-0 ms-0 mb-0">
-                        <div class="col-12 pe-0 ps-0">
-                            <div class="card card-style">
-                                <img src="/templates/images/pictures/etamain.png" class="img-fluid">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               <div class="content px-2 text-center mb-0">
+						<div class="row me-0 ms-0 mb-0">
+							<div class="col-12 pe-0 ps-0">
+								<div class="card card-style" style="margin: 0px 0px 20px 0px;">
+									<img src="/templates/images/pictures/etamain3.png"
+										class="img-fluid">
+								</div>
+							</div>
+						</div>
+					</div>
 
                 <div class="d-flex justify-content-center">
                     <div class="form-custom card-style2 form-label form-icon mb-1">
-                        <input type="text" class="form-control rounded-xs" onclick="loginHome()" placeholder="가자!!" readonly/>
+                        <input type="text" class="form-control rounded-xs" onclick="loginHome()" placeholder="로그인 후 이용가능합니다!" readonly/>
                     </div>
                 </div>
             </c:when>
 
             <c:when test="${user.role eq 'passenger'}">
-                <div class="d-flex justify-content-center">
-                    <div class="form-custom card-style2 form-label form-icon mb-1">
-                        <input type="text" class="form-control rounded-xs" onclick="inputAddress('N')" placeholder="가자!!"/>
+             <div class="content px-2 text-center mb-0">
+                    <div class="row me-0 ms-0 mb-0">
+                        <div class="col-12 pe-0 ps-0">
+                            <div class="card card-style" style="margin: 0px 0px 20px 0px; ">
+                                <img src="/templates/images/pictures/etamain2.png" class="img-fluid">
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="content px-2 text-center mb-0">
+                <div class="d-flex justify-content-center" style="z-index: 2;position: relative">
+                    <div class="form-custom card-style2 form-label form-icon mb-1">
+                        <input type="text" class="form-control rounded-xs" onclick="inputAddress('N')" placeholder="${user.name}님, 오늘은 어디로 가시나요?"/>
+                    </div>
+                </div>
+                <div class="content px-2 text-center mb-0" style="position: absolute; top: 80%; z-index: 1; width: 90%">
                     <div class="row me-0 ms-0 mb-0">
-                        <div class="col-4 ps-0 pe-0" onclick="inputAddress('R')">
-                            <div class="card card-style">
-                                <img src="/templates/images/pictures/23.jpg" class="img-fluid">
-                                <div class="content pb-0">
-                                    <p class="mb-0">예약</p>
+                        <div class="col-4 ps-0 pe-0" onclick="inputAddress('R')" >
+                            <div class="card card-style" style="height: 50% !important; margin: -17px 5px 5px 5px;padding-bottom: 40px; background-color: #AACD69">
+                                <div class="content pb-0" >
+                                    <p class="mb-0" style="color: white">예약</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-4 pe-0 ps-0" onclick="inputAddress('D')">
-                            <div class="card card-style">
-                                <img src="/templates/images/pictures/2.jpg" class="img-fluid">
+                            <div class="card card-style" style="height: 50% !important; margin: -17px 5px 5px 5px;padding-bottom: 40px;background-color: #678DDE; ">
                                 <div class="content pb-0">
-                                    <p class="mb-0">딜</p>
+                                    <p class="mb-0" style="color: white">딜</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-4 pe-0 ps-0" onclick="inputAddress('S')">
-                            <div class="card card-style">
-                                <img src="/templates/images/pictures/5.jpg" class="img-fluid">
+                            <div class="card card-style" style="height: 50% !important; margin: -17px 5px 5px 5px;padding-bottom: 40px;background-color: #E9C052;">
                                 <div class="content pb-0">
-                                    <p class="mb-0">합승</p>
+                                    <p class="mb-0" style="color: white">합승</p>
                                 </div>
                             </div>
                         </div>
@@ -136,33 +142,55 @@
             </c:when>
 
             <c:when test="${user.role eq 'driver'}">
-                <div class="row mb-0">
-                    <div class="col-4 pe-0" onclick="call()">
-                        <div class="card card-style me-2">
-                            <img src="/templates/images/pictures/21.jpg" class="img-fluid">
-                            <div class="content pb-0">
-                                <p class="mb-0">일반</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-4 pe-0" onclick="reservationList()">
-                        <div class="card card-style me-2">
-                            <img src="/templates/images/pictures/21.jpg" class="img-fluid">
-                            <div class="content pb-0">
-                                <p class="mb-0">예약</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-4 ps-0" onclick="getDealList()">
-                        <div class="card card-style ms-2">
-                            <img src="/templates/images/pictures/22.jpg" class="img-fluid">
-                            <div class="content pb-0">
-                                <p class="mb-0">딜</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </c:when>
+					<div class="content px-2 text-center mb-0">
+						<div class="row me-0 ms-0 mb-0">
+							<div class="col-12 pe-0 ps-0">
+								<div class="card card-style" style="margin: 0px 0px 20px 0px;">
+									<img src="/templates/images/pictures/etamain2.png"
+										class="img-fluid">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="d-flex justify-content-center"
+						style="z-index: 2; position: relative">
+						<div class="form-custom card-style2 form-label form-icon mb-1">
+							<input type="text" class="form-control rounded-xs"
+								placeholder="${user.name}님, 오늘도 안전운행 하세요!" />
+						</div>
+					</div>
+					<div class="content px-2 text-center mb-0"
+						style="position: absolute; top: 80%; z-index: 1; width: 90%">
+						<div class="row me-0 ms-0 mb-0">
+							<div class="col-4 ps-0 pe-0" onclick="call()">
+								<div class="card card-style"
+									style="height: 50% !important; margin: -17px 5px 5px 5px; padding-bottom: 40px; background-color: #AACD69">
+
+									<div class="content pb-0">
+										<p class="mb-0" style="color: white">일반</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-4 pe-0 ps-0" onclick="reservationList()">
+								<div class="card card-style"
+									style="height: 50% !important; margin: -17px 5px 5px 5px; padding-bottom: 40px; background-color: #678DDE;">
+
+									<div class="content pb-0">
+										<p class="mb-0" style="color: white">예약</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-4 pe-0 ps-0" onclick="getDealList()">
+								<div class="card card-style"
+									style="height: 50% !important; margin: -17px 5px 5px 5px; padding-bottom: 40px; background-color: #E9C052;">
+									<div class="content pb-0">
+										<p class="mb-0" style="color: white">딜</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</c:when>
         </c:choose>
 
     </div>
