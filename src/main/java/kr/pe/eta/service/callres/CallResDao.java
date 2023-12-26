@@ -21,7 +21,7 @@ public interface CallResDao {
 
 	public void updateCallStateCode(Call call) throws Exception;
 
-	public List<Object> getCallResList(Search search) throws Exception;
+	public List<Object> getCallResList(Search search, String month) throws Exception;
 
 	public void updateEndXY(Call call) throws Exception;
 

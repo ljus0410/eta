@@ -85,9 +85,9 @@ public class CallResServiceImpl implements CallResService {
 	}
 
 	@Override
-	public Map<String, Object> getCallResList(Search search) throws Exception {
+	public Map<String, Object> getCallResList(Search search, String month) throws Exception {
 		// TODO Auto-generated method stub
-		List<Object> list = callResDao.getCallResList(search);
+		List<Object> list = callResDao.getCallResList(search, month);
 		System.out.println(list);
 		int totalCount = callResDao.getTotalCount(search);
 		System.out.println(totalCount);

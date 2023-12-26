@@ -65,6 +65,14 @@
     margin-bottom: 0; /* 하단 마진 제거 */
     /* 필요에 따라 패딩 조정 */
 }
+
+#map {
+        width: 90%;
+        height: 300px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px; /* Adjust this value as needed to lift the map */
+    }
 </style>
 
 
@@ -170,7 +178,12 @@ $(document).ready(function() {
 						<li class="info-item"><span class="info-label">도착:</span> <span
 							class="info-value">${call.endKeyword}</span></li>
 						<li class="info-item"><span class="info-label">호출 옵션:</span>
-							<span class="info-value">${call.callCode}</span></li>
+							<span class="info-value">
+							<c:if test="${call.callCode == 'N'}">일반 배차</c:if>
+				            <c:if test="${call.callCode == 'R'}">예약 배차</c:if>
+				            <c:if test="${call.callCode == 'D'}">딜 배차</c:if>
+				            <c:if test="${call.callCode == 'S'}">합승 배차</c:if>
+							</span></li>
 						<li class="info-item"><span class="info-label">운행 종료
 								시간:</span> <span class="info-value">${call.callDate}</span></li>
 					</ul>
@@ -227,12 +240,11 @@ $(document).ready(function() {
 					<c:if test="${sessionScope.user.role == 'admin'}">
 						<div class="section-title">관리자 정보</div>
 						<ul class="mb-0 ps-3">
-							<li class="info-item"><span class="info-label">Passenger
-									정보:</span> <span class="info-value">${passengerNo},
-									${call.callNo}</span></li>
-							<li class="info-item"><span class="info-label">택시 정보:</span>
-								<span class="info-value">${users.userNo},${users.phone},
-									${users.carNum}, ${call.star}</span></li>
+							<li class="info-item"><span class="info-label">승객 번호:</span> <span class="info-value">${passengerNo}</span></li>		
+							<li class="info-item"><span class="info-label">기사 번호:</span><span class="info-value">${users.userNo}</span></li>
+							<li class="info-item"><span class="info-label">기사 전화번호:</span><span class="info-value">${users.phone}</span></li>
+							<li class="info-item"><span class="info-label">차량 번호:</span><span class="info-value">
+									${users.carNum}</span></li>
 						</ul>
 					</c:if>
 				</div>
@@ -241,8 +253,7 @@ $(document).ready(function() {
 
 			<div
 				style="display: flex; justify-content: center; align-items: center; height: 100%;">
-				<div id="map"
-					style="width: 90%; height: 300px; border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);"></div>
+				<div id="map"></div>
 			</div>
 		</div>
 

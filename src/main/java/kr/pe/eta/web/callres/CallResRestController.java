@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
@@ -42,12 +43,13 @@ public class CallResRestController {
 	int pageUnit;
 
 	@RequestMapping(value = "listCallRecord/{currentpage}")
-	public List<Notice> listCallRecord(@RequestBody Search search) throws Exception {
+	public List<Notice> listCallRecord(@RequestBody Search search, @RequestParam("month") String month)
+			throws Exception {
 		System.out.println("/callRes/json/listRecord : GET/POST");
 
 		search.setPageSize(pageSize);
 
-		Map<String, Object> map = callResService.getCallResList(search);
+		Map<String, Object> map = callResService.getCallResList(search, month);
 		List<Notice> calllist = (List<Notice>) map.get("list");
 
 		return calllist;
