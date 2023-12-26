@@ -79,7 +79,7 @@
     <a href="#" data-bs-toggle="offcanvas" data-bs-target="#menu-main"><i class="bi bi-list"></i><span>Menu</span></a>
 </div>
 
-<div id="menu-main" data-menu-active="nav-comps" data-menu-load="../home/menu.jsp" style="width:280px;"
+<div id="menu-main" data-menu-active="nav-comps" data-menu-load="/home/menu.jsp" style="width:280px;"
      class="offcanvas offcanvas-start offcanvas-detached rounded-m" aria-modal="true" role="dialog">
 </div>
 
