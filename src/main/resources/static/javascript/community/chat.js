@@ -168,3 +168,39 @@ function appendMessage(message,sender,time) {
     insertMessage(htmlContent);
 }
 
+function capturePhoto() {
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+
+    input.addEventListener('change', function (event) {
+        var file = event.target.files[0];
+        var formData = new FormData();
+        formData.append('photo', file);
+
+        // 이미지를 서버로 업로드하고, 채팅 메시지로 전송하는 함수 호출
+        uploadAndSendMessage(formData);
+    });
+
+    input.click();
+}
+
+function uploadAndSendMessage(formData) {
+    // 서버로 이미지 업로드 요청을 보내는 코드
+    $.ajax({
+        url: '/community/json/upload', // 업로드를 처리할 서버 엔드포인트
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            // 업로드 성공 시 채팅 메시지로 이미지 표시
+            var imageUrl = response.imageUrl;
+            var content = '<img src="' + imageUrl + '" alt="Photo">';
+            insertMessage(content);
+        },
+        error: function (error) {
+            console.error('Image upload failed:', error);
+        }
+    });
+}
