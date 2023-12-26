@@ -297,6 +297,9 @@ public class UserController {
 		ModelAndView model = new ModelAndView();
 		System.out.println("user :" + user);
 		userService.updatePwd(user);
+		User newUser = userService.getUser(user.getEmail());
+
+		session.setAttribute("user", newUser);
 
 		model.setViewName("redirect:/");
 		return model;
