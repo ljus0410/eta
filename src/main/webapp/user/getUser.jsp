@@ -678,7 +678,7 @@ function updateUser() {
           <input type="text" class="form-control rounded-xs" id="carNum2" name="carNum2" value="${user.carNum}"/>
            <input type="hidden" class="form-control rounded-xs" id="carNum" name="carNum" />
           <label for="c2" class="color-theme">CarNum</label>
-          <span>(required)</span>
+          <span></span>
         </div>
         
         

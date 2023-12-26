@@ -59,9 +59,23 @@
             center: new kakao.maps.LatLng(37.4939072071976, 127.0143838311636),
             level: 3
         };
-
+	
         var map = new kakao.maps.Map(mapContainer, mapOption);
-        var marker = new kakao.maps.Marker({ map: map }); // 전역 스코프에서 마커 정의
+        
+        var imageSrc = 'https://ifh.cc/g/6gaYnh.png', // 마커이미지의 주소입니다    
+        imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
+        imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+          
+    // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+        markerPosition = new kakao.maps.LatLng(37.54699, 127.09598);
+        
+        
+    let marker = new kakao.maps.Marker({
+        map: map,
+        position: markerPosition,
+        image: markerImage
+    }); // 전역 스코프에서 마커 정의
     </script>
     
     <script>
