@@ -271,15 +271,28 @@
         }
 
     </script>
+    
+    <style>
+    /* Add this style to your existing <style> section or in a <style> tag in the <head> */
+    .btn{
+    	padding : 10px 95%;
+    	 text-align: center;
+    }
+    .text-start {
+    white-space: nowrap; /* Prevents wrapping */
+}
+</style>
 </head>
 <body>
-	<div class="page-content header-clear-medium">
+
+
+	<div id="map" style="width: 100%; height: 680px;"></div>
+				
+
 
 		<div class="card card-style">
 			<div class="content">
-				<div class="col-md-6">
-					<div id="map" style="width: 100%; height: 690px;"></div>
-				</div>
+				
 
 
 				<div class="row">
@@ -289,7 +302,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+
 
 	<script
 		src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
