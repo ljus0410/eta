@@ -96,7 +96,6 @@ public class CommunityController {
 		List<RedisEntity> driverList = null;
 		try {
 			driverList = redisService.getAllUser();
-			callReqService.addCall(call); // addCall()
 		} catch (RedisService.DatabaseHasNoDataException ex) {
 			String errorMessage = ex.getMessage();
 			System.out.print(errorMessage);
