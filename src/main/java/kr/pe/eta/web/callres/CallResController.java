@@ -232,6 +232,9 @@ public class CallResController {
 			List<ShareReq> shares = callResService.getSharesByCallNod(callNo);
 			int numberOfShares = shares.size();
 			int allCount = 0;
+			call.setCallNo(callNo);
+			call.setRealPay(money);
+			callResService.updateRealPay(call);
 			for (ShareReq share : shares) {
 				allCount += share.getFirstShareCount();
 			}

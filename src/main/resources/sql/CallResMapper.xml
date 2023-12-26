@@ -339,61 +339,27 @@
 		resultMap="callSelectMap">
 
 		SELECT *
-
-		FROM (
-
-		SELECT inner_table.*, ROWNUM AS row_seq
-
-		FROM (
-
-		SELECT c.*
-
-		FROM call c
-
-		JOIN match m ON c.call_no = m.call_no
-
-		WHERE (
-
-		m.passenger_no
-		= #{userNo}
-
-		OR m.driver_no = #{userNo}
-
-		OR m.call_no IN (
-
-		SELECT s.call_no
-
-		FROM shares s
-
-		WHERE s.share_no = #{userNo}
-
-		)
-
-		)
-
-		AND c.call_state_code =
-		'운행후'
-
-		<if test="month != 'all'">
-
-			AND EXTRACT(MONTH FROM c.call_date) =
-			#{month}
-
-		</if>
-
-
-
-		ORDER BY c.call_date DESC
-
-		) inner_table
-
-		WHERE ROWNUM &lt;=
-		#{search.endRowNum}
-
-		)
-
-		WHERE row_seq BETWEEN #{search.startRowNum} AND
-		#{search.endRowNum}
+			FROM (
+			    SELECT inner_table.*, ROWNUM AS row_seq
+			    FROM (
+			        SELECT c.*
+			        FROM call c
+			        JOIN match m ON c.call_no = m.call_no
+			        LEFT JOIN shares s ON c.call_no = s.call_no AND s.user_no = #{userNo}
+			        WHERE (
+			            m.passenger_no = #{userNo}
+			            OR m.driver_no = #{userNo}
+			            OR s.share_no IS NOT NULL
+			        )
+			        AND c.call_state_code = '운행후'
+			        <if test="month != 'all'">
+			            AND EXTRACT(MONTH FROM c.call_date) = #{month}
+			        </if>
+			        ORDER BY c.call_date DESC
+			    ) inner_table
+			    WHERE ROWNUM &lt;= #{search.endRowNum}
+			)
+			WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
 
 	</select>
 
