@@ -111,7 +111,7 @@
                 </div>
                 <div class="d-flex justify-content-center" style="z-index: 2;position: relative">
                     <div class="form-custom card-style2 form-label form-icon mb-1">
-                        <input type="text" class="form-control rounded-xs" onclick="inputAddress('N')" placeholder="${user.name}님, 오늘은 어디로 가시나요?"/>
+                        <input type="text" class="form-control rounded-xs" onclick="inputAddress('N')" placeholder="${user.name}님, 오늘은 어디로 가시나요?" readonly/>
                     </div>
                 </div>
                 <div class="content px-2 text-center mb-0" style="position: absolute; top: 80%; z-index: 1; width: 90%">
@@ -141,7 +141,7 @@
                 </div>
             </c:when>
 
-            <c:when test="${user.role eq 'driver'}">
+				<c:when test="${user.role eq 'driver'}">
 					<div class="content px-2 text-center mb-0">
 						<div class="row me-0 ms-0 mb-0">
 							<div class="col-12 pe-0 ps-0">
@@ -156,7 +156,7 @@
 						style="z-index: 2; position: relative">
 						<div class="form-custom card-style2 form-label form-icon mb-1">
 							<input type="text" class="form-control rounded-xs"
-								placeholder="${user.name}님, 오늘도 안전운행 하세요!" />
+								placeholder="${user.name}님, 오늘도 안전운행 하세요!" readonly/>
 						</div>
 					</div>
 					<div class="content px-2 text-center mb-0"
@@ -191,8 +191,27 @@
 						</div>
 					</div>
 				</c:when>
-        </c:choose>
-
+				<c:otherwise>
+					<div class="content px-2 text-center mb-0">
+						<div class="row me-0 ms-0 mb-0">
+							<div class="col-12 pe-0 ps-0">
+								<div class="card card-style" style="margin: 0px 0px 20px 0px;">
+									<img src="/templates/images/pictures/etamain.png"
+										class="img-fluid">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="d-flex justify-content-center"
+						style="z-index: 2; position: relative">
+						<div class="form-custom card-style2 form-label form-icon mb-1">
+							<input type="text" class="form-control rounded-xs"
+								placeholder="관리자 페이지 입니다." readonly/>
+						</div>
+					</div>
+				</c:otherwise>
+			</c:choose>
+		
     </div>
 
 
