@@ -82,6 +82,10 @@
 		<result column="bank" property="bank" jdbcType="VARCHAR" />
 
 		<result column="account" property="account" jdbcType="VARCHAR" />
+		
+		<result column="DEAL_CODE" property="dealCode" jdbcType="NUMERIC" />
+		
+		<result column="share_code" property="shareCode" jdbcType="NUMERIC" />
 
 	</resultMap>
 
@@ -108,7 +112,6 @@
 			jdbcType="DATE" />
 
 	</resultMap>
-
 	<update id="updateRealPay" parameterType="call">
 
 		UPDATE call

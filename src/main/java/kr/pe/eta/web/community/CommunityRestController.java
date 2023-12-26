@@ -108,6 +108,18 @@ public class CommunityRestController {
 		return callNo;
 	}
 
+	@RequestMapping(value = "getDeal", method = RequestMethod.GET)
+	public Call getDeal(HttpSession session) throws Exception {
+
+		System.out.println("/json/getCall GET");
+
+		int userNo = ((User) session.getAttribute("user")).getUserNo();
+		int callNo = communityService.getCallNo(userNo, "D");
+		Call call = callReqService.getCall(callNo);
+
+		return call;
+	}
+
 	@RequestMapping(value = "deleteDealOther", method = RequestMethod.POST)
 	public ResponseEntity<DealReq> deleteDealOther(@RequestBody DealReq dealReq) throws Exception {
 		System.out.println("/json/deleteDealOther");
@@ -192,4 +204,17 @@ public class CommunityRestController {
 		return shareReq;
 	}
 
+	@RequestMapping(value = "getShareReqPassenger")
+	public String getShareReqPassenger(@RequestParam int callNo) throws Exception {
+
+		System.out.println("/json/getShareReqPassenger GET");
+
+		int userNo = communityService.getShareReqPassenger(callNo);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		// Java 객체를 JSON 문자열로 변환
+		String jsonString = objectMapper.writeValueAsString(userNo);
+		return jsonString;
+	}
 }

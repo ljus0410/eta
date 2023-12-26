@@ -26,6 +26,29 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
     <script>
+    
+    $(document).ready(function() {
+        // id가 "logoutLink"인 요소에 클릭 이벤트를 추가
+        $("#logOutButton").on("click", function() {
+            // 쿠키에서 토큰 값을 가져옴
+            var naverAccessToken = getCookie("naverAccessToken");
+            console.log("Naver Access Token:", naverAccessToken);
+            // 로그아웃 URL 구성 (토큰 값이 있다면 추가)
+            var logoutUrl = "/user/kakao-logOut" + (naverAccessToken ? "?token=" + encodeURIComponent(naverAccessToken) : "");
+
+            // 페이지 이동
+            window.location.href = logoutUrl;
+        });
+
+        // 쿠키에서 특정 이름의 값을 가져오는 함수
+        function getCookie(name) {
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length == 2) return parts.pop().split(";").shift();
+        }
+
+    });
+    
         $(function (){
 
             $.ajax({
@@ -68,7 +91,7 @@
                         }
                     })
                         .fail(function () {
-                            alert("에러가 발생했습니다");
+                            $("#cancelShare").addClass("fade show")
                         })
                 } else {
                     $('#noShareAlert').addClass('fade show');
@@ -108,7 +131,6 @@
 
                 let shareCode = $("#shareCode").val();
 
-                alert(shareCode)
                 var row = $(this).closest('div.card');
 
                 // 부모 행에서 배차 번호와 제시 금액을 가져오기
@@ -342,6 +364,24 @@
 
         <div class="align-self-center">
             <span class="font-11 mt-n1 opacity-70">입력된 참여 인원수가<br/> 최대 참여 인원수를 초과합니다</span>
+        </div>
+
+        <div class="align-self-center ms-auto">
+            <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+        </div>
+
+    </div>
+    <!--Warning Toast Bar 끝 -->
+    
+    <!--Warning Toast Bar-->
+    <div id="cancelShare" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+
+        <div class="align-self-center">
+            <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+        </div>
+
+        <div class="align-self-center">
+            <span class="font-11 mt-n1 opacity-70">참여한 합승이 취소되었습니다.</span>
         </div>
 
         <div class="align-self-center ms-auto">

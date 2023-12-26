@@ -134,7 +134,6 @@ function start(callNo) {
         dataType: "json",
         data: JSON.stringify(data),
         success: function (response){
-            alert("여기")
             self.location="/callres/callAccept?callNo=" + callNo;
         }
     })

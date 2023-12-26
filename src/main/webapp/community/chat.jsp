@@ -58,62 +58,32 @@
     </div>
     </form>
 
-    <div class="offcanvas offcanvas-bottom rounded-m offcanvas-detached bg-theme" id="menu-upload">
-        <div class="content">
-            <div class="d-flex pb-2">
-                <div class="align-self-center">
-                    <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Just tap and</h5>
-                    <h1 class="font-700">Add to Chat</h1>
-                </div>
-                <div class="align-self-center ms-auto">
-                    <a href="#" data-bs-dismiss="offcanvas" class="icon icon-m"><i class="bi bi-x-circle-fill color-red-dark font-18 me-n4"></i></a>
-                </div>
-            </div>
-            <div class="list-group list-custom list-group-m rounded-xs list-group-flush bg-theme">
-                <a href="#" class="list-group-item">
-                    <i class="bi bi-file-arrow-up-fill color-theme opacity-30 font-16"></i>
-                    <div class="font-500 ps-2">File</div>
-                    <i class="bi bi-chevron-right pe-1"></i>
-                </a>
-                <a href="#" class="list-group-item">
-                    <i class="bi bi-geo-alt-fill color-theme opacity-30 font-16"></i>
-                    <div class="font-500 ps-2">Location</div>
-                    <i class="bi bi-chevron-right pe-1"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-
     <div class="page-content header-clear-medium">
+    <div style="display: none;" id="userNo">${user.userNo}</div>
+        <div class="card card-style">
+            <div class="content" style="height:5%">
+              <div class="accordion accordion-m border-0" id="accordion-group-5">
 
-        <%--<div class="card card-style">
-            <div class="content">
-                <div class="accordion accordion-m border-0" id="accordion-group-7">
-                    <div class="accordion-item border border-fade-highlight rounded-bottom rounded-top rounded-m">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion7-3" aria-expanded="false">
-                            <i class="bi bi-check-circle-fill color-green-dark pe-3 font-14"></i>
-                            <span class="font-600 font-13">합승 배차 정보</span>
-                            <i class="bi bi-arrow-down-short font-20"></i>
-                        </button>
-                        <div id="accordion7-3" class="accordion-collapse collapse" data-bs-parent="#accordion-group-7" style="">
-                            <p class="px-3 mb-0 pb-3 pt-1">
-                            <div class="row">
-                                <div class="col-12">
-                                    배차 번호 : ${call.callNo}<br/>
-                                    출발 : ${call.startAddr}<br/>
-                                    도착 : ${call.endAddr}<br/>
-                                </div>
-                                <div class="col-9">
-                                    출발 날짜 : ${share.shareDate} <br/>
-                                    참여 인원 : ${share.firstShareCount} / ${share.maxShareCount}
-                                </div>
-                            </div>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+			          <div class="accordion-item">
+			            <button class="accordion-button px-0 ps-1 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordion5-3" aria-expanded="false">
+			             <i class="bi bi-check-circle-fill color-green-dark pe-3 font-14"></i>
+			             <span class="font-600 font-13">배차정보</span>
+			              <i class="bi bi-arrow-down-short font-20"></i>
+			            </button>
+			            <div id="accordion5-3" class="accordion-collapse collapse" data-bs-parent="#accordion-group-5" style="">
+			            <p class="mb-0 pb-3">
+                      배차 번호 : ${call.callNo}<br/>
+                      출발 : ${call.startAddr}<br/>
+                      도착 : ${call.endAddr}<br/>
+                  </p>
+                  <div id="shareStartButton">
+                  </div>
+			            </div>
+			          </div>
+              </div>
+             
             </div>
-        </div><!-- card card-style 끝 -->--%>
+        </div><!-- card card-style 끝 -->
 
         <div class="content mt-0">
             <div id="chat">

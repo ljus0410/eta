@@ -83,4 +83,30 @@ public class PayServiceImpl implements PayService {
 		payDao.updateRealPay(callNo, money);
 	}
 
+	public List<Call> getCashDriverListComplete(String month) throws Exception {
+		List<Call> cashDriverListComplete = payDao.getCashDriverListComplete(month);
+
+		return cashDriverListComplete;
+	}
+
+	public List<Call> getCashDriverListWait(String month) throws Exception {
+		List<Call> cashDriverListWait = payDao.getCashDriverListWait(month);
+
+		return cashDriverListWait;
+	}
+
+	public List<Call> getMyCashListWait(int userNo, String month) throws Exception {
+
+		List<Call> myCashListWait = payDao.getMyCashListWait(userNo, month);
+
+		return myCashListWait;
+	}
+
+	public List<Call> getMyCashListComplete(int userNo, String month) throws Exception {
+
+		List<Call> myCashListComplete = payDao.getMyCashListComplete(userNo, month);
+
+		return myCashListComplete;
+	}
+
 }
