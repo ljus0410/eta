@@ -140,16 +140,24 @@ document.addEventListener("DOMContentLoaded", function () {
      
     if(first == null || first == ''){
       first = 0;
-    } 
+    } else{
+    	first = first * 5/95;
+    }
     if(second == null || second == ''){
       second = 0;
-      } 
+      } else{
+    	  second = second * 5/95;
+      }
     if(third == null || third == ''){
       third = 0;
-      } 
+      } else{
+    	  third=third * 5/95;
+      }
     if(fourth == null || fourth == ''){
       fourth = 0;
-      } 
+      } else{
+    	  fourth=fourth * 5/95;
+      }
     
     
      const myChart = new Chart(ctx, {
