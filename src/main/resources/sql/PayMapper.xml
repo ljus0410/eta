@@ -109,12 +109,12 @@
     <select id="getCashDriverListComplete"  parameterType="String" resultMap="cashDriverCompleteSelectMap">
     <if test="month == 'all'">
          SELECT cash_driver_no, cash_month, cash_total
-         FROM cash
+         FROM cash ORDER BY cash_month DESC
      </if>
      <if test="month != 'all'">
         SELECT cash_driver_no, cash_month, cash_total
         FROM cash
-        WHERE SUBSTR(cash_month, 6, 2) = #{month:VARCHAR}
+        WHERE SUBSTR(cash_month, 6, 2) = #{month:VARCHAR} ORDER BY cash_month DESC
      </if>
   </select>
   
@@ -184,12 +184,12 @@
     <if test="month == 'all'">
         SELECT cash_month, cash_total
         FROM cash
-        WHERE cash_driver_no = #{userNo:NUMERIC}
+        WHERE cash_driver_no = #{userNo:NUMERIC} ORDER BY cash_month DESC
     </if>
     <if test="month != 'all'">
        SELECT cash_month, cash_total
        FROM cash
-       WHERE cash_driver_no = #{userNo:NUMERIC} AND SUBSTR(cash_month, 6, 2) = #{month:VARCHAR}
+       WHERE cash_driver_no = #{userNo:NUMERIC} AND SUBSTR(cash_month, 6, 2) = #{month:VARCHAR} ORDER BY cash_month DESC
     </if>
      
   </select>
