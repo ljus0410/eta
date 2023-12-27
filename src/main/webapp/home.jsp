@@ -111,7 +111,7 @@
                 </div>
                 <div class="d-flex justify-content-center" style="z-index: 2;position: relative">
                     <div class="form-custom card-style2 form-label form-icon mb-1">
-                        <input type="text" class="form-control rounded-xs" onclick="inputAddress('N')" placeholder="${user.name}님, 오늘은 어디로 가시나요?" readonly/>
+                        <input type="text" class="form-control rounded-xs" onclick="inputAddress('N')" placeholder="${user.nickName}님, 오늘은 어디로 가시나요?" readonly/>
                     </div>
                 </div>
                 <div class="content px-2 text-center mb-0" style="position: absolute; top: 80%; z-index: 1; width: 90%">
