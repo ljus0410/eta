@@ -59,7 +59,7 @@ function checkedMoney(){
 document.addEventListener("DOMContentLoaded", function () {
 	
 	const ctx = document.getElementById('myChart');
-	const adminCash = ${completeTotal};
+	const adminCash = ${adminCashTotal};
 	 const monthTotal = ${monthTotal};
 	 const completeTotal = ${completeTotal};
 	 const waitTotal = ${waitTotal};
