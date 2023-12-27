@@ -85,7 +85,7 @@
 					GROUP BY
 					    M.driver_no, TO_CHAR(C.call_date, 'YYYY-MM'), CA.cash_code
 					ORDER BY
-					    M.driver_no, TO_CHAR(C.call_date, 'YYYY-MM'), CA.cash_code
+					    TO_CHAR(C.call_date, 'YYYY-MM') DESC, M.driver_no
 		 </if>
 		 <if test="month != 'all'">
 		    SELECT
@@ -168,7 +168,7 @@
         FROM call C
         JOIN match M ON C.call_no = M.call_no
         LEFT JOIN cash CA ON TO_CHAR(C.call_date, 'YYYY-MM') = CA.cash_month AND M.driver_no = CA.cash_driver_no
-        WHERE M.driver_no = #{userNo:NUMERIC}
+        WHERE M.driver_no = #{userNo:NUMERIC}  ORDER BY CA.cash_month DESC
     </if>
     <if test="month != 'all'">
         SELECT C.call_no, C.call_date, C.real_pay, COALESCE(CA.cash_code,0) AS cash_code
