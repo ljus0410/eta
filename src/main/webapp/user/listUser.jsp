@@ -170,7 +170,7 @@
        <div class="card overflow-visible card-style">
           <div class="content mb-0">
             <div class="col-12 mb-4 pb-1" align="right" style="height: 15px">
-              <a style=" font-size: 9px; display: inline-block; padding-top: 5px; padding-bottom: 5px; float: left; margin-top: 2px">passenger : ${passenger}명 , driver :${driver}명</a>
+              <a style=" font-size: 12px; display: inline-block; padding-top: 5px; padding-bottom: 5px; float: left; margin-top: 2px">passenger:${passenger}명, driver:${driver}명</a>
               <div>
               <input type="text" class="form-control rounded-xs"
                 style="width: 35%; display: inline-block" name="searchKeyword" id="searchKeyword"
