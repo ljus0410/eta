@@ -161,7 +161,7 @@
 </div>
 
 
-<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-register">
+<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-info">
     <div class="content">
         <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
         <h1 class="font-24 font-800 mb-3">내정보</h1>
@@ -195,7 +195,7 @@
 
 
 
-<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-register2">
+<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="menu-newPwd">
     <div class="content">
         <h1 class="font-24 font-800 mb-3">비밀번호변경</h1>
 
