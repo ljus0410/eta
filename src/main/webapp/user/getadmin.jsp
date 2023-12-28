@@ -123,7 +123,7 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
  
  $(document).ready(function() { 
       $("#block").on("click", function() {
-          alert("비활성화");
+         
           // 여기서 usersNo 가져오기
           var usersNo = $("#usersNo").val();
           let reportNo = ${reportNo }
@@ -133,11 +133,14 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
               type: "GET",
               url: "/feedback/json/addBlock/" + usersNo+"/"+reportNo,
               success: function(response) {
-                alert("비활성화 적용 :"+response+"회")
+                 userEnteredValue = "비활성화 적용 :"+response+"회";
+                  updateToastText();
+                  showToast();
+        
                 
                   console.log("블록 추가 성공!"+response);
                 if (response >= 4) {
-                	console.log("비활성화 4회 이상");
+                   console.log("비활성화 4회 이상");
                     $("#block").prop('disabled', true);
                 }
             },
@@ -149,7 +152,19 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
   });
 
 
+ function showToast() {
+     var toastElement = document.getElementById('blockToast');
+     var toast = new bootstrap.Toast(toastElement);
+     toast.show();
 
+   }
+
+   var userEnteredValue
+   function updateToastText() {
+     // 사용자가 입력한 값을 각 요소에 적용
+     document.getElementById('messgeInfo').textContent = userEnteredValue;
+
+   }
 
 
    
@@ -161,6 +176,7 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
 
 <form>
 <jsp:include page="../home/top.jsp" />
+<div id="page">
 <div class="page-content header-clear-medium" >
         
         
@@ -308,22 +324,34 @@ margin-right: 3px; /* 이미지 사이의 간격을 조정하세요 */
  </c:if>
  <input type="hidden" id="usersNo" value="${users.userNo}">
  <c:if test="${!empty reportNo }">
-	 <c:if test="${block >= 4}">
-	 <a href="#" id="blocks" style ="opacity: 0.5;" class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4">비활성화</a> 
-	 </c:if>
-	 <c:if test="${block < 4}">
-	 <a class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4" id="block">비활성화</a>
-	</c:if>
+    <c:if test="${block >= 4}">
+    <a href="#" id="blocks" style ="opacity: 0.5;" class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4">비활성화</a> 
+    </c:if>
+    <c:if test="${block < 4}">
+    <a class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4" id="block">비활성화</a>
+   </c:if>
 </c:if>
  </div>
  </div>
  </div>
 
-
+</div>
         
      </form>
         
         
+<div id="blockToast" class="toast toast-bar toast-top rounded-l bg-red-dark shadow-bg shadow-bg-s" data-bs-delay="3000">
+    <div class="align-self-center">
+      <i class="icon icon-s bg-white color-red-dark rounded-l shadow-s bi bi-exclamation-triangle-fill font-22 me-3"></i>
+    </div>
+    <div class="align-self-center">
+      <strong id ="messgeInfo" class="font-13 mb-n2"></strong>
+      <span class="font-10 mt-n1 opacity-70">add Block</span>
+    </div>
+    <div class="align-self-center ms-auto">
+      <button type="button" class="btn-close btn-close-white me-2 m-auto font-9" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
 
   
     
