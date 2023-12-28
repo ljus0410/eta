@@ -179,8 +179,8 @@
         resultText.text("일치합니다").css('color', 'blue');
 
         // 부트스트랩 JavaScript API를 사용하요 모달 닫기
-        $('#phone-Num').offcanvas('hide');
-        $('#phone-Num').on('hidden.bs.offcanvas', function() {
+        $('#phoneCerMessage').offcanvas('hide');
+        $('#phoneCerMessage').on('hidden.bs.offcanvas', function() {
 
 
           // 입력 필드 비활성화
@@ -255,7 +255,7 @@
     }
     $(document).ready(function() {
       // 텍스트 입력란에 입력이 발생할 때마다 dupEmail 함수 호출
-      $('#emailal').on('keyup', function() {
+      $('#emalal').on('change', function() {
         console.log('이메일 입력이 종료되었습니다.');
         dupEmail();
       })
@@ -263,9 +263,9 @@
 
         // Get the phone number from the input field
 
-        var email = $('#emailal').val();
+        var email = $('#emalal').val();
         console.log("이메일 :" + email);
-        var resultText = $('#resultText'); // resultText 변수 추가
+        var resultText = $('#emailMessage'); // resultText 변수 추가
 
         if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
           emailErr = 0;
@@ -284,6 +284,7 @@
               if (dupEEmail === "1") {
                 resultText.text("사용가능한 이메일입니다.").css('color', 'blue');
               } else {
+                 console.log("왜안되냐" + data);
                 resultText.text("이미 사용중인 이메일입니다.").css('color', 'red');
               }
             },
@@ -328,7 +329,7 @@
             // Handle the success response
             console.log("response" + data);
             nickNum = data;
-            var resultText = $('#resultText2'); // resultText 변수 추가
+            var resultText = $('#nickMessage'); // resultText 변수 추가
 
             nickNum
 
@@ -709,13 +710,14 @@
           <input type="text" class="form-control rounded-xs" id="email" name="email" 
           value="${not empty param.kakaoProfile ? param.kakaoProfile : param.naver}" placeholder="이메일"/>
           <label for="email" class="color-theme">Email</label>
+           <span id="resultText" style="margin-left: 10px;"></span>
           </c:if>
           <c:if test = "${param.role !=null}">
-          <input type="text" class="form-control rounded-xs" id="emailal" name="email" value="" placeholder="이메일"/>
+          <input type="text" class="form-control rounded-xs" id="emalal" name="email" value="" placeholder="이메일"/>
           <label for="email" class="color-theme">Email</label>
+           <span id="emailMessage" style="margin-left: 10px;"></span>
           </c:if>        
-          
-          <span id="resultText" style="margin-left: 10px;"></span>
+
         </div>
         
 
@@ -744,7 +746,7 @@
           <i class="bi bi-person-square font-12"></i>
           <input type="text" class="form-control rounded-xs" id="nickName" name="nickName" placeholder="닉네임"/>
           <label for="nick" class="color-theme">NickName</label>
-         <span id="resultText2" style="margin-left: 10px;"></span>
+         <span id="nickMessage" style="margin-left: 10px;"></span>
         </div>
         
         <div class="form-custom form-label form-icon mb-3">
@@ -765,7 +767,7 @@
     <div style="justify-content: flex-start; display: flex; align-items: center; margin-left: 10px;">
         <div id="inputContainer">
             <input class="rounded-xs" name="phone" style="height:25px; color: gray; margin-left: 10px; border: 1px solid #ced4da !important; font-size: 14px;" type="text" id="phone" value="" placeholder="01066726545"/>
-            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#phone-Num" style="text-align: center; width: 60px; margin-left: 5px; height: 25px; line-height: 7px; white-space: nowrap; font-size: 10px; vertical-align: middle;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
+            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#phoneCerMessage" style="text-align: center; width: 60px; margin-left: 5px; height: 25px; line-height: 7px; white-space: nowrap; font-size: 10px; vertical-align: middle;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
 
         </div>
     </div>
@@ -1008,7 +1010,7 @@
 
 
 
-<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="phone-Num">
+<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="phoneCerMessage">
     <div class="content">
       <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
       <h1 class="font-24 font-800 mb-3">인증번호</h1>

@@ -21,6 +21,12 @@
             background-repeat: no-repeat;
             background-position: center center;
         }
+        
+        .musicBtn {
+			    text-align: right; /* Align buttons to the left */
+			    margin-bottom: 5px; /* Add some margin below the buttons */
+			    margin-left: 5px;
+			}
 
     </style>
 
@@ -66,6 +72,8 @@
         function loginHome() {
             $("loginAlert").addClass("fade show");
         }
+        
+
 
     </script>
 
@@ -78,15 +86,29 @@
     <jsp:include page="/home/top.jsp" />
 
     <div class="page-content header-clear-medium">
-
+			<audio autoplay id="music">
+			    <source src="/templates/audio/eta.mp3" type="audio/mp3">
+			</audio>
+        
         <c:choose>
             <c:when test="${empty user.role}">
                <div class="content px-2 text-center mb-0">
 						<div class="row me-0 ms-0 mb-0">
 							<div class="col-12 pe-0 ps-0">
+							<div class="musicBtn">
+								<a onclick="play()" class="musicBtn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#585858" class="bi bi-play-circle" viewBox="0 0 16 16">
+			            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
+			            <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"></path>
+			          </svg></a>
+							  <a onclick="stop()" class="musicBtn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#585858" class="bi bi-stop-circle" viewBox="0 0 16 16">
+									  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
+									  <path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5z"></path>
+									</svg></a>
+									</div>
 								<div class="card card-style" style="margin: 0px 0px 20px 0px;">
 									<img src="/templates/images/pictures/etamain3.png"
 										class="img-fluid">
+																		
 								</div>
 							</div>
 						</div>
@@ -103,6 +125,16 @@
              <div class="content px-2 text-center mb-0">
                     <div class="row me-0 ms-0 mb-0">
                         <div class="col-12 pe-0 ps-0">
+                          <div class="musicBtn">
+					                <a onclick="play()" class="musicBtn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#585858" class="bi bi-play-circle" viewBox="0 0 16 16">
+					                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
+					                  <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"></path>
+					                </svg></a>
+					                <a onclick="stop()" class="musicBtn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#585858" class="bi bi-stop-circle" viewBox="0 0 16 16">
+					                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
+					                    <path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5z"></path>
+					                  </svg></a>
+					                  </div>
                             <div class="card card-style" style="margin: 0px 0px 20px 0px; ">
                                 <img src="/templates/images/pictures/etamain2.png" class="img-fluid">
                             </div>
@@ -145,6 +177,16 @@
 					<div class="content px-2 text-center mb-0">
 						<div class="row me-0 ms-0 mb-0">
 							<div class="col-12 pe-0 ps-0">
+							   <div class="musicBtn">
+                          <a onclick="play()" class="musicBtn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#585858" class="bi bi-play-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
+                            <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"></path>
+                          </svg></a>
+                          <a onclick="stop()" class="musicBtn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#585858" class="bi bi-stop-circle" viewBox="0 0 16 16">
+                              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
+                              <path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5z"></path>
+                            </svg></a>
+                 </div>
 								<div class="card card-style" style="margin: 0px 0px 20px 0px;">
 									<img src="/templates/images/pictures/etamain2.png"
 										class="img-fluid">
@@ -195,6 +237,16 @@
 					<div class="content px-2 text-center mb-0">
 						<div class="row me-0 ms-0 mb-0">
 							<div class="col-12 pe-0 ps-0">
+							  <div class="musicBtn">
+                          <a onclick="play()" class="musicBtn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#585858" class="bi bi-play-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
+                            <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"></path>
+                          </svg></a>
+                          <a onclick="stop()" class="musicBtn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#585858" class="bi bi-stop-circle" viewBox="0 0 16 16">
+                              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
+                              <path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5z"></path>
+                            </svg></a>
+                 </div>
 								<div class="card card-style" style="margin: 0px 0px 20px 0px;">
 									<img src="/templates/images/pictures/etamain.png"
 										class="img-fluid">
@@ -248,7 +300,46 @@
     </div>
 
 </div>
+<script>
+var audio = document.getElementById("music");
 
+ function play() {
+	 if (!audio.paused) {
+         audio.pause();
+         isPlaying = false;
+     } else {
+         audio.play();
+         isPlaying = true;
+     }
+  }
+ 
+ function stop() {
+	   audio.pause();
+	     audio.currentTime = 0;
+	     isPlaying = false;
+	  }
+ 
+ expireDate = new Date
+ expireDate.setMonth(expireDate.getMonth()+3)
+ hitCt = eval(cookieVal("pageHit"))
+ hitCt++
+ document.cookie = "pageHit = "+hitCt+";expires="+expireDate.toGMTString()
+
+ function cookieVal(cookieName){
+ thisCookie = document.cookie.split("; ")
+ for(i=0; i<thisCookie.length; i++){
+ if(cookieName == thisCookie[i].split("=")[0]) {
+ return thisCookie[i].split("=")[1]
+ }
+ }
+ return 0
+ }
+ 
+ console.log(hitCt);
+ if(hitCt == 5){
+	 console.log("당첨!");
+ }
+</script>
 
 
 </body>
