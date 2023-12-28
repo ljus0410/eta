@@ -242,7 +242,7 @@ function updateUser() {
       $("#account").val(bank_num);
     }
   if (gender2 =='남') {
-	     console.log("gender");
+        console.log("gender");
         $("#gender").val('0');
       }
   if (gender2 =='여') {
@@ -259,7 +259,7 @@ function updateUser() {
     }
 
     if (role === "driver" && (moneyName == 2)) {
-    	userEnteredValue = "예금주 인증을 진행해세요";
+       userEnteredValue = "예금주 인증을 진행해세요";
         updateToastText();
         showToast();
       console.log("예금주 불일치" + moneyName);
@@ -273,10 +273,9 @@ function updateUser() {
 
 
 
-  var messege;
 
   // Ajax 요청 함수
-  function phone() {
+  function phoneMess() {
     // Get the phone number from the input field
     var phone = $('#phone2').val();
 
@@ -288,6 +287,7 @@ function updateUser() {
         phone: phone
       },
       success: function(response) {
+         console.log("메세지 보내고");
         // Handle the success response
         console.log(response.num);
         messege = response.num
@@ -299,6 +299,34 @@ function updateUser() {
       }
     });
   }
+  
+  function callPhoneCer() {
+      console.log("num: "+messege);
+      var userInput = document.getElementById('certifyPhone').value;
+      userInput = parseInt(userInput);
+      var resultText = $('#phoneCerMessage');
+
+      if ( messege == userInput) {
+        phoneCer = 1;
+        console.log("입력값: " + userInput);
+        resultText.text("일치합니다").css('color', 'blue');
+
+        // 부트스트랩 JavaScript API를 사용하요 모달 닫기
+        $('#phoneMeCer').offcanvas('hide');
+        $('#phoneMeCer').on('hidden.bs.offcanvas', function() {
+
+
+          // 입력 필드 비활성화
+          $("#checkNum").text("인증완료").css("color", "blue");
+
+        });
+      } else {
+        phoneCer = 2;
+        console.log("틀린 입력값: " + userInput);
+        resultText.text("불일치합니다.").css('color', 'red');
+      }
+    }
+
 
   function handleBankClick(imgElement) {
     var bankCode = imgElement.getAttribute('data-bank-code');
@@ -414,32 +442,7 @@ function updateUser() {
   }
 
 //인증번호
-  function phoneCer() {
-      console.log("num: " + messege);
-      var userInput = document.getElementById('certify').value;
-      userInput = parseInt(userInput);
-      var resultText = $('#message');
-
-      if (messege == userInput) {
-        phoneCer = 1;
-        console.log("입력값: " + userInput);
-        resultText.text("일치합니다").css('color', 'blue');
-
-        // 부트스트랩 JavaScript API를 사용하여 모달 닫기
-        $('#phoneNum').offcanvas('hide');
-        $('#phoneNum').on('hidden.bs.offcanvas', function() {
-
-
-          // 입력 필드 비활성화
-          $("#checkNum").text("인증완료").css("color", "blue");
-
-        });
-      } else {
-        phoneCer = 2;
-        console.log("틀린 입력값: " + userInput);
-        resultText.text("불일치합니다.").css('color', 'red');
-      }
-    }
+  
 
 
 
@@ -498,7 +501,7 @@ function updateUser() {
    
     
     function showInputAndButton() {
-    	 console.log("showInputAndButton 함수 호출됨");
+        console.log("showInputAndButton 함수 호출됨");
         // 이미지를 클릭하면 숨겨진 입력란과 버튼을 나타나게 함
         document.getElementById("accountname").style.display = "inline-block";
         document.getElementById("confirmation").style.display = "inline-block";
@@ -566,7 +569,7 @@ function updateUser() {
         <div id="inputContainer">
             <input class="rounded-xs" value=""  name="phone" style="color: gray; margin-left: 10px; border: 1px solid #ced4da !important;" type="hidden" id="phone" />
             <input class="rounded-xs" value="${user.phone}"  name="phone2" style="color: gray; margin-left: 10px; border: 1px solid #ced4da !important;" type="text" id="phone2" />
-            <a onclick="phone()" data-bs-toggle="offcanvas" data-bs-target="#phoneNum" style="width: 60px; height: 30px; line-height: 7px; white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
+            <a onclick="phoneMess()" data-bs-toggle="offcanvas" data-bs-target="#phoneMeCer" style="width: 60px; height: 30px; line-height: 7px; white-space: nowrap;" class="btn-s btn bg-fade2-blue color-blue-dark" id=>인 증</a>
         </div>
     </div>
     <span id="checkNum" style="justify-content: flex-start; display: flex; margin-left: 40px; font-size: 11px;"></span>
@@ -731,17 +734,17 @@ function updateUser() {
         
         
         
-<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="phoneNum">
+<div class="offcanvas offcanvas-modal rounded-m offcanvas-detached bg-theme" style="width:340px" id="phoneMeCer">
     <div class="content">
       <h5 class="mb-n1 font-12 color-highlight font-700 text-uppercase pt-1">Welcome</h5>
       <h1 class="font-24 font-800 mb-3">인증번호</h1>
       <div class="form-custom form-label form-border form-icon mb-3 bg-transparent">
         <i class="bi bi-at font-14"></i>
-        <input type="text" class="form-control rounded-xs" id="certify" value="" placeholder="인증번호" />
+        <input type="text" class="form-control rounded-xs" id="certifyPhone" value="" placeholder="인증번호" />
         <label for="c1" class="color-theme">인증번호</label>
-        <span id="message" style="margin-left: 10px;"></span>
+        <span id="phoneCerMessage" style="margin-left: 10px;"></span>
       </div>
-      <a href="#"  id ="message" onclick="phoneCer()" class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4">확 인</a>
+      <a href="#"  id ="message" onclick="callPhoneCer()" class="btn btn-full gradient-blue shadow-bg shadow-bg-s mt-4">확 인</a>
       <div class="row">      
       </div>
     </div>
