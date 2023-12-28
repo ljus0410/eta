@@ -37,8 +37,8 @@
         <div class="dropdown-menu bg-transparent border-0 mt-n1 ms-3" style="margin: 0px;">
           <div class="card card-style rounded-m shadow-xl mt-1 me-1">
             <div class="list-group list-custom list-group-s list-group-flush rounded-xs px-3 py-1">
-              <a href="#" class="color-theme opacity-70 list-group-item py-1" data-bs-toggle="offcanvas" data-bs-target="#menu-register"><strong class="font-500 font-12">내 정보</strong></a>
-              <a href="#" class="color-theme opacity-70 list-group-item py-1" data-bs-toggle="offcanvas" data-bs-target="#menu-register2"><strong class="font-500 font-12">비밀번호 변경</strong></a>
+              <a href="#" class="color-theme opacity-70 list-group-item py-1" data-bs-toggle="offcanvas" data-bs-target="#menu-info"><strong class="font-500 font-12">내 정보</strong></a>
+              <a href="#" class="color-theme opacity-70 list-group-item py-1" data-bs-toggle="offcanvas" data-bs-target="#menu-newPwd"><strong class="font-500 font-12">비밀번호 변경</strong></a>
               <a href="#" class="color-theme opacity-70 list-group-item py-1" onclick="deleteUserView()"><strong class="font-500 font-12">회원 탈퇴</strong></a>
             </div>
           </div>
@@ -80,9 +80,9 @@
         <div class="dropdown-menu bg-transparent border-0 mt-n1 ms-3" style="margin: 0px;">
           <div class="card card-style rounded-m shadow-xl mt-1 me-1">
             <div class="list-group list-custom list-group-s list-group-flush rounded-xs px-3 py-1">
-              <a href="#" class="color-theme opacity-70 list-group-item py-1" data-bs-toggle="offcanvas" data-bs-target="#menu-register"><strong class="font-500 font-12">내 정보</strong></a>
-              <a href="#" class="color-theme opacity-70 list-group-item py-1" data-bs-toggle="offcanvas" data-bs-target="#menu-register2"><strong class="font-500 font-12">비밀번호 변경</strong></a>
-              <a href="#" class="color-theme opacity-70 list-group-item py-1" onclick="deleteUserView()"><strong class="font-500 font-12">회원 탈퇴</strong></a>
+              <a href="#" class="color-theme opacity-70 list-group-item py-1" data-bs-toggle="offcanvas" data-bs-target="#menu-info"><strong class="font-500 font-12">내 정보</strong></a>
+              <a href="#" class="color-theme opacity-70 list-group-item py-1" data-bs-toggle="offcanvas" data-bs-target="#menu-newPwd"><strong class="font-500 font-12">비밀번호 변경</strong></a>
+              <a href="/user/deleteUserView" class="color-theme opacity-70 list-group-item py-1"><strong class="font-500 font-12">회원 탈퇴</strong></a>
             </div>
           </div>
         </div>
