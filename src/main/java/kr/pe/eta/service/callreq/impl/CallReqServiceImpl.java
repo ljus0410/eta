@@ -108,4 +108,18 @@ public class CallReqServiceImpl implements CallReqService {
 		return call;
 	}
 
+	public void updateCount() throws Exception {
+		System.out.println("2222");
+		callReqDao.updateCount();
+
+	}
+
+	public int getCount() throws Exception {
+
+		int visitCount = callReqDao.getCount();
+		System.out.println("getCount222: " + visitCount);
+		return visitCount;
+
+	}
+
 }
