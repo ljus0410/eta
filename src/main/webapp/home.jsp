@@ -336,8 +336,9 @@ var audio = document.getElementById("music");
  }
  
  console.log(hitCt);
- if(hitCt == 5){
-	 console.log("당첨!");
+ if(hitCt == 80){
+	 console.log(hitCt+ "번째 방문자 당첨!");
+	 self.location = "event.jsp?hitCt="+hitCt;
  }
 </script>
 
