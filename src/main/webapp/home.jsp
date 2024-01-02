@@ -301,6 +301,32 @@
 
 </div>
 <script>
+addCount();
+function addCount(){
+    $.ajax({
+        type: 'POST',
+        url: '/callreq/json/updateCount',
+        success: function (response) {
+                   
+          if (response && response.success) {
+        	  console.log("updateCount() 성공"); 
+        	  console.log("Visit Count: " + response.visitCount);
+        	  var visitcount = response.visitCount;
+        	  if(visitcount == 7 || visitcount == 15 || visitcount == 23){
+        		   console.log(visitcount+ "번째 방문자 당첨!");
+        		   self.location = "event.jsp?hitCt="+visitcount;
+        		 }
+            } else {
+            	console.log("updateCount() 실패"); 
+            }
+        },
+        error: function (error) {
+          console.error('updateCount() 실패 에러', error);
+        }
+      });
+
+    }
+
 var audio = document.getElementById("music");
 
  function play() {
@@ -319,7 +345,7 @@ var audio = document.getElementById("music");
 	     isPlaying = false;
 	  }
  
- expireDate = new Date
+ /*expireDate = new Date
  expireDate.setMonth(expireDate.getMonth()+3)
  hitCt = eval(cookieVal("pageHit"))
  hitCt++
@@ -339,7 +365,7 @@ var audio = document.getElementById("music");
  if(hitCt == 110){
 	 console.log(hitCt+ "번째 방문자 당첨!");
 	 self.location = "event.jsp?hitCt="+hitCt;
- }
+ }*/
 </script>
 
 

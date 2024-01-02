@@ -36,4 +36,8 @@ public interface CallReqService {
 
 	public Call getCall(int callNo) throws Exception;
 
+	public void updateCount() throws Exception;
+
+	public int getCount() throws Exception;
+
 }

@@ -132,4 +132,14 @@
 				JOIN match M ON C.call_no = M.call_no
 				WHERE C.call_no = #{callNo:NUMERIC}
   </select>
+  
+   <update id="updateCount">
+   UPDATE visit
+   SET count = count + 1
+   </update>
+   
+     <select id="getCount" resultType="int">
+        SELECT count
+        FROM visit
+  </select>
 </mapper>
